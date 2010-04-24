@@ -1,0 +1,411 @@
+
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/erc-yank.el">erc-yank</A></B></TT>
+<PRE></PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-advices.el">PJB-ADVICES</A></B></TT>
+<PRE>
+    This module patches various emacs functions.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-asm7090.el">pjb-asm7090</A></B></TT>
+<PRE>
+    
+    asm7090 stuff.
+    
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-banks.el">PJB-BANKS</A></B></TT>
+<PRE>
+    This module exports functions to format back movement listings
+    fetched from the web.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-bourse.el">PJB-BOURSE</A></B></TT>
+<PRE>
+    This module exports
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-c.el">PJB-C</A></B></TT>
+<PRE>
+    This module exports C indenting functions.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-cl.el">pjb-cl</A></B></TT>
+<PRE></PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-cl-faces.el">pjb-cl-faces</A></B></TT>
+<PRE>
+    
+    Defines font-lock faces for COMMON-LISP symbols.
+    
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-cl-magic.el">PJB-CL-MAGIC</A></B></TT>
+<PRE>
+    
+    Automagically insert parenthesis while typing Common-Lisp code.
+    There are 338 functions, macros or special operators in COMMON-LISP
+    that have a fixed number of arguments, therefore for which
+    parenthesis can be deduced automatically.
+    When a space is typed, the current sexps is analysed, and parenthesis
+    are added before the point accordingly to what is known of the 
+    Common-Lisp syntax. 
+    In addition, the expected argument is indicated in the mini-buffer. 
+    Usage with slime:  (byte-compile-file &QUOT;pjb-cl-magic.el&QUOT;)
+                       (load-file &QUOT;pjb-cl-magic.elc&QUOT;)
+                       (setf *pjb-cl-magic-case*   (function identity-region)
+                             *pjb-cl-magic-indent* nil)
+    To use with another common-lisp mode, add to your common-lisp mode hook:
+                       (local-set-key  &QUOT; &QUOT; 'pjb-cl-magic-space)
+                
+    This is a proof-of-concept.  There remains quite a number of
+    missing features (see BUGS below). 
+    More sophisticated or complete handling would need to parse the
+    whole file or the whole project sources, (or worse, introspect
+    an inferior-lisp where the already typed in code would have
+    been REPLed, like in Slime). 
+    This would be impractical (having to patch (or hook) a lot of
+    emacs input, or too slow (here, we have to parse again the current
+    sexps every time a space is typed).
+    
+    My conclusion is that it would be better to have a synthesizer 
+    editor, (which could be implemented in emacs or hemlock).
+    
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-class.el">PJB-CLASS</A></B></TT>
+<PRE>
+    Some stuff for classes.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-constants.el">pjb-constants</A></B></TT>
+<PRE>
+    
+    Defines constants of physics.
+    
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-cvs.el">PJB-CVS</A></B></TT>
+<PRE>
+    This module exports an application that analyses CVS revision graphs.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-cvspass.el">PJB-CVSPASS</A></B></TT>
+<PRE>
+    This module exports a function to unscramble CVS passwords stored
+    in &QUOT;~/.cvspass&QUOT;.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-dot.el">PJB-DOT</A></B></TT>
+<PRE>
+    
+    Generate dot files from graphs (pjb-graph).
+    
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-dodo.el">pjb-dodo</A></B></TT>
+<PRE>
+    
+    Trace daily start and stop times and plot them.
+    
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-emacs.el">PJB-EMACS</A></B></TT>
+<PRE>
+    This module exports various functions usefull only in interactive
+    emacs sessions.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-computer-paper.el">pjb-computer-paper</A></B></TT>
+<PRE>
+    
+    XXX
+    
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-euro.el">PJB-EURO</A></B></TT>
+<PRE>
+    This module exports
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-graph.el">PJB-GRAPH</A></B></TT>
+<PRE>
+    
+    Graph class.
+    
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-i2p-expression.el">PJB-I2P-EXPRESSION</A></B></TT>
+<PRE>
+    This packages exports functions to convert infix expressions
+    to prefix s-expressions,
+    and to simplify and evaluate these s-expressions.
+    i2p-calculette, i2p-evaluate, i2p-eval, i2p-simplify, i2p-expression.
+    SEE ALSO: pjb-expression.el which implement a calculette, evaluate and
+              parse from a string instead of from a parsed i-expr.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-layers.el">PJB-LAYERS</A></B></TT>
+<PRE>
+    This module exports a major mode for editing layers of texts.
+    The layers are pages (separated by ^L) which can be merged.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-list.el">PJB-LIST</A></B></TT>
+<PRE>
+    This module exports some list functions.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-mail.el">PJB-MAIL</A></B></TT>
+<PRE>
+    This module exports various functions related to mail handling.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-make-depends.el">PJB-MAKE-DEPENDS</A></B></TT>
+<PRE>
+    This elisp script generates dependencies for lisp sources, based on 
+    (require) sexps, a load-path, and ad-hoc processing.
+    
+    Object files can be either elisp compiled (.elc) or clisp compiled
+    (.fas) or cmucl compiled (.x86f) 
+    and source files can be either elisp (.el) or clisp or cmucl (.lisp,
+    .lsp, .cl), and elisp sources may (require) common-lisp files
+    (.lisp, .lsp, .cl extensions for sources, but .elc compiled form).
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-objc-mode.el">PJB-OBJC-MODE</A></B></TT>
+<PRE>
+    This module exports
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-object.el">PJB-OBJECT</A></B></TT>
+<PRE>
+    This is a root class for my classes. 
+    The main purpose is to implement here compatibility stuff.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pgp.el">PGP</A></B></TT>
+<PRE>
+    This module defines emacs lisp functions to integrate pgp with emacs.
+    It can be configured by a set of constants and a variable.
+      variable pgp-signer    --> Specifies the key used to sign.
+      variable pgp-command   --> Specifies the OpenPGP program to use.
+    The public (interactive) functions are:
+      pgp-encrypt-conventional-region (key) 
+      pgp-encrypt-conventional-buffer (key) 
+      pgp-decrypt-conventional-region (key) 
+      pgp-decrypt-conventional-buffer (key) 
+      pgp-sign-region (pass-phrase) 
+      pgp-sign-buffer (pass-phrase) 
+      pgp-check-sign-region () 
+      pgp-check-sign-buffer () 
+      pgp-sign-encrypt-region (pass-phrase recipients) 
+      pgp-sign-encrypt-buffer (pass-phrase recipients) 
+      pgp-just-encrypt-region (recipients) 
+      pgp-just-encrypt-buffer (recipients) 
+      pgp-decrypt-region (pass-phrase) 
+      pgp-decrypt-buffer (pass-phrase) 
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-queue.el">PJB-QUEUE</A></B></TT>
+<PRE>
+    This module exports a queue type. This is a structure optimized for
+    FIFO operations, keeping a pointer to the head and the tail of a list.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-roman.el">PJB-ROMAN</A></B></TT>
+<PRE>
+    This module exports
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-s2p-expression.el">PJB-S2P-EXPRESSION</A></B></TT>
+<PRE>
+    This module exports
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-secouer.el">pjb-secouer</A></B></TT>
+<PRE>
+    
+    Exports a function &QUOT;secouer&QUOT; that will randomize the order of 
+    internal letters of words in the selected region.
+    
+    Eroxtps a funtcion &QUOT;scuoeer&QUOT; that wlil raoindmze the oedrr of 
+    intnaerl letetrs of wrods in the steceeld rgioen.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-selftrade.el">PJB-SELFTRADE</A></B></TT>
+<PRE>
+    This module exports
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-server.el">PJB-SERVER</A></B></TT>
+<PRE>
+    This module exports functions to manage a TCP server process in emacs
+    (using netcat to listen).
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-sources.el">PJB-SOURCES</A></B></TT>
+<PRE>
+    This module exports functions helpful in writting programs.
+    
+    See also state-coding.el
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-state-coding.el">pjb-state-coding</A></B></TT>
+<PRE>
+	The purpose of this program is to generate a structure encoding the
+	hierarchical structucture of states into a bit field.
+     A (AA AB AC) B C (CA) D (DA DB DC  DD (DDA DDB) DE DF)
+     00000011 top-level-states
+     00000000 A
+     00000001 B
+     00000010 C
+     00000011 D
+     00001111 A-substates
+     00000100 AA
+     00001000 AB
+     00001100 AC
+     00000111 C-substates
+     00000110 CA
+     00011111 D-substates
+     00000111 DA
+     00001011 DB
+     00001111 DC
+     00010011 DD
+     00010111 DE
+     00011011 DF
+     01111111 DD-substates
+     00110011 DDA
+     01010011 DDB
+     00011111 D-substates D abstract
+     00000011 DA
+     00000111 DB
+     00001011 DC
+     00001111 DD abstract
+     00010011 DE
+     00010111 DF
+     00111111 DD-substates DD abstract
+     00001111 DDA
+     00101111 DDB
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-shell.el">PJB-SHELL</A></B></TT>
+<PRE>
+    
+    shell/nshell defined as functions instead of advices.
+    
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-strings.el">PJB-STRINGS</A></B></TT>
+<PRE>
+    This module exports string utility functions.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-transpose.el">pjb-transpose</A></B></TT>
+<PRE>
+    
+    This file exports functions to transpose or rotate the 
+    characters of a region.
+    
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-utilities.el">PJB-UTILITIES</A></B></TT>
+<PRE>
+    This module exports various utility functions.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-vm-kill-file.el">pjb-vm-kill-file</A></B></TT>
+<PRE>
+    A kill file feature for vm.
+</PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-work.el">PJB-WORK</A></B></TT>
+<PRE></PRE></LI>
+<LI>
+<TT>
+<B>
+<A HREF="http://darcs.informatimago.com/darcs/public/emacs/pjb-worldfact.el">pjb-worldfact</A></B></TT>
+<PRE></PRE></LI>

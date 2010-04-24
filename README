@@ -1,0 +1,50 @@
+
+
+Occurences of interactive:
+
+'(
+  (     29 pjb-sources.el )
+  (     28 pjb-emacs.el )
+  (     20 pjb-pgp.el )
+  (     14 pjb-advices.el )
+  (      9 pjb-utilities.el )
+  (      9 pjb-banks.el )
+  (      9 pjb-banks-old.el )
+  (      8 pjb-cl.el )
+  (      6 pjb-layers.el )
+  (      5 pjb-work.el )
+  (      5 pjb-roman.el )
+  (      4 pjb-mail.el )
+  (      4 pjb-euro.el )
+  (      2 pjb-walk.el )
+  (      2 pjb-transpose.el )
+  (      2 pjb-s2p-expression.el )
+  (      2 pjb-objc-mode.el )
+  (      2 pjb-i2p-expression.el )
+  (      2 pjb-cvspass.el )
+  (      1 pjb-vm-kill-file.el )
+  (      1 pjb-selftrade.el )
+  (      1 pjb-secouer.el )
+  (      1 pjb-constants.el )
+  (      1 pjb-c.el )
+  (      1 html-update-index.el )
+  ;;----------------------------------------
+  (      0 pjb-bourse-test.el )
+  (      0 pjb-bourse.el )
+  (      0 pjb-class.el )
+  (      0 pjb-cvs.el )
+  (      0 pjb-invoices.el )
+  (      0 pjb-make-depends.el )
+  (      0 pjb-object.el )
+  (      0 pjb-prolog-mode.el )
+  (      0 pjb-server.el )
+  (      0 pjb-state-coding.el )
+  (      0 pjb-worldfact.el )
+  (      0 pjb-queue.el )
+  (      0 pjb-graph.el )
+  (      0 pjb-list.el )
+  (      0 pjb-strings.el )
+  )
+
+Files where no or few interactive  occur could be written in COMMON-LISP.
+Actually, some have been converted (pjb-list, pjb-strings, pjb-graph).

@@ -1,0 +1,2512 @@
+;;******************************************************************************
+;;FILE:               pjb-invoices.el
+;;LANGUAGE:           emacs lisp
+;;SYSTEM:             emacs
+;;USER-INTERFACE:     emacs
+;;DESCRIPTION
+;;
+;;    This module exports classes and functions used for accounting:
+;;    invoices, customers/providers, movements, taxes...
+;;
+;;AUTHORS
+;;    <PJB> Pascal J. Bourguignon
+;;MODIFICATIONS
+;;    199?-??-?? <PJB> Creation.
+;;    2002-09-09 <PJB> Added generate-invoice.
+;;BUGS
+;;LEGAL
+;;    LGPL
+;;
+;;    Copyright Pascal J. Bourguignon 1990 - 2002
+;;
+;;    This library is free software; you can redistribute it and/or
+;;    modify it under the terms of the GNU Lesser General Public
+;;    License as published by the Free Software Foundation; either
+;;    version 2 of the License, or (at your option) any later version.
+;;
+;;    This library is distributed in the hope that it will be useful,
+;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;;    Lesser General Public License for more details.
+;;
+;;    You should have received a copy of the GNU Lesser General Public
+;;    License along with this library; if not, write to the Free Software
+;;    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
+;;
+;;******************************************************************************
+(require 'pjb-euro)
+(require 'pjb-lists)
+(require 'pjb-strings)
+(require 'pjb-object)
+(require 'pjb-cl)
+
+(provide 'pjb-invoices)
+
+(defconstant vat-rates '(0.00 0.04 0.07 0.16) "The valid VAT rates.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; BankReference
+
+(defclass BankReference (PjbObject)
+  (
+   (bank-name
+    :initform nil
+    :initarg  :bank-name
+    :accessor bank-name
+    :type     (or null string)
+    :documentation
+    "The name of the bank.")
+   (bank-address
+    :initform nil
+    :initarg  :bank-address
+    :accessor bank-address
+    :type     (or null string)
+    :documentation
+    "The address of the bank.")
+   (branch-name
+    :initform nil
+    :initarg  :branch-name
+    :accessor branch-name
+    :type     (or null string)
+    :documentation
+    "The name of the branch.")
+   (swift-code
+    :initform nil
+    :initarg  :swift-code
+    :accessor swift-code
+    :type     (or null string)
+    :documentation
+    "The swift-code of the bank.")
+   (account-number
+    :initform nil
+    :initarg  :account-number
+    :accessor account-number
+    :type     (or null string)
+    :documentation
+    "The account number.")
+   (beneficiary-name
+    :initform nil
+    :initarg  :beneficiary-name
+    :accessor beneficiary-name
+    :type     (or null string)
+    :documentation
+    "The beneficiary's name.")
+   )
+  (:documentation
+   "A bank account reference.")
+  );;BankReference
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; FiscalPerson
+
+(defclass FiscalPerson (PjbObject)
+  (
+   (fiscal-id
+    :initform nil
+    :initarg  :fiscal-id
+    :accessor fiscal-id
+    :type     (or null string)
+    :documentation
+    "The fiscal ID of the person.")
+   (name
+    :initform nil
+    :initarg  :name
+    :accessor name
+    :type     (or null string)
+    :documentation
+    "The name of the person.")
+   (address
+    :initform nil
+    :initarg  :address
+    :accessor address
+    :type     (or null string)
+    :documentation
+    "The address of the person.")
+   (phone
+    :initform nil
+    :initarg  :phone
+    :accessor phone
+    :type     (or null string)
+    :documentation
+    "The phone number of the person.")
+   (fax
+    :initform nil
+    :initarg  :fax
+    :accessor fax
+    :type     (or null string)
+    :documentation
+    "The fax number of the person.")
+   (email
+    :initform nil
+    :initarg  :email
+    :accessor email
+    :type     (or null string)
+    :documentation
+    "The fax number of the person.")
+   (bank-reference
+    :initform nil
+    :initarg  :bank-reference
+    :accessor bank-reference
+    :type     (or null BankReference)
+    :documentation
+    "The bank reference of the person.")
+   (language
+    :initform :es
+    :initarg  :language
+    :accessor language
+    :type     symbol;; :es :en :fr :de
+    :documentation
+    "The language (two-letter code) used by this person.")
+   )
+  (:documentation
+   "A person (physical or moral) identified by a fiscal identification number."
+   ))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; InvoiceLine
+
+(defclass InvoiceLine (PjbObject)
+  ((description
+    :initform ""
+    :initarg  :description
+    :accessor description
+    :type     string
+    :documentation
+    "The description of this line.")
+   (devise
+    :initform :EUR
+    :initarg  :devise
+    :accessor devise
+    :type     symbol
+    :documentation
+    "The devise of this line.")
+   (amount-ht
+    :initform 0.00
+    :initarg  :amount-ht
+    :accessor amount-ht
+    :type     number
+    :documentation
+    "The amount excluding the taxes of this line.")
+   (vat-rate
+    :initform 0.00
+    :initarg  :vat-rate
+    :accessor vat-rate
+    :type     number
+    :documentation
+    "The rate of VAT for this line (0.00 <= vat-rate <= 0.50).")
+   (amount-vat
+    :initform 0.00
+    :initarg  :amount-vat
+    :accessor amount-vat
+    :type     number
+    :documentation
+    "The amount of VAT for this line. ( = amount-ht * (1+vat-rate) )")
+   (amount-ttc
+    :initform 0.00
+    :initarg  :amount-ttc
+    :accessor amount-ttc
+    :type     number
+    :documentation
+    "The amount including the taxes of this line.")
+   )
+  (:documentation
+   "An Invoice Line."))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Invoice
+
+(defclass Invoice (PjbObject)
+  ((date
+    :initform nil
+    :initarg  :date
+    :accessor date
+    :type     (or null string)
+    :documentation
+    "'YYYY-MM-DD' The date of the invoice.")
+   (issuer-fiscal-id
+    :initform nil
+    :initarg  :issuer-fiscal-id
+    :accessor issuer-fiscal-id
+    :type     (or null string)
+    :documentation
+    "The fiscal ID of the issuer of this invoice.")
+   (invoice-number
+    :initform nil
+    :initarg  :invoice-number
+    :accessor invoice-number
+    :type     (or null string)
+    :documentation
+    "The invoice number.")
+   (payer-fiscal-id
+    :initform nil
+    :initarg  :payer-fiscal-id
+    :accessor payer-fiscal-id
+    :type     (or null string)
+    :documentation
+    "The fiscal ID of the payer of this invoice.")
+   (title
+    :initform ""
+    :initarg  :title
+    :accessor title
+    :type     (or null string)
+    :documentation
+    "The title of this invoice.")
+   (devise
+    :initform :EUR
+    :initarg  :devise
+    :accessor devise
+    :type     symbol
+    :documentation
+    "The devise of this invoice.")
+   (lines
+    :initform nil
+    :accessor lines
+    :type     list
+    :documentation
+    "(list of InvoiceLine) The line items of this invoice.")
+   (total-ht
+    :initform 0.00
+    :accessor total-ht
+    :type     number
+    :documentation
+    "The total excluding taxes of this invoice.")
+   (total-vat
+    :initform 0.00
+    :accessor total-vat
+    :type     number
+    :documentation
+    "The total of VAT.")
+   (total-ttc
+    :initform 0.00
+    :accessor total-ttc
+    :type     number
+    :documentation
+    "The total including taxes of this invoice.")
+   )
+  (:documentation
+   "An invoice, either outgoing or incoming.
+The amounts of the invoice may be negative when it's a refund.
+"))
+
+(defvar invoice-directory "/home/pascal/jobs/free-lance/invoices"
+  "The directory where the generated invoices are stored.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; InvoiceSet
+
+(defclass InvoiceSet (PjbObject)
+  ((fiscal-id
+    :initform nil
+    :initarg  :fiscal-id
+    :accessor fiscal-id
+    :type     (or null string)
+    :documentation
+    "The fiscal id of the owner of this invoice set.")
+   (fisc-fiscal-ids
+    :initform nil
+    :initarg  :fisc-fiscal-ids
+    :accessor fisc-fiscal-ids
+    :type     list
+    :documentation
+    "(list of string) List of fiscal-id of fisc entity. An invoice issued by
+on of these entities is actually a tax.")
+   (persons
+    :initform nil
+    :initarg  :persons
+    :accessor persons
+    :type     list
+    :documentation
+    "The list of known FiscalPerson.")
+   (invoices
+    :initform nil
+    :initarg  :invoices
+    :accessor invoices
+    :type     list
+    :documentation
+    "The list of known Invoices.")
+   )
+  (:documentation
+   "This class gather all the data sets about invoices and fiscal persons."))
+
+
+(defconstant invoice-set-file-path "~/.pjb-invoices"
+  "Path to the file where invoices data is stored.")
+
+(defvar invoice-set (make-instance InvoiceSet
+                        :object-id "Default Invoice Set")
+  "Default Invoice Set.")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; InvoiceLine
+
+
+;; check = ( a-ttc | a-ht ) & ( a-vat | vat-rate )
+;; error = ~check | (  ~a-ttc & ~a-ht ) | ( ~a-vat & ~vat-rate ) )
+
+
+;; (insert
+;;  (carnot '( a-ttc a-ht a-vat vat-rate check)
+;;          '((check . (lambda (a-ttc a-ht a-vat vat-rate check)
+;;                       (and (or a-ttc a-ht) (or a-vat vat-rate))
+;;                       ))
+;;            (error . (lambda (a-ttc a-ht a-vat vat-rate check)
+;;                       (or (not check)
+;;                           (and (not a-ttc) (not  a-ht))
+;;                           (and (not a-vat) (not  vat-rate)))
+;;                       ))
+;;            ))
+;;  )
+
+;; +-------+------+-------+----------+-------+-------+-------+
+;; | a-ttc | a-ht | a-vat | vat-rate | check | check | error |
+;; +-------+------+-------+----------+-------+-------+-------+
+;; |  OUI  |  OUI |  OUI  |    OUI   |  OUI  |   ×   |   ·   |
+;; |  OUI  |  OUI |  OUI  |    OUI   |  NON  |   ×   |   ×   |
+;; |  OUI  |  OUI |  OUI  |    NON   |  OUI  |   ×   |   ·   |
+;; |  OUI  |  OUI |  OUI  |    NON   |  NON  |   ×   |   ×   |
+;; |  OUI  |  OUI |  NON  |    OUI   |  OUI  |   ×   |   ·   |
+;; |  OUI  |  OUI |  NON  |    OUI   |  NON  |   ×   |   ×   |
+;; |  OUI  |  OUI |  NON  |    NON   |  OUI  |   ·   |   ×   |
+;; |  OUI  |  OUI |  NON  |    NON   |  NON  |   ·   |   ×   |
+;; |  OUI  |  NON |  OUI  |    OUI   |  OUI  |   ×   |   ·   |
+;; |  OUI  |  NON |  OUI  |    OUI   |  NON  |   ×   |   ×   |
+;; |  OUI  |  NON |  OUI  |    NON   |  OUI  |   ×   |   ·   |
+;; |  OUI  |  NON |  OUI  |    NON   |  NON  |   ×   |   ×   |
+;; |  OUI  |  NON |  NON  |    OUI   |  OUI  |   ×   |   ·   |
+;; |  OUI  |  NON |  NON  |    OUI   |  NON  |   ×   |   ×   |
+;; |  OUI  |  NON |  NON  |    NON   |  OUI  |   ·   |   ×   |
+;; |  OUI  |  NON |  NON  |    NON   |  NON  |   ·   |   ×   |
+;; |  NON  |  OUI |  OUI  |    OUI   |  OUI  |   ×   |   ·   |
+;; |  NON  |  OUI |  OUI  |    OUI   |  NON  |   ×   |   ×   |
+;; |  NON  |  OUI |  OUI  |    NON   |  OUI  |   ×   |   ·   |
+;; |  NON  |  OUI |  OUI  |    NON   |  NON  |   ×   |   ×   |
+;; |  NON  |  OUI |  NON  |    OUI   |  OUI  |   ×   |   ·   |
+;; |  NON  |  OUI |  NON  |    OUI   |  NON  |   ×   |   ×   |
+;; |  NON  |  OUI |  NON  |    NON   |  OUI  |   ·   |   ×   |
+;; |  NON  |  OUI |  NON  |    NON   |  NON  |   ·   |   ×   |
+;; |  NON  |  NON |  OUI  |    OUI   |  OUI  |   ·   |   ×   |
+;; |  NON  |  NON |  OUI  |    OUI   |  NON  |   ·   |   ×   |
+;; |  NON  |  NON |  OUI  |    NON   |  OUI  |   ·   |   ×   |
+;; |  NON  |  NON |  OUI  |    NON   |  NON  |   ·   |   ×   |
+;; |  NON  |  NON |  NON  |    OUI   |  OUI  |   ·   |   ×   |
+;; |  NON  |  NON |  NON  |    OUI   |  NON  |   ·   |   ×   |
+;; |  NON  |  NON |  NON  |    NON   |  OUI  |   ·   |   ×   |
+;; |  NON  |  NON |  NON  |    NON   |  NON  |   ·   |   ×   |
+;; +-------+------+-------+----------+-------+-------+-------+
+
+
+(defmethod shared-initialize ((self InvoiceLine) fields)
+  "
+DOES:    Checks that the values for the fields are within limits.
+"
+
+  ;; (mapc (lambda (a)  (let ((slot (intern (concat ":" (symbol-name a)))))
+  ;;           (printf "(%-20s (plist-get fields %s))\n" a slot)))
+  ;;        (class-attributes InvoiceLine))
+  (let (
+        (object-id            (plist-get fields :object-id))
+        (description          (plist-get fields :description))
+        (devise               (plist-get fields :devise))
+        (amount-ht            (plist-get fields :amount-ht))
+        (vat-rate             (plist-get fields :vat-rate))
+        (amount-vat           (plist-get fields :amount-vat))
+        (amount-ttc           (plist-get fields :amount-ttc))
+        )
+    (when (or (and (not amount-ttc) (not  amount-ht))
+              (and (not amount-vat) (not  vat-rate)))
+      (error "Not enought amount data defined for this line %S." fields))
+
+    (unless amount-ttc
+      (setq amount-ttc
+            (cond
+             (amount-vat        (+ amount-ht amount-vat))
+             (vat-rate          (* amount-ht (+ 1.0 vat-rate)))
+             ;; last case should not occur.
+             (t                 (/ (* amount-vat (+ 1.0 vat-rate)) vat-rate)))))
+
+    (unless amount-ht
+      (setq amount-ht
+            (cond
+             (amount-vat       (- amount-ttc amount-vat))
+             (vat-rate         (/ amount-ttc (+ 1.0 vat-rate)))
+             ;; last case should not occur.
+             (t                (/ amount-vat vat-rate)))))
+
+    (unless amount-vat
+      (setq amount-vat (- amount-ttc amount-ht)))
+
+    (unless vat-rate
+      (setq vat-rate (* (round (/ amount-vat amount-ht) 0.01) 0.01)))
+
+    (check-vat amount-ttc amount-ht amount-vat vat-rate)
+
+    (call-next-method self (list :object-id           object-id
+                            :description         description
+                            :devise              devise
+                            :amount-ht           amount-ht
+                            :vat-rate            vat-rate
+                            :amount-vat          amount-vat
+                            :amount-ttc          amount-ttc ))
+
+    ));;shared-initialize
+
+;;; (defmethod compute-amount-ttc ((self InvoiceLine))
+;;;   "DOES:    compute the amount-ttc."
+;;;   (if (vat-rate self)
+;;;       (setf (slot-value self 'amount-vat) (euro-round
+;;;                                            (* (amount-ht self)
+;;;                                               (vat-rate self)) (devise self))))
+;;;   (setf (slot-value self 'amount-ttc) (euro-round
+;;;                                        (+ (amount-ht self) 
+;;;                                           (amount-vat self)) (devise self)))
+
+;;;   );;compute-amount-ttc
+
+
+;;; (defmethod vat-rate ((self InvoiceLine))
+;;;   "
+;;; RETURN: A computed VAT rate.
+;;; "
+;;;   (let ((result
+;;;          (/ (round (abs (/ (amount-vat self) (amount-ht self))) 0.01) 100.0)
+;;;          )) (message "InvoiceLine vat-rate = %f" result) result)
+;;;   );;vat-rate
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Invoice
+
+(defmethod compute-totals ((self Invoice))
+  "DOES:    Compute the totals."
+  (let ((th 0.00) (tv 0.00) (tt 0.00))
+  (mapcar (lambda (line)
+            (setq th (+ th (amount-ht  line))
+                  tv (+ tv (amount-vat line))
+                  tt (+ tt (amount-ttc line)))
+            )
+          (slot-value self 'lines))
+  (setf (slot-value self 'total-ht)  th)
+  (setf (slot-value self 'total-vat) tv)
+  (setf (slot-value self 'total-ttc) tt))
+  );;compute-totals
+
+
+(defmethod vat-rate ((self Invoice))
+  "RETURN: A computed VAT rate."
+  (let ((result
+         (/ (round (abs (/ (total-vat self) (total-ht self))) 0.01) 100.0)
+         )) (message "vat-rate=%f" result) result)
+  );;vat-rate
+
+
+
+(put 'add-line 'lisp-indent-function 2)
+(defmethod add-line ((self Invoice) (line InvoiceLine))
+  "DOES:    Add the line."
+  ;; (compute-amount-ttc line)
+  (setf (slot-value self 'lines) (append (slot-value self 'lines) (list line)))
+  (compute-totals self)
+  );;add-line
+
+
+(defmethod is-refund ((self Invoice))
+  "RETURN: Whether this invoice is a refund invoice."
+  (< (total-ttc self) 0.00))
+
+
+
+(defun clean-title-for-file-name (title-string)
+  "
+RETURN: A string containing the first word of title-string as plain ASCII.
+DOES:   Remove accents from the returned word.
+"
+  (string-remove-accents
+  (downcase
+   (substring title-string 0
+              (string-match "[-_ \n\t\v\f]" title-string 0))))
+  );;clean-title-for-file-name
+
+
+
+(defvar invoice-strings nil "Localization data for this module.")
+
+(mapcar
+ (lambda (slt)
+ (deftranslation invoice-strings (nth 0 slt) (nth 1 slt) (nth 2 slt)))
+ '(
+ ("Phone:" :en :idem)
+ ("Phone:" :fr "Téléphone :")
+ ("Phone:" :es "Teléfono :")
+
+ ("Fax:" :en :idem)
+ ("Fax:" :fr "Télécopie :")
+ ("Fax:" :es "Telécopia :")
+
+ ("Email:" :en :idem)
+ ("Email:" :fr "Email :")
+ ("Email:" :es "Email :")
+
+ ("VAT Immatriculation:" :en :idem)
+ ("VAT Immatriculation:" :fr "TVA Intracommunautaire :")
+ ("VAT Immatriculation:" :es "Imatriculación IVA :")
+
+ ("INVOICE" :en :idem)
+ ("INVOICE" :fr "FACTURE")
+ ("INVOICE" :es "FACTURA")
+
+ ("Date:" :en :idem)
+ ("Date:" :fr "Date :")
+ ("Date:" :es "Fecha :")
+
+ ("Invoice no.:" :en :idem)
+ ("Invoice no.:" :fr "Facture nº :")
+ ("Invoice no.:" :es "Nº de factura :")
+
+ ("Billing address:" :en :idem)
+ ("Billing address:" :fr "Adresse de facturation :")
+ ("Billing address:" :es "Dirección de factura :")
+
+ ("Description" :en :idem)
+ ("Description" :fr "Description")
+ ("Description" :es "Descripción")
+
+ ("Price" :en :idem)
+ ("Price" :fr "Prix")
+ ("Price" :es "Precio")
+
+
+
+ ("Total" :en :idem)
+ ("Total" :fr "Total HT")
+ ("Total" :es "Base imponible")
+
+ ("VAT  %5.1f %%" :en :idem)
+ ("VAT  %5.1f %%" :fr "TVA  %5.1f %%")
+ ("VAT  %5.1f %%" :es "IVA  %5.1f %%")
+
+ ("IRPF %5.1f %%" :en "")
+ ("IRPF %5.1f %%" :fr "")
+ ("IRPF %5.1f %%" :es :idem)
+
+ ("Total VAT Incl." :en :idem)
+ ("Total VAT Incl." :fr "Total TTC")
+ ("Total VAT Incl." :es "Total factura")
+
+ ("PAYMENT-METHOD" :en
+  "Method of Payment:  Bank Transfer
+     Please make your payment using the details below,
+     before %s.")
+ ("PAYMENT-METHOD" :fr
+  "Mode de règlement :  À régler par virement bancaire au compte suivant,
+     avant le %s.")
+ ("PAYMENT-METHOD" :es
+  "Forma de pago :  Transferencia bancaria a la cuenta siguiente,
+     antes del %s.")
+
+ ("Payment Bank" :en :idem)
+ ("Payment Bank" :fr "Banque destinataire")
+ ("Payment Bank" :es "Banco")
+
+ ("Branch Name" :en :idem)
+ ("Branch Name" :fr "Agence")
+ ("Branch Name" :es "Oficina")
+
+ ("Account Number (IBAN)" :en :idem)
+ ("Account Number (IBAN)" :fr "Numéro de compte (IBAN)")
+ ("Account Number (IBAN)" :es "Número de cuenta (IBAN)")
+
+ ("Beneficiary" :en :idem)
+ ("Beneficiary" :fr "Bénéficiaire")
+ ("Beneficiary" :es "Beneficiario")
+
+ ("SWIFT Code" :en :idem)
+ ("SWIFT Code" :fr "Code SWIFT")
+ ("SWIFT Code" :es "Código SWIFT")
+
+ ))
+
+
+(defmacro longest-localized-length (table language fields)
+  `(loop for fname in ,fields
+  maximize (length (localize ,table ,language fname)) into increment
+  finally return increment
+  ))
+
+
+(defun generate-person-address (title left-margin person &rest cl-keys)
+  "
+DOES:    insert into the current buffer at the current point the address
+         and phone, fax and email of the given person,
+         prefixed by the title and with a left-margin of `left-margin'
+         characters.  If the length of the title is greater than the
+         `left-margin' then the length of the title is used instead.
+cl-keys: may contain the key: :language. The default language is French (:fr),
+         :en and :es are also available for English and Spanish.
+"
+
+  (cl-parsing-keywords ((:language :fr)) nil
+  (unless title (setq title ""))
+  (when (< left-margin (length title))
+    (setq left-margin (length title)))
+
+  ;; title / name
+  (printf "%s%s\n" (string-pad title left-margin) (name person))
+  ;; address
+  (mapcar (lambda (line) (printf "%s%s\n"
+                                 (string-pad "" left-margin)
+                                 (chop-spaces line)))
+          (split-string (address person) "[\f\n\r\v]+"))
+  ;; other fields
+  (let* ((fields '("Phone:" "Fax:" "Email:" "VAT Immatriculation:"))
+         (slots  '(phone fax email fiscal-id))
+         (increment
+          (loop for fname in fields
+                for slot  in slots
+                when (slot-value person slot)
+                maximize (length (localize invoice-strings
+                                           cl-language fname)) into increment
+                finally return increment
+                ))
+         )
+    (loop for fname in fields
+          for slot  in slots
+          when (slot-value person slot)
+          do (printf "%s%s %s\n"
+                     (string-pad "" left-margin)
+                     (string-pad (localize invoice-strings cl-language fname)
+                                 increment)
+                     (slot-value person slot)))
+    );;let*
+  ));;generate-person-address
+
+
+;;; (generate-person-address
+;;;  "" 1
+;;;  (get-person-with-fiscal-id invoice-set "ESX3156225G")
+;;;  :language :en)
+
+
+(defun show-tva (montant-ht &rest options)
+  "Affiche le montant HT donné, la TVA, le montant TTC, et éventuellement
+le montant dans une autre devise optionnelle.
+
+En option une valeur numérique représente un taux de TVA.
+
+Une devise peut être spécifiée (sinon la facture est en EURO).
+
+Une ou deux langues peuvent aussi être indiquées (:es, :fr, :en).
+
+Une option :irpf ou :no-irpf peut être indiquée pour forcer la déduction IRPF,
+sinon elle est appliquée par défaut uniquement dans le cas où le taux de TVA
+est 16% et la langue est 'es (sans langue secondaire) et la devise :EUR.
+
+ (show-tva 750.00 0.16 EUR :en :es)
+
+donne :
+
+ ----------------------------------------------------   -----------------
+                (Base imponible  ) Total            :          750.00 EUR
+                (IVA   16.0 %    ) VAT   16.0 %     :   +      120.00 EUR
+                (Total factura   ) Total VAT Incl.  :   =      870.00 EUR
+ ----------------------------------------------------   -----------------
+"
+
+  (let* (
+
+         (line-form " %52s   %17s\n")
+         (desc-line (make-string 52 ?-))
+         (pric-line (make-string 17 ?-))
+
+         (base-lab-gau "")
+         (tvat-lab-gau "")
+         (irpf-lab-gau "")
+         (tota-lab-gau "")
+
+         (base-lab-dro)
+         (tvat-lab-dro)
+         (irpf-lab-dro)
+         (tota-lab-dro)
+
+
+         (taux-tva         nil)
+         (taux-tva-present nil)
+         (devise       nil)
+
+         ;; empeze la actividad el 2000/07 entonces desde el 2003/07 es -18%.
+         (taux-irpf  (if (date-after (calendar-current-date) '(6 30 2003))
+                         -0.18 -0.09))
+
+         (show-irpf        nil)
+         (force-show-irpf  nil)
+
+         (montant-tva)
+         (montant-irpf)
+         (montant-ttc)
+
+         (lang-pri     nil)
+         (lang-sec     nil)
+
+         (devises (mapcar 'car euro-parities))
+         (ltrings)
+         )
+
+  (while options
+    (let ((op (car options)))
+      (setq options (cdr options))
+      (cond
+
+       ((eq op :irpf)
+        (setq show-irpf t force-show-irpf t))
+
+       ((eq op :no-irpf)
+        (setq show-irpf nil force-show-irpf t))
+
+       ((member op '(:fr :en :es :de))
+        (if lang-pri
+            (setq lang-sec op)
+          (setq lang-pri op)))
+
+       ((member op devises)
+        (if devise (error "C:est fini ces bétises avec deux devises !"))
+        (setq devise op))
+
+       ((numberp op)
+        (if taux-tva (error "Un taux-tva a déjà été spécifié (%f)." taux-tva))
+        (setq taux-tva op))
+
+       (t (error (concat "Option inconnue : %S "
+                         "(ni une langue connue, ni une devise connue).")
+                 op))
+       );;cond
+      ));;while options
+
+  (if taux-tva
+      (setq taux-tva-present t)
+    (setq taux-tva 0.00
+          taux-tva-present nil))
+
+  (if (null devise)
+      (setq devise EUR))
+
+  (if (equal lang-pri lang-sec)
+      (setq lang-sec nil))
+  (unless lang-pri
+    (setq lang-pri :es))
+
+  (if (and (null lang-sec)
+           (not taux-tva-present)
+           (eq  lang-pri :es))
+      (setq taux-tva 0.16))
+
+  (unless force-show-irpf
+    (setq show-irpf (and (eq devise EUR)
+                         (eq lang-pri :es)
+                         (null lang-sec)
+                         (= taux-tva 0.16)))
+    )
+
+  (setq montant-tva  (* montant-ht taux-tva))
+  (setq montant-irpf (if show-irpf (* montant-ht taux-irpf) 0.00))
+  (setq montant-ttc  (+ montant-ht montant-tva montant-irpf))
+
+  (setq base-lab-dro
+        (format "%-16s :"
+                (localize invoice-strings lang-pri "Total")))
+  (setq tvat-lab-dro
+        (format "%-16s :"
+                (format (localize invoice-strings lang-pri "VAT  %5.1f %%")
+                        (* 100.0 taux-tva))))
+  (setq irpf-lab-dro
+        (format "%-16s :"
+                (format (localize invoice-strings lang-pri "IRPF %5.1f %%")
+                        (* 100.0 taux-irpf))))
+  (setq tota-lab-dro
+        (format "%-16s :"
+                (localize invoice-strings lang-pri "Total VAT Incl.")))
+
+  (when lang-sec
+    (setq base-lab-gau
+          (format "(%-16s) "
+                  (localize invoice-strings lang-sec "Total")))
+    (setq tvat-lab-gau
+          (format "(%-16s) "
+                  (format (localize invoice-strings lang-sec "VAT  %5.1f %%")
+                          (* 100.0 taux-tva))))
+    (setq irpf-lab-gau
+          (format "(%-16s) "
+                  (format (localize invoice-strings lang-sec "IRPF %5.1f %%")
+                          (* 100.0 taux-irpf))))
+    (setq tota-lab-gau
+          (format "(%-16s) "
+                  (localize invoice-strings lang-sec "Total VAT Incl.")))
+    );;when lang-sec
+
+
+  (insert "\n")
+  (insert (format line-form desc-line pric-line))
+  (insert (format line-form
+                  (concat base-lab-gau base-lab-dro)
+                  (format " %12.2f %-3s" montant-ht  devise )))
+  (insert (format line-form
+                  (concat tvat-lab-gau tvat-lab-dro)
+                  (format "+%12.2f %-3s" montant-tva devise)))
+  (when show-irpf
+    (insert (format line-form
+                    (concat irpf-lab-gau irpf-lab-dro)
+                    (format "-%12.2f %-3s" (- 0.00 montant-irpf) devise)))
+    );;when show-irpf
+  (insert (format line-form
+                  (concat tota-lab-gau tota-lab-dro)
+                  (format "=%12.2f %-3s" montant-ttc devise)))
+  (insert (format line-form desc-line pric-line))
+  ));;show-tva
+
+
+
+
+(defun date-to-universal-time (date-string)
+  "
+RETURN: a number of seconds since 1900-01-01 00:00:00 GMT.
+"
+  (let ((ymd (split-string date-string "-")))
+  (encode-universal-time
+   0 0 0
+   (string-to-number (nth 2 ymd))
+   (string-to-number (nth 1 ymd))
+   (string-to-number (nth 0 ymd))
+   0))
+  );;date-to-universal-time
+
+
+(defun universal-time-to-date (utime)
+  "
+RETURN: the given universal time formated in the ISO8601 YYYY-MM-DD format.
+"
+  (let ((smhdmydlz (multiple-value-list (decode-universal-time utime 0))))
+  (format "%04d-%02d-%02d"
+          (nth 5 smhdmydlz) (nth 4 smhdmydlz) (nth 3 smhdmydlz)))
+  );;universal-time-to-date
+
+(defconstant DAY (* 24 3600) "Number of seconds in a day.")
+
+
+(defun date-format (utime &rest cl-keys)
+  (let* ((smhdmydlz (multiple-value-list (decode-universal-time utime 0)))
+         (day       (nth 3 smhdmydlz))
+         (month     (nth 4 smhdmydlz))
+         (year      (nth 5 smhdmydlz))
+         )
+
+  (cl-parsing-keywords ((:language :en)) nil
+    (cond
+     ((eq cl-language :fr)
+      (format "%d%s %s %d"
+              day
+              (if (= 1 day) "er" "")
+              (aref ["Janvier" "Février" "Mars" "Avril"
+                     "Mai" "Juin" "Juillet" "Août"
+                     "Septembre" "Octobre" "Novembre" "Décembre"]
+                    (1- month))
+              year))
+     ((eq cl-language :es)
+      (format "%d de %s de %d"
+              day
+              (aref ["Enero" "Febrero" "Marzo" "Abril"
+                     "Mayo" "Junio" "Julio" "Augosto"
+                     "Septiembre" "Octobre" "Noviembre" "Diciembre"]
+                    (1- month))
+              year))
+     (t
+      (format "%s %d%s, %d"
+              (aref ["January" "February" "March" "April"
+                     "May" "June" "July" "August"
+                     "September" "October" "November" "December"]
+                    (1- month))
+              day
+              (cond ((= 1 (% day 10)) "st")
+                    ((= 2 (% day 10)) "nd")
+                    ((= 3 (% day 10)) "rd")
+                    (t                "th"))
+              year))
+     )))
+  );;date-format
+
+
+(defun align-following-lines (text left-margin)
+  (let ((first t)
+        (margin (make-string left-margin 32)))
+  (unsplit-string
+   (mapcar (lambda (line)
+             (if first
+                 (progn
+                   (setq first nil)
+                   (chop-spaces line))
+               (concat margin (chop-spaces line))))
+           (split-string text "[\f\n\r\v]"))
+   "\n"))
+  );;align-following-lines
+
+
+(defmethod generate-invoice ((self Invoice) &rest cl-keys)
+  "
+DOES:    Generate this invoice into a file in directory `invoice-directory'.
+"
+  (let* ((payer     (get-person-with-fiscal-id invoice-set
+                                               (payer-fiscal-id self)))
+         (issuer    (get-person-with-fiscal-id invoice-set
+                                               (issuer-fiscal-id self)))
+         (file-path (format "%s/%s-%s-%s.txt"
+                            invoice-directory
+                            (string-replace (invoice-number self) "/" "" t t)
+                            (clean-title-for-file-name (object-id payer))
+                            (clean-title-for-file-name (title self))))
+         )
+
+  (cl-parsing-keywords (:language) nil
+    (unless cl-language
+      (setq cl-language (language payer)))
+    (unless cl-language
+      (setq cl-language :es))
+    (save-excursion
+      (find-file file-path)
+      (erase-buffer)
+
+      (generate-person-address "" 1 issuer :language cl-language)
+      (printf " \n")
+      (let* ((title (localize invoice-strings cl-language "INVOICE"))
+             (width (+ 8 (length title)))
+             (title-b (concat "|" (string-pad title width :center) "|"))
+             (line-b  (concat "+" (make-string width ?-) "+")))
+        (printf " %s\n" (string-pad line-b 72 :center))
+        (printf " %s\n" (string-pad title-b 72 :center))
+        (printf " %s\n" (string-pad line-b 72 :center))
+        )
+      (printf " \n")
+
+      (let ( (increment (longest-localized-length
+                         invoice-strings cl-language
+                         '("Date:" "Invoice no.:" "Billing address:"))) )
+
+        (printf " %s %s\n"
+                (string-pad (localize invoice-strings cl-language
+                                      "Date:") increment)
+                (date-format (date-to-universal-time (date self))
+                             :language cl-language))
+        (printf " \n")
+
+        (printf " %s %s\n"
+                (string-pad (localize invoice-strings cl-language
+                                      "Invoice no.:") increment)
+                (invoice-number self))
+        (printf " \n")
+
+        (generate-person-address
+         (concat " " (localize invoice-strings cl-language "Billing address:"))
+         (+ 2 increment) payer :language cl-language)
+        (printf " \n")
+        );;let*
+
+
+      (let (
+            (line-form " %-52s   %-17s\n")
+            (desc-line (make-string 52 ?-))
+            (pric-line (make-string 17 ?-))
+            )
+        (printf line-form desc-line pric-line)
+        (printf line-form
+                (localize invoice-strings cl-language "Description")
+                (localize invoice-strings cl-language "Price"))
+        (printf line-form desc-line pric-line)
+        (loop for invo-line in (lines self)
+              do
+              (let ((last-length 0))
+                (mapcar (lambda (desc-line)
+                          (let ((item (chop-spaces desc-line)))
+                            (printf "\n %s" item)
+                            (setq last-length (length item))))
+                        (split-string (description invo-line) "[\f\n\r\v]"))
+                (if (<= last-length 55)
+                    (printf "%s %12.2f %-3s"
+                            (make-string (- 55 last-length) 32)
+                            (amount-ht invo-line)
+                            (devise invo-line))
+                  (printf "\n %52s   %12.2f %-3s"
+                          ""
+                          (amount-ht invo-line)
+                          (devise invo-line))))
+              );;loop
+        (printf " \n")
+        );;let
+
+      (show-tva (total-ht self) (devise self) cl-language :es)
+      (printf " \n")
+      (let ((bankref (bank-reference issuer)))
+        (when bankref
+          (mapcar (lambda (line) (printf " %s\n" (chop-spaces line)))
+                  (split-string
+                   (format
+                    (localize invoice-strings cl-language "PAYMENT-METHOD")
+                    (date-format (+ (* 30 DAY)
+                                    (date-to-universal-time (date self)))
+                                 :language cl-language))
+                   "[\f\n\r\v]"))
+          (printf " \n")
+          (let* ((fields '("Payment Bank" "" "Branch Name"
+                           "Account Number (IBAN)" "Beneficiary"
+                           "SWIFT Code"))
+                 (slots  '(bank-name bank-address branch-name
+                                     account-number beneficiary-name swift-code))
+                 (increment (longest-localized-length
+                             invoice-strings cl-language fields))
+                 )
+
+
+            (loop for fname in fields
+                  for slot  in slots
+                  when (slot-value bankref slot)
+                  do (printf
+                      " %s%s : %s\n"
+                      (string-pad "" 8)
+                      (string-pad (localize invoice-strings cl-language fname)
+                                  increment)
+                      (align-following-lines (slot-value bankref slot)
+                                             (+ increment 10))))
+
+            )));;let bankref
+      (printf " \n")
+      (printf " \n")
+      (save-buffer 0)
+      (kill-buffer (current-buffer)))
+    ));;let*
+  );;generate-invoice
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; InvoiceSet
+
+
+(defun invoices-load ()
+  "DOES:   Load the invoice set from `invoice-set-file-path' file."
+  (load invoice-set-file-path)
+  );;invoices-load
+
+
+(defun invoices-save (invoice-set)
+  "DOES:   Save the invoice set into the `invoice-set-file-path' file."
+  (find-file invoice-set-file-path)
+  (erase-buffer)
+  (insert (format  "(setq invoice-set '%S)\n" invoice-set))
+  (save-buffer nil)
+  (kill-buffer (current-buffer))
+  );;invoices-save
+
+
+
+
+(defmethod get-person-with-fiscal-id ((self InvoiceSet) fiscal-id )
+  (object-assoc fiscal-id 'fiscal-id (persons self))
+  );;get-person-with-fiscal-id
+
+
+
+(put 'add-person 'lisp-indent-function 2)
+(defmethod add-person ((self InvoiceSet) (person FiscalPerson)
+&optional fisc)
+  (let ((old (get-person-with-fiscal-id self (fiscal-id person))))
+  (if old
+      (list-replace-member-in-place (persons self) old person)
+    (push person (slot-value self 'persons)))
+  );;let
+  (when (and fisc  (not (member (fiscal-id person) (fisc-fiscal-ids self))))
+  (push (fiscal-id person) (slot-value self 'fisc-fiscal-ids)))
+  );;add-person
+
+
+(defmethod get-invoice-with-issuer-and-number
+  ((self InvoiceSet) issuer-fiscal-id number)
+  (let ((i (invoices self))
+        result)
+  (while i
+    (if (and (equal issuer-fiscal-id (issuer-fiscal-id (car i)))
+             (equal number           (invoice-number   (car i))))
+        (setq result (car i)
+              i nil)
+      (setq i (cdr i))))
+  result)
+  );;get-invoice-with-issuer-and-number
+
+
+(put 'add-invoice 'lisp-indent-function 2)
+(defmethod add-invoice ((self InvoiceSet) (invoice Invoice))
+  (let ((old (get-invoice-with-issuer-and-number
+              self
+              (issuer-fiscal-id invoice)
+              (invoice-number   invoice))))
+  (if old
+      (list-replace-member-in-place (slot-value self 'invoices) old invoice)
+    (push invoice (slot-value self 'invoices)))
+  );;let
+  );;add-invoice
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Movement
+
+(defclass Movement (PjbObject)
+  ((date
+    :initform nil
+    :initarg  :date
+    :accessor date
+    :type     (or null string)
+    :documentation
+    "'YYYY-MM-DD' Date of the movement.")
+  (amount-ttc
+   :initform 0.00
+   :initarg  :amount-ttc
+   :accessor amount-ttc
+   :type     number
+   :documentation
+   "(number) The amount paid (including taxes).")
+  (amount-vat
+   :initform 0.00
+   :initarg  :amount-vat
+   :accessor amount-vat
+   :type     number
+   :documentation
+   "(number) The VAT of the movement.")
+  (description
+   :initform ""
+   :initarg  :description
+   :accessor description
+   :type     string
+   :documentation
+   "(string) A description of the movement.")
+  (kind
+   :initform nil
+   :initarg  :kind
+   :accessor kind
+   :type     (or null symbol)
+   :documentation
+   "(symbol) A kind of movement, for tax reporting purpose.
+PRESTACION-NACIONAL, PRESTACION-INTRACOMUNITARIA, IMPUESTO, INVERSION,
+GASTO-CORRIENTE, ADQUISICION-INTRACOMUNITARIA")
+  (invoice-fiscal-id
+   :initform nil
+   :initarg  :invoice-fiscal-id
+   :accessor invoice-fiscal-id
+   :type     (or null string)
+   :documentation
+   "The fiscal id of the common issuer of the following invoices
+related to this movement.")
+  (invoice-numbers
+   :initform nil
+   :initarg  :invoice-numbers
+   :accessor invoice-numbers
+   :type     list
+   :documentation
+   "(list of string) The list of invoice numbers related to this entry.
+Note that one journal entry may relate to several invoices (grouped payment)
+and one invoice may relate to several movements (part payments, or
+corrections.")
+  )
+  (:documentation
+  "An entry in the journal.
+A movement with a positive amount is a credit,
+while a movement with a negative amount is a debit."))
+
+
+(defmethod shared-initialize ((self Movement) fields)
+  "
+DOES:    Checks that the values for the fields are within limits.
+"
+  (let ((date                (plist-get fields :date))
+        (amount-ttc          (plist-get fields :amount-ttc))
+        (amount-ht           (plist-get fields :amount-ht))
+        (amount-vat          (plist-get fields :amount-vat))
+        (description         (plist-get fields :description))
+        (kind                (plist-get fields :kind))
+        (invoice-fiscal-id   (plist-get fields :invoice-fiscal-id))
+        (invoice-numbers     (plist-get fields :invoice-numbers))
+        )
+  (when amount-ttc
+    (if (< 15000.00 (abs amount-ttc))
+        (error "amount-ttc too big for movement %S." fields)))
+
+  (when amount-ht
+    (if (< 15000.00 (abs amount-ht))
+        (error "amount-ht too big for movement %S." fields)))
+
+  (when invoice-fiscal-id
+    (unless (get-person-with-fiscal-id invoice-set invoice-fiscal-id)
+      (error "Unknown person (fiscal-id=%S) for movement %S."
+             invoice-fiscal-id fields)))
+  );;let
+  (call-next-method)
+  );;shared-initialize
+
+
+
+;; kinds of Movement:
+(defconst PRESTACION-NACIONAL
+  'PRESTACION-NACIONAL          "Kind of entry of journal.")
+(defconst PRESTACION-INTRACOMUNITARIA
+  'PRESTACION-INTRACOMUNITARIA  "Kind of entry of journal.")
+(defconst IMPUESTO
+  'IMPUESTO                     "Kind of entry of journal.")
+(defconst INVERSION
+  'INVERSION                    "Kind of entry of journal.")
+(defconst GASTO-CORRIENTE
+  'GASTO-CORRIENTE              "Kind of entry of journal.")
+(defconst ADQUISICION-INTRACOMUNITARIA
+  'ADQUISICION-INTRACOMUNITARIA "Kind of entry of journal.")
+
+(defmethod amount-ht ((self Movement))
+  (euro-round (- (amount-ttc self) (amount-vat self)) :EUR))
+
+
+
+(defun make-journal-entry-from-invoice (invoice)
+  "RETURN: A new instance of Movement filled with data from invoice."
+  (let (kind amount-sign fiscal-id)
+  (cond
+   ((member (issuer-fiscal-id invoice)
+            (fisc-fiscal-ids invoice-set))
+    (setq kind 'IMPUESTO
+          amount-sign -1.0
+          fiscal-id (issuer-fiscal-id invoice)))
+   ((equal (issuer-fiscal-id invoice)
+           (fiscal-id invoice-set))
+    (setq kind (if (= 0.00 (total-vat invoice))
+                   'PRESTACION-INTRACOMUNITARIA
+                 'PRESTACION-NACIONAL)
+          amount-sign 1.0
+          fiscal-id (payer-fiscal-id invoice)))
+   (t
+    (setq kind 'GASTO-CORRIENTE
+          amount-sign -1.0
+          fiscal-id (issuer-fiscal-id invoice))))
+  (message "amount-sign=%S" amount-sign)
+  (Movement
+   ""
+   :date                (date                     invoice)
+   :amount-ttc          (* amount-sign (total-ttc invoice))
+   :amount-vat          (* amount-sign (total-vat invoice))
+   :description         (title                    invoice)
+   :kind                kind
+   :invoice-fiscal-id   fiscal-id
+   :invoice-numbers     (list (invoice-number     invoice))))
+  );;make-journal-entry-from-invoice
+
+
+
+
+(defun make-journal-entry (date amount-ttc vat-rate nif fac-l description kind)
+  "RETURN: A new instance of Movement filled with the given data."
+  (if (not (member kind
+                   '(PRESTACION-NACIONAL
+                     PRESTACION-INTRACOMUNITARIA
+                     IMPUESTO
+                     INVERSION GASTO-CORRIENTE ADQUISICION-INTRACOMUNITARIA)))
+  (error "Invalid kind %s." kind))
+
+  (if (< vat-rate 0.00)
+  (error "VAT-RATE must always be >= 0.00."))
+
+  (if (eq kind PRESTACION-INTRACOMUNITARIA)
+  t
+  (if (member kind '(PRESTACION-NACIONAL));;
+      (if (>= 0.00 amount-ttc)
+          (error "AMOUNT-TTC must be > 0.00 for an entry of kind %s." kind))
+    ;;(if (<= 0.00 amount-ttc)
+    ;;    (error "AMOUNT-TTC must be < 0.00 for an entry of kind %s." kind))
+    )
+  )
+
+  (cond
+  ((eq kind PRESTACION-NACIONAL)
+   (if (>= 0.00 vat-rate)
+       (error "VAT-RATE must be > 0.00 for an entry of kind %s." kind)))
+  ((member kind '(PRESTACION-INTRACOMUNITARIA IMPUESTO))
+   (if (< 0.00 vat-rate)
+       (error "VAT-RATE must be = 0.00 for an entry of kind %s." kind)))
+  (t
+   ;;(if (= 0.00 vat-rate)
+   ;; (error "VAT-RATE must be > 0.00 for an entry of kind %s." kind))
+   t
+   ))
+
+  (Movement
+  ""
+  :date              date
+  :amount-ttc        amount-ttc
+  :amount-vat        (euro-round
+                      (/ (* amount-ttc vat-rate) (+ 1.0 vat-rate)) :EUR)
+  :description       description
+  :kind              kind
+  :invoice-fiscal-id nif
+  :invoice-numbers   fac-l)
+  );;make-journal-entry
+
+
+
+(defmethod is-credit   ((self Movement))
+  "RETURN: Whether the SELF is a credit movement."
+  (< 0.00 (amount-ht self)))
+
+(defmethod vat-rate    ((self Movement))
+  "
+RETURN: A computed VAT rate for this entry.
+"
+  (* (round (/ (amount-vat self) (amount-ht self)) 0.01) 0.01)
+  );;vat-rate
+
+
+(defmethod credit-ht   ((self Movement))
+  (if (is-credit self)
+  (amount-ht self)
+  0.00))
+
+
+(defmethod credit-iva  ((self Movement))
+  (if (is-credit self)
+  (amount-vat self)
+  0.00))
+
+(defmethod debit-ht    ((self Movement))
+  (if (is-credit self)
+  0.00
+  (- 0.00 (amount-ht self))))
+
+
+(defmethod debit-iva   ((self Movement))
+  (if (is-credit self)
+  0.00
+  (- 0.00 (amount-vat self))))
+
+
+(defmethod debit-iva-inversion  ((self Movement))
+  (if (eq INVERSION (kind self))
+  (debit-iva self)
+  0.00))
+
+
+(defmethod debit-iva-corriente  ((self Movement))
+  (if (eq GASTO-CORRIENTE (kind self))
+  (debit-iva self)
+  0.00))
+
+
+
+
+
+(defmethod invoices ((self Movement))
+  "RETURN: A list of Invoice instances related to this entry."
+  (let ((fiscal-id  (if (and (is-credit self)
+                             (not (equal (kind self) 'GASTO-CORRIENTE)))
+                        (fiscal-id invoice-set)
+                      (invoice-fiscal-id self))))
+  (remove nil
+          (mapcar
+           (lambda (number)
+             (get-invoice-with-issuer-and-number invoice-set fiscal-id number))
+           (invoice-numbers self))))
+  );;invoices
+
+
+
+(defun chop-justify-and-split-text (text width)
+  "DOES:    chop spaces on each line. justify each paragraph."
+  (let (
+        ;; chop the lines.
+        (lines (mapcar (lambda (line) (chop-spaces line))
+                       (split-string text "[\n\r\v]")))
+        paragraphs current-paragraph
+        jlines
+        )
+
+    ;; group the paragraphs.
+  (while lines
+    (let ((line (car lines)))
+      (if (string-equal line "")
+          (progn
+            (if current-paragraph
+                (setq paragraphs (cons current-paragraph paragraphs)))
+            (setq current-paragraph nil))
+        (setq current-paragraph (concat current-paragraph " " line)))
+      (setq lines (cdr lines))))
+  (if current-paragraph
+      (setq paragraphs (cons current-paragraph paragraphs)))
+  (setq paragraphs (nreverse paragraphs))
+
+  ;; justify the paragraphs.
+  (while paragraphs
+    (setq jlines (cons (string-justify-left (car paragraphs) width 0) jlines))
+    (setq paragraphs (cdr paragraphs)))
+
+  ;; don't return nil.
+  (if (null jlines)
+      (setq jlines (list " ")))
+
+  ;; split the justified paragraphs.
+  (apply 'append
+         (mapcar (lambda (lines) (split-string lines "[\n\r\v]"))
+                 (nreverse jlines)))
+  ));;chop-justify-and-split-text
+
+
+
+
+(defmethod insert-formated ((self Movement))
+  "DOES:    format and insert this entry."
+
+  (let ((id  (invoice-fiscal-id self))
+        person
+        (name "")  name-l
+        invoices
+        (movement-sign (if (is-credit self) 1.0 -1.0))
+        (invoices-sign 1))
+
+    ;; first line:
+  (if id
+      (progn
+        (setq person (get-person-with-fiscal-id invoice-set id))
+        (if person (setq name (name person))))
+    (setq id ""))
+  (setq name-l (chop-justify-and-split-text name 38))
+  ;; SEN FECHA IDENTIFICATION NOMBRE
+  (insert (format "%3s %10s %-23s %s\n"
+                  (cond
+                   ((is-credit self) "ING")
+                   ((eq 'IMPUESTO (kind self)) "IMP")
+                   (t "GAS"))
+                  (date self) id
+                  (car name-l)))
+
+  ;; optional next lines:
+  ;;                          NOMBRE (continuación)
+  (setq name-l (cdr name-l))
+  (while name-l
+    (insert (format "%38s %s\n" "" (car name-l)))
+    (setq name-l (cdr name-l)))
+
+  (let ((t-ht  0.00)
+        (t-vat 0.00)
+        (t-ttc 0.00))
+    ;; invoice lines:
+    ;;     IMPORTE  IVA%   +IVA   TOTAL  NUMERO FACTURA o DESCRIPCION
+
+    ;; Let's find the invoices-sign
+    (setq invoices (invoices self))
+    (let ((t-ttc 0.00))
+      (while invoices
+        (setq t-ttc (+ t-ttc (total-ttc (car invoices)))
+              invoices (cdr invoices)))
+      (setq invoices-sign (* movement-sign (if (< t-ttc 0)  -1 1))))
+
+    ;; Let's print the invoices
+    (setq invoices (invoices self))
+    (while invoices
+      (let* ((invoice (car invoices))
+             (title-l (chop-justify-and-split-text
+                       (title invoice) 38))
+             (title (car title-l))
+             (i-ht  (total-ht invoice))
+             (i-vat (total-vat invoice))
+             (i-ttc (total-ttc invoice)))
+        (setq title-l (cdr title-l))
+        (setq t-ht  (+ t-ht   i-ht)
+              t-vat (+ t-vat  i-vat)
+              t-ttc (+ t-ttc  i-ttc))
+        (insert (format "    %9.2f %4.1f%% %8.2f %9.2f %s\n"
+                        (* invoices-sign i-ht)
+                        (* 100.0 (vat-rate invoice))
+                        (* invoices-sign i-vat)
+                        (* invoices-sign  i-ttc)
+                        (invoice-number invoice)))
+        (insert (format "%38s %s\n" "" title))
+        (while title-l
+          (insert (format "%38s %s\n" "" (car title-l)))
+          (setq title-l (cdr title-l))));;let*
+      (setq invoices (cdr invoices)))
+
+    ;;(if (not (= (+ t-ht t-vat)  t-ttc))
+    ;; (insert (format "**** %f + %f != %f ****\n" t-ht t-vat t-ttc)))
+
+    (if (and (= 0.0 t-ht) (= 0.0 t-vat) (= 0.0 t-ttc))
+        t;; No invoices, no differences
+      ;; Invoices, let's see if there's a difference.
+      (if (not (= (amount-ttc self) (* invoices-sign t-ttc)))
+          (let* ((diff-ht  (-  (amount-ht  self) (* invoices-sign t-ht ) ))
+                 (diff-vat (-  (amount-vat self) (* invoices-sign t-vat) ))
+                 (diff-ttc (-  (amount-ttc self) (* invoices-sign t-ttc) ))
+                 )
+            (insert (format "    %9.2f %5s %8.2f %9.2f %s\n"
+                            diff-ht
+                            ""
+                            diff-vat
+                            diff-ttc
+                            "Diferencia"))))
+      (insert "    --------- ----- -------- ---------\n"));;if
+    );;let
+
+  ;; total entry lines:
+  (let* ((desc-l (chop-justify-and-split-text (description self) 38))
+         (desc   (car desc-l)))
+    (insert (format "    %9.2f %4.1f%% %8.2f %9.2f %s\n"
+                    (amount-ht  self)
+                    (* 100.0 (vat-rate   self))
+                    (amount-vat self)
+                    (amount-ttc self)
+                    desc))
+    (setq desc-l (cdr desc-l))
+    (while desc-l
+      (insert (format "%38s %s\n" "" (car desc-l)))
+      (setq desc-l (cdr desc-l))))
+
+  (insert "--- ---------- ----------------------- ----------------------------------------\n")
+  ));;insert-formated
+
+
+
+(commented-out
+
+ (if (null description)
+ (setq description ""))
+ (let* ((jdesc-1r (journal-split-and-justify-description description 38))
+        (jdesc-1  (car jdesc-1r))
+        (jdesc-r  (cdr jdesc-1r))
+        amount iva)
+ (if (< amount-ht 0)
+     (progn
+       (setq amount  (- 0 amount-ht))
+       (setq iva     (euro-round (* vat amount) :EUR))
+       (insert (format "\n%10s                %7.2f %6.2f %-38s\n"
+                       date amount iva  jdesc-1 )))
+   (progn
+     (setq amount  amount-ht)
+     (setq iva     (euro-round (* vat amount) :EUR))
+     (insert (format "\n%10s %7.2f %6.2f                %-38s\n"
+                     date amount iva  jdesc-1 ))))
+ (while jdesc-r
+   (insert (format "%40s %-38s\n" "" (car jdesc-r)))
+   (setq jdesc-r (cdr jdesc-r)))
+ (insert (format "%40s %-38s\n" ""
+                 (format "%7.2f + %6.2f = %7.2f"
+                         amount iva (+ amount iva))))))
+
+
+
+;; (show (journal-entries))
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; journal-entry object
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+(defun journal-entry-new (date amount-ht vat-rate nif fac-l description kind)
+
+  (if (not (member kind
+                   '(PRESTACION-NACIONAL
+                     PRESTACION-INTRACOMUNITARIA
+                     IMPUESTO
+                     INVERSION GASTO-CORRIENTE ADQUISICION-INTRACOMUNITARIA)))
+  (error "Invalid kind %s." kind))
+
+  (if (< vat-rate 0.00)
+  (error "VAT-RATE must always be >= 0.00."))
+
+  (if (eq kind PRESTACION-INTRACOMUNITARIA)
+  t
+  (if (member kind '(PRESTACION-NACIONAL));;
+      (if (>= 0.00 amount-ht)
+          (error "AMOUNT-HT must be > 0.00 for an entry of kind %s." kind))
+    ;; (if (<= 0.00 amount-ht)
+    ;;   (error "AMOUNT-HT must be < 0.00 for an entry of kind %s." kind))
+    )
+  )
+
+  (cond
+  ((eq kind PRESTACION-NACIONAL)
+   (if (>= 0.00 vat-rate)
+       (error "VAT-RATE must be > 0.00 for an entry of kind %s." kind)))
+  ((member kind '(PRESTACION-INTRACOMUNITARIA IMPUESTO))
+   (if (< 0.00 vat-rate)
+       (error "VAT-RATE must be = 0.00 for an entry of kind %s." kind)))
+  (t
+   (if (= 0.00 vat-rate)
+       (error "VAT-RATE must be > 0.00 for an entry of kind %s." kind))))
+
+  (list date amount-ht vat-rate description kind nif fac-l))
+
+
+
+(defun journal-entry-date        (entry)  (nth 0 entry))
+(defun journal-entry-amount-ht   (entry)  (nth 1 entry))
+(defun journal-entry-vat-rate    (entry)  (nth 2 entry))
+(defun journal-entry-description (entry)  (nth 3 entry))
+(defun journal-entry-kind        (entry)  (nth 4 entry))
+(defun journal-entry-nif         (entry)  (nth 5 entry))
+(defun journal-entry-facturas    (entry)  (nth 6 entry))
+
+
+(defun journal-entry-is-credit   (entry)
+  "RETURN: Whether the ENTRY is a credit."
+  (< 0.00 (journal-entry-amount-ht entry)))
+
+
+(defun journal-entry-credit-ht   (entry)
+  (if (journal-entry-is-credit entry)
+  (journal-entry-amount-ht entry)
+  0.00))
+
+
+(defun journal-entry-credit-iva  (entry)
+  (euro-round (* (journal-entry-vat-rate entry)
+                 (journal-entry-credit-ht entry)) :EUR))
+
+
+(defun journal-entry-debit-ht    (entry)
+  (if (journal-entry-is-credit entry)
+  0.00
+  (- 0 (journal-entry-amount-ht entry))))
+
+
+(defun journal-entry-debit-iva   (entry)
+  (euro-round (* (journal-entry-vat-rate entry)
+                 (journal-entry-debit-ht entry)) :EUR))
+
+
+(defun journal-entry-debit-iva-inversion  (entry)
+  (if (eq INVERSION (journal-entry-kind entry))
+  (journal-entry-debit-iva entry)
+  0.00))
+
+
+(defun journal-entry-debit-iva-corriente  (entry)
+  (if (eq GASTO-CORRIENTE (journal-entry-kind entry))
+  (journal-entry-debit-iva entry)
+  0.00))
+
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; journal object
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defvar journal-data nil "Private journal data.")
+
+
+(defun journal-is-sorted ()
+  "PRIVATE"
+  (car journal-data))
+
+
+(defun journal-entries ()
+  "PRIVATE"
+  (cdr journal-data))
+
+
+(defun journal-reset ()
+  "POST: (null (journal-entries))"
+  (setq journal-data '(t)))
+
+
+(defun journal-add-entry (entry)
+  "DOES:   Add the ENTRY into the journal.
+        ENTRY is a list containing the journal entry data.
+POST:   (and (member entry (journal-entries)) (not (journal-is-sorted)))"
+  (setq journal-data (cons nil (cons entry (journal-entries)))))
+
+(defun journal-entry-ht (date amount-ht vat nif fac description kind)
+  "OBSOLETE
+DOES:   Add a new journal entry.
+        AMOUNT-HT is the total excluding the VAT expressed in Euros.
+        VAT is the V.A.T percentage: 0.00 or 0.16."
+  (journal-add-entry
+  (make-journal-entry date (* (+ 1.0 vat) amount-ht) vat nif
+                      (if (listp fac) fac (list fac)) description kind)))
+
+
+(defun journal-entry (date amount-ttc vat-rate nif fac description kind)
+  "
+DOES:   Add a new journal entry.
+        AMOUNT-TTC is the total paid (including VAT) expressed in Euros.
+        VAT-RATE is the V.A.T percentage."
+  (journal-add-entry
+  (make-journal-entry date amount-ttc vat-rate nif
+                      (if (listp fac) fac (list fac)) description kind)))
+
+
+(defun journal-sort ()
+  "POST:   (journal-is-sorted)"
+  (setq journal-data
+  (cons  t (sort (journal-entries)
+                 (lambda (a b) (string-lessp (date a) (date  b)))))))
+
+
+
+(defun journal-date-in-year-trimestre (date-str year trimestre)
+  "RETURN: Whether the given date string (formated as \"YYYY-MM-DD\") is within
+        the given YEAR and TRIMESTRE."
+  (let* ((ymd (split-string date-str "-"))
+         (y   (string-to-number (nth 0 ymd)))
+         (m   (string-to-number (nth 1 ymd)))
+         (ml  (nth (- trimestre 1) '((1 2 3) (4 5 6) (7 8 9) (10 11 12)))))
+  (and (= y year) (member m ml))))
+
+
+
+(defun journal-extract (year trimestre)
+  "RETURN: The entries of the journal corresponding
+        to the given YEAR and TRIMESTRE."
+  (unless (journal-is-sorted) (journal-sort))
+  (list-extract-predicate
+  (journal-entries)
+  (lambda (entry)
+    (journal-date-in-year-trimestre (date entry) year trimestre))))
+
+
+
+
+(defun journal-totals-of-entries (entries)
+  "PRIVATE
+RETURN: a list containing the totals:
+        credit-ht credit-iva debit-ht debit-iva-inversion debit-iva-corriente"
+  (let ((credit-ht   0.00)
+        (credit-iva  0.00)
+        (debit-ht    0.00)
+        (debit-iva-c 0.00)
+        (debit-iva-i 0.00)
+        sch sci sdh sdi)
+  (mapcar (lambda (entry)
+            (setq credit-ht   (+ credit-ht   (credit-ht  entry))
+                  credit-iva  (+ credit-iva  (credit-iva entry))
+                  debit-ht    (+ debit-ht    (debit-ht   entry))
+                  debit-iva-c (+ debit-iva-c
+                                 (debit-iva-corriente  entry))
+                  debit-iva-i (+ debit-iva-i
+                                 (debit-iva-inversion  entry))))
+          entries)
+  (list credit-ht credit-iva debit-ht debit-iva-i debit-iva-c)))
+
+
+
+
+(defun journal-split-and-justify-description (description width)
+  "PRIVATE"
+  (let ((lines (split-string description "[\n\r\v]+"))
+        (jlines nil)
+        )
+  (while lines
+    (setq jlines (cons (string-justify-left (car lines) width 0) jlines))
+    (setq lines (cdr lines)))
+  (if (null jlines)
+      (setq jlines (list " ")))
+  (apply 'append
+         (mapcar (lambda (lines) (split-string lines "[\n\r\v]+"))
+                 (nreverse jlines)))))
+
+
+(defun journal-insert-header (year trimestre)
+  "PRIVATE"
+  (insert "-------------------------------------------------------------------------------\n")
+  (insert (format "%36d - TRIMESTRE %d\n" year trimestre))
+  (insert "--- ---------- ----------------------- ----------------------------------------\n")
+  (insert "SEN FECHA      IDENTIFICACION          NOMBRE\n")
+  (insert "TID   IMPORTE  IVA%     +IVA     TOTAL NUMERO FACTURA / DESCRIPTION\n")
+  (insert "--- --------- ----- -------- --------- ---------------------------------------\n")
+  )
+
+
+(defun journal-insert-trailer ()
+  "PRIVATE"
+  (insert "      IMPORTE            IVA     TOTAL\n")
+  (insert "--- --------- ----- -------- --------- ---------------------------------------\n")
+  )
+
+
+
+;; (defun journal-format-entry (date amount-ht vat description &rest rest)
+;;   "PRIVATE"
+;;   (if (null description)
+;;       (setq description ""))
+;;   (let* ((jdesc-1r (journal-split-and-justify-description description 38))
+;;          (jdesc-1  (car jdesc-1r))
+;;          (jdesc-r  (cdr jdesc-1r))
+;;          amount iva)
+;;     (if (< amount-ht 0)
+;;         (progn
+;;           (setq amount  (- 0 amount-ht))
+;;           (setq iva     (euro-round (* vat amount) :EUR))
+;;           (insert (format "\n%10s                %7.2f %6.2f %-38s\n"
+;;                           date amount iva  jdesc-1 )))
+;;       (progn
+;;         (setq amount  amount-ht)
+;;         (setq iva     (euro-round (* vat amount) :EUR))
+;;         (insert (format "\n%10s %7.2f %6.2f                %-38s\n"
+;;                         date amount iva  jdesc-1 ))))
+;;     (while jdesc-r
+;;       (insert (format "%40s %-38s\n" "" (car jdesc-r)))
+;;       (setq jdesc-r (cdr jdesc-r)))
+;;     (insert (format "%40s %-38s\n" ""
+;;                     (format "%7.2f + %6.2f = %7.2f"
+;;                             amount iva (+ amount iva))))))
+
+(defun journal-insert-totals (totals)
+  "PRIVATE"
+  (let ((credit-ht  (nth 0 totals))
+        (credit-vat (nth 1 totals))
+        (debit-ht   (nth 2 totals))
+        (debit-vat  (+ (nth 3 totals) (nth 4 totals)))
+        )
+
+  (insert (format "    %9.2f %5s %8.2f %9s %s\n"
+                  credit-ht "" credit-vat "" "Credito"))
+
+  (insert (format "    %9.2f %5s %8.2f %9s %s\n"
+                  (- 0.0 debit-ht) "" (- 0.0 debit-vat) "" "Debido"))
+
+  (insert (format "    %9.2f %5s %8.2f %9s %s\n"
+                  (- credit-ht debit-ht)
+                  ""
+                  (- credit-vat debit-vat)
+                  "" "Saldo"))
+
+  ));;journal-insert-totals
+
+
+(defun old-journal-insert-totals (totals)
+  "PRIVATE"
+  (let ((credit-ht  (nth 0 totals))
+        (credit-iva (nth 1 totals))
+        (debit-ht   (nth 2 totals))
+        (debit-iva  (+ (nth 3 totals) (nth 4 totals)))
+        sch sci sdh sdi)
+  (insert (format "%10s%8.2f%7.2f%8.2f%7.2f\n" "Total: "
+                  credit-ht credit-iva debit-ht debit-iva))
+
+  (if (< debit-ht credit-ht)
+      (setq sch (format "%8.2f" (- credit-ht debit-ht))
+            sdh "")
+    (setq sdh (format "%8.2f" (- debit-ht credit-ht))
+          sch ""))
+  (if (< debit-iva credit-iva)
+      (setq sci (format "%7.2f" (- credit-iva debit-iva))
+            sdi "")
+    (setq sdi (format "%7.2f" (- debit-iva credit-iva))
+          sci ""))
+  (insert (format "%10s%8s%7s%8s%7s\n" "Solde: " sch sci sdh sdi))
+  ))
+
+
+(defun kind-to-order (kind)
+  (cond 
+   ((eq kind PRESTACION-NACIONAL)          1)
+   ((eq kind PRESTACION-INTRACOMUNITARIA)  2)
+   ((eq kind IMPUESTO)                     3)
+   ((eq kind INVERSION)                    4)
+   ((eq kind GASTO-CORRIENTE)              5)
+   ((eq kind ADQUISICION-INTRACOMUNITARIA) 6)
+   (t 7)))
+
+(defun journal-insert (year trimestre)
+  "DOES:   Insert the formated entries of the journal into the current buffer
+        at the current point."
+  (journal-sort)
+  (let* ((entries 
+          (sort (journal-extract year trimestre)
+                (lambda (a b)
+                  (cond
+                   ((= (kind-to-order (kind a)) (kind-to-order (kind b)))
+                    (string<=  (date a) (date b)))
+                   (t (< (kind-to-order (kind a)) (kind-to-order (kind b)))))
+                  )))
+         (totals  (journal-totals-of-entries entries)))
+    (journal-insert-header year trimestre)
+    (mapcar (lambda (entry) (insert-formated entry)) entries)
+    (journal-insert-trailer)
+    (journal-insert-totals totals)
+    (insert "\n")
+    (apply 'impuestos (list year trimestre entries ))
+    (insert "\n")
+    (insert "\n")
+    ))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; impuestos: IVA, IRPF.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defvar impuestos-data nil "Private impuestos data.")
+
+(defun impuestos-reset ()
+  "DOES:   Reinitialize the impuestos data and the impuestos file.
+SEE-ALSO:    impuestos-file-path."
+  (interactive)
+  (setq impuestos-data nil)
+  (impuestos-save impuestos-data))
+
+
+(defun impuestos-iva-get (year trimestre)
+  "RETURN: The IVA data for the given TRIMESTRE."
+  (assoc 'iva (assoc trimestre impuestos-data)))
+
+
+(defun impuestos-iva-put (year trimestre data)
+  "DOES:   Insert the DATA for the TRIMESTRE into the impuestos data."
+  (let ((trim-data (cdr (assoc trimestre impuestos-data))))
+  (setq trim-data (assoc-setq 'iva data trim-data))
+  (setq impuestos-data (assoc-setq trimestre trim-data impuestos-data))))
+
+
+(defun impuestos-irpf-get (year trimestre)
+  "RETURN: The IRPF data for the given TRIMESTRE."
+  (assoc 'irpf (assoc trimestre impuestos-data)))
+
+
+(defun impuestos-irpf-put (year trimestre data)
+  "DOES:   Insert the DATA for the TRIMESTRE into the impuestos data."
+  (let ((trim-data (cdr (assoc trimestre impuestos-data))))
+  (setq trim-data (assoc-setq 'irpf data trim-data))
+  (setq impuestos-data (assoc-setq trimestre trim-data impuestos-data))))
+
+
+(defun impuestos-trimestre-get (year trimestre)
+  "RETURN: The impuestos data for the given trimestre."
+  (if (not (member trimestre '( 1 2 3 4 )))
+  (error "TRIMESTRE must be either 1, 2, 3 or 4."))
+  (assoc 'trim-data (assoc trimestre impuestos-data)))
+
+
+(defun impuestos-trimestre-put
+  (year trimestre credit-ht credit-iva debit-ht iva-corriente iva-inversion)
+  "DOES:   Insert the trimestre data into the impuestos file."
+  (let ((trim-data (cdr (assoc trimestre impuestos-data)))
+        (data      (list credit-ht credit-iva
+                         debit-ht  iva-corriente iva-inversion)))
+  (setq trim-data (assoc-setq 'trim-data data trim-data))
+  (setq impuestos-data (assoc-setq trimestre trim-data impuestos-data))))
+
+
+
+(defconst impuestos-file-path "~/.pjb-impuestos"
+  "Path to the file where impuestos data is stored.")
+
+
+(defun impuestos-load ()
+  "DOES:   Load the impuestos file."
+  (load impuestos-file-path))
+
+
+(defun impuestos-save (impuestos-data)
+  "DOES:   Save the impuestos data."
+  (find-file impuestos-file-path)
+  (erase-buffer)
+  (insert (format  "(setq impuestos-data '%S)\n" impuestos-data))
+  (save-buffer nil)
+  (kill-buffer (current-buffer)))
+
+
+
+
+
+(defun trimestre-credit-ht      (trimdata)  (nth 1 trimdata))
+(defun trimestre-credit-iva     (trimdata)  (nth 2 trimdata))
+(defun trimestre-debit-ht       (trimdata)  (nth 3 trimdata))
+(defun trimestre-iva-corriente  (trimdata)  (nth 4 trimdata))
+(defun trimestre-iva-inversion  (trimdata)  (nth 5 trimdata))
+
+
+(defun check-vat (amount-ttc amount-ht amount-vat vat-rate)
+
+  (unless (member vat-rate  vat-rates)
+  (error "Invalid VAT rate (%f not in %S)." vat-rate vat-rates))
+
+  (unless (member (/ (round (abs (/  amount-vat amount-ht)) 0.01) 100.0)
+                  vat-rates)
+  (error "Invalid VAT amount (%f/%f not in %S)." 
+         amount-vat amount-ht vat-rates))
+
+  (when (/= (round amount-ttc 0.01) 
+            (+ (round  amount-ht 0.01) (round amount-vat 0.01)))
+    (error "amount-ttc /= amount-ht + amount-vat (%f /= %f + %f)."
+           amount-ttc amount-ht amount-vat))
+
+  (when (/= (round (/ amount-vat amount-ht) 0.01) (round vat-rate 0.01))
+    (error "vat-rate /= amount-vat / amount-ht (%f /= %f / %f)."
+           vat-rate amount-vat amount-ht))
+  
+  );;check-vat
+
+
+(defun impuestos-iva (year trimestre entries)
+  "DOES:   Update the data for the given TRIMESTRE from the given ENTRIES.
+RETURN: the IVA data for the given ENTRIES of journal."
+
+  (let ((base-iva-04 0.00)
+        (base-iva-07 0.00)
+        (base-iva-16 0.00)
+        (iva-ded-int 0.00)
+        (iva-ded-adi 0.00)
+        entry kind vat-rate)
+
+    (while entries
+      (setq entry   (car entries)
+            entries (cdr entries))
+      (setq kind     (kind entry))
+      (setq vat-rate (vat-rate entry))
+      (cond
+       ((eq kind PRESTACION-NACIONAL)
+        (cond
+         ((= vat-rate 0.04)
+          (setq base-iva-04 (+ base-iva-04 (credit-ht entry))))
+         ((= vat-rate 0.07)
+          (setq base-iva-07 (+ base-iva-07 (credit-ht entry))))
+         ((= vat-rate 0.16)
+          (setq base-iva-16 (+ base-iva-16 (credit-ht entry))))
+         (t
+          (error "Invalid VAT rate %f in entry %S of journal." 
+                 vat-rate entry))))
+       ((member kind '(PRESTACION-INTRACOMUNITARIA IMPUESTO))
+        ;; Nada que hacer.
+        )
+       ((member kind '(INVERSION GASTO-CORRIENTE))
+        (setq iva-ded-int (+ iva-ded-int (debit-iva entry))))
+       ((eq kind ADQUISICION-INTRACOMUNITARIA )
+        (setq iva-ded-adi (+ iva-ded-int (debit-iva entry))))
+       (t
+        (error "Invalid kind %s in entries of journal." kind))))
+
+    (let* ((iva-04 (euro-round (* 0.04 base-iva-04) EUR))
+           (iva-07 (euro-round (* 0.07 base-iva-07) EUR))
+           (iva-16 (euro-round (* 0.16 base-iva-16) EUR))
+           (total-cuota-devengada (euro-round (+ iva-04 iva-07 iva-16) EUR))
+           (total-a-deducir       (euro-round (+ iva-ded-int iva-ded-adi) EUR))
+           (diferencia  (euro-round
+                         (- total-cuota-devengada total-a-deducir) EUR))
+           (a-compensar-anterior
+            (let ((anterior (if (< 1 trimestre)
+                                (impuestos-assoc-val
+                                 34 (impuestos-iva-get year (- trimestre 1)))
+                              0.00)))
+              (if (< 0.00 anterior) 0.00 (- 0.00 anterior))))
+           (resultado (euro-round
+                       (- diferencia a-compensar-anterior) EUR))
+           (trim-data (list
+                       (cons 'kind      'iva-300-euro)
+                       (cons 'year      year)
+                       (cons 'trimestre trimestre)
+                       (cons  1 base-iva-04)
+                       (cons  2 4.00)
+                       (cons  3 iva-04)
+                       (cons  4 base-iva-07)
+                       (cons  5 7.00)
+                       (cons  6 iva-07)
+                       (cons  7 base-iva-16)
+                       (cons  8 16.00)
+                       (cons  9 iva-16)
+                       (cons 21 total-cuota-devengada)
+                       (cons 22 iva-ded-int)
+                       (cons 24 iva-ded-adi)
+                       (cons 27 total-a-deducir)
+                       (cons 28 diferencia)
+                       (cons 30 diferencia)
+                       (cons 31 a-compensar-anterior)
+                       (cons 34 resultado))
+                      ))
+      (impuestos-iva-put year trimestre trim-data)
+      trim-data)))
+
+
+
+(defun impuestos-irpf (year trimestre entries)
+  "RETURN: The IRPF data for the given trimestre."
+  (if (not (member trimestre '( 1 2 3 4 )))
+      (error "TRIMESTRE must be either 1, 2, 3 or 4."))
+  (let ((trim 1)
+        (ingresos-computables 0.00)
+        (gastos-deducibles    0.00)
+        (pagos-anteriores     0.00)
+        rendimiento veinte-por-ciento pago-fraccionado
+        entry kind
+        )
+
+    ;; Get the totals for the current trimestre.
+    (while entries
+      (setq entry   (car entries)
+            entries (cdr entries))
+      (setq kind     (kind entry))
+      (if (is-credit entry)
+          (if (member kind '(PRESTACION-NACIONAL
+                             PRESTACION-INTRACOMUNITARIA))
+              (setq ingresos-computables (+ ingresos-computables
+                                            (credit-ht entry))))
+        (if (member kind '(INVERSION
+                           GASTO-CORRIENTE
+                           ADQUISICION-INTRACOMUNITARIA
+                           PRESTACION-NACIONAL
+                           PRESTACION-INTRACOMUNITARIA))
+            (setq gastos-deducibles    (+ gastos-deducibles
+                                          (debit-ht entry)))))
+      )
+
+    ;; Add the totals for the previous trimestres.
+    (if (< 1 trimestre)
+        (let ((irpf-data       (impuestos-irpf-get year (- trimestre 1))))
+          (setq ingresos-computables (+ ingresos-computables
+                                        (impuestos-assoc-val 1 irpf-data))
+                gastos-deducibles    (+ gastos-deducibles
+                                        (impuestos-assoc-val 2 irpf-data)))))
+    (while (< trim trimestre)
+      (let ((irpf-data       (impuestos-irpf-get year trim)))
+        (setq pagos-anteriores     (+ pagos-anteriores
+                                      (impuestos-assoc-val 7 irpf-data))))
+      (setq trim (+ trim 1)))
+
+    ;; Compute the IRFP data.
+    (setq rendimiento          (euro-round (- ingresos-computables
+                                              gastos-deducibles) EUR))
+    (setq veinte-por-ciento    (if (< 0.00 rendimiento)
+                                   (euro-round (* 0.20 rendimiento)   EUR)
+                                 0.00))
+    (if (>= 0.00 veinte-por-ciento)
+        (setq pagos-anteriores 0.00))
+    (setq pago-fraccionado
+          (euro-round (- veinte-por-ciento pagos-anteriores) EUR))
+    (if (>= 0.00 pago-fraccionado)
+        (setq pago-fraccionado 0.00))
+
+    (let ((trim-data (list
+                      (cons 'kind      'irpf-130-euro)
+                      (cons 'year      year)
+                      (cons 'trimestre trimestre)
+                      (cons 1 ingresos-computables)
+                      (cons 2 gastos-deducibles)
+                      (cons 3 rendimiento)
+                      (cons 4 veinte-por-ciento)
+                      (cons 5 pagos-anteriores)
+                      (cons 7 pago-fraccionado)
+                      (cons 12 pago-fraccionado)
+                      (cons 14 pago-fraccionado))))
+      (impuestos-irpf-put year trimestre trim-data)
+      trim-data)
+    ))
+
+
+
+
+(defun impuestos-assoc-val (key alist)
+  (let ((value (assoc-val key alist)))
+    (if value value 0.00)))
+
+
+(defun impuestos-iva-display (data)
+  (insert (format "\n\n%s\n" (impuestos-assoc-val 'kind data)))
+  (insert (format "Trimestre: %d\n" (impuestos-assoc-val 'trimestre data)))
+  (insert (format "01 : %10.2f     02 :  %5.2f %%     03 : %10.2f \n"
+                  (impuestos-assoc-val 1 data)
+                  (impuestos-assoc-val 2 data)
+                  (impuestos-assoc-val 3 data)))
+  (insert (format "04 : %10.2f     05 :  %5.2f %%     06 : %10.2f \n"
+                  (impuestos-assoc-val 4 data)
+                  (impuestos-assoc-val 5 data)
+                  (impuestos-assoc-val 6 data)))
+  (insert (format "07 : %10.2f     08 :  %5.2f %%     09 : %10.2f \n"
+                  (impuestos-assoc-val 7 data)
+                  (impuestos-assoc-val 8 data)
+                  (impuestos-assoc-val 9 data)))
+  (insert (format "%38s21 : %10.2f\n"  "Total cuota devengada: "
+                  (impuestos-assoc-val 21 data)))
+  (insert (format "%38s22 : %10.2f\n"  "I.V.A. deducible oper. interiores: "
+                  (impuestos-assoc-val 22 data)))
+  (insert (format "%38s24 : %10.2f\n"  "I.V.A. deducible adq. intracomun.: "
+                  (impuestos-assoc-val 24 data)))
+  (insert (format "%38s27 : %10.2f\n"  "Total a deducir: "
+                  (impuestos-assoc-val 27 data)))
+  (insert (format "%38s28 : %10.2f\n"  "Diferencia: "
+                  (impuestos-assoc-val 28 data)))
+  (insert (format "%38s30 : %10.2f\n"  "" (impuestos-assoc-val 30 data)))
+  (insert (format "%38s31 : %10.2f\n"  "Cuotas a compensar de p. anteriores: "
+                  (impuestos-assoc-val 31 data)))
+  (insert (format "%38s34 : %10.2f\n"  "Resultado: "
+                  (impuestos-assoc-val 34 data)))
+  )
+
+
+(defun impuestos-irpf-display (data)
+  (insert (format "\n\n%s\n" (impuestos-assoc-val 'kind data)))
+  (insert (format "Trimestre: %d\n" (impuestos-assoc-val 'trimestre data)))
+  (insert (format "%38s01 : %10.2f\n"  "Ingresos computables: "
+                  (impuestos-assoc-val  1 data)))
+  (insert (format "%38s02 : %10.2f\n"  "Gastos fiscalmente deducibles: "
+                  (impuestos-assoc-val  2 data)))
+  (insert (format "%38s03 : %10.2f\n"  "Rendimiento neto: "
+                  (impuestos-assoc-val  3 data)))
+  (insert (format "%38s04 : %10.2f\n"  "20 por 100 de rendimiento neto: "
+                  (impuestos-assoc-val  4 data)))
+  (insert (format "%38s05 : %10.2f\n"  "Pagos fraccionados anteriores: "
+                  (impuestos-assoc-val  5 data)))
+  (insert (format "%38s06 : %10.2f\n"  "Retenciones y ingresos: "
+                  (impuestos-assoc-val  6 data)))
+  (insert (format "%38s07 : %10.2f\n"  "Pago fraccionado: "
+                  (impuestos-assoc-val  7 data)))
+  (insert (format "%38s12 : %10.2f\n"  "Suma de los pagos fraccionados: "
+                  (impuestos-assoc-val 12 data)))
+  (insert (format "%38s13 : %10.2f\n"  "A deducir: "
+                  (impuestos-assoc-val 13 data)))
+  (insert (format "%38s14 : %10.2f\n"  "Cuota a ingresar: "
+                  (impuestos-assoc-val 14 data)))
+  )
+
+
+
+(defun impuestos (year trimestre &optional entries)
+  "DOES:   Computes and inserts into the current buffer at the current point
+        the IVA and the IRPF from the data in the journal for the given YEAR
+        and TRIMESTRE."
+
+  (if (not (member trimestre '( 1 2 3 4 )))
+      (error "TRIMESTRE must be either 1, 2, 3 or 4."))
+
+  (if (null entries)  (setq entries (journal-extract year trimestre)))
+  ;;  (if (null totals)   (setq totals  (journal-totals-of-entries entries)))
+
+  (let (iva-data irpf-data)
+
+    (impuestos-load)
+
+    (setq iva-data  (impuestos-iva  year trimestre entries))
+    (impuestos-iva-display  iva-data)
+
+    (setq irpf-data (impuestos-irpf year trimestre entries))
+    (impuestos-irpf-display irpf-data)
+
+    (impuestos-save impuestos-data)
+    ))
+
+
+
+
+
+(defun date-after (date limite)
+  "
+RETURN:  Whether date is after limite.
+"
+  (or (< (nth 2 limite) (nth 2 date));; year is after
+      (and (= (nth 2 limite) (nth 2 date));; same year
+           (or (< (nth 0 limite) (nth 0 date));; month is after
+               (and (= (nth 0 limite) (nth 0 date));; same month
+                    (< (nth 1 limite) (nth 1 date))))));; day is after
+  );;date-after
+
+
+
+
+;;; (defun old-show-tva (montant-ht taux &optional devise &rest options)
+;;;   "Affiche le montant HT donné, la TVA, le montant TTC, et éventuellement
+;;; le montant dans une autre devise optionnelle. La langue peut aussi être
+;;; indiquée ('es, 'fr, 'en).
+;;;
+;;; Le TAUX  peut être nil  auquel cas la  facture est émise hors  taxe et
+;;; sans la ligne TVA.
+;;;
+;;; Si la DEVISE n'est pas spécifiée, la facture est en EURO.
+;;;
+;;;
+;;;  (show-tva 750.00 EUR FRF)  donne :
+;;;  ----------------------------------------------------   -----------------
+;;;                      (Base  imponible)  Total HT    :          750.00 EUR
+;;;                      (IVA   16.0 %)     TVA  16.0 % :   +      120.00 EUR
+;;;                      (Total factura)    Total TTC   :   =      870.00 EUR
+;;;  ----------------------------------------------------   -----------------
+;;; "
+;;;
+;;;    (let* (
+;;;           (strings '(
+;;;   (es "Base imponible "  "IVA %4.1f %%     "  "Total factura  " "   " "   " "   ")
+;;;   (fr "Total HT       "  "TVA %4.1f %%     "  "Total TTC      " "HT " "   " "TTC")
+;;;   (en "Total          "  "VAT %4.1f %%     "  "Total VAT Inc. " "   " "   " "   ")
+;;;   ))
+;;;
+;;;           (line-form " %52s     %21s\n")
+;;;           (desc-line (make-string 52 ?-))
+;;;           (pric-line (make-string 21 ?-))
+;;;
+;;;           (base-lab-gau "")
+;;;           (tvat-lab-gau "")
+;;;           (tota-lab-gau "")
+;;;
+;;;           (base-lab-dro)
+;;;           (tvat-lab-dro)
+;;;           (tota-lab-dro)
+;;;
+;;;           (base-lab-com)
+;;;           (tvat-lab-com)
+;;;           (tota-lab-com)
+;;;
+;;;           (montant-tva  (* montant-ht taux))
+;;;           (montant-ttc  (* montant-ht (+ 1.0 taux)))
+;;;           (montant-aut)
+;;;
+;;;           (lang-pri     'es)
+;;;           (lang-sec     'es)
+;;;
+;;;           (devises (mapcar 'car euro-parities))
+;;;           (ltrings)
+;;;           )
+;;;
+;;;      (while options
+;;;        (let ((op (car options)))
+;;;          (setq options (cdr options))
+;;;          (cond
+;;;           ((member op '(fr en es))  (setq lang-sec lang-pri lang-pri op))
+;;;           ((member op devises)      (setq devi-sec op))
+;;;           (t (error (concat "Option inconnue : %S "
+;;;                             "(ni une langue connue, ni une devise connue).")
+;;;                     op)))))
+;;;
+;;;      (if (equal lang-pri lang-sec)
+;;;          (setq lang-sec nil))
+;;;
+;;;      (setq montant-aut
+;;;            (if (and devi-sec (not (equal devi-pri devi-sec)))
+;;;                (euro-to-value devi-sec (euro-from-value montant-ttc devi-pri))
+;;;              nil))
+;;;
+;;;      (setq ltrings (assoc lang-pri strings))
+;;;      (setq base-lab-dro (format "%s :" (nth 1 ltrings))
+;;;            tvat-lab-dro (format "%s :" (format (nth 2 ltrings) (* 100.0 taux)))
+;;;            tota-lab-dro (format "%s :" (nth 3 ltrings))
+;;;            base-lab-com (nth 4 ltrings)
+;;;            tvat-lab-com (nth 5 ltrings)
+;;;            tota-lab-com (nth 6 ltrings))
+;;;      (if lang-sec
+;;;          (progn
+;;;            (setq ltrings (assoc lang-sec strings))
+;;;            (setq base-lab-gau (nth 1 ltrings)
+;;;                  tvat-lab-gau (format (nth 2 ltrings) (* 100.0 taux))
+;;;                  tota-lab-gau (nth 3 ltrings))
+;;;            (setq base-lab-gau (format "(%s) " base-lab-gau)
+;;;                  tvat-lab-gau (format "(%s) " tvat-lab-gau)
+;;;                  tota-lab-gau (format "(%s) " tota-lab-gau))
+;;;            ))
+;;;
+;;;      (insert "\n")
+;;;      (insert (format line-form desc-line pric-line))
+;;;      (insert (format line-form
+;;;                      (concat base-lab-gau base-lab-dro)
+;;;                      (format " %12.2f %-3s %s" montant-ht  devise base-lab-com)))
+;;;      (insert (format line-form
+;;;                      (concat tvat-lab-gau tvat-lab-dro)
+;;;                      (format "+%12.2f %-3s %s" montant-tva devise tvat-lab-com)))
+;;;      (insert (format line-form
+;;;                      (concat tota-lab-gau tota-lab-dro)
+;;;                      (format "=%12.2f %-3s %s" montant-ttc devise tota-lab-com)))
+;;;      (if devi-sec
+;;;          (insert (format line-form ""
+;;;                          (format "=%12.2f %-3s %s"
+;;;                                  montant-aut devi-sec tota-lab-com))))
+;;;      (insert (format line-form desc-line pric-line))
+;;; ));;old-show-tva
+;;; )
+
+
+(defun solde (credit debit devise)
+  "Affiche le solde d'un compte (pour les fichiers comptes)."
+  (interactive)
+  (let ((lines "---------- ---------- ---------- ------- ------------------------ --------------\n")
+        (value (- credit debit))
+        (value-eur (euro-round (/ (- credit debit)
+                                  (euro-get-ratio devise)) :EUR)))
+    (insert-string
+     (format
+      (concat
+       "\n" lines "           "
+       (euro-get-format :EUR)
+       " "
+       (euro-get-format :EUR)
+       "\n" lines "           "
+       (euro-get-format :EUR)
+       "\n")
+      credit debit value value-eur)
+     )
+    ;;(let ((value-frf (euro-to-value :FRF value-eur))
+    ;;(value-esp (euro-to-value :ESP value-eur)))
+    ;;"Solde actuel Euro        "
+    ;;(euro-get-format :EUR) " EUR"
+    ;;"\n                                         "
+    ;;"Solde actuel Franc       "
+    ;;(euro-get-format :FRF) " FRF"
+    ;;"\n                                         "
+    ;;"Solde actuel Peseta      "
+    ;;(euro-get-format :ESP) " ESP"
+    ;;"\n                                         "
+    ;; )
+    ;;value-frf value-esp)
+    ));;solde
+
+
+
+(defun solde-line (credit debit devise title)
+  "Affiche une ligne de solde d'un compte (pour les fichiers comptes)."
+  (interactive)
+  (let ((value (- credit debit))
+        (value-eur (euro-round (/ (- credit debit)
+                                  (euro-get-ratio devise)) :EUR)))
+    (insert
+     (format
+      (concat
+       "%-20s  "
+       (euro-get-format :EUR) " EUR  "
+       "\n"
+       )
+      title value-eur)
+     )
+    ));;solde-line
+
+
+
+
+(defun show-impots (kind ca)
+  "Formate le chiffre d'affaire HT donné avec la provision pour impôts (20%)."
+  (let* ((cattc (if (eq kind 'TTC) ca nil))
+         (caht  (if (eq kind 'HT)  ca (/ ca 1.16)))
+         (impot (* caht 0.20))
+         (line  (format "%-10s+%-8s+%-37s+%-18s\n"
+                        (make-string 10 ?-)
+                        (make-string 8 ?-)
+                        (make-string 37 ?-)
+                        (make-string 14 ?-)))
+         (form  "%-10s|%-8s|%-37s|%10.2f EUR\n"))
+    (insert line)
+    (if (eq kind 'TTC)
+        (insert (format form "" "" "Total Réglé (TTC) :"        cattc)))
+    (insert (format form "" "" "Total       (HT)  :"        caht))
+    (insert (format form "" "" "Provision Impôts (20%) :"   impot))
+    (insert (format form "" "" "Reste :"   (- caht impot) ""))
+    (insert line)
+    ))
+
+;;;; pjb-invoices.el                  -- 2001-03-21 16:15:28 -- pascal   ;;;;
