@@ -2045,13 +2045,13 @@ to the buffer instead of local to the mode."
 ;;;----------------------------------------
 ;;; cedet
 ;;;----------------------------------------
-(defvar pjb:*load-noerror* nil)
-(defvar pjb:*load-silent*  nil)
+(defvar *pjb-load-noerror* nil)
+(defvar *pjb-load-silent*  nil)
 
 (defun compile-cedet ()
   (interactive)
   (require 'ede)
-  (load "ede-proj.el" pjb:*load-noerror* pjb:*load-silent*)
+  (load "ede-proj.el" *pjb-load-noerror* *pjb-load-silent*)
   (provide 'ede-proj)
   (let ((default-directory "/usr/local/share/emacs/site-lisp/cedet/ede/")
         (compilation-ask-about-save nil))
@@ -2075,7 +2075,7 @@ to the buffer instead of local to the mode."
           (insert "Did you run first: M-x compile-cedet RET ?")
           (split-window-vertically 5)
           (require 'ede)
-          (load "ede-proj.el" pjb:*load-noerror* pjb:*load-silent*)
+          (load "ede-proj.el" *pjb-load-noerror* *pjb-load-silent*)
           (provide 'ede-proj)
           (let ((default-directory
                  "/usr/local/share/emacs/site-lisp/cedet/eieio/")

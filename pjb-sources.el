@@ -691,7 +691,7 @@ RETURN: A font-lock-keywords list mapping greek letter names
 RETURN: A font-lock-keywords list mapping greek letter names 
         to greek characters.
 "
-  (when (<= 21 emacs-major-version)
+  (when (and (<= 21 emacs-major-version) (<= emacs-major-version 22))
     (let ((maj 64) (min 96))
       (mapcan 
        (lambda (letter) 

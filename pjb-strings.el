@@ -157,6 +157,7 @@ then a simple space is used."
       (error "unsplit-string: separator must be a string or a char."))
   (apply 'concat (list-insert-separator string-list separator)))
 
+(defun join (string-list separator) (unsplit-string string-list separator))
 
 (defun string-repeat (num string)
   "Return a string built from the concatenation of num times string."

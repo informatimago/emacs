@@ -39,7 +39,7 @@
   (dolist (path files)
     (unless 
         (condition-case cc
-            (load path  pjb:*load-noerror*  pjb:*load-silent*)
+            (load path  *pjb-load-noerror*  *pjb-load-silent*)
           ('error
            (setq show-messages t)
            (message (format "ERROR: %S" cc ))))))
@@ -82,7 +82,7 @@
         ))
 
 
-(unless pjb:+light-emacs+
+(unless *pjb-light-emacs*
   (setf *pjb-sources*
         (append *pjb-sources*
                 '(
@@ -143,7 +143,7 @@
  ;;            "pjb-w3"
  ;;            "pjb-objc-mode"
  ;;            "pjb-banks-old")
- ;;          (when pjb:+light-emacs+
+ ;;          (when *pjb-light-emacs*
  ;;            ;; files NOT to load when light
  ;;            '("pjb-banks"
  ;;              "pjb-bourse"
@@ -403,6 +403,6 @@ RETURN: A list of NODES sorted topologically according to
     (error "There are circularities in the requires of PJB sources."))
   (setf *pjb-sources* (reverse (mapcar (lambda (name) (format "%s.el" name)) sorted))))
 
-(load-stuff *pjb-sources* (not pjb:*load-silent*))
+(load-stuff *pjb-sources* (not *pjb-load-silent*))
 
 ;;;; THE END ;;;;
