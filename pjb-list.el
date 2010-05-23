@@ -38,6 +38,7 @@
 
 ;; list-to-set list-to-set-sorted  ==> Use REMOVE-DUPLICATES
 
+(defun ensure-list (x) (if (listp x) x (list x)))
 
 (defun iota (count &optional start step)
   "
