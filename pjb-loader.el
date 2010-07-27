@@ -65,6 +65,7 @@
         "pjb-font.el"
         "pjb-html.el"
         "pjb-list.el"
+        "pjb-gnus.el"
         "pjb-mail.el"
         "pjb-object.el"
         "pjb-page.el"
@@ -124,7 +125,7 @@
      "pjb-banks-old.el"
      "pjb-c.el"
      "pjb-objc-mode.el"
-
+     "pjb-comint"
      "slime-rpc.el"
      "split.el"
      ))
