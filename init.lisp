@@ -80,26 +80,70 @@
 ;; COM.INFORMATIMAGO.COMMON-LISP packages depends only on themselves, 
 ;; from the current directory.
 
+(progn 
+  (defvar *directories*  '())
+  (defun get-directory (key &optional (subpath ""))
+    (unless *directories*
+      (with-open-file (dirs (make-pathname :name "DIRECTORIES" :type "TXT"
+                                           :version nil :case :common
+                                           :defaults (user-homedir-pathname)))
+        (loop
+           :for k = (read dirs nil dirs)
+           :until (eq k dirs)
+           :do (push (string-trim " " (read-line dirs)) *directories*)
+           :do (push (intern (substitute #\- #\_ (string k))
+                             "KEYWORD") *directories*))))
+    (unless (getf *directories* key)
+      (error "~S: No directory keyed ~S" 'get-directory key))
+    (merge-pathnames subpath (getf *directories* key) nil)))
+
+
 ;; Load COM.INFORMATIMAGO.COMMON-LISP.PACKAGE:
-(LOAD "/usr/local/share/lisp/packages/com/informatimago/common-lisp/package.lisp")
-;; (HANDLER-CASE (LOAD "package")
-;;   (T ()       (LOAD "package.lisp")))
+(defparameter *translations*
+ (loop
+    :for (file translations)
+    :in (list (list (get-directory :share-lisp "packages/com/informatimago/common-lisp/package.lisp")
+                    (list (LIST (make-pathname
+                                 :host "PACKAGES"
+                                 :directory '(:absolute :wild-inferiors)
+                                 :name :wild :type :wild :version :wild)
+                                (merge-pathnames
+                                 (make-pathname :case :common
+                                                :directory '(:relative :wild-inferiors)
+                                                :name :wild :type :wild :version :wild)
+                                 (get-directory :share-lisp "packages/")
+                                 nil))))
+              (list (get-directory :lisp-sources "common-lisp/package.lisp")
+                    (list (LIST (make-pathname
+                                 :host "PACKAGES"
+                                 :directory '(:absolute "COM" "INFORMATIMAGO" :wild-inferiors)
+                                 :name :wild :type :wild :version :wild)
+                                (merge-pathnames
+                                 (make-pathname :case :common
+                                                :directory '(:relative :wild-inferiors)
+                                                :name :wild :type :wild :version :wild)
+                                 (get-directory :lisp-sources)
+                                 nil))))
+              (list "/usr/local/share/lisp/packages/com/informatimago/common-lisp/package.lisp"
+                    (list (LIST (make-pathname
+                                 :host "PACKAGES"
+                                 :directory '(:absolute :wild-inferiors)
+                                 :name :wild :type :wild :version :wild)
+                                (make-pathname
+                                 :case :common
+                                 :directory '(:absolute "USR" "LOCAL" "SHARE" "LISP" "PACKAGES" 
+                                              :wild-inferiors)
+                                 :name :wild :type :wild :version :wild)))))
+   
+    :until (ignore-errors (load file))
+    :finally (return translations)))
 
 ;; Import DEFINE-PACKAGE, and add translations:
 (IMPORT 'PACKAGE:DEFINE-PACKAGE)
 (SETF (LOGICAL-PATHNAME-TRANSLATIONS "PACKAGES")
       (HANDLER-CASE (LOGICAL-PATHNAME-TRANSLATIONS "PACKAGES") 
         (ERROR NIL)))
-(PACKAGE:ADD-TRANSLATIONS
- (LIST (make-pathname
-        :host "PACKAGES"
-        :directory '(:absolute :wild-inferiors)
-        :name :wild :type :wild :version :wild)
-       (make-pathname
-        :case :common
-        :directory '(:absolute "USR" "LOCAL" "SHARE" "LISP" "PACKAGES" 
-                     :wild-inferiors)
-        :name :wild :type :wild :version :wild)))
+(apply (function PACKAGE:ADD-TRANSLATIONS) *translations*)
 
 
 ;; #+sbcl (setf (logical-pathname-translations "PACKAGES")

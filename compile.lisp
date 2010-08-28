@@ -65,15 +65,17 @@
  *sources*
  :source-type *source-type*
  :summary-path "summary.html"
- :comment-start ";;"
- :verbose nil
- :repository-url
- (lambda (pp)
-   (format nil "http://darcs.informatimago.com/darcs/public/emacs/~(~A~)"
-           (file-namestring
-            (merge-pathnames
-             (make-pathname :type *source-type* :defaults pp)
-             pp nil)))))
+ ;; :comment-start ";;"
+ :verbose t
+ :repository-url (lambda (pp)
+                   (format nil
+                           ;; "http://darcs.informatimago.com~
+                           ;;  /darcs/public/emacs/~(~A/~A~).el"
+                           "~(~A~)"
+                           (file-namestring
+                            (merge-pathnames
+                             (make-pathname :type *source-type* :defaults pp)
+                             pp nil)))))
 
 
 

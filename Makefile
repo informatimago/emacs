@@ -96,7 +96,7 @@ EMACS_SOURCES=\
 EMACS_OBJECTS=$(EMACS_SOURCES:.el=.elc)
 LISP_OBJECTS=$(EMACS_OBJECTS) 
 
-all::$(EMACS_OBJECTS) #summary.html
+all::$(EMACS_OBJECTS) summary.html
 	-@chmod a+r *
 
 install::install-packages
