@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-computer-paper.el
 ;;;;LANGUAGE:           emacs lisp

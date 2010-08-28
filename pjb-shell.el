@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-shell.el
 ;;;;LANGUAGE:           emacs lisp

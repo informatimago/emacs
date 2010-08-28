@@ -1,4 +1,4 @@
-;;;; -*- coding: utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-sources.el
 ;;;;LANGUAGE:           emacs lisp

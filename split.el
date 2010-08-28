@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 (require 'pjb-cl)
 
 ;; Some time ago I wrote some suggestions about how to rewrite

@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;******************************************************************************
 ;;;;FILE:               pjb-roman.el
 ;;;;LANGUAGE:           emacs lisp
@@ -47,7 +48,7 @@ SEE ALSO: fahrenheit (F), celcius (C) and kelvin (K)."
   (funcall (if buffer-file-read-only
                (function insert)
                (function message))
-           (format "%10.2f K  %10.2f °C  %10.2f °F   %s"
+           (format "%10.2f K  %10.2f Â°C  %10.2f Â°F   %s"
                   k
                   (- k 273.15)
                   (+ 32.0 (* 1.8 (- k 273.15)))
@@ -91,11 +92,11 @@ SEE ALSO: fahrenheit (F), celcius (C) and kelvin (K)."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Règles d'écriture des nombres romains :
-;; Les chiffres M, C, X, I ne peuvent pas être répétés plus de quatre fois.
-;; Les chiffres D, L, V ne peuvent pas être répétés.
-;; Les chiffres doivent être écris dans l'ordre : M, D, C, L, X, V, I ; 
-;; sauf que un I peut précéder V, X, L, ou C, et un X peut précéder L ou C.
+;; RÃ¨gles d'Ã©criture des nombres romains :
+;; Les chiffres M, C, X, I ne peuvent pas Ãªtre rÃ©pÃ©tÃ©s plus de quatre fois.
+;; Les chiffres D, L, V ne peuvent pas Ãªtre rÃ©pÃ©tÃ©s.
+;; Les chiffres doivent Ãªtre Ã©cris dans l'ordre : M, D, C, L, X, V, I ; 
+;; sauf que un I peut prÃ©cÃ©der V, X, L, ou C, et un X peut prÃ©cÃ©der L ou C.
 
 
 ;;  romain : milliers centaines .

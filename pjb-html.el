@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;**************************************************************************
 ;;;;FILE:               pjb-html.el
 ;;;;LANGUAGE:           emacs lisp

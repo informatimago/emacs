@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-graph.el
 ;;;;LANGUAGE:           emacs-lisp

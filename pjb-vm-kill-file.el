@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;*****************************************************************************
 ;;;;FILE:               pjb-vm-kill-file.el
 ;;;;LANGUAGE:           emacs lisp
@@ -150,7 +151,7 @@ POST:   If the message match our \"kill-file\", then it is marked deleted.
                 (message-cond (string-match "Credit Repair\\|$$$" value))
                 (message-cond (string-match "=?big5?" value)) 
                 (message-cond (string-match "=?euc-kr?" value)) 
-                (message-cond (string-match "(±¤°í)" value))
+                (message-cond (string-match "(Â±Â¤Â°Ã­)" value))
                 )))
 
            (let ((value (mail-fetch-field "Received" nil t)))

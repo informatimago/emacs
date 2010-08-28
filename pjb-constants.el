@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;****************************************************************************
 ;;;;FILE:               constantes.el
 ;;;;LANGUAGE:           emacs lisp
@@ -74,13 +75,13 @@
                  "Avogadro's number") ;;N
 
 (def-phys-const  H_0      1.01325e5            (* kg (^ m -1) (^ s -2))
-                 "pression atmosphérique normale") ;;H_0
+                 "pression atmosphÃ©rique normale") ;;H_0
 
 (def-phys-const  V_0      22.414e-3            (* (^ m 3) (^ mol -1))
                  "volume molaire du gaz parfait (CN)") ;;V_0
 
 (def-phys-const  T_0       273.15              K
-                 "zéro de l'échelle Celsius") ;;T_0
+                 "zÃ©ro de l'Ã©chelle Celsius") ;;T_0
 
 (def-phys-const  n_0 (/ N V_0)                 (^ m -3)
                  "Loschmidt's number") ;;n_0
@@ -94,10 +95,10 @@
                  "constante de la gravitation") ;;G
 
 (def-phys-const  e       1.602189e-19          C
-                 "charge élémentaire") ;;e
+                 "charge Ã©lÃ©mentaire") ;;e
 
 (def-phys-const  c       299792458.0           (* m (^ s -1))
-                 "célérité de la lumière") ;;c
+                 "cÃ©lÃ©ritÃ© de la lumiÃ¨re") ;;c
 
 (def-phys-const  k       1.38066e-23           (* J (^ K -1))
                  "Boltzmann's constant") ;;k
@@ -115,10 +116,10 @@
                  "Mass of electron") ;;m_e
 
 (def-phys-const  mu_0       (* 16e-7 (atan 1))  (* H (^ m -1))
-                 "perméabilité du vide") ;;mu_0
+                 "permÃ©abilitÃ© du vide") ;;mu_0
 
 (def-phys-const  epsilon_0  (/ 1 (* mu_0 c c))  (* F (^ m -1))
-                 "permittivité du vide") ;;epsilon_0
+                 "permittivitÃ© du vide") ;;epsilon_0
 
 (def-phys-const  g_n        9.80665             (* m (^ s -2))
                  "pesanteur normale") ;;g_n
@@ -169,7 +170,7 @@
 
 
 (def-phys-const earth-GM             .3986e15         (* (^ m 3) (^ s -2))
-                "G × Mass of Earth") ;;earth-GM
+                "G Ã— Mass of Earth") ;;earth-GM
 
 (def-phys-const earth-albedo-bond                  0.306           1
                 "Bond Albedo of Earth") ;;earth-albedo-bond
@@ -184,13 +185,13 @@
 ;;; Solar Irradiance          1367.6 W m-2
 ;;; Black-Body Temperature    254.3 K
 ;;; Moment of Inertia         0.3308 I MR-2
-;;; J2                        1082.63 × 10-6
+;;; J2                        1082.63 Ã— 10-6
 ;;; Topographic Range         20 km
 
 
 
 ;;;; Orbital Parameters
-;;;; Semimajor Axis           149.60 × 106 km
+;;;; Semimajor Axis           149.60 Ã— 106 km
 ;;;; Sidereal Orbit Period    365.256 day
 ;;;; Tropical Orbit Period    365.242 day
 
@@ -232,10 +233,10 @@
 (def-phys-const earth-length-of-day             24.0000  hours)
 (def-phys-const earth-obliquity-to-orbit        23.45  1)
 (def-phys-const earth-orbital-eccentricity      0.01671022  1)
-(def-phys-const earth-orbital-inclination       0.00005  °)
-(def-phys-const earth-longitude-of-ascending-node  -11.26064  °)
-(def-phys-const earth-longitude-of-pericenter   102.94719  °)
-(def-phys-const earth-mean-longitude            100.46435  °)
+(def-phys-const earth-orbital-inclination       0.00005  Â°)
+(def-phys-const earth-longitude-of-ascending-node  -11.26064  Â°)
+(def-phys-const earth-longitude-of-pericenter   102.94719  Â°)
+(def-phys-const earth-mean-longitude            100.46435  Â°)
 (def-phys-const earth-dipole-field-strength     0.3076 (* gauss (^ Re 3)))
 (def-phys-const earth-latitude-of-dipole-north  78.6  N)
 (def-phys-const earth-longitude-of-dipole-north  70.1  W)
@@ -291,10 +292,10 @@
 (def-phys-const moon-revolution-period          27.322  day)
 (def-phys-const moon-synodic-period             29.53  day)
 (def-phys-const moon-mean-orbital-velocity      1.023 (* km (^ s -1)))
-(def-phys-const moon-orbital-inclination        5.145  °)
+(def-phys-const moon-orbital-inclination        5.145  Â°)
 (def-phys-const moon-orbital-excentricity       0.0549  1)
 (def-phys-const moon-sidereal-rotation-period   655.728  hours)
-(def-phys-const moon-equatorial-inclination     6.68  °)
+(def-phys-const moon-equatorial-inclination     6.68  Â°)
 (def-phys-const moon-recession-rate-from-earth  3.8 (* cm (^ yr -1)))
 
 
@@ -320,9 +321,9 @@
 (def-phys-const mars-moment-of-inertia          0.366 (* I (^ MR -2)))
 (def-phys-const mars-neon-ne                    2.5  ppm)
 (def-phys-const mars-nitrogen-n2                2.7  %)
-(def-phys-const mars-obliquity-to-orbit         25.19  °)
+(def-phys-const mars-obliquity-to-orbit         25.19  Â°)
 (def-phys-const mars-orbital-eccentricity       0.0934  1)
-(def-phys-const mars-orbital-inclination        1.85  °)
+(def-phys-const mars-orbital-inclination        1.85  Â°)
 (def-phys-const mars-oxygen-o2                  0.13  %)
 (def-phys-const mars-perihelion                 206.6e6  km)
 (def-phys-const mars-polar-radius               3375  km)
@@ -390,13 +391,13 @@ RETURN: x' ; t' ; dx' ; dt' such as
 ;;; (setq t_ (/ d v))
 ;;; (setq gamma (car (lorentz d t_ v)))
 
-;; Luego,  por efecto  de  la compresión  del  tiempo cuando  se viaja  a
+;; Luego,  por efecto  de  la compresiÃ³n  del  tiempo cuando  se viaja  a
 ;; velocidades cerca de  c, la sonda no tarda tanto  tiempo en llegar, y,
-;; por lo contrario, la gente que  se queda en la Tierra debe esparar más
+;; por lo contrario, la gente que  se queda en la Tierra debe esparar mÃ¡s
 ;; tiempo en antes de saber que la sonda a llegado.
 ;;
-;; Cómo se  podra verificar en cualquier  página web sobre  el tema (para
-;; decir que ¡esta clase de información  esta a accesible por todo con un
+;; CÃ³mo se  podra verificar en cualquier  pÃ¡gina web sobre  el tema (para
+;; decir que Â¡esta clase de informaciÃ³n  esta a accesible por todo con un
 ;; par de clics!):
 ;;
 ;; Aplicando las transformadas de Lorentz:
@@ -408,30 +409,30 @@ RETURN: x' ; t' ; dx' ; dt' such as
 ;; que dan las coordenadas (x',t')  dentro de un referencial que se mueve
 ;; a  la  velocidad  v con  respecto  a  un  referencial fijo,  dadas  la
 ;; coordenadas  (x,t)  dentro  del  referencial fijo,  se  puede  deducir
-;; facilmente  la dilatación  y la  contracción de  la longitud  y  de la
-;; duración:
+;; facilmente  la dilataciÃ³n  y la  contracciÃ³n de  la longitud  y  de la
+;; duraciÃ³n:
 ;;
 ;;     l' = l / gamma
 ;;     d' = d / gamma
 ;;
 ;; (o si se es vago, se puede tanbien buscar en el web con un par de clic
-;; de más).
+;; de mÃ¡s).
 ;;
 ;;
-;; Así que,  por ejemplo, si  la sonda viaja  a v/c =  0.90 or 90%  de la
-;; velocidad de  la luz, a una distancia  de 4.3 años-luz, lo  hara en un
-;; tiempo superior a 4.3 años (visto desde el referencial fijo, es decir,
+;; AsÃ­ que,  por ejemplo, si  la sonda viaja  a v/c =  0.90 or 90%  de la
+;; velocidad de  la luz, a una distancia  de 4.3 aÃ±os-luz, lo  hara en un
+;; tiempo superior a 4.3 aÃ±os (visto desde el referencial fijo, es decir,
 ;; desde la Tierra porque va siempre a una velocidad menor que c:
 ;;
-;;       d = 4.3 * año * c
+;;       d = 4.3 * aÃ±o * c
 ;;       v = 0.9 * c
 ;;       t = d / v
 ;;
-;;       t = ( 4.3 * año * c )  / ( 0.9 * c )
-;;         = (  4.3 / 0.9 ) * año
-;;         = 4.777 año
+;;       t = ( 4.3 * aÃ±o * c )  / ( 0.9 * c )
+;;         = (  4.3 / 0.9 ) * aÃ±o
+;;         = 4.777 aÃ±o
 ;;
-;; Pero, visto de la sonda, la duración del viaje es:
+;; Pero, visto de la sonda, la duraciÃ³n del viaje es:
 ;;
 ;;       d' = d / gamma
 ;; con:
@@ -441,8 +442,8 @@ RETURN: x' ; t' ; dx' ; dt' such as
 ;;
 ;; asi que:
 ;;
-;;       d' = 4.777 año / 2.294
-;;       d' = 2.082 año
+;;       d' = 4.777 aÃ±o / 2.294
+;;       d' = 2.082 aÃ±o
 ;;
 ;;
 ;; En  el caso  que la  sonda viaje  a  99% de  la velocidad  de la  luz,
@@ -451,31 +452,31 @@ RETURN: x' ; t' ; dx' ; dt' such as
 ;;       gamma = 1 / sqrt( 1 - 0.99^2 )
 ;;       gamma = 7.089
 ;; y:
-;;       d' = 4.777 año / 7.089
-;;       d' = 0.673 año, o 8 meses,
+;;       d' = 4.777 aÃ±o / 7.089
+;;       d' = 0.673 aÃ±o, o 8 meses,
 ;;
-;; ¡a comparar con los 3 meses que Cristobal Colomb tomó para ir a America!
+;; Â¡a comparar con los 3 meses que Cristobal Colomb tomÃ³ para ir a America!
 ;;
 ;; (Esto para decir  que se podria salir a explorar  las estrellas con la
-;; tecnologia que tenemos  desde hace 50 años :  los reactores nucleares,
+;; tecnologia que tenemos  desde hace 50 aÃ±os :  los reactores nucleares,
 ;; salvo que los  que se quedan atras no verian  volver a los astronautas
-;; que van más lejos).
+;; que van mÃ¡s lejos).
 ;;
 ;;
 ;;
 ;;
-;; (En el caso del photon que viaja a la velocidad de la luz, él toca los
+;; (En el caso del photon que viaja a la velocidad de la luz, Ã©l toca los
 ;; dos puntos  al mismo  tiempo, de  su punto de  vista. Cuando  quita un
 ;; electron y cuando llega a un  otro electro, que sea dentro de la misma
-;; molecula o al  otro lado de la  galaxia o del universo, para  él es al
-;; mismo tiempo.  Las  interacciónes electro-magneticas son efectivamente
+;; molecula o al  otro lado de la  galaxia o del universo, para  Ã©l es al
+;; mismo tiempo.  Las  interacciÃ³nes electro-magneticas son efectivamente
 ;; instantaneas, para los photones).
 ;;
 ;;
 ;;
 ;; http://scienceworld.wolfram.com/physics/TimeDilation.html
 ;; http://www.geocities.com/angelto.geo/bhole/lorentz.html
-;; y miles de páginas sobre el tema...
+;; y miles de pÃ¡ginas sobre el tema...
 ;;
 
 ;;; (show constantes)
@@ -615,7 +616,7 @@ RETURN: x' ; t' ; dx' ; dt' such as
       (while (re-search-forward regexp nil t)
         (replace-match to-string fixed-case literal))))
   (goto-char (point-min))
-  (while (re-search-forward "| *\\([-+]*[0-9][ 0-9]*\\(\\.[0-9][ 0-9]*\\)*\\)\\( × 10\\([-+]*[0-9][0-9]*\\)\\)?\\( .*\\)?$" nil t)
+  (while (re-search-forward "| *\\([-+]*[0-9][ 0-9]*\\(\\.[0-9][ 0-9]*\\)*\\)\\( Ã— 10\\([-+]*[0-9][0-9]*\\)\\)?\\( .*\\)?$" nil t)
     (let* ((mantissa-str (match-string-no-properties 1))
            (exponent-str (match-string-no-properties 4))
            (unit-str     (match-string-no-properties 5))
