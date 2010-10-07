@@ -80,6 +80,7 @@
         "pjb-work.el"
         "pjb-xresources.el"
 
+        "pjb-pl1.el" ; testing
         ))
 
 

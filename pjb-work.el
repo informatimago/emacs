@@ -280,11 +280,11 @@ RETURN: A list of the names of projects initiated for the FIRM.
 
 (defstruct activity
   event
-  (time (GET-UNIVERSAL-TIME))
-  (hostname *hostname*)
-  (tag *activity-tag*)
-  (buffer-name (buffer-name (current-buffer)))
-  (file-name   (buffer-file-name (current-buffer)))
+  (time         (GET-UNIVERSAL-TIME))
+  (hostname     *hostname*)
+  (tag          *activity-tag*)
+  (buffer-name  (buffer-name (current-buffer)))
+  (file-name    (buffer-file-name (current-buffer)))
   last-command-char
   last-command
   last-prefix-arg
@@ -311,8 +311,7 @@ RETURN: A list of the names of projects initiated for the FIRM.
     ((eql 'start (activity-event event))
      (setf *activity-last-start-event* event))
     ((eql 'stop (activity-event event))
-     (setf *activity-last-stop-event* event))
-    ))
+     (setf *activity-last-stop-event* event))))
 
 (defun activity-pre-command ()
   (ignore-errors
@@ -326,9 +325,9 @@ RETURN: A list of the names of projects initiated for the FIRM.
 
 (defun activity-post-command ()
   (ignore-errors
-    (let* ((time (GET-UNIVERSAL-TIME))
+    (let* ((time     (GET-UNIVERSAL-TIME))
            (duration (- time (activity-time *current-command*)))
-           (event (make-activity :event 'stop
+           (event    (make-activity :event 'stop
                                  :last-command-char last-command-char
                                  :last-command      last-command
                                  :last-prefix-arg   last-prefix-arg
@@ -358,6 +357,7 @@ RETURN: A list of the names of projects initiated for the FIRM.
 
 
 (defun activity-on ()
+  "Starts"
   (interactive)
   (add-hook 'pre-command-hook   'activity-pre-command)
   (add-hook 'post-command-hook  'activity-post-command))

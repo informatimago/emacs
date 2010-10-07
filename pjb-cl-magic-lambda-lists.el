@@ -1,4 +1,3 @@
-;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 
 (setf *cl-lambda-lists* (make-hash-table :test (function equal) :size 978))
 
