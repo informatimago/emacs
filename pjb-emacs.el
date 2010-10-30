@@ -12,6 +12,8 @@
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon 
 ;;;;MODIFICATIONS
+;;;;    2010-10-30 <PJB> Renamed multifile-replace-string to recursive-replace-string,
+;;;;                     Added recursive-replace-regexp and multifile-replace-regexp.
 ;;;;    2006-03-23 <PJB> Added fringe-width and scroll-bar-width for full-frame.
 ;;;;    2004-10-15 <PJB> Added maximize-window.
 ;;;;    2001-11-30 <PJB> Extracted from pjb-utilities.el.
@@ -20,7 +22,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 1990 - 2004
+;;;;    Copyright Pascal J. Bourguignon 1990 - 2010
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -2198,19 +2200,19 @@ EXCEPTIONS: either a list of pathnames that musthn't be processed,
 ;;; multi-file replace
 ;;;----------------------------------------
 
-(defvar *multifile-ignored-directories*
+(defvar *recursive-replace-ignored-directories*
   '("_darcs" ".darcsrepo" ".svn" ".hg" ".git" "CVS" "RCS" "MT" "SCCS"
     ".tmp_versions" "{arch}" ".arch-ids"
     "BitKeeper" "ChangeSet" "autom4te.cache"))
 
 
-(defun multifile-replace-string (from-string to-string &optional directory recursive delimited)
-  "Replace the all occurences of from-string by to-string in all the files in the directory.
-If recursive is true (or a prefix argument is given), then the files are searched recursively
-otherwise only the files directly in the given directory are modified.
-`*multifile-ignored-directories*' is a list of directory names that are excluded from the
+(defun recursive-replace-string (from-string to-string &optional directory recursive delimited)
+  "Replace the all occurences of `from-string' by `to-string' in all the files in the directory.
+If `recursive' is true (or a prefix argument is given), then the files are searched recursively
+otherwise only the files directly in the given `directory' are modified.
+`*recursive-replace-ignored-directories*' is a list of directory names that are excluded from the
 recursive search.  Backup files (name ending in ~) are ignored too.
-delimited, if non-nil, means replace only matches surrounded by word boundaries.
+`delimited', if non-nil, means replace only matches surrounded by word boundaries.
  "
   (interactive
    (let* ((directory (symbol-name (read-minibuffer "Directory: " default-directory)))
@@ -2222,7 +2224,7 @@ delimited, if non-nil, means replace only matches surrounded by word boundaries.
                     (lambda (path)
                       (let ((name (basename path)))
                         (or (string= "~" (subseq name (1- (length name))))
-                            (member* name *multifile-ignored-directories*
+                            (member* name *recursive-replace-ignored-directories*
                                      :test (function string=))))))
     (with-file (file)
       (message "Processing %S" file)
@@ -2230,5 +2232,41 @@ delimited, if non-nil, means replace only matches surrounded by word boundaries.
       (replace-string from-string to-string delimited))))
 
 
+(defun recursive-replace-regexp (regexp to-string &optional directory recursive delimited)
+  "Replace the all occurences of `regexp' by `to-string' in all the files in the directory.
+If `recursive' is true (or a prefix argument is given), then the files are searched recursively
+otherwise only the files directly in the given `directory' are modified.
+`*recursive-replace-ignored-directories*' is a list of directory names that are excluded from the
+recursive search.  Backup files (name ending in ~) are ignored too.
+`delimited', if non-nil, means replace only matches surrounded by word boundaries.
+ "
+  (interactive
+   (let* ((directory (symbol-name (read-minibuffer "Directory: " default-directory)))
+          (arguments (query-replace-read-args
+                      (format "Replace string in all files in %s" directory)
+                      nil)))
+     (list (first arguments) (second arguments) directory (third arguments) nil)))
+  (with-files (file directory recursive
+                    (lambda (path)
+                      (let ((name (basename path)))
+                        (or (string= "~" (subseq name (1- (length name))))
+                            (member* name *recursive-replace-ignored-directories*
+                                     :test (function string=))))))
+    (with-file (file)
+      (message "Processing %S" file)
+      (beginning-of-buffer)
+      (replace-regexp regexp to-string delimited))))
 
-;;;; pjb-emacs.el                     --                     --          ;;;;
+
+(defun multifile-replace-regexp (regexp to-string files &optional delimited)
+  "Replace the all occurences of `regexp' by `to-string' in all the `files'.
+`delimited', if non-nil, means replace only matches surrounded by word boundaries.
+ "
+  (dolist (file files)
+    (with-file (file :save t :kill nil)
+      (message "Processing %S" file)
+      (beginning-of-buffer)
+      (replace-regexp regexp to-string delimited))))
+
+
+;;;: THE END ;;;;
