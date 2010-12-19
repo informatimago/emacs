@@ -263,25 +263,27 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
       "\\(#|\\([^|]\\||[^#]\\)*|#\\)\\|\\(;.*$\\)")
     ((text-mode)
      "\\(/\\*.*?\\*/\\)\\|\\(//.*$\\)") ;; \(/\*.*?\*/\)\|\(//.*$\)
-    ( LSOURCE    ";;;; %-32s -- %19s -- %-8s ;;;;" 
-     (asm-mode dsssl-mode emacs-lisp-mode ledit-mode
-      lisp-interaction-mode lisp-mode scheme-mode
-      common-lisp-mode fi:common-lisp-mode
-      zone-mode  )
-     ";;;;%s"
-     ";;;;%s"
-     ";;;;%s"
-     ";;;;    %s"
-     "\\(#|\\([^|]\\||[^#]\\)*|#\\)\\|\\(;.*$\\)")
-    ( TEXT       "" ;;";;;; %-32s -- %19s -- %-8s ;;;;" 
-     (text-mode)
-     "%s"
-     "%s"
-     "%s"
-     "    %s"
-     "%s"
-     "" ;;";;;; %-32s -- %19s -- %-8s ;;;;" 
-     "\\(^;.*$\\)")
+
+    ;; ( LSOURCE    ";;;; %-32s -- %19s -- %-8s ;;;;" 
+    ;;  (asm-mode dsssl-mode emacs-lisp-mode ledit-mode
+    ;;   lisp-interaction-mode lisp-mode scheme-mode
+    ;;   common-lisp-mode fi:common-lisp-mode
+    ;;   zone-mode  )
+    ;;  ";;;;%s"
+    ;;  ";;;;%s"
+    ;;  ";;;;%s"
+    ;;  ";;;;    %s"
+    ;;  "\\(#|\\([^|]\\||[^#]\\)*|#\\)\\|\\(;.*$\\)")
+    ;; ( TEXT       "" ;;";;;; %-32s -- %19s -- %-8s ;;;;" 
+    ;;  (text-mode)
+    ;;  "%s"
+    ;;  "%s"
+    ;;  "%s"
+    ;;  "    %s"
+    ;;  "%s"
+    ;;  "" ;;";;;; %-32s -- %19s -- %-8s ;;;;" 
+    ;;  "\\(^;.*$\\)")
+    
     ((awk-mode eshell-mode icon-mode m4-mode makefile-mode makefile-gmake-mode
                octave-mode perl-mode sh-mode shell-script-mode
                tcl-mode )
@@ -2113,7 +2115,7 @@ by pjb-add-change-log-entry.")
   "
 RETURN: A string containing the name of the mode, without the -mode suffix.
 "
-  (let ((mode (STRING (or mode major-mode))))
+  (let ((mode (string* (or mode major-mode))))
     (if (and (< 5 (length mode))
              (string= "-mode" (subseq mode (- (length mode) 5))))
         (subseq mode 0 (- (length mode) 5))
@@ -2139,7 +2141,7 @@ DO:         Inserts a header at the beginning of the file with various
          (author-abrev   *pjb-sources-initials*)
          (author         (or add-log-full-name (user-full-name)))
          (email          user-mail-address)
-         (year           (elt (MULTIPLE-VALUE-LIST (GET-DECODED-TIME)) 5))
+         (year           (third (calendar-current-date)))
          (line-length    78)
          license lic-data
          (system         "POSIX")
