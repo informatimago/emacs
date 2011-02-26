@@ -1,6 +1,6 @@
 ;;;; -*- coding:utf-8 -*-
 ;;;;****************************************************************************
-;;;;FILE:               pjb-pmatch.lisp
+;;;;FILE:               pjb-pmatch.el
 ;;;;LANGUAGE:           Common-Lisp
 ;;;;SYSTEM:             Common-Lisp
 ;;;;USER-INTERFACE:     NONE
