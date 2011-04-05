@@ -2078,6 +2078,7 @@ by pjb-add-change-log-entry.")
      "This program and its documentation constitute intellectual property "
      "of Pascal J. Bourguignon and is protected by the copyright laws of "
      "the European Union and other countries.")
+
     ("medicalis"
      t
      "Copyright 2008 Medical Information Systems. "
