@@ -148,14 +148,15 @@ NOTE:    cmp is a function used to compare atoms ('eq, 'equal or whatever).
 
 (defun ^ (x exp)
   "Computes x^exp = x to the power of exp."
-  (cond ((< exp 0) (/ 1.0 (^ x (- 0 exp))))
-        ((= exp 0) 1)
-        ((= exp 1) x)
-        (t         (if (= (% exp 2) 0)
-                       (let ((x2 (^ x (/ exp 2))))
-                         (* x2 x2))
-                     (let ((x2 (^ x (/ (- exp 1) 2))))
-                       (* x x2 x2))))))
+  (cond ((< exp 0)       (/ 1.0 (^ x (- exp))))
+        ((= exp 0)       1)
+        ((= exp 1)       x)
+        ((integerp exp)  (if (= (% exp 2) 0)
+                             (let ((x2 (^ x (/ exp 2))))
+                               (* x2 x2))
+                             (let ((x2 (^ x (/ (- exp 1) 2))))
+                               (* x x2 x2))))
+        (t               (exp (* (log x) exp)))))
 
 
 
