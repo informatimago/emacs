@@ -17,7 +17,7 @@
 ;;;;    2002-12-03 <PJB> Common-Lisp'ized.
 ;;;;BUGS
 ;;;;LEGAL
-;;;;    Copyright Pascal J. Bourguignon 2002 - 2002
+;;;;    Copyright Pascal J. Bourguignon 2002 - 2011
 ;;;;
 ;;;;    This script is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU  General Public

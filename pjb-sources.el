@@ -37,7 +37,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 1990 - 2004
+;;;;    Copyright Pascal Bourguignon 1990 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -93,6 +93,16 @@
 ;; generate-options (options defaults)
 
 
+
+(defun mode-name (&optional mode)
+  "
+RETURN: A string containing the name of the mode, without the -mode suffix.
+"
+  (let ((mode (string* (or mode major-mode))))
+    (if (and (< 5 (length mode))
+             (string= "-mode" (subseq mode (- (length mode) 5))))
+        (subseq mode 0 (- (length mode) 5))
+        mode)))
 
 ;; ------------------------------------------------------------------------
 
@@ -1835,6 +1845,124 @@ EXAMPLE: (COMBINE '(WWW FTP) '(EXA) '(COM ORG)))
 
 
 ;; ------------------------------------------------------------------------
+;; Extract, format, and update copyright lines.
+;; ------------------------------------------------------------------------
+
+(defun pjb-copyright-regexp (hcd)
+  (let* ((comment-format (or (hcd-header-comment-format hcd) "%s"))
+         (pattern  "Copyright ")
+         (base-re  (format "^%s" (regexp-quote (format comment-format pattern))))
+         (pos      (+ (search pattern base-re) (length pattern)))
+         (left-re  (subseq base-re 0 pos))
+         (right-re (subseq base-re pos)))
+    (format "%s *\\(.*?\\) +\\([0-9]+\\)\\(\\( +-\\|,\\) +\\([0-9]+\\)\\)*\\( +-\\|,\\) +\\([0-9]+\\).*%s"
+            left-re right-re)))
+
+
+(defun regexp-results (match string)
+  (let ((data (match-data t)))
+    (when data
+      (coerce
+       (loop
+          for (beg end) on data by (function cddr)
+          while (or (null beg) (integerp beg))
+          collect (list beg end (when (and beg end) (subseq string (1- beg) (1- end)))))
+       'vector))))
+
+
+(defun pjb-process-copyrights (hcd fun)
+  "
+Call the function `fun' with  the beginning and end points of each
+copyright line, and a list containing the copyright owner, the first
+and last year of the copyright.
+"
+  (let ((re   (pjb-copyright-regexp hcd))
+        (text (buffer-substring-no-properties (point-min) (point-max))))
+    (save-excursion
+      (goto-char (point-min))
+      (with-marker (end (point-max))
+       (loop
+          with next = (make-marker)
+          while (re-search-forward re end t)
+          do (let ((res (regexp-results t text)))
+               (set-marker next (1+ (second (aref res 0))))
+               (funcall fun
+                        (first  (aref res 0))
+                        (second (aref res 0))
+                        (list (third (aref res 1))
+                              (parse-integer (third (aref res 2)))
+                              (parse-integer (third (aref res 7)))))
+               (goto-char (1- (marker-position next)))))))))
+
+
+(defun pjb-extract-copyrights (hcd)
+  (let ((pjb-extract-copyrights/result '()))
+    (pjb-process-copyrights hcd
+                            (lambda (start end copyright)
+                              (declare (ignore start end))
+                              (push copyright pjb-extract-copyrights/result)))
+    (nreverse pjb-extract-copyrights/result)))
+
+;; (pjb-extract-copyrights  (header-comment-description-for-mode major-mode))
+
+
+(defun pjb-format-copyright (hcd author first-year last-year)
+  (let ((comment-format (hcd-header-comment-format hcd)))
+   (format comment-format
+           (format "Copyright %s %04d - %04d"
+                   author first-year last-year))))
+
+
+(defun pjb-update-copyright ()
+  "
+Update the copyright lines with the current year.
+NOTE:  only for Copyright Pascal Bourguignon.
+"
+  (interactive)
+  (let ((current-year  (third (calendar-current-date)))
+        (hcd (header-comment-description-for-mode major-mode)))
+    (pjb-process-copyrights
+     hcd
+     (lambda (start end copyright)
+       (destructuring-bind (owner first-year last-year) copyright
+         (declare (ignore last-year))
+         (when (and (search "Pascal" owner)
+                    (search "Bourguignon" owner))
+           (delete-region start end)
+           (insert (pjb-format-copyright hcd owner first-year current-year))))))))
+
+(defvar *source-extensions*
+  '(".lisp" ".cl" ".asd" ".el"
+    "Makefile"
+    ".c" ".cc" ".cpp" ".c++"
+    ".h" ".hh" ".hpp" ".h++"
+    ".m" ".mm"))
+
+(defvar *ignorable-directories*
+  '("_darcs" ".darcsrepo" ".svn" ".hg" ".git" "CVS" "RCS" "MT" "SCCS"
+    ".tmp_versions" "{arch}" ".arch-ids"
+    "BitKeeper" "ChangeSet" "autom4te.cache"))
+
+
+(defun pjb-update-copyright-directory ()
+  (interactive)
+  (let ((good-files-re      (format "\\(%s\\)$" (regexp-opt *source-extensions*)))
+        (bad-directories-re (format "/%s$" (regexp-opt *ignorable-directories*))))
+    (message "Updating copyright of all source files in %S" default-directory)
+    (message "Source files: %s" (join *source-extensions* " "))
+    (with-files (path default-directory t
+                      (lambda (path)
+                        ;; (message "filter %S --> %s" path  (string-match bad-directories-re path))
+                        ;; (message "recursive %s stat %S" recursive stat)
+                        (string-match bad-directories-re path)))
+      (when (string-match good-files-re path)
+        (with-file (path :save t :kill t :literal nil)
+          (message "Updating copyright in file %S" path)
+          (pjb-update-copyright))))))
+
+
+
+;; ------------------------------------------------------------------------
 ;; pjb-add-change-log-entry
 ;; ------------------------------------------------------------------------
 ;; Inserts a change log entry in the current source, 
@@ -2112,17 +2240,6 @@ by pjb-add-change-log-entry.")
     (insert "\n")))
 
 
-(defun mode-name (&optional mode)
-  "
-RETURN: A string containing the name of the mode, without the -mode suffix.
-"
-  (let ((mode (string* (or mode major-mode))))
-    (if (and (< 5 (length mode))
-             (string= "-mode" (subseq mode (- (length mode) 5))))
-        (subseq mode 0 (- (length mode) 5))
-        mode)))
-
-
 (defun pjb-add-header ()
   "
 DO:         Inserts a header at the beginning of the file with various 
@@ -2196,10 +2313,9 @@ DO:         Inserts a header at the beginning of the file with various
         (insert "\n")
         (pjb-insert-license 
          license lic-data
-         (list (format comment-format (format "Copyright %s %04d - %04d"
-                                        author year year)))
+         (list (pjb-format-copyright data author year year))
          title-format comment-format)
-        (insert (pjb-fill-a-line last-format  line-length))
+        (insert (pjb-fill-a-line last-format line-length))
         (insert "\n")
         (insert (format comment-format ""))
         (insert "\n"))))
@@ -2211,6 +2327,7 @@ DO:         Inserts a header at the beginning of the file with various
 ;; ------------------------------------------------------------------------
 ;; Change the license in the header.
 ;;
+
 
 (defun pjb-change-license (license)
   "
@@ -2260,28 +2377,11 @@ DO:         Assuming there's already a header with a LEGAL section,
             (error 
              "Can't find the end of the header. Please use M-x pjb-add-header"))
         (goto-char start)
-        (while (re-search-forward 
-                (format "^%s" 
-                  (regexp-quote 
-                   (let ((comm-line (format comment-format "Copyright")))
-                     (subseq comm-line 0
-                             (+ (search "Copyright" comm-line)
-                                (length "Copyright"))))))
-                end t)
-          (push (buffer-substring-no-properties
-                 (progn (beginning-of-line) (point))
-                 (progn (end-of-line) (point)))
-                copyrights))
-        (unless copyrights 
-          (setq copyrights
-                (list (format comment-format
-                        (format "Copyright %s %04d - %04d"
-                          author year year)))))
+        (setf copyrights (or (pjb-extract-copyrights data)
+                             (list (pjb-format-copyright data author year year))))
         (delete-region start end)
         (pjb-insert-license  license lic-data copyrights
                              title-format comment-format)))))
-
-
 
 
 ;; ------------------------------------------------------------------------
