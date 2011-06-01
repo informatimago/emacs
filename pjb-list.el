@@ -11,6 +11,7 @@
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
+;;;;    2011-06-01 <PJB> Added clean-alist, clean-plist, alist->plist and plist->alist.
 ;;;;    2006-03-23 <PJB> Added maptree.
 ;;;;    199?-??-?? <PJB> Creation.
 ;;;;    2001-11-30 <PJB> Added list-remove-elements.
@@ -543,5 +544,43 @@ RETURN:  The next dll-cons in the `dll-cons' double-linked-list node.
      finally (return (mapcar (function cdr) classes))))
 
 
+
+(defun clean-alist (a-list)
+  "Returns a new a-list containing the same associations than `a-list',
+with the shadowed associations removed."
+  (mapcon (lambda (a-list)
+             (if (member* (caar a-list) (cdr a-list) :key (function car) :test (function equal))
+                 '()
+                 (list (car a-list))))
+          (reverse a-list)))
+
+
+(defun alist->plist (alist)
+  "Converts an a-list into a p-list.
+Warning: the keys in p-list should be only symbols. p-lists getf and get use eq."
+  (loop for (k . v) in alist collect k collect v))
+
+(defun plist->alist (plist)
+  "Converts an p-list into a a-list."
+  (loop for (k v) on plist by (function cddr) collect (cons k v)))
+
+(defun clean-plist (plist)
+  "Returns a new p-list containing the same associations than `p-list',
+with the shadowed associations remvoved."
+  (alist->plist (clean-alist (plist->alist plist))))
+
+
+;; (let ((old-alist '((a . 1) (c . 3) (a . 11) (b . 22) (c . 33))))
+;;   (list (clean-alist old-alist)
+;;         old-alist))
+;; 
+;; --> (((b . 22) (c . 3) (a . 1))
+;;      ((a . 1) (c . 3) (a . 11) (b . 22) (c . 33)))
+;; 
+;; (let ((old-plist '(a 1 c 3 a 11 b 22 c 33)))
+;;   (list (clean-plist old-plist)
+;;         old-plist))
+;; --> ((b 22 c 3 a 1)
+;;      (a 1 c 3 a 11 b 22 c 33))
 
 ;;;; pjb-list.el                      --                     --          ;;;;
