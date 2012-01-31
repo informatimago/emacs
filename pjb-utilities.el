@@ -536,6 +536,12 @@ SEE-ALSO: `write-char'.
       (if (= 1 (length x)) (car x) x)))
   (if (= 1 (length x)) (car x) x))
 
+(defmacro mshow (&rest expressions)
+  "Message the formated value of each expression in `expressions'."
+  `(progn
+     ,@(mapcar (lambda (expr)
+                   `(message "%s -> %S" ',expr ,expr))
+               expressions)))
 
 
 (defmacro for (var  init  final  &rest body)
