@@ -51,7 +51,6 @@
 (require 'eieio-opt)
 (require 'parse-time)
 
-(provide 'pjb-cl)
 
 ;; Let's teach emacs how to format Common-Lisp:
 
@@ -840,6 +839,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         compared are of unequal length; that is, if (not (= (- end1
         start1) (- end2 start2)))  is true, then string= is false.
 "
+  ;; TODO: should use compare-string
   (setq string1 (string* string1)
         string2 (string* string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
@@ -867,6 +867,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         arguments are provided so that substrings can be compared
         efficiently.
 "
+  ;; TODO: should use compare-string
   (setq string1 (string* string1)
         string2 (string* string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
@@ -892,6 +893,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         arguments are provided so that substrings can be compared
         efficiently.
 "
+  ;; TODO: should use compare-string
   (setq string1 (string* string1)
         string2 (string* string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
@@ -917,6 +919,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         arguments are provided so that substrings can be compared
         efficiently.
 "
+  ;; TODO: should use compare-string
   (setq string1 (string* string1)
         string2 (string* string2))
   (let ( (start1 (or (cadr (memq :start1 cl-keys)) 0))
@@ -943,6 +946,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         arguments are provided so that substrings can be compared
         efficiently.
 "
+  ;; TODO: should use compare-string
   (setq string1 (string* string1)
         string2 (string* string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
@@ -968,6 +972,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         arguments are provided so that substrings can be compared
         efficiently.
 "
+  ;; TODO: should use compare-string
   (not (apply 'string= string1 string2 cl-keys)))
 
 
@@ -1976,4 +1981,5 @@ Valid clauses are:
     ))
 
 
+(provide 'pjb-cl)
 ;;;; pjb-cl.el                        --                     --          ;;;;
