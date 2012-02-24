@@ -1033,6 +1033,7 @@ KEYS:   :deeply   (boolean,  default nil)
 NOTE:   Scanning stops as soon as an error is detected by forward-sexp.
 RETURN: The list of results from fun.
 "
+  (error "Doesn't work, need re-implementation; see new-map-sexps.")
   (cl-parsing-keywords ((:deeply   nil)
                         (:atoms    nil)) ()
     (message "map-sexps deeply %S  atoms %S" cl-deeply cl-atoms)
@@ -1906,6 +1907,7 @@ and last year of the copyright.
 ;; (pjb-extract-copyrights  (header-comment-description-for-mode major-mode))
 
 
+
 (defun pjb-format-copyright (hcd author first-year last-year)
   (let ((comment-format (hcd-header-comment-format hcd)))
    (format comment-format
@@ -2094,7 +2096,7 @@ by pjb-add-change-log-entry.")
 
 
 (defparameter pjb-sources-licenses 
-  '(("GPL"           
+  '(("GPL2"           
      t
      "This program is free software; you can redistribute it and/or"
      "modify it under the terms of the GNU General Public License"
@@ -2111,7 +2113,7 @@ by pjb-add-change-log-entry.")
      "Software Foundation, Inc., 59 Temple Place, Suite 330,"
      "Boston, MA 02111-1307 USA")
 
-    ("LGPL"          
+    ("LGPL2"          
      t
      "This library is free software; you can redistribute it and/or"
      "modify it under the terms of the GNU Lesser General Public"
@@ -2153,6 +2155,71 @@ by pjb-add-change-log-entry.")
      "Free Software Foundation, Inc., 59 Temple Place, Suite 330,"
      "Boston, MA 02111-1307 USA")
 
+    ("GPL3"
+     t
+     "This program is free software: you can redistribute it and/or modify"
+    "it under the terms of the GNU General Public License as published by"
+    "the Free Software Foundation, either version 3 of the License, or"
+    "(at your option) any later version."
+     ""
+    "This program is distributed in the hope that it will be useful,"
+    "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
+    "GNU General Public License for more details."
+     ""
+    "You should have received a copy of the GNU General Public License"
+    "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
+
+    ("GPL3-fr"
+     t
+     "Ce programme est un logiciel libre ; vous pouvez le redistribuer ou le"
+     "modifier suivant les termes de la GNU General Public License telle que"
+     "publiée par la Free Software Foundation : soit la version 3 de cette"
+     "licence, soit (à votre gré) toute version ultérieure."
+     ""
+     "Ce programme est distribué dans lespoir quil vous sera utile, mais SANS"
+     "AUCUNE GARANTIE : sans même la garantie implicite de COMMERCIALISABILITÉ"
+     "ni dADÉQUATION À UN OBJECTIF PARTICULIER. Consultez la Licence Générale"
+     "Publique GNU pour plus de détails."
+     ""
+     "Vous devriez avoir reçu une copie de la Licence Générale Publique GNU avec"
+     "ce programme ; si ce nest pas le cas, consultez :"
+     "<http://www.gnu.org/licenses/>.")
+
+    ("AGPL3"
+     t
+     "This program is free software: you can redistribute it and/or modify"
+     "it under the terms of the GNU Affero General Public License as published by"
+     "the Free Software Foundation, either version 3 of the License, or"
+     "(at your option) any later version."
+     ""
+     "This program is distributed in the hope that it will be useful,"
+     "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+     "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
+     "GNU Affero General Public License for more details."
+     ""
+     "You should have received a copy of the GNU Affero General Public License"
+     "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
+
+    ("LGPL3"
+     t
+
+     "This library is free software; you can redistribute it and/or"
+     "modify it under the terms of the GNU Lesser General Public"
+     "License as published by the Free Software Foundation; either"
+     "version 3 of the License, or (at your option) any later"
+     "version."
+     ""
+     "This library is distributed in the hope that it will be"
+     "useful, but WITHOUT ANY WARRANTY; without even the implied"
+     "warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR"
+     "PURPOSE.  See the GNU Lesser General Public License for more"
+     "details."
+     ""
+     "You should have received a copy of the  GNU Lesser General"
+     "Public License along with this library."
+     "If not, see <http://www.gnu.org/licenses/>.")
+    
     ("BSD"
      t
      "Redistribution and use in source and binary forms, with or"
@@ -2377,8 +2444,13 @@ DO:         Assuming there's already a header with a LEGAL section,
             (error 
              "Can't find the end of the header. Please use M-x pjb-add-header"))
         (goto-char start)
-        (setf copyrights (or (pjb-extract-copyrights data)
-                             (list (pjb-format-copyright data author year year))))
+        (setf copyrights  (let ((old-copyrights (pjb-extract-copyrights data)))
+                            (if old-copyrights
+                                (mapcar  (lambda (old-copyright)
+                                           (destructuring-bind (author year-0 year-1) old-copyright
+                                             (pjb-format-copyright data author year-0 year-1)))
+                                         old-copyrights)
+                                (list (pjb-format-copyright data author year year)))))
         (delete-region start end)
         (pjb-insert-license  license lic-data copyrights
                              title-format comment-format)))))

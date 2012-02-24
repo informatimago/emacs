@@ -2269,7 +2269,7 @@ FILE-AND-OPTION: either an atom evaluated to a path,
 THUNK:      a function of one argument called for each file pathname.
 DIRECTORY:  the pathname of the base directory.
 RECURSIVE:  a boolean indicating whether the directory will be walked recursively.
-EXCEPTIONS: either a list of pathnames that musthn't be processed,
+EXCEPTIONS: either a list of pathnames that mustn't be processed,
             or a predicate indicating the pathnames that mustn't be processed.
 "
   (dolist (file (directory-files directory))
