@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;**************************************************************************
 ;;;;FILE:               pjb-font.el
 ;;;;LANGUAGE:           emacs lisp
@@ -15,7 +16,7 @@
 ;;;;LEGAL
 ;;;;    GPL
 ;;;;    
-;;;;    Copyright Pascal Bourguignon 2006 - 2006
+;;;;    Copyright Pascal Bourguignon 2006 - 2011
 ;;;;    
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License

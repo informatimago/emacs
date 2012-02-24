@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;****************************************************************************
 ;;;;FILE:              pjb-make-depends.el
 ;;;;LANGUAGE:          emacs
@@ -22,7 +23,7 @@
 ;;;;    2002-11-16 <PJB> Created.
 ;;;;BUGS
 ;;;;LEGAL
-;;;;    Copyright Pascal J. Bourguignon 2002 - 2002
+;;;;    Copyright Pascal J. Bourguignon 2002 - 2011
 ;;;;
 ;;;;    This script is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU  General Public

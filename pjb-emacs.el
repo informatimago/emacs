@@ -1,4 +1,4 @@
-;;;; -*- coding: utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-emacs.el
 ;;;;LANGUAGE:           emacs lisp
@@ -12,6 +12,8 @@
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon 
 ;;;;MODIFICATIONS
+;;;;    2010-10-30 <PJB> Renamed multifile-replace-string to recursive-replace-string,
+;;;;                     Added recursive-replace-regexp and multifile-replace-regexp.
 ;;;;    2006-03-23 <PJB> Added fringe-width and scroll-bar-width for full-frame.
 ;;;;    2004-10-15 <PJB> Added maximize-window.
 ;;;;    2001-11-30 <PJB> Extracted from pjb-utilities.el.
@@ -20,7 +22,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 1990 - 2004
+;;;;    Copyright Pascal J. Bourguignon 1990 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -1288,6 +1290,13 @@ in screen.              out of screen.
 |    |    ||    |    |
 +----+----++----+----+
 
++------+------+------+
+|      |      |      |
+|  11  |  12  |  13  |  -11 -12 -13
+|      |      |      |
++------+------+------+
+
+
 +---------++---------+
 |    21   ||   31    |
 +---------++---------+  No decorationless here.
@@ -1300,6 +1309,11 @@ in screen.              out of screen.
 | 42 | 52 || 62 | 72 |  
 +----+----++----+----+
 
++------+------+------+
+|  111 |  121 |  131 |
++------+------+------+  No decorationless here.
+|  112 |  122 |  132 |
++------+------+------+
 "
   (interactive "p")
   (let* ((frame (current-frame))
@@ -1310,31 +1324,36 @@ in screen.              out of screen.
          (screen-height (fourth area)))
     (if (not (member (abs prefix) '(1 2 3 4 5 6 7
                                     -1 -2 -3 -4 -5 -6 -7
+                                    11 12 13 -11 -12 -13
+                                    111 112 121 122 131 132 -111 -112 -121 -122 -131 -132
                                     21 22 31 32
                                     41 42 51 52 61 62 71 72)))
         (message "Invalid prefix %S; expecting: %s"
                  prefix
-                 "[   1   ]   [ 2 | 3 ]   [4|5|6|7]
+                 "[   1   ]   [ 2 | 3 ]*   [4|5|6|7]*   [11|12|13]*
 Multiply by -1 = without decoration.
-Multiply by 10 and add 1 for top half, and 2 for bottom half.
+*: Multiply by 10 and add 1 for top half, and 2 for bottom half.
 ")
         (let* ((top-offset    (if (minusp prefix)
                                   (- *window-manager-above*) 0))
                (height-offset (if (minusp prefix)
                                   0 (- *window-manager-y-offset*)))
                (prefix (abs prefix))
-               (hpref  (if (< prefix 10) prefix (truncate prefix 10))) ; 1..7
-               (vpref  (if (< prefix 10) 0 (mod prefix 10))) ; 0,1,2
+               (hpref  (if (< prefix 20) prefix (truncate prefix 10))) ; 1..19
+               (vpref  (if (< prefix 20) 0 (mod prefix 10))) ; 0,1,2
                (left   (+ screen-left
                           (case hpref
-                            ((1 2 4) 0)
+                            ((1 2 4 11) 0)
                             ((3 6)   (truncate screen-width 2))
                             ((5)     (truncate screen-width 4))
-                            ((7)     (* 3 (truncate screen-width 4))))))
+                            ((7)     (* 3 (truncate screen-width 4)))
+                            ((12)    (truncate screen-width 3))
+                            ((13)    (* 2 (truncate screen-width 3))))))
                (width  (truncate screen-width (case hpref
-                                                ((1)       1)
-                                                ((2 3)     2)
-                                                ((4 5 6 7) 4))))
+                                                ((1)        1)
+                                                ((2 3)      2)
+                                                ((11 12 13) 3)
+                                                ((4 5 6 7)  4))))
                (top    (+ screen-top
                           (case vpref
                             ((0 1) 0)
@@ -1371,8 +1390,6 @@ Multiply by 10 and add 1 for top half, and 2 for bottom half.
                      (mesframe frame)))
             (move-frame left width
                         (+ top top-offset) (+ height height-offset)))))))
-
-
 
                
 (defun single-frame ()
@@ -2040,6 +2057,102 @@ to the buffer instead of local to the mode."
     
 
 
+;;;----------------------------------------
+;;; Radio Londre
+;;;----------------------------------------
+
+(defvar *radio-londre-messages*
+  '("Andromaque se parfume à la lavande."
+    "Athalie est restée en extase. Nous disons deux fois : Athalie est restée en extase."
+    "Attention elle mord. Nous disons trois fois."
+    "Baissez donc les paupières."
+    "Bercent mon coeur d'une langueur monotone."
+    "C'est évidemment un tort."
+    "Clarisse a les yeux bleus, nous disons, Clarisse a les yeux bleus."
+    "Clarisse sera vengée. Nous disons deux fois..."
+    "Clémentine peut se curer les dents."
+    "De Camille à Amicha : six amis trouveront qu'elle mord ce soir. Nous disons : six amis trouveront qu'elle mord ce soir."
+    "De Marie-Thérèse à Marie-Louise : un ami viendra ce soir."
+    "Demain, la mélasse deviendra du cognac."
+    "Du bouledogue au sanglier : vous recevrez encore des amis ce soir. Le vent souffle les flambeaux. Nous disons : vous recevrez encore des amis ce soir. Le vent souffle les flambeaux.."
+    "Écoute mon cœur qui pleure."
+    "Elle est rasoir, Jeannie. Nous disons deux fois..."
+    "Elle restera sur le dos."
+    "Fréderick était roi de Prusse; nous disons quatre fois."
+    "Gabrielle vous envoie ses amitiés."
+    "Grand-Mère mange nos bonbons."
+    "Gustave est très doux. Nous disons deux fois..."
+    "Heureux qui comme Ulysse a fait un long voyage."
+    "Il a pleuré de joie."
+    "Il a une voix de fausset."
+    "Il est sévère mais juste (+ code du département)."
+    "Il est temps de cueillir des tomates."
+    "Il fait chaud à Suez."
+    "Il faut avoir des pipes pour trier les lentilles."
+    "Il n'y a plus de tabac dans la tabatière."
+    "Il pleut toujours en Angleterre."
+    "J'aime les chats siamois."
+    "Je n'aime pas la blanquette de veau."
+    "Je n'aime pas les crêpes Suzette."
+    "Je veux être parrain."
+    "Jean a une moustache très longue."
+    "Jeannette a du cran. Nous disons deux fois."
+    "L'acide rougit le tournesol."
+    "L'angora a les poils longs."
+    "L'éléphant s'est cassé une défense."
+    "L'heure des combats viendra."
+    "L'infirme veut courir."
+    "La Bénédictine est une liqueur douce."
+    "La fortune vient en dormant."
+    "La jeunesse est l'espoir du pays."
+    "La mort de Turenne est irréparable."
+    "La secrétaire est jolie."
+    "La vache saute par dessus la lune."
+    "La vertu réduit dans tous les yeux."
+    "Le canapé se trouve au milieu du salon."
+    "Le chacal n'aime pas le vermicelle. Nous disons : Le chacal n'aime pas le vermicelle."
+    "Le chat a neuf vies."
+    "Le chercheur d'or ira à la foire. Nous disons deux fois..."
+    "Le cheval bleu se promène sur l'horizon."
+    "Le chimpanzé est protocolaire. Nous disons trois fois..."
+    "Le cocker est bon chasseur. Nous disons trois fois..."
+    "Le coq chantera à minuit."
+    "Le facteur s'est endormi."
+    "Le grand blond s'appelle Bill."
+    "Le musicien est enthousiaste."
+    "Le père La Cerise est verni."
+    "Le sapin est vert, je répète, le sapin est vert."
+    "Le soleil se lève à l'Est le dimanche."
+    "Les carottes sont cuites."
+    "Les dés sont sur la table."
+    "Les fraises sont dans leur jus."
+    "Les girafes ne portent pas de faux-col."
+    "Les noix sont sèches."
+    "Les sanglots longs des violons de l'automne."
+    "Lily embrasse Mimi. Nous disons : Lily embrasse Mimi..."
+    "Lisette va bien."
+    "Louis a deux cochons."
+    "Ma femme à l'oeil vif."
+    "Message très important pour Samuel : L'octogénaire ne se déride pas. Attendez deux voitures et des amis sur le bonbon. Nous disons : L'octogénaire ne se déride pas. Attendez deux voitures et des amis sur le bonbon..."
+    "Messieurs faites vos jeux."
+    "Michel-Ange et Raphael sont immortels."
+    "Paul a du bon tabac."
+    "Pierrot ressemble à son grand-père."
+    "Rien ne m'est plus."
+    "Saint Liguori fonda Naples."
+    "Tambours, battez la charge, quatre fois. Nous disons : Tambours, battez la charge, quatre fois."
+    "Tante Amélie fait du vélo en short."
+    "Tu monteras la colline deux fois."
+    "Une poule sur un mur picore du pain dur."
+    "Véronèse était un peintre."
+    "Yvette aime les grosses carottes."))
+
+(defun radio-londre (&optional insertp)
+  (interactive "P")
+  (funcall (if insertp
+               (function insert)
+               (function message))
+           (elt *radio-londre-messages* (random (length *radio-londre-messages*)))))
 
 
 ;;;----------------------------------------
@@ -2156,25 +2269,29 @@ FILE-AND-OPTION: either an atom evaluated to a path,
 THUNK:      a function of one argument called for each file pathname.
 DIRECTORY:  the pathname of the base directory.
 RECURSIVE:  a boolean indicating whether the directory will be walked recursively.
-EXCEPTIONS: either a list of pathnames that musthn't be processed,
+EXCEPTIONS: either a list of pathnames that mustn't be processed,
             or a predicate indicating the pathnames that mustn't be processed.
 "
   (dolist (file (directory-files directory))
-    (let ((stat (file-attributes file))
-          (predicate (cond
-                       ((null exceptions)
-                        (constantly nil))
-                       ((functionp exceptions)
-                        exceptions)
-                       ((listp exceptions)
-                        (byte-compile `(lambda (x) (member* x ',exceptions :test (function string=)))))
-                       (t (error "exceptions must be either a list or a function, not a ~S: ~S"
-                                 (type-of exceptions) exceptions))))
-          (path  (concat directory
-                         (if (string= (subseq directory (1- (length directory)))
-                                      "/")
-                             "" "/")
-                         file)))
+    (let* ((predicate (cond
+                        ((null exceptions)
+                         (constantly nil))
+                        ((functionp exceptions)
+                         exceptions)
+                        ((listp exceptions)
+                         (byte-compile `(lambda (x) (member* x ',exceptions :test (function string=)))))
+                        (t (error "exceptions must be either a list or a function, not a ~S: ~S"
+                                  (type-of exceptions) exceptions))))
+           (path  (concat directory
+                          (if (string= (subseq directory (1- (length directory)))
+                                       "/")
+                              "" "/")
+                          file))
+           (stat (file-attributes path)))
+      ;; (message "\n\nstat      = %S" stat)
+      ;; (message "recursive = %S" recursive)
+      ;; (message "path      = %S" path)
+      ;; (message "filter (funcall predicate path) -> %S" (funcall predicate path))
       (case (first stat)
         ((t)                            ; directory
          (unless (or (string= "." file) (string= ".." file))
@@ -2183,7 +2300,7 @@ EXCEPTIONS: either a list of pathnames that musthn't be processed,
                (mapfiles thunk path recursive predicate)))))
         ((nil) ; file
          (unless (funcall predicate path)
-          (funcall thunk path)))
+           (funcall thunk path)))
         (otherwise ; symlink
          ;; NOP
          )))))
@@ -2198,19 +2315,17 @@ EXCEPTIONS: either a list of pathnames that musthn't be processed,
 ;;; multi-file replace
 ;;;----------------------------------------
 
-(defvar *multifile-ignored-directories*
-  '("_darcs" ".darcsrepo" ".svn" ".hg" ".git" "CVS" "RCS" "MT" "SCCS"
-    ".tmp_versions" "{arch}" ".arch-ids"
-    "BitKeeper" "ChangeSet" "autom4te.cache"))
+
+(defvar *recursive-replace-ignored-directories* *ignorable-directories*)
 
 
-(defun multifile-replace-string (from-string to-string &optional directory recursive delimited)
-  "Replace the all occurences of from-string by to-string in all the files in the directory.
-If recursive is true (or a prefix argument is given), then the files are searched recursively
-otherwise only the files directly in the given directory are modified.
-`*multifile-ignored-directories*' is a list of directory names that are excluded from the
+(defun recursive-replace-string (from-string to-string &optional directory recursive delimited)
+  "Replace the all occurences of `from-string' by `to-string' in all the files in the directory.
+If `recursive' is true (or a prefix argument is given), then the files are searched recursively
+otherwise only the files directly in the given `directory' are modified.
+`*recursive-replace-ignored-directories*' is a list of directory names that are excluded from the
 recursive search.  Backup files (name ending in ~) are ignored too.
-delimited, if non-nil, means replace only matches surrounded by word boundaries.
+`delimited', if non-nil, means replace only matches surrounded by word boundaries.
  "
   (interactive
    (let* ((directory (symbol-name (read-minibuffer "Directory: " default-directory)))
@@ -2222,7 +2337,7 @@ delimited, if non-nil, means replace only matches surrounded by word boundaries.
                     (lambda (path)
                       (let ((name (basename path)))
                         (or (string= "~" (subseq name (1- (length name))))
-                            (member* name *multifile-ignored-directories*
+                            (member* name *recursive-replace-ignored-directories*
                                      :test (function string=))))))
     (with-file (file)
       (message "Processing %S" file)
@@ -2230,5 +2345,41 @@ delimited, if non-nil, means replace only matches surrounded by word boundaries.
       (replace-string from-string to-string delimited))))
 
 
+(defun recursive-replace-regexp (regexp to-string &optional directory recursive delimited)
+  "Replace the all occurences of `regexp' by `to-string' in all the files in the directory.
+If `recursive' is true (or a prefix argument is given), then the files are searched recursively
+otherwise only the files directly in the given `directory' are modified.
+`*recursive-replace-ignored-directories*' is a list of directory names that are excluded from the
+recursive search.  Backup files (name ending in ~) are ignored too.
+`delimited', if non-nil, means replace only matches surrounded by word boundaries.
+ "
+  (interactive
+   (let* ((directory (symbol-name (read-minibuffer "Directory: " default-directory)))
+          (arguments (query-replace-read-args
+                      (format "Replace string in all files in %s" directory)
+                      nil)))
+     (list (first arguments) (second arguments) directory (third arguments) nil)))
+  (with-files (file directory recursive
+                    (lambda (path)
+                      (let ((name (basename path)))
+                        (or (string= "~" (subseq name (1- (length name))))
+                            (member* name *recursive-replace-ignored-directories*
+                                     :test (function string=))))))
+    (with-file (file)
+      (message "Processing %S" file)
+      (beginning-of-buffer)
+      (replace-regexp regexp to-string delimited))))
 
-;;;; pjb-emacs.el                     --                     --          ;;;;
+
+(defun multifile-replace-regexp (regexp to-string files &optional delimited)
+  "Replace the all occurences of `regexp' by `to-string' in all the `files'.
+`delimited', if non-nil, means replace only matches surrounded by word boundaries.
+ "
+  (dolist (file files)
+    (with-file (file :save t :kill nil)
+      (message "Processing %S" file)
+      (beginning-of-buffer)
+      (replace-regexp regexp to-string delimited))))
+
+
+;;;: THE END ;;;;

@@ -13,7 +13,7 @@
 #LEGAL
 #    GPL
 #    
-#    Copyright Pascal J. Bourguignon 2003 - 2003
+#    Copyright Pascal J. Bourguignon 2003 - 2011
 #    
 #    This program is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU General Public License
@@ -96,7 +96,7 @@ EMACS_SOURCES=\
 EMACS_OBJECTS=$(EMACS_SOURCES:.el=.elc)
 LISP_OBJECTS=$(EMACS_OBJECTS) 
 
-all::$(EMACS_OBJECTS) #summary.html
+all::$(EMACS_OBJECTS) summary.html
 	-@chmod a+r *
 
 install::install-packages

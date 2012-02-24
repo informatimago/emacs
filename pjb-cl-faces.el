@@ -16,7 +16,7 @@
 ;;;;LEGAL
 ;;;;    GPL
 ;;;;    
-;;;;    Copyright Pascal Bourguignon 2004 - 2004
+;;;;    Copyright Pascal Bourguignon 2004 - 2011
 ;;;;    
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
@@ -1781,7 +1781,7 @@
 RETURN: A list containg the name of sym in down case and in up case.
 "
   (list (string-downcase (symbol-name sym)) 
-        (string-upcase   (symbol-name sym)))) ;;up-down-case
+        (string-upcase   (symbol-name sym))))
 
 
 (defconst +separator-regexp+ "[ \"',`()\n\t]")
@@ -1816,7 +1816,7 @@ RETURN: A regexp that match the given REGEXP, but
                      (format tree
                        (token-regexp
                         (regexp-opt
-                         (mapcar (function symbol-name) symbols)
+                         (mapcar (lambda (x) (string-upcase (symbol-name x))) symbols)
                          ;; (mapcan (function up-down-case) symbols)
                          'words))))
                     ((consp tree) (cons (format-regexp-in (car tree))
@@ -1907,4 +1907,4 @@ RETURN: A regexp that match the given REGEXP, but
   (setq font-lock-keywords
         *common-lisp-font-lock-keywords*))
 
-;;;; pjb-cl-faces.el                  --                     --          ;;;;
+;;;; THE END ;;;;

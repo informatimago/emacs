@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;******************************************************************************
 ;;;;FILE:               pjb-transpose.el
 ;;;;LANGUAGE:           emacs-lisp
@@ -16,7 +17,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;    
-;;;;    Copyright Pascal Bourguignon 2003 - 2003
+;;;;    Copyright Pascal Bourguignon 2003 - 2011
 ;;;;    mailto:pjb@informatimago.com
 ;;;;    
 ;;;;    This library is free software; you can redistribute it and/or

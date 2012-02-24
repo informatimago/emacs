@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;******************************************************************************
 ;;;;FILE:               pjb-c.el
 ;;;;LANGUAGE:           emacs lisp
@@ -16,7 +17,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 1990 - 2003
+;;;;    Copyright Pascal J. Bourguignon 1990 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public

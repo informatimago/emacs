@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;******************************************************************************
 ;;;;FILE:               pjb-bourse.el
 ;;;;LANGUAGE:           emacs lisp
@@ -15,7 +16,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 1990 - 2001
+;;;;    Copyright Pascal J. Bourguignon 1990 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -180,7 +181,7 @@ for each devise [See: pjb-euro].")
 
 
 (defmethod amount-at-devise ((self DeviseAccount) devise)
-  "Retourne le montant de la devise indiquÈe dans le devise-account.
+  "Retourne le montant de la devise indiqu√©e dans le devise-account.
 Voir account-valuation pour la valeur totale du devise-account."
   (cdr (assoc devise (amounts self)))
   );;amount-at-devise
@@ -191,8 +192,8 @@ Voir account-valuation pour la valeur totale du devise-account."
   );;devises
 
 (defmethod account-valuation ((self DeviseAccount) devise)
-  "Retourne la valeur du devise-account dans la devise indiquÈe.
-Utilise pjb-euro, et nÈcessite pour les devises flottantes, des cours ‡ jour."
+  "Retourne la valeur du devise-account dans la devise indiqu√©e.
+Utilise pjb-euro, et n√©cessite pour les devises flottantes, des cours √† jour."
   (let ((total-euro 0.0))
     (mapc (lambda (a)
             (setq total-euro (+ total-euro
@@ -203,7 +204,7 @@ Utilise pjb-euro, et nÈcessite pour les devises flottantes, des cours ‡ jour."
 
 
 (defmethod account-add ((self DeviseAccount) devise montant)
-  "Additionne au devise-account le montant indiquÈ dans la devise indiquÈe.
+  "Additionne au devise-account le montant indiqu√© dans la devise indiqu√©e.
 Pour additionner deux comptes, utiliser account-add-account.
 Return: self."
   (let ((ligne (assoc devise (amounts self))))
@@ -215,7 +216,7 @@ Return: self."
 
 
 (defmethod account-sub ((self DeviseAccount) devise montant)
-  "Soustrait du devise-account le montant indiquÈ dans la devise indiquÈe.
+  "Soustrait du devise-account le montant indiqu√© dans la devise indiqu√©e.
 Pour soustraire deux comptes, utiliser account-sub-account.
 Return: self."
   (let ((ligne (assoc devise (amounts self))))
@@ -262,8 +263,8 @@ RETURN: self"
 
 (defmethod account-operation-account ((self DeviseAccount)
                                       (other DeviseAccount) op-lambda)
-  "Retourne un devise-account rÈsultat de l'opÈration op-lambda sur
-les paires de montants de mÍme devise, et ajoute les montants-devise
+  "Retourne un devise-account r√©sultat de l'op√©ration op-lambda sur
+les paires de montants de m√™me devise, et ajoute les montants-devise
 restants."
   (let ((sort-a (sorted-accounts self))
         (sort-b (sorted-accounts other))
@@ -274,7 +275,7 @@ restants."
         (setq result
               (cons
                (cond
-                ((and a b (compare-sequal-sn-c a b)) ;; les deux sont Ègaux
+                ((and a b (compare-sequal-sn-c a b)) ;; les deux sont √©gaux
                  (setq sort-a (cdr sort-a) ;; on les passe
                        sort-b (cdr sort-b))
                  ;; resultat : l'operation appliquee sur eux.
@@ -1258,20 +1259,20 @@ RETURN: self."
 
 (defun portefeuille (operations &rest options)
   "
-OPERATIONS est une liste d'opÈrations boursiËres au format :
+OPERATIONS est une liste d'op√©rations boursi√®res au format :
      ( (DATE   QUANTITE   DEVISE COURS   COMISSION SYMBOL)
        (2000-10-16  20    EUR     8.98   8.20      ES0132580319) )
-Achat : quantitÈ > 0
-Vente : quantitÈ < 0
+Achat : quantit√© > 0
+Vente : quantit√© < 0
 
 On peut placer 0, 1 ou plusieurs options:
 
-    'efface-reste-du-tampon   --> efface le reste du tampon ‡ partir du point
-                                  d'insertion avant d'afficher les rÈsultats.
+    'efface-reste-du-tampon   --> efface le reste du tampon √† partir du point
+                                  d'insertion avant d'afficher les r√©sultats.
 
-    les symboles monÈtaires dÈfinis
-    dans (euro-get-devises)   --> affiche les totaux dans la devise indiquÈe
-                                  (que les cours soient ‡ jour!).
+    les symboles mon√©taires d√©finis
+    dans (euro-get-devises)   --> affiche les totaux dans la devise indiqu√©e
+                                  (que les cours soient √† jour!).
 "
 
   (let ((portfolio (make-instance Portfolio))

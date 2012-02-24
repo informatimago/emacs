@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;******************************************************************************
 ;;;;FILE:               pjb-utilities.el
 ;;;;LANGUAGE:           emacs lisp
@@ -19,7 +20,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 1990 - 2001
+;;;;    Copyright Pascal J. Bourguignon 1990 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -147,14 +148,15 @@ NOTE:    cmp is a function used to compare atoms ('eq, 'equal or whatever).
 
 (defun ^ (x exp)
   "Computes x^exp = x to the power of exp."
-  (cond ((< exp 0) (/ 1.0 (^ x (- 0 exp))))
-        ((= exp 0) 1)
-        ((= exp 1) x)
-        (t         (if (= (% exp 2) 0)
-                       (let ((x2 (^ x (/ exp 2))))
-                         (* x2 x2))
-                     (let ((x2 (^ x (/ (- exp 1) 2))))
-                       (* x x2 x2))))))
+  (cond ((< exp 0)       (/ 1.0 (^ x (- exp))))
+        ((= exp 0)       1)
+        ((= exp 1)       x)
+        ((integerp exp)  (if (= (% exp 2) 0)
+                             (let ((x2 (^ x (/ exp 2))))
+                               (* x2 x2))
+                             (let ((x2 (^ x (/ (- exp 1) 2))))
+                               (* x x2 x2))))
+        (t               (exp (* (log x) exp)))))
 
 
 
@@ -534,6 +536,12 @@ SEE-ALSO: `write-char'.
       (if (= 1 (length x)) (car x) x)))
   (if (= 1 (length x)) (car x) x))
 
+(defmacro mshow (&rest expressions)
+  "Message the formated value of each expression in `expressions'."
+  `(progn
+     ,@(mapcar (lambda (expr)
+                   `(message "%s -> %S" ',expr ,expr))
+               expressions)))
 
 
 (defmacro for (var  init  final  &rest body)

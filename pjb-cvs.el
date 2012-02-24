@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-cvs.el
 ;;;;LANGUAGE:           emacs lisp
@@ -15,7 +16,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 2002 - 2002
+;;;;    Copyright Pascal J. Bourguignon 2002 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -42,7 +43,7 @@
 ;; file = { revision=(file,*) }
 ;; tag  = { {file_i,version_j), k!=l ==> file_k!=file_l }
 ;; 
-;; arc_file ( (file,v1),(file,v2) ) si v2 succède v1 (+branches)
+;; arc_file ( (file,v1),(file,v2) ) si v2 succÃ¨de v1 (+branches)
 ;; arc_tag  ( (tag1,tag) si existe arc_file(n1,n2) avec n1 dans tag1 
 ;;                                                   et n2 dans tag2 )
 ;; poind(arc_tag(tag1,tag2)) = cardinal { arc_file(n1,n2) avec n1 dans tag1 

@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;******************************************************************************
 ;;;;FILE:               pjb-banks.el
 ;;;;LANGUAGE:           emacs lisp
@@ -15,7 +16,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 1990 - 2001
+;;;;    Copyright Pascal J. Bourguignon 1990 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -133,8 +134,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
         (store-match-data mat)
         (replace-match lin nil nil)))
 
-    (insert (format "; crédits : %s\n" (pjb-string-amount-list credits)))
-    (insert (format "; débits  : %s\n" (pjb-string-amount-list debits)))
+    (insert (format "; crÃ©dits : %s\n" (pjb-string-amount-list credits)))
+    (insert (format "; dÃ©bits  : %s\n" (pjb-string-amount-list debits)))
     ));;from-cajamar-table
 
 ;; ---------------------------------------------------------------------
@@ -195,8 +196,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
               ));;when
           (setq data (cdr data))
           );;while
-        (printf "; crédits : %s\n" (pjb-string-amount-list credits))
-        (printf "; débits  : %s\n" (pjb-string-amount-list debits))
+        (printf "; crÃ©dits : %s\n" (pjb-string-amount-list credits))
+        (printf "; dÃ©bits  : %s\n" (pjb-string-amount-list debits))
         (printf "; solde   : %s\n" solde)
         );;let
     (message "Not found!"))
@@ -258,8 +259,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
         (store-match-data mat)
         (replace-match lin nil nil)))
 
-    (insert (format "; crédits : %s\n" (pjb-string-amount-list credits)))
-    (insert (format "; débits  : %s\n" (pjb-string-amount-list debits)))
+    (insert (format "; crÃ©dits : %s\n" (pjb-string-amount-list credits)))
+    (insert (format "; dÃ©bits  : %s\n" (pjb-string-amount-list debits)))
     ));;from-cajamar-old
 
 ;; ------------------------------------------------------------------------
@@ -310,8 +311,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
         (store-match-data mat)
         (replace-match lin nil nil)))
 
-    (insert (format "; crédits : %s\n" (pjb-string-amount-list credits)))
-    (insert (format "; débits  : %s\n" (pjb-string-amount-list debits)))
+    (insert (format "; crÃ©dits : %s\n" (pjb-string-amount-list credits)))
+    (insert (format "; dÃ©bits  : %s\n" (pjb-string-amount-list debits)))
     ));;from-evolvebank-xls-eur
 
 ;; ---------------------------------------------------------------------
@@ -362,8 +363,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
         (replace-match lin nil nil)
         (printf "%s\n" lin)
         ));;while
-  (printf "; crédits : %s\n" (pjb-string-amount-list credits))
-  (printf "; débits  : %s\n" (pjb-string-amount-list debits))
+  (printf "; crÃ©dits : %s\n" (pjb-string-amount-list credits))
+  (printf "; dÃ©bits  : %s\n" (pjb-string-amount-list debits))
     ));;from-patagon-table
 
 
@@ -421,8 +422,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
         (store-match-data mat)
         (replace-match lin nil nil)))
 
-    (insert (format "; crédits : %s\n" (pjb-string-amount-list credits)))
-    (insert (format "; débits  : %s\n" (pjb-string-amount-list debits)))
+    (insert (format "; crÃ©dits : %s\n" (pjb-string-amount-list credits)))
+    (insert (format "; dÃ©bits  : %s\n" (pjb-string-amount-list debits)))
     ));;from-evolvebank-table
 
 (defun from-evolvebank-xls-esp ()
@@ -471,8 +472,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
         (store-match-data mat)
         (replace-match lin nil nil)))
 
-    (insert (format "; crédits : %s\n" (pjb-string-amount-list credits)))
-    (insert (format "; débits  : %s\n" (pjb-string-amount-list debits)))
+    (insert (format "; crÃ©dits : %s\n" (pjb-string-amount-list credits)))
+    (insert (format "; dÃ©bits  : %s\n" (pjb-string-amount-list debits)))
     ));;from-evolvebank-xls-esp
 
 

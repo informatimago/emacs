@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;******************************************************************************
 ;;;;FILE:               pjb-banks.el
 ;;;;LANGUAGE:           emacs lisp
@@ -18,7 +19,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 1990 - 2004
+;;;;    Copyright Pascal J. Bourguignon 1990 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -169,8 +170,8 @@ Use Mozilla, and copy-and-paste to emacs."
                     (t ":GASTO-CORRIENTE")))
                 journal)
           (insert lin))))
-    (printf "; crédits : %s\n" (pjb-string-amount-list credits))
-    (printf "; débits  : %s\n" (pjb-string-amount-list debits))
+    (printf "; crÃ©dits : %s\n" (pjb-string-amount-list credits))
+    (printf "; dÃ©bits  : %s\n" (pjb-string-amount-list debits))
     (printf "; solde   : %s\n\n\n" solde)
     (dolist (entry (reverse journal))
       (printf "(%s %s %s %s\n  %s %s\n  %s\n  %s)\n\n"
@@ -234,8 +235,8 @@ Use Mozilla, and copy-and-paste to emacs."
                 debits  (append debits  (list deb))
                 solde   sol)
           (insert lin))))
-    (printf "; crédits : %s\n" (pjb-string-amount-list credits))
-    (printf "; débits  : %s\n" (pjb-string-amount-list debits))
+    (printf "; crÃ©dits : %s\n" (pjb-string-amount-list credits))
+    (printf "; dÃ©bits  : %s\n" (pjb-string-amount-list debits))
     (printf "; solde   : %s\n" solde)));;from-cajamar-2003-mozilla
 
 
@@ -301,8 +302,8 @@ See: from-cajamar-mozilla"
         (setq debits  (nconc debits   deb))
         (store-match-data mat)
         (replace-match lin nil nil)))
-    (insert (format "; crédits : %s\n" (pjb-string-amount-list credits)))
-    (insert (format "; débits  : %s\n" (pjb-string-amount-list debits)))
+    (insert (format "; crÃ©dits : %s\n" (pjb-string-amount-list credits)))
+    (insert (format "; dÃ©bits  : %s\n" (pjb-string-amount-list debits)))
     (insert (format "(setq movements '%S)\n" movements))
     ));;from-cajamar-table
 
@@ -359,8 +360,8 @@ See: from-cajamar-mozilla"
             (setq solde   sol)
             (insert lin)))
         (setq data (cdr data)))
-      (printf "; crédits : %s\n" (pjb-string-amount-list credits))
-      (printf "; débits  : %s\n" (pjb-string-amount-list debits))
+      (printf "; crÃ©dits : %s\n" (pjb-string-amount-list credits))
+      (printf "; dÃ©bits  : %s\n" (pjb-string-amount-list debits))
       (printf "; solde   : %s\n" solde))
     (message "Nothing found! (Need from 'Fecha' to 'NO HAY MAS MOVIMIENTOS').")))
 
@@ -404,8 +405,8 @@ See: from-cajamar-mozilla"
         (setq debits  (append debits  (list deb)))
         (store-match-data mat)
         (replace-match lin nil nil)))
-    (insert (format "; crédits : %s\n" (pjb-string-amount-list credits)))
-    (insert (format "; débits  : %s\n" (pjb-string-amount-list debits)))
+    (insert (format "; crÃ©dits : %s\n" (pjb-string-amount-list credits)))
+    (insert (format "; dÃ©bits  : %s\n" (pjb-string-amount-list debits)))
     ));;from-cajamar-old
 
 
@@ -454,8 +455,8 @@ See: from-cajamar-mozilla"
         (replace-match lin nil nil)
         (printf "%s\n" lin)
         )) ;;while
-    (printf "; crédits : %s\n" (pjb-string-amount-list credits))
-    (printf "; débits  : %s\n" (pjb-string-amount-list debits))
+    (printf "; crÃ©dits : %s\n" (pjb-string-amount-list credits))
+    (printf "; dÃ©bits  : %s\n" (pjb-string-amount-list debits))
     ));;from-patagon-table
 
 
@@ -512,8 +513,8 @@ See: from-cajamar-mozilla"
 ;;;         (store-match-data mat)
 ;;;         (replace-match lin nil nil)))
 ;;; 
-;;;     (insert (format "; crédits : %s\n" (pjb-string-amount-list credits)))
-;;;     (insert (format "; débits  : %s\n" (pjb-string-amount-list debits)))
+;;;     (insert (format "; crÃ©dits : %s\n" (pjb-string-amount-list credits)))
+;;;     (insert (format "; dÃ©bits  : %s\n" (pjb-string-amount-list debits)))
 ;;;     ));;from-evolvebank-table
 ;;; 
 ;;; 
@@ -563,8 +564,8 @@ See: from-cajamar-mozilla"
 ;;;         (store-match-data mat)
 ;;;         (replace-match lin nil nil)))
 ;;; 
-;;;     (insert (format "; crédits : %s\n" (pjb-string-amount-list credits)))
-;;;     (insert (format "; débits  : %s\n" (pjb-string-amount-list debits)))
+;;;     (insert (format "; crÃ©dits : %s\n" (pjb-string-amount-list credits)))
+;;;     (insert (format "; dÃ©bits  : %s\n" (pjb-string-amount-list debits)))
 ;;;     ));;from-evolvebank-xls-esp
 ;;; 
 ;;; 
@@ -693,8 +694,8 @@ See: from-cajamar-mozilla"
 ;;;         (setq debits  (append debits  (list deb)))
 ;;;         (store-match-data mat)
 ;;;         (replace-match lin nil nil)))
-;;;     (insert (format "; crédits : %s\n" (pjb-string-amount-list credits)))
-;;;     (insert (format "; débits  : %s\n" (pjb-string-amount-list debits)))
+;;;     (insert (format "; crÃ©dits : %s\n" (pjb-string-amount-list credits)))
+;;;     (insert (format "; dÃ©bits  : %s\n" (pjb-string-amount-list debits)))
 ;;;     ));;from-evolvebank-xls-eur
 
 

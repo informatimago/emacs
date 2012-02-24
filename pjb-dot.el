@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-dot.el
 ;;;;LANGUAGE:           emacs-lisp
@@ -15,7 +16,7 @@
 ;;;;LEGAL
 ;;;;    GPL
 ;;;;    
-;;;;    Copyright Pascal Bourguignon 2003 - 2003
+;;;;    Copyright Pascal Bourguignon 2003 - 2011
 ;;;;    mailto:pjb@informatimago.com
 ;;;;    
 ;;;;    This program is free software; you can redistribute it and/or

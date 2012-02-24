@@ -27,7 +27,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 2002 - 2006
+;;;;    Copyright Pascal J. Bourguignon 2002 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -51,7 +51,6 @@
 (require 'eieio-opt)
 (require 'parse-time)
 
-(provide 'pjb-cl)
 
 ;; Let's teach emacs how to format Common-Lisp:
 
@@ -203,6 +202,49 @@ IMPLEMENTATION: The clause variable symbols are substituted by one single
         `(condition-case ,var
              ,expression
            ,@handlers))))
+
+;; From: Stefan Monnier <monnier@iro.umontreal.ca>
+;; Subject: Re: condition-case
+;; Newsgroups: gnu.emacs.help
+;; Date: Thu, 09 Dec 2010 10:04:12 -0500
+;; Organization: A noiseless patient Spider
+;; Message-ID: <jwvbp4v9enz.fsf-monnier+gnu.emacs.help@gnu.org>
+;;
+;; Oh wait, I just noticed this one: `subst' is wrong here.  I know CL
+;; already uses it for similar purposes elsewhere, but it's simply wrong
+;; because `subst' doesn't know about Elisp binding rules.
+;; So (subst 'b 'a '(lambda () '(a b c))) will happily return
+;; (lambda () '(b b c)).  Better simply use `let', even if it has
+;; a performance cost.
+
+;; (defmacro handler-case (expression &rest clauses)
+;;   "Evaluate expression with `condition-case' and catch errors with CLAUSES.
+;; 
+;; Longer explanation here..."
+;;   (let* ((var (gensym))
+;;          (neclause (assoc :NO-ERROR clauses))
+;;          (nell     (cadr neclause))
+;;          (nebody   (cddr neclause))
+;;          (handlers (mapcar (lambda (clause)
+;;                              (let ((typespec (car clause))
+;;                                    (clausvar (cadr clause))
+;;                                    (body     (cddr clause)))
+;;                                (cons (if (and (consp typespec)
+;;                                               (eq 'or (car typespec)))
+;;                                          (cdr typespec)
+;;                                        typespec)
+;;                                      (if (null clausvar)
+;;                                          body
+;;                                        (let ((var (car clausvar)))
+;;                                          body)))))
+;;                            (remove neclause clauses))))
+;;     (if neclause
+;;         `(condition-case ,var
+;;              (multiple-value-bind ,nell ,expression ,@nebody)
+;;            ,@handlers)
+;;       `(condition-case ,var
+;;            ,expression
+;;          ,@handlers))))
 
 
 
@@ -797,6 +839,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         compared are of unequal length; that is, if (not (= (- end1
         start1) (- end2 start2)))  is true, then string= is false.
 "
+  ;; TODO: should use compare-string
   (setq string1 (string* string1)
         string2 (string* string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
@@ -824,6 +867,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         arguments are provided so that substrings can be compared
         efficiently.
 "
+  ;; TODO: should use compare-string
   (setq string1 (string* string1)
         string2 (string* string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
@@ -849,6 +893,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         arguments are provided so that substrings can be compared
         efficiently.
 "
+  ;; TODO: should use compare-string
   (setq string1 (string* string1)
         string2 (string* string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
@@ -874,6 +919,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         arguments are provided so that substrings can be compared
         efficiently.
 "
+  ;; TODO: should use compare-string
   (setq string1 (string* string1)
         string2 (string* string2))
   (let ( (start1 (or (cadr (memq :start1 cl-keys)) 0))
@@ -900,6 +946,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         arguments are provided so that substrings can be compared
         efficiently.
 "
+  ;; TODO: should use compare-string
   (setq string1 (string* string1)
         string2 (string* string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
@@ -925,6 +972,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
         arguments are provided so that substrings can be compared
         efficiently.
 "
+  ;; TODO: should use compare-string
   (not (apply 'string= string1 string2 cl-keys)))
 
 
@@ -1933,4 +1981,5 @@ Valid clauses are:
     ))
 
 
+(provide 'pjb-cl)
 ;;;; pjb-cl.el                        --                     --          ;;;;

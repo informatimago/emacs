@@ -1,3 +1,4 @@
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;******************************************************************************
 ;;;;FILE:               pjb-strings.el
 ;;;;LANGUAGE:           emacs lisp
@@ -18,7 +19,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 1990 - 2003
+;;;;    Copyright Pascal J. Bourguignon 1990 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -303,18 +304,29 @@ RETURN: A padded string.
         (cl-parsing-keywords ((:padchar 32))  t
           (when (stringp cl-padchar) 
             (setq cl-padchar (string-to-char cl-padchar)))
-          (let ((result (make-string* length :initial-element cl-padchar)))
-            (cond
-              ((memq :right cl-keys)
-               (copy-to-substring string 0 (1- slen) 
-                                  result (- length slen)))
-              ((memq :center cl-keys)
-               (copy-to-substring string 0 (1- slen) 
-                                  result (/ (- length slen) 2)))
-              (t 
-               (copy-to-substring string 0 (1- slen) result 0))))))))
-
-
+          ;; (let ((result (make-string* length :initial-element cl-padchar)))
+          ;;   (cond
+          ;;     ((memq :right cl-keys)
+          ;;      (copy-to-substring string 0 (1- slen) 
+          ;;                         result (- length slen)))
+          ;;     ((memq :center cl-keys)
+          ;;      (copy-to-substring string 0 (1- slen) 
+          ;;                         result (/ (- length slen) 2)))
+          ;;     (t 
+          ;;      (copy-to-substring string 0 (1- slen) result 0))))
+          (cond
+            ((memq :right cl-keys)
+             (concat string
+                     (make-string (- length slen) cl-padchar)))
+            ((memq :center cl-keys)
+             (let* ((left  (/ (- length slen) 2))
+                    (right (- (- length slen) left)))
+               (concat (make-string left cl-padchar)
+                       string
+                       (make-string right cl-padchar))))
+            (t
+             (concat (make-string (- length slen) cl-padchar)
+                     string)))))))
 
 
 (defun chop-spaces-old (string)

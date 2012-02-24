@@ -1,4 +1,4 @@
-;;;; -*- coding: utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-sources.el
 ;;;;LANGUAGE:           emacs lisp
@@ -37,7 +37,7 @@
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 1990 - 2004
+;;;;    Copyright Pascal Bourguignon 1990 - 2011
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -93,6 +93,16 @@
 ;; generate-options (options defaults)
 
 
+
+(defun mode-name (&optional mode)
+  "
+RETURN: A string containing the name of the mode, without the -mode suffix.
+"
+  (let ((mode (string* (or mode major-mode))))
+    (if (and (< 5 (length mode))
+             (string= "-mode" (subseq mode (- (length mode) 5))))
+        (subseq mode 0 (- (length mode) 5))
+        mode)))
 
 ;; ------------------------------------------------------------------------
 
@@ -263,25 +273,27 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
       "\\(#|\\([^|]\\||[^#]\\)*|#\\)\\|\\(;.*$\\)")
     ((text-mode)
      "\\(/\\*.*?\\*/\\)\\|\\(//.*$\\)") ;; \(/\*.*?\*/\)\|\(//.*$\)
-    ( LSOURCE    ";;;; %-32s -- %19s -- %-8s ;;;;" 
-     (asm-mode dsssl-mode emacs-lisp-mode ledit-mode
-      lisp-interaction-mode lisp-mode scheme-mode
-      common-lisp-mode fi:common-lisp-mode
-      zone-mode  )
-     ";;;;%s"
-     ";;;;%s"
-     ";;;;%s"
-     ";;;;    %s"
-     "\\(#|\\([^|]\\||[^#]\\)*|#\\)\\|\\(;.*$\\)")
-    ( TEXT       "" ;;";;;; %-32s -- %19s -- %-8s ;;;;" 
-     (text-mode)
-     "%s"
-     "%s"
-     "%s"
-     "    %s"
-     "%s"
-     "" ;;";;;; %-32s -- %19s -- %-8s ;;;;" 
-     "\\(^;.*$\\)")
+
+    ;; ( LSOURCE    ";;;; %-32s -- %19s -- %-8s ;;;;" 
+    ;;  (asm-mode dsssl-mode emacs-lisp-mode ledit-mode
+    ;;   lisp-interaction-mode lisp-mode scheme-mode
+    ;;   common-lisp-mode fi:common-lisp-mode
+    ;;   zone-mode  )
+    ;;  ";;;;%s"
+    ;;  ";;;;%s"
+    ;;  ";;;;%s"
+    ;;  ";;;;    %s"
+    ;;  "\\(#|\\([^|]\\||[^#]\\)*|#\\)\\|\\(;.*$\\)")
+    ;; ( TEXT       "" ;;";;;; %-32s -- %19s -- %-8s ;;;;" 
+    ;;  (text-mode)
+    ;;  "%s"
+    ;;  "%s"
+    ;;  "%s"
+    ;;  "    %s"
+    ;;  "%s"
+    ;;  "" ;;";;;; %-32s -- %19s -- %-8s ;;;;" 
+    ;;  "\\(^;.*$\\)")
+    
     ((awk-mode eshell-mode icon-mode m4-mode makefile-mode makefile-gmake-mode
                octave-mode perl-mode sh-mode shell-script-mode
                tcl-mode )
@@ -1021,6 +1033,7 @@ KEYS:   :deeply   (boolean,  default nil)
 NOTE:   Scanning stops as soon as an error is detected by forward-sexp.
 RETURN: The list of results from fun.
 "
+  (error "Doesn't work, need re-implementation; see new-map-sexps.")
   (cl-parsing-keywords ((:deeply   nil)
                         (:atoms    nil)) ()
     (message "map-sexps deeply %S  atoms %S" cl-deeply cl-atoms)
@@ -1833,6 +1846,125 @@ EXAMPLE: (COMBINE '(WWW FTP) '(EXA) '(COM ORG)))
 
 
 ;; ------------------------------------------------------------------------
+;; Extract, format, and update copyright lines.
+;; ------------------------------------------------------------------------
+
+(defun pjb-copyright-regexp (hcd)
+  (let* ((comment-format (or (hcd-header-comment-format hcd) "%s"))
+         (pattern  "Copyright ")
+         (base-re  (format "^%s" (regexp-quote (format comment-format pattern))))
+         (pos      (+ (search pattern base-re) (length pattern)))
+         (left-re  (subseq base-re 0 pos))
+         (right-re (subseq base-re pos)))
+    (format "%s *\\(.*?\\) +\\([0-9]+\\)\\(\\( +-\\|,\\) +\\([0-9]+\\)\\)*\\( +-\\|,\\) +\\([0-9]+\\).*%s"
+            left-re right-re)))
+
+
+(defun regexp-results (match string)
+  (let ((data (match-data t)))
+    (when data
+      (coerce
+       (loop
+          for (beg end) on data by (function cddr)
+          while (or (null beg) (integerp beg))
+          collect (list beg end (when (and beg end) (subseq string (1- beg) (1- end)))))
+       'vector))))
+
+
+(defun pjb-process-copyrights (hcd fun)
+  "
+Call the function `fun' with  the beginning and end points of each
+copyright line, and a list containing the copyright owner, the first
+and last year of the copyright.
+"
+  (let ((re   (pjb-copyright-regexp hcd))
+        (text (buffer-substring-no-properties (point-min) (point-max))))
+    (save-excursion
+      (goto-char (point-min))
+      (with-marker (end (point-max))
+       (loop
+          with next = (make-marker)
+          while (re-search-forward re end t)
+          do (let ((res (regexp-results t text)))
+               (set-marker next (1+ (second (aref res 0))))
+               (funcall fun
+                        (first  (aref res 0))
+                        (second (aref res 0))
+                        (list (third (aref res 1))
+                              (parse-integer (third (aref res 2)))
+                              (parse-integer (third (aref res 7)))))
+               (goto-char (1- (marker-position next)))))))))
+
+
+(defun pjb-extract-copyrights (hcd)
+  (let ((pjb-extract-copyrights/result '()))
+    (pjb-process-copyrights hcd
+                            (lambda (start end copyright)
+                              (declare (ignore start end))
+                              (push copyright pjb-extract-copyrights/result)))
+    (nreverse pjb-extract-copyrights/result)))
+
+;; (pjb-extract-copyrights  (header-comment-description-for-mode major-mode))
+
+
+
+(defun pjb-format-copyright (hcd author first-year last-year)
+  (let ((comment-format (hcd-header-comment-format hcd)))
+   (format comment-format
+           (format "Copyright %s %04d - %04d"
+                   author first-year last-year))))
+
+
+(defun pjb-update-copyright ()
+  "
+Update the copyright lines with the current year.
+NOTE:  only for Copyright Pascal Bourguignon.
+"
+  (interactive)
+  (let ((current-year  (third (calendar-current-date)))
+        (hcd (header-comment-description-for-mode major-mode)))
+    (pjb-process-copyrights
+     hcd
+     (lambda (start end copyright)
+       (destructuring-bind (owner first-year last-year) copyright
+         (declare (ignore last-year))
+         (when (and (search "Pascal" owner)
+                    (search "Bourguignon" owner))
+           (delete-region start end)
+           (insert (pjb-format-copyright hcd owner first-year current-year))))))))
+
+(defvar *source-extensions*
+  '(".lisp" ".cl" ".asd" ".el"
+    "Makefile"
+    ".c" ".cc" ".cpp" ".c++"
+    ".h" ".hh" ".hpp" ".h++"
+    ".m" ".mm"))
+
+(defvar *ignorable-directories*
+  '("_darcs" ".darcsrepo" ".svn" ".hg" ".git" "CVS" "RCS" "MT" "SCCS"
+    ".tmp_versions" "{arch}" ".arch-ids"
+    "BitKeeper" "ChangeSet" "autom4te.cache"))
+
+
+(defun pjb-update-copyright-directory ()
+  (interactive)
+  (let ((good-files-re      (format "\\(%s\\)$" (regexp-opt *source-extensions*)))
+        (bad-directories-re (format "/%s$" (regexp-opt *ignorable-directories*))))
+    (message "Updating copyright of all source files in %S" default-directory)
+    (message "Source files: %s" (join *source-extensions* " "))
+    (with-files (path default-directory t
+                      (lambda (path)
+                        ;; (message "filter %S --> %s" path  (string-match bad-directories-re path))
+                        ;; (message "recursive %s stat %S" recursive stat)
+                        (string-match bad-directories-re path)))
+      (when (string-match good-files-re path)
+        (with-file (path :save t :kill t :literal nil)
+          (message "Updating copyright in file %S" path)
+          (pjb-update-copyright))))))
+
+
+
+;; ------------------------------------------------------------------------
 ;; pjb-add-change-log-entry
 ;; ------------------------------------------------------------------------
 ;; Inserts a change log entry in the current source, 
@@ -1964,7 +2096,7 @@ by pjb-add-change-log-entry.")
 
 
 (defparameter pjb-sources-licenses 
-  '(("GPL"           
+  '(("GPL2"           
      t
      "This program is free software; you can redistribute it and/or"
      "modify it under the terms of the GNU General Public License"
@@ -1981,7 +2113,7 @@ by pjb-add-change-log-entry.")
      "Software Foundation, Inc., 59 Temple Place, Suite 330,"
      "Boston, MA 02111-1307 USA")
 
-    ("LGPL"          
+    ("LGPL2"          
      t
      "This library is free software; you can redistribute it and/or"
      "modify it under the terms of the GNU Lesser General Public"
@@ -2023,6 +2155,71 @@ by pjb-add-change-log-entry.")
      "Free Software Foundation, Inc., 59 Temple Place, Suite 330,"
      "Boston, MA 02111-1307 USA")
 
+    ("GPL3"
+     t
+     "This program is free software: you can redistribute it and/or modify"
+    "it under the terms of the GNU General Public License as published by"
+    "the Free Software Foundation, either version 3 of the License, or"
+    "(at your option) any later version."
+     ""
+    "This program is distributed in the hope that it will be useful,"
+    "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
+    "GNU General Public License for more details."
+     ""
+    "You should have received a copy of the GNU General Public License"
+    "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
+
+    ("GPL3-fr"
+     t
+     "Ce programme est un logiciel libre ; vous pouvez le redistribuer ou le"
+     "modifier suivant les termes de la GNU General Public License telle que"
+     "publiée par la Free Software Foundation : soit la version 3 de cette"
+     "licence, soit (à votre gré) toute version ultérieure."
+     ""
+     "Ce programme est distribué dans lespoir quil vous sera utile, mais SANS"
+     "AUCUNE GARANTIE : sans même la garantie implicite de COMMERCIALISABILITÉ"
+     "ni dADÉQUATION À UN OBJECTIF PARTICULIER. Consultez la Licence Générale"
+     "Publique GNU pour plus de détails."
+     ""
+     "Vous devriez avoir reçu une copie de la Licence Générale Publique GNU avec"
+     "ce programme ; si ce nest pas le cas, consultez :"
+     "<http://www.gnu.org/licenses/>.")
+
+    ("AGPL3"
+     t
+     "This program is free software: you can redistribute it and/or modify"
+     "it under the terms of the GNU Affero General Public License as published by"
+     "the Free Software Foundation, either version 3 of the License, or"
+     "(at your option) any later version."
+     ""
+     "This program is distributed in the hope that it will be useful,"
+     "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+     "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
+     "GNU Affero General Public License for more details."
+     ""
+     "You should have received a copy of the GNU Affero General Public License"
+     "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
+
+    ("LGPL3"
+     t
+
+     "This library is free software; you can redistribute it and/or"
+     "modify it under the terms of the GNU Lesser General Public"
+     "License as published by the Free Software Foundation; either"
+     "version 3 of the License, or (at your option) any later"
+     "version."
+     ""
+     "This library is distributed in the hope that it will be"
+     "useful, but WITHOUT ANY WARRANTY; without even the implied"
+     "warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR"
+     "PURPOSE.  See the GNU Lesser General Public License for more"
+     "details."
+     ""
+     "You should have received a copy of the  GNU Lesser General"
+     "Public License along with this library."
+     "If not, see <http://www.gnu.org/licenses/>.")
+    
     ("BSD"
      t
      "Redistribution and use in source and binary forms, with or"
@@ -2076,6 +2273,7 @@ by pjb-add-change-log-entry.")
      "This program and its documentation constitute intellectual property "
      "of Pascal J. Bourguignon and is protected by the copyright laws of "
      "the European Union and other countries.")
+
     ("medicalis"
      t
      "Copyright 2008 Medical Information Systems. "
@@ -2109,17 +2307,6 @@ by pjb-add-change-log-entry.")
     (insert "\n")))
 
 
-(defun mode-name (&optional mode)
-  "
-RETURN: A string containing the name of the mode, without the -mode suffix.
-"
-  (let ((mode (STRING (or mode major-mode))))
-    (if (and (< 5 (length mode))
-             (string= "-mode" (subseq mode (- (length mode) 5))))
-        (subseq mode 0 (- (length mode) 5))
-        mode)))
-
-
 (defun pjb-add-header ()
   "
 DO:         Inserts a header at the beginning of the file with various 
@@ -2139,7 +2326,7 @@ DO:         Inserts a header at the beginning of the file with various
          (author-abrev   *pjb-sources-initials*)
          (author         (or add-log-full-name (user-full-name)))
          (email          user-mail-address)
-         (year           (elt (MULTIPLE-VALUE-LIST (GET-DECODED-TIME)) 5))
+         (year           (third (calendar-current-date)))
          (line-length    78)
          license lic-data
          (system         "POSIX")
@@ -2193,10 +2380,9 @@ DO:         Inserts a header at the beginning of the file with various
         (insert "\n")
         (pjb-insert-license 
          license lic-data
-         (list (format comment-format (format "Copyright %s %04d - %04d"
-                                        author year year)))
+         (list (pjb-format-copyright data author year year))
          title-format comment-format)
-        (insert (pjb-fill-a-line last-format  line-length))
+        (insert (pjb-fill-a-line last-format line-length))
         (insert "\n")
         (insert (format comment-format ""))
         (insert "\n"))))
@@ -2208,6 +2394,7 @@ DO:         Inserts a header at the beginning of the file with various
 ;; ------------------------------------------------------------------------
 ;; Change the license in the header.
 ;;
+
 
 (defun pjb-change-license (license)
   "
@@ -2257,28 +2444,16 @@ DO:         Assuming there's already a header with a LEGAL section,
             (error 
              "Can't find the end of the header. Please use M-x pjb-add-header"))
         (goto-char start)
-        (while (re-search-forward 
-                (format "^%s" 
-                  (regexp-quote 
-                   (let ((comm-line (format comment-format "Copyright")))
-                     (subseq comm-line 0
-                             (+ (search "Copyright" comm-line)
-                                (length "Copyright"))))))
-                end t)
-          (push (buffer-substring-no-properties
-                 (progn (beginning-of-line) (point))
-                 (progn (end-of-line) (point)))
-                copyrights))
-        (unless copyrights 
-          (setq copyrights
-                (list (format comment-format
-                        (format "Copyright %s %04d - %04d"
-                          author year year)))))
+        (setf copyrights  (let ((old-copyrights (pjb-extract-copyrights data)))
+                            (if old-copyrights
+                                (mapcar  (lambda (old-copyright)
+                                           (destructuring-bind (author year-0 year-1) old-copyright
+                                             (pjb-format-copyright data author year-0 year-1)))
+                                         old-copyrights)
+                                (list (pjb-format-copyright data author year year)))))
         (delete-region start end)
         (pjb-insert-license  license lic-data copyrights
                              title-format comment-format)))))
-
-
 
 
 ;; ------------------------------------------------------------------------
