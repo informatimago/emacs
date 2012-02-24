@@ -1816,7 +1816,7 @@ RETURN: A regexp that match the given REGEXP, but
                      (format tree
                        (token-regexp
                         (regexp-opt
-                         (mapcar (function STRING) symbols)
+                         (mapcar (function symbol-name) symbols)
                          ;; (mapcan (function up-down-case) symbols)
                          'words))))
                     ((consp tree) (cons (format-regexp-in (car tree))

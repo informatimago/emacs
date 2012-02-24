@@ -65,6 +65,7 @@
         "pjb-font.el"
         "pjb-html.el"
         "pjb-list.el"
+        "pjb-gnus.el"
         "pjb-mail.el"
         "pjb-object.el"
         "pjb-page.el"
