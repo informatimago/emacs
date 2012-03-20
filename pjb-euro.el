@@ -363,9 +363,11 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
       (do ((titles   (reverse titles)   (cdr titles))
            (top-cols (reverse top-cols) (cdr top-cols))
            (right    "" (format "%s|%s"
-                                (make-string* (- (first top-cols) 
-                                                (or (second top-cols) 0) 1)
-                                             :initial-element (character " "))
+                                (if (endp (rest titles))
+                                    0
+                                    (make-string* (- (first top-cols) 
+                                                     (or (second top-cols) 0) 1)
+                                                  :initial-element (character " ")))
                                 right))
            name col)
           ((null titles))
@@ -397,8 +399,8 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
                                   (if (null (cdr line)) "" " "))
                           (car line))))
         (insert "\n"))
-      (h-bars)
-      )));;format-table
+      (h-bars))))
+
 
 
 

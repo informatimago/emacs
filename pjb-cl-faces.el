@@ -1781,7 +1781,7 @@
 RETURN: A list containg the name of sym in down case and in up case.
 "
   (list (string-downcase (symbol-name sym)) 
-        (string-upcase   (symbol-name sym)))) ;;up-down-case
+        (string-upcase   (symbol-name sym))))
 
 
 (defconst +separator-regexp+ "[ \"',`()\n\t]")
@@ -1907,4 +1907,4 @@ RETURN: A regexp that match the given REGEXP, but
   (setq font-lock-keywords
         *common-lisp-font-lock-keywords*))
 
-;;;; pjb-cl-faces.el                  --                     --          ;;;;
+;;;; THE END ;;;;
