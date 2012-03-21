@@ -1787,6 +1787,36 @@ to the buffer instead of local to the mode."
     (goto-char (point-min))
     (values)))
 
+(defun list-all-bindings ()
+  "Return a list of all bound keys."
+  (let ((bindings '()))
+    (rloop ((for C in '("" "C-"))       ; Control
+            (for M in '("" "M-"))       ; Meta
+            (for A in '("" "A-"))       ; Alt
+            (for S in '("" "S-"))       ; Shift
+            (for H in '("" "H-"))       ; Hyper
+            (for s in '("" "s-"))       ; super
+            (for x from 32 to 127))
+           (let* ((k (format "%s%s%s%s%s%s%c" C M A S H s x))
+                  (key (ignore-errors (read-kbd-macro k))))
+             (when key
+               (push
+                (list k
+                      (format "%-12s  %-12s  %S\n" k key
+                              (or
+                               ;; (string-key-binding key)
+                               ;; What is this string-key-binding?
+                               (key-binding key))))
+                bindings))))
+    (sort bindings
+          (lambda (a b)
+            (or (< (length (first a))
+                   (length (first b)))
+                (and (= (length (first a))
+                        (length (first b)))
+                     (string< (first a)
+                              (first b))))))))
+
 
 ;;;----------------------------------------
 ;;; Properties:
