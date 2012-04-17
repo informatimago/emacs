@@ -405,30 +405,44 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
     (t                 :atom)))
 
 
+(defun cl-skip-over-sharp-comment ()
+  (let ((start (match-beginning 0)))
+    (goto-char (match-end 0))
+    (loop named :search do
+      (re-search-forward "\\(#|\\||#\\)")
+      (if (string= "#|" (match-string 0))
+          (progn
+            (cl-skip-over-sharp-comment)
+            (goto-char (match-end 0)))
+          (let ((end (match-end 0)))
+            (set-match-data (list start (point)))
+            (return-from :search))))))
+
 (defun cl-skip-over (&optional what)
   (setf what (or what (cl-looking-at-what)))
   (case what
     ((:space)             (looking-at "[ \n\t\v\f\r]+"))
     ((:semicolon-comment) (looking-at ";.*$"))
-    ((:sharp-comment)     (looking-at "#|\\([^|]\\||[^#]\\)*|#"))
-    ((:string)            (looking-at "\"\\([^\\\\\"]\\|\\\\.\\|\\\\\n\\)*\""))
+    ((:sharp-comment)     (when (looking-at "#|")
+                            (cl-skip-over-sharp-comment)
+                            t))
+    ((:string)            (looking-at "\"\\(\\(\\|\\\\.\\|\\\\\n\\)[^\\\\\"]*\\)*\""))
     ((:beginning-of-list) (looking-at "("))
     ((:end-of-list)       (looking-at ")"))
     ((:quote)             (looking-at "'"))
     ((:backquote)         (looking-at "`"))
     ((:comma)             (looking-at ","))
     ((:comma-at)          (looking-at ",@"))
-    ((:atom)
-     (looking-at
-      "\\(|[^|]*|\\|\\\\.\\|#[^|]\\|[^\"\\#|;()'`, \n\t\v\f\r\\]\\)+"))
-    (otherwise (error "Cannot skip over %S" what)))
+    ((:atom)              (looking-at
+                           "\\(|[^|]*|\\|\\\\.\\|#[^|]\\|[^\"\\#|;()'`, \n\t\v\f\r\\]\\)+"))
+    (otherwise (error "cannot skip over %s" what)))
   (goto-char (match-end 0)))
 
 
-(defun cl-forward  (n)
+(defun cl-forward  (&optional n)
   (interactive "p")
   (setf n (or n 1))
-  (dotimes (i n)
+  (dotimes (i n t)
     (cl-skip-over)))
 
 
@@ -439,14 +453,17 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
   
 (defun case-lisp-region (start end transform)
   "
-DO:      Applies transform on all subregions from start to end that are not
+do:      applies transform on all subregions from start to end that are not
          a quoted character, a quote symbol, a comment (;... or #|...|#), 
          or a string.
 "
   (save-excursion
     (goto-char start)
     (while (< (point) end)
-      (while (and (< (point) end) (looking-at "\\([^\"#|;\\\\]\\|#[^|]\\)+"))
+      (while (and (< (point) end)
+                  (or (looking-at "[^\"#|;\\\\]+")
+                      (and (looking-at "#")
+                           (not (looking-at "#|")))))
         (goto-char (match-end 0)))
       (funcall transform start (min end (point)))
       (cl-skip-over)
@@ -907,7 +924,7 @@ NOTE:   All positions are kept in markers, so modifying the buffer between
         quote-depth
         start-m sexp)
     (skip-comments)
-    (when (/= (point) (point-max))
+    (while (/= (point) (point-max))
       (when (member major-mode *lisp-modes*)
         ;; gather the quotes:
         (while (looking-at "['`] *")
@@ -2453,7 +2470,8 @@ DO:         Assuming there's already a header with a LEGAL section,
                                 (list (pjb-format-copyright data author year year)))))
         (delete-region start end)
         (pjb-insert-license  license lic-data copyrights
-                             title-format comment-format)))))
+                             title-format comment-format))))
+  :changed)
 
 
 ;; ------------------------------------------------------------------------
