@@ -294,7 +294,7 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
     ;;  "" ;;";;;; %-32s -- %19s -- %-8s ;;;;" 
     ;;  "\\(^;.*$\\)")
     
-    ((awk-mode eshell-mode icon-mode m4-mode makefile-mode makefile-gmake-mode
+    ((awk-mode eshell-mode icon-mode m4-mode makefile-mode makefile-gmake-mode makefile-bsdmake-mode
                octave-mode perl-mode sh-mode shell-script-mode
                tcl-mode )
      "#%s"
@@ -2324,12 +2324,23 @@ by pjb-add-change-log-entry.")
     (insert "\n")))
 
 
-(defun pjb-add-header ()
+(defun pjb-add-header (license &optional system user-interface owner start-year end-year
+                       modification description)
   "
-DO:         Inserts a header at the beginning of the file with various 
-            informations.
+DO:               Inserts a header at the beginning of the file with
+                  various  informations.
+`license'         a string naming one license in `pjb-sources-licenses'.
+`system'          a string naming a system (default: \"POSIX\").
+`user-interface'  a string naming a user interface (default: \"NONE\").
+`author'          a string naming the copyright owner (default: the author).
+`start-year'      the starting year of the copyright (default: the current year).
+`end-year'        the starting year of the copyright (default: the current year).
+`modification'    the modification comment (default: empty, the programmer can edit it later).
+`description'     the description of the file (default: \"XXX\", the programmer can edit it later).
 "
-  (interactive "*")
+  (interactive
+   (list (completing-read "License: " pjb-sources-licenses
+                          nil t nil nil "GPL")))
   (goto-char (point-min))
   (let* ((data           (header-comment-description-for-mode major-mode))
          (first-format   (hcd-header-first-format data))
@@ -2342,18 +2353,21 @@ DO:         Inserts a header at the beginning of the file with various
                                  0 (search "-mode" (symbol-name major-mode))))
          (author-abrev   *pjb-sources-initials*)
          (author         (or add-log-full-name (user-full-name)))
+         (owner          (or owner author))
          (email          user-mail-address)
          (year           (third (calendar-current-date)))
+         (start-year     (or start-year year))
+         (end-year       (or end-year   year))
          (line-length    78)
-         license lic-data
-         (system         "POSIX")
-         (user-interface "NONE")
-         )
+         (lic-data       (cdr (assoc license pjb-sources-licenses)))
+         (system         (or system "POSIX"))
+         (user-interface (or user-interface "NONE"))
+         (modification   (or modification ""))
+         (description    (or description "XXX")))
     (unless data
       (error "Don't know how to handle this major mode %S." major-mode))
-    (setq license (completing-read "License: " pjb-sources-licenses
-                                   nil t nil nil "GPL"))
-    (setq lic-data (cdr (assoc license pjb-sources-licenses)))
+    ;; (setq license (completing-read "License: " pjb-sources-licenses
+    ;;                                nil t nil nil "GPL"))
     (cond
       ((eq major-mode 'emacs-lisp-mode)
        (setq language "emacs lisp"))
@@ -2382,7 +2396,7 @@ DO:         Inserts a header at the beginning of the file with various
         (insert "\n")
         (insert (format comment-format ""))
         (insert "\n")
-        (insert (format comment-format "XXX"))
+        (insert (format comment-format description))
         (insert "\n")
         (insert (format comment-format ""))
         (insert "\n")
@@ -2397,13 +2411,13 @@ DO:         Inserts a header at the beginning of the file with various
         (insert "\n")
         (pjb-insert-license 
          license lic-data
-         (list (pjb-format-copyright data author year year))
+         (list (pjb-format-copyright data owner start-year end-year))
          title-format comment-format)
         (insert (pjb-fill-a-line last-format line-length))
         (insert "\n")
         (insert (format comment-format ""))
         (insert "\n"))))
-  (pjb-add-change-log-entry))
+  (pjb-add-change-log-entry modification))
 
 
 ;; ------------------------------------------------------------------------
