@@ -35,15 +35,14 @@
 ;;;;******************************************************************************
 
 (debug "Should not load this file!")
-(provide 'pjb-objc-mode)
 (require 'cc-mode)
 (require 'pjb-utilities)
 (require 'pjb-cl)
 
 (defun alist-setObject-forKey (alist object key)
-   (cond ((null alist) (list (cons key object)))
-		 ((eq (caar alist) key) (cons (cons key object) (cdr alist)))
-		 (t (cons (car alist) (alist-setObject-forKey (cdr alist) object key)))))
+  (cond ((null alist) (list (cons key object)))
+	((eq (caar alist) key) (cons (cons key object) (cdr alist)))
+	(t (cons (car alist) (alist-setObject-forKey (cdr alist) object key)))))
 
 
 (defvar c-indent-level)
@@ -53,49 +52,6 @@
 (defvar c-label-offset)
 (defvar c-continued-statement-offset)
 (defvar c-continued-brace-offset)
-
-
-
-(setq tab-width                     4)  ; the true one!
-
-(setq c-indent-level                4) ;  Indentation of C statements with
-                                        ; respect to containing block.
-
-(setq c-brace-imaginary-offset      0) ;  Imagined indentation of a C open brace
-                                        ; that actually follows a statement.
-
-(setq c-brace-offset                0) ;  Extra indentation for braces, compared
-                                        ; with other text in same context.
-
-(setq c-argdecl-indent              4) ;  Indentation level of declarations of
-                                        ; C function arguments.
-
-(setq c-label-offset               -4) ;  Offset of C label lines and case
-                                        ; statements relative to usual 
-                                        ; indentation.
-
-(setq c-continued-statement-offset  4) ;  Extra indent for lines not starting
-                                        ; new statements.
-
-(setq c-continued-brace-offset      0) ;  Extra indent for substatements that
-                                        ; start with open-braces.
-
-(setq c-basic-offset                4) ;  Amount of basic offset used by `+' and
-                                        ; `-' symbols in `c-offsets-alist'.
-
-(setq c-auto-newline                nil) ; Non-nil means automatically newline
-                                        ;  before and after braces, and after
-                                        ;  colons and semicolons, inserted in C
-                                        ;  code. If you do not want a leading
-                                        ;  newline before braces then use:
-                                        ;  (define-key c-mode-map \"{\"
-                                        ;           'electric-c-semi)"
-
-(setq c-tab-always-indent           nil) ; Non-nil means TAB in C mode should
-                                        ;  always reindent the current line,
-                                        ;  regardless of where in the line point
-                                        ;  is when the TAB command is used.
-
 
 
 
@@ -410,4 +366,7 @@ Key bindings:
           (lambda () 
             (define-key c-mode-map "{"  'self-insert-command)))
 
-;;;; pjb-objc-mode.el                 -- 2004-02-22 02:47:23 -- pascal   ;;;;
+
+(provide 'pjb-objc-mode)
+;;;; THE END ;;;;
+
