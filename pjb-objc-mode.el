@@ -194,19 +194,23 @@ RETURN: whether the current line is on the first line of a comment,
 
 
 (defun really-comment-intro (langelem)
-  "RETURN: whether the given langelem is really a comment intro, and not a mere
-        // comment following a // comment or a comment inside a /* comment."
+  "
+RETURN: whether the given langelem is really a comment intro, and not a mere
+        // comment following a // comment or a comment inside a /* comment.
+"
   (save-excursion
     (and (eq (car langelem) 'comment-intro) 
          (not (assoc 'c c-syntactic-context)))))
 
 
 (defun pjb-lineup-C-comments (langelem)
-  "PRE:    langelem = (comment-intro) or langelem = (c . N)
+  "
+PRE:    langelem = (comment-intro) or langelem = (c . N)
 NOTE:   When langelem = (comment-intro), we're on the line '/*',
         when langelem = (c . N), we're inside the comment.
 RETURN: The relative indentation of the following line.
-SEE-ALSO:  c-indent-line"
+SEE-ALSO:  c-indent-line
+"
   (save-excursion
     (if (really-comment-intro langelem)
         (progn

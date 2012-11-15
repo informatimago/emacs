@@ -55,7 +55,7 @@
                                       (access-label         . (after))
                                       (member-init-intro    . ())
                                       (inher-intro          . ())))
-   ;; (c-hanging-semi&comma-criteria)
+   (c-hanging-semi&comma-criteria  . ())
    ;; (c-indent-comment-alist)
    (c-indent-comments-syntactically-p . nil)
    (c-label-minimum-indentation       . 2)
@@ -157,7 +157,7 @@
                                          ;; Subsequent argument list lines when at
                                          ;; least one argument follows on the same
                                          ;; line as the arglist opening paren.
-                                         (arglist-close         . 0)          
+                                         (arglist-close         . c-lineup-arglist)
                                          ;; The solo close paren of an argument list.
                                          (stream-op             . +)              
                                          ;; Lines continuing a stream operator construct.
@@ -230,7 +230,7 @@
    ;; (c-macro-shrink-window-flag          . t) 
    ;; (c-tab-always-indent                 . t))
 
- )
+   ))
 
 
 
@@ -284,7 +284,7 @@
                                       (member-init-intro    . ())
                                       (inher-intro          . ())))
    
-   ;; (c-hanging-semi&comma-criteria)
+   (c-hanging-semi&comma-criteria  . ())
    ;; (c-indent-comment-alist)
    (c-indent-comments-syntactically-p . nil)
    (c-label-minimum-indentation       . 2)
@@ -315,40 +315,40 @@
                                          ;; cannot put anything but whitespace and comments
                                          ;; between them; in C++ and Java, throws declarations
                                          ;; and other things can appear in this context.
-                                         (knr-argdecl-intro  . +)      
+                                         (knr-argdecl-intro     . +)      
                                          ;; First line of a K&R C argument declaration.
-                                         (knr-argdecl        . +)            
+                                         (knr-argdecl           . +)            
                                          ;; Subsequent lines in a K&R C argument declaration.
-                                         (topmost-intro      . +)          
+                                         (topmost-intro         . 0)
                                          ;; The first line in a topmost construct definition.
-                                         (topmost-intro-cont . ++)     
+                                         (topmost-intro-cont    . ++)     
                                          ;; Topmost definition continuation lines.
-                                         (member-init-intro  . +)      
+                                         (member-init-intro     . +)      
                                          ;; First line in a member initialization list.
-                                         (member-init-cont   . ++)       
+                                         (member-init-cont      . ++)       
                                          ;; Subsequent member initialization list lines.
-                                         (inher-intro        . +)            
+                                         (inher-intro           . +)            
                                          ;; First line of a multiple inheritance list.
-                                         (inher-cont         . ++)             
+                                         (inher-cont            . ++)             
                                          ;; Subsequent multiple inheritance lines.
-                                         (block-open         . 0)             
+                                         (block-open            . 0)             
                                          ;; Statement block open brace.
-                                         (block-close        . 0)            
+                                         (block-close           . 0)            
                                          ;; Statement block close brace.
-                                         (brace-list-open    . 0)        
+                                         (brace-list-open       . 0)        
                                          ;; Open brace of an enum or static array list.
-                                         (brace-list-close   . 0)       
+                                         (brace-list-close      . 0)       
                                          ;; Close brace of an enum or static array list.
-                                         (brace-list-intro   . +)       
+                                         (brace-list-intro      . +)       
                                          ;; First line in an enum or static array list.
-                                         (brace-list-entry   . +)       
+                                         (brace-list-entry      . +)       
                                          ;; Subsequent lines in an enum or static array list.
-                                         (brace-entry-open   . +)       
+                                         (brace-entry-open      . +)       
                                          ;; Subsequent lines in an enum or static array
                                          ;; list that start with an open brace.
-                                         (statement          . +)              
+                                         (statement             . +)              
                                          ;; A C (or like) statement.
-                                         (statement-cont     . ++)         
+                                         (statement-cont        . ++)         
                                          ;; A continuation of a C (or like) statement.
                                          (statement-block-intro . +)  
                                          ;; The first line in a new statement block.
@@ -356,9 +356,9 @@
                                          ;; The first line in a case "block".
                                          (statement-case-open   . +)    
                                          ;; The first line in a case block starting with brace.
-                                         (substatement          . +)           
+                                         (substatement          . 0)           
                                          ;; The first line after an if/while/for/do/else.
-                                         (substatement-open     . 0)      
+                                         (substatement-open     . 0)
                                          ;; The brace that opens a substatement block.
                                          (substatement-label    . /)     
                                          ;; Labelled line after an if/while/for/do/else.
@@ -403,7 +403,7 @@
                                          ;; The first line of an Objective-C method definition.
                                          (objc-method-args-cont . 0)  
                                          ;; Lines continuing an Objective-C method definition.
-                                         (objc-method-call-cont . +)  
+                                         (objc-method-call-cont . ++)  
                                          ;; Lines continuing an Objective-C method call.
                                          (extern-lang-open      . 0)       
                                          ;; Brace that opens an "extern" block.
@@ -442,6 +442,8 @@
    ;; Only called when c-syntactic-indentation is non nil.
    ;; (c-special-indent-hook . user-fun)
    ))
+
+
 
 
 
@@ -735,3 +737,5 @@
 ;;   [_helper resetQueryCount]; 
 ;; } 
 ;; @end
+
+(provide 'pjb-ocedit)
