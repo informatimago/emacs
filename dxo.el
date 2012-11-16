@@ -154,7 +154,7 @@
                                          ;; Close brace of an enum or static array list.
                                          (brace-list-intro      . +)       
                                          ;; First line in an enum or static array list.
-                                         (brace-list-entry      . +)       
+                                         (brace-list-entry      . 0)       
                                          ;; Subsequent lines in an enum or static array list.
                                          (brace-entry-open      . +)       
                                          ;; Subsequent lines in an enum or static array
