@@ -367,6 +367,18 @@ Key bindings:
             (define-key c-mode-map "{"  'self-insert-command)))
 
 
+
+(defun gdb-object-to-sexp (start end)
+  "Transforms a gdb object dump {<NSButton> = …} into a sexp."
+  (interactive "r")
+  (with-marker (end end)
+    (goto-char start)
+    (replace-string " = " " " nil start end)
+    (replace-string "{" "((" nil start end)
+    (replace-string "}" "))" nil start end)
+    (replace-string ", " ")\n(" nil start end)))
+
+
 (provide 'pjb-objc-mode)
 ;;;; THE END ;;;;
 
