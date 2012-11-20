@@ -105,7 +105,7 @@
    (c-offsets-alist                   . (
                                          (string             . 0)                 
                                          ;; Inside multi-line string.
-                                         (c                  . 0)                      
+                                         (c                  . 1)                      
                                          ;; Inside a multi-line C style block comment.
                                          (defun-open         . 0)             
                                          ;; Brace that opens a function definition.
@@ -315,6 +315,38 @@
     (insert "DxO Labs"))
   (goto-char (point-min))
   (message "Did you mind setting the company name in XCode preferences?"))
+
+(defun dxo-remove-unneeded-spaces (start end)
+  "Remove duplicate spaces in the region."
+  (interactive "r")
+  (goto-char start)
+  (with-marker (end end)
+   (while (< (point) end)
+     (cond
+
+       ((looking-at "\"\\([^\\\"]\\|\\.\\)*\"")
+        (message "string ")
+        ;; skip over strings
+        (goto-char (match-end 0)))
+
+       ((looking-at "//.*\n")
+        (message "//comment ")
+        ;; skip over // comments
+        (goto-char (match-end 0)))
+
+       ((looking-at "/\\*\\(.\\|\n\\)*?\\*/")
+        (message "/*comment ")
+        ;; skip over C comments..
+        (goto-char (match-end 0)))
+
+       ((looking-at "  +")
+        (message "whitespaces ")
+        (delete-region (1+ (match-beginning 0)) (match-end 0)))
+
+       (t
+        (message ". ")
+        (forward-char 1))))))
+
 
 
 (provide 'dxo)
