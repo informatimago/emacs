@@ -7,9 +7,19 @@
 ;;;;DESCRIPTION
 ;;;;    
 ;;;;    Emacs configuration used at DxO Labs / Optics Pro Mac team.
+;;;;
+;;;;    Add to your ~/.emacs:
+;;;;
+;;;;         (require 'dxo)
+;;;;
+;;;;    Then new C, Objective-C or C++ buffers will get the dxo style.
+;;;;
+;;;;    To change the c-style manually:
+;;;;
+;;;;        M-x c-set-style RET dxo RET
 ;;;;    
 ;;;;AUTHORS
-;;;;    <PJB> Pascal Bourguignon <pbourguignon@dxo.com>
+;;;;    <PJB> Pascal Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
 ;;;;    2012-11-15 <PJB> Created.
 ;;;;BUGS
@@ -316,8 +326,9 @@
   (goto-char (point-min))
   (message "Did you mind setting the company name in XCode preferences?"))
 
+
 (defun dxo-remove-unneeded-spaces (start end)
-  "Remove duplicate spaces in the region."
+  "Remove duplicate spaces in the region. (Inverse function of align-cols"
   (interactive "r")
   (goto-char start)
   (with-marker (end end)
@@ -345,7 +356,8 @@
 
        (t
         (message ". ")
-        (forward-char 1))))))
+        (forward-char 1))))
+   (indent-region start end)))
 
 
 
