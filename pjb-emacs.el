@@ -1747,6 +1747,8 @@ to the buffer instead of local to the mode."
       `(progn ,@body)
       `(loop ,@(car clauses) do (rloop ,(cdr clauses) ,@body))))
 
+;; map-keymap https://github.com/dgutov/diff-hl/blob/a01d2917a07d91269c13901bb65fd7ef54766fd4/diff-hl.el#L327
+
 (defun all-bindings ()
   (interactive)
   (message "all-bindings: wait a few seconds please...")
