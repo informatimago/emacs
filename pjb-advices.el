@@ -11,12 +11,13 @@
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon 
 ;;;;MODIFICATIONS
+;;;;    2012-11-27 <PJB> Updated mail-setup advice for emacs-24.
 ;;;;    2002-08-13 <PJB> Creation.
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 2002 - 2011
+;;;;    Copyright Pascal J. Bourguignon 2002 - 2012
 ;;;;
 ;;;;    This library is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU Lesser General Public
@@ -44,8 +45,7 @@
 (defadvice switch-to-buffer (after pjb-nshell-switch-to-buffer nil activate)
   "When switching to a shell buffer, go down to the max position."
   (when (string-match "^\\([0-9][0-9]*<shell>\\|\\*shell\\*\\)$" (buffer-name))
-    (goto-char (point-max)))
-  );;switch-to-buffer
+    (goto-char (point-max))))
 (ad-activate 'switch-to-buffer)
 
 
@@ -89,8 +89,7 @@ It's not nice to report errors (or drop in the debugger), while mouse-dragging.
   ;; leave interactive to mouse-drag-vertical-line itself.
   (condition-case signal
       ad-do-it
-    ('error nil))
-  );;mouse-drag-vertical-line
+    ('error nil)))
 (ad-activate 'mouse-drag-vertical-line)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -100,10 +99,10 @@ It's not nice to report errors (or drop in the debugger), while mouse-dragging.
 (require 'mail-utils)
 
 (defvar bcc-user-mail-address user-mail-address 
-  "The address used for BCC: when creating a new mail with mail-self-blind set.");;bcc-user-mail-address
+  "The address used for BCC: when creating a new mail with mail-self-blind set.")
 
 (defadvice mail-setup 
-  (after pjb-mail-setup-bcc (to subject in-reply-to cc replybuffer actions))
+  (after pjb-mail-setup-bcc (&rest args))
   "This advice replace the BCC: user-mail-address by BCC:bcc-user-mail-address."
   ;; not interactive
   (when mail-self-blind
@@ -111,9 +110,7 @@ It's not nice to report errors (or drop in the debugger), while mouse-dragging.
       (goto-char (point-min))
       (if (search-forward (format "BCC: %s" user-mail-address) 
                           (mail-text-start) t)
-          (replace-match (format "BCC: %s" bcc-user-mail-address) t t))
-      ));;when
-  );;mail-setup
+          (replace-match (format "BCC: %s" bcc-user-mail-address) t t)))))
 (ad-activate 'mail-setup)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -147,8 +144,7 @@ Email addresses are not case sensitive."
                          (substring address (+ 1 atpos)) "[.]")) ".")
               "@"
               (substring address 0 atpos))
-           address))))))
-  );;rmail-sort-by-correspondent
+           address)))))))
 (ad-activate 'rmail-sort-by-correspondent)
 
 
@@ -165,16 +161,14 @@ Email addresses are not case sensitive."
     (setq l (1+ l))
     (while (and (< i l) (eq (aref string i) space))
       (setq i (1+ i)))
-    (substring string i l))
-  );;pjb-chop-spaces
+    (substring string i l)))
 
 
 (defadvice x-parse-geometry 
   (before pjb-parse-geometry-chop-spaces (string))
   "This advice remove unwanted spaces from the argument."
   ;; not interactive
-  (ad-set-arg 0 (pjb-chop-spaces (ad-get-arg 0)))
-  );;x-parse-geometry
+  (ad-set-arg 0 (pjb-chop-spaces (ad-get-arg 0))))
 (ad-activate 'x-parse-geometry)
 
 
@@ -190,15 +184,7 @@ Email addresses are not case sensitive."
                    (if (numberp value) (/= value 0) value)
                  value)
            (setq result (cons  key (cons value result)))))
-       result))
-;;;                (loop for couples = args then (cddr couples)
-;;;                      while couples
-;;;                      for key     = (car  couples)
-;;;                      for value   = (cadr couples)
-;;;                      when 
-;;;                      append (list key value) into result
-;;;                      finally return result))
-  );;set-face-attribute
+       result)))
 (ad-activate 'set-face-attribute)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -264,8 +250,7 @@ Email addresses are not case sensitive."
          (sort customized-atoms 'string-lessp)))
       (princ ")")
       (unless (looking-at "\n")
-        (princ "\n"))))
-  );;custom-save-variables
+        (princ "\n")))))
 (ad-activate 'custom-save-variables)
 
 
@@ -406,6 +391,5 @@ delete any existing frames that the frame configuration doesn't mention.
 \(Otherwise, these frames are iconified.)"
   (interactive "cJump to register: \nP")
   (recenter (funcall *jump-to-register-offset*)))
-
-;;;; pjb-advices.el                   --                     --          ;;;;
+;;;; THE END ;;;;
 
