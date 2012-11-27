@@ -123,7 +123,7 @@ nExperience Ratio [0.0,1.0]: ")
          (total-class-count    (* key-class-count 
                                   (+ 1.0 user-interface-complexity)))
          (total-person-days (* total-class-count person-day-per-class))
-         (total-months (/ total-person-days 20.0 person-count)))
+         (total-months (/ total-person-days 20.000000 person-count)))
     (insert
      (concatenate 'string
        (format "OOEstimate for Project %s:\n\n" project-name)
@@ -2236,8 +2236,41 @@ by pjb-add-change-log-entry.")
      "You should have received a copy of the  GNU Lesser General"
      "Public License along with this library."
      "If not, see <http://www.gnu.org/licenses/>.")
+
+    ("BSD-2"
+     t
+     "All rights reserved."
+     ""
+     "Redistribution and use in source and binary forms, with or without"
+     "modification, are permitted provided that the following conditions are"
+     "met: "
+     ""
+     "1. Redistributions of source code must retain the above copyright"
+     "   notice, this list of conditions and the following disclaimer. "
+     ""
+     "2. Redistributions in binary form must reproduce the above copyright"
+     "   notice, this list of conditions and the following disclaimer in the"
+     "   documentation and/or other materials provided with the"
+     "   distribution. "
+     ""
+     "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS"
+     "\"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT"
+     "LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR"
+     "A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT"
+     "OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,"
+     "SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT"
+     "LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,"
+     "DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY"
+     "THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT"
+     "(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE"
+     "OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+     ""
+     "The views and conclusions contained in the software and documentation"
+     "are those of the authors and should not be interpreted as representing"
+     "official policies,  either expressed or implied, of the FreeBSD"
+     "Project.")
     
-    ("BSD"
+    ("BSD-3"
      t
      "Redistribution and use in source and binary forms, with or"
      "without modification, are permitted provided that the following"
@@ -2297,7 +2330,7 @@ by pjb-add-change-log-entry.")
      ""
      "All Rights Reserved.")
     )
-  "An a-list of license name, ( copyright-flag copyright-line...).
+  "An a-list of (license name,  copyright-flag copyright-line...).
    When the copyright-flag is not nil, a copyright line is displayed.
    URL: http://www.gnu.org/licenses/license-list.html")
 
