@@ -34,6 +34,7 @@
 ;;;;    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
 ;;;;
 ;;;;******************************************************************************
+
 (require 'pjb-cl)
 (require 'pjb-list)
 
@@ -41,13 +42,10 @@
 (require 'pjb-emacs)
 (require 'pjb-pgp)
 
-(require 'vm)
-(require 'vm-vars)
 (require 'mailheader)
 (require 'mm nil t)
 (require 'sendmail)
 
-(provide 'pjb-mail)
 
 
 
@@ -882,55 +880,40 @@ DO:     Insert a file attachment at the point, prefixed with Content- headers
 
 
 
-;;;----------------------------------------------------------------------
-;;; Create auto-folders
-;;;----------------------------------------------------------------------
-(defstruct (afr (:type list)) label slot regexp)
 
-(defvar *auto-folder-regexps*
-  '(("Subject"   vm-subject-of  "^Subject:")
-    ("To"        vm-to-of       "^To:")
-    ("From"      vm-from-of     "^From:")
-    ("FromToCc"  vm-from-of     "^\\(From:\\|To:\\|Cc:\\)")))
+(when (require 'vm nil t)
+  (require 'vm-vars)
 
-(defun vm-current-message () (car vm-message-pointer))
+  ;;----------------------------------------------------------------------
+  ;; Create auto-folders
+  ;;----------------------------------------------------------------------
+  (defstruct (afr (:type list)) label slot regexp)
 
-;; (defun pjb-vm-create-auto-folder-and-save-message (selector)
-;;   (interactive
-;;    (list
-;;     (completing-read 
-;;      "Selector: " (mapcar (afr-label) *auto-folder-regexps*) nil t "From")))
-;;   (let ((
-;; 
-;;          (vm-subject-of message)
-;;          (vm-from-of    message)
-;;          (vm-to-of      message)
-;;          (vm-cc-of      message)
-;;          
-;; (vm-auto-select-folder vm-message-pointer vm-auto-folder-alist)
-;; 
-;; (insert (format "%s" selector))
-;; 
-;;   )
-;; (defvar pjb-test-var 1 "*Testing variable")
-;; (customize-save-variable 'pjb-test-var 2)
-;; 
-;; 
-;; 
-;; 
-;; 
-;; ("^Subject:" ("cs daily" . "~/mail/cs-papers.mbox") ("quotes/or\\|or/get-quote" . "~/mail/gold.mbox") ("Mutant Update" . "~/tmp/mutant/MAIL.mbox") ("CRYPTO.*GRAM" . "~/mail/lists/crypto-gram.mbox") ("hermes: mailstats" . "~/firms/afaa/MAILSTATS.mbox") ("TUNES" . "~/mail/lists/tunes.mbox") ("selfish_genes" . "~/mail/lists/selfish_genes.mbox") ("ipchains" . "~/firms/afaa/ipchains.mbox") ("ipnsig" . "~/mail/lists/ipnsig.mbox") ("\\(lispme\\|clisp\\|sbcl\\|cmucl\\|openmcl\\|ilisp\\|clocc\\|clump\\|cclan\\|ecls\\|nocrew.org\\|biolisp\\|lispweb\\|climacs\\)" . "~/mail/lists/lisp.mbox") ("\\(Cercle HAYEK\\|rationalistes-autrichiens\\)" . "~/mises/MAIL.mbox") ("\\(\\[gweekly\\]\\|gutvol-\\)" . "~/mail/lists/gutenberg.mbox") ("\\(jlnlabs\\|brown_effect\\|lifters\\|cfr_project\\)" . "~/mail/lists/jlnlabs.mbox"))
-;; 
-;; ("^To:" ("statistiques@afaa.asso.fr" . "~/firms/afaa/STATS.mbox"))
-;; 
-;; ("^From:" ("@palm.*\\.\\(com\\|net\\)" . "~/mail/lists/palm.mbox") ("@Computerworld.com" . "~/mail/lists/sharktank.mbox") ("\\(root@linux.local\\|root@thalassa\\|root@triton\\|root@despina\\)" . "~/mail/lists/root-admin.mbox") ("spammit.com" . "/tmp/SPAM.mbox") ("root@.*afaa.asso.fr" . "~/firms/afaa/REPORTS.mbox") ("arpwatch@afaa.asso.fr" . "~/firms/afaa/ARP.mbox"))
-;; 
-;; ("^\\(From:\\|To:\\|Cc:\\)" ("@parroquias-manga.org" . "~/mail/lists/parroquias-manga.mbox") ("sicp-vsg.*@yahoogroups.com" . "~/mail/lists/sicp-vsg.mbox") ("turnkey-mvs.*@yahoogroups.com" . "~/mail/lists/turnkey-mvs.mbox") ("fink" . "~/mail/lists/fink.mbox") ("info-cvs" . "~/mail/lists/cvs.mbox") ("\\(bese.*common-lisp\\)" . "~/mail/lists/ucw.mbox") ("\\(lispme\\|clisp\\|sbcl\\|cmucl\\|openmcl\\|ilisp\\|clocc\\|clump\\|cclan\\|ecls\\|nocrew.org\\|biolisp\\|lispweb\\|climacs\\)" . "~/mail/lists/lisp.mbox") ("\\(paypal\\|supportwebsite\\|interdomain\\|godaddy\\)" . "~/jobs/free-lance/MAIL.mbox") ("cert-advisory@cert.org" . "~/mail/lists/cert.mbox") ("\\([Ss]tock\\|[Ii]nvest\\|[Ww]arrant\\|AllThePlanet.com\\|consultant.com\\|health.gr\\|ccinews@bolt.com\\|Daily Reckoning\\)" . "~/private/bourse/MAIL.mbox") ("@reseauvoltaire" . "~/mail/lists/reseauvoltaire.mbox") ("selftrade" . "~/private/bourse/selftrade/MAIL.mbox") ("\\(datek\\|ameritrade\\)" . "~/private/bourse/datek/MAIL.mbox") ("\\(@yahoo-inc.com\\|@jazzfree.com\\|Infored@offcampus.es\\|colt\\|worldonline\\)" . "~/mail/lists/internet-providers.mbox") ("squeak.*@cs.uiuc.edu" . "~/mail/lists/squeak.mbox") ("@sbuilders.com" . "~/firms/sbuilders/MAIL.mbox") ("\\(eros-os.org\\|capros\\|bitc\\)" . "~/mail/lists/eros.mbox") ("oreo@cubiculum.com" . "~/mail/lists/oreo.mbox") ("postfix" . "~/mail/lists/postfix.mbox") ("\\(adc\\|lists.apple.com\\|devdepot\\|macgenerat\\)" . "~/mail/lists/adc.mbox") ("rpm-list" . "~/mail/lists/rpm.mbox") ("\\(security-request.*\\|mandrake.*.com\\)" . "~/mail/lists/mandrake.mbox") ("\\(suse-security\\)" . "~/mail/lists/suse.mbox") (".debian.org" . "~/mail/lists/debian.mbox") ("gentoo" . "~/mail/lists/gentoo.mbox") ("megproject" . "~/mail/lists/megproject.mbox") ("\\(jose.remy\\|paritate\\)" . "~/jobs/latymer-designs-ltd/paritate/MAIL.mbox") ("@\\(larural.es\\|cajamar.es\\|si-100.com\\)" . "~/private/comptabilite/cajamar/MAIL.mbox") ("\\(patagon.com\\|openbank.es\\)" . "~/private/comptabilite/openbank/MAIL.mbox") ("evolvebank" . "~/private/comptabilite/evolvebank/MAIL.mbox") ("BEDV Newsletter" . "~/firms/hbedv/Newsletter.mbox") ("\\(Ritter\\|marty@landsberg.org\\|antivir.de\\)" . "~/firms/hbedv/MAIL.mbox") ("jem-consulting.com" . "~/firms/jem/MAIL.mbox") ("intergruas.com" . "~/firms/intergruas/MAIL.mbox") ("AvMailGate@afaa.asso.fr" . "~/firms/afaa/VIRUS.mbox") ("afaa.asso.fr" . "~/firms/afaa/MAIL.mbox") ("\\(mappy\\|snv.fr\\)" . "~/firms/mappy/MAIL.mbox") ("\\(mises.org\\|cerclehayek\\|capitalismmag\\)" . "~/mises/MAIL.mbox") ("dc-y2k-WRP" . "~/mail/lists/dc-y2k-WRP.mbox") ("\\(prolog\\|swi\\)" . "~/mail/lists/prolog.mbox") ("selfish_genes" . "~/mail/lists/selfish_genes.mbox") ("gnustep" . "~/mail/lists/gnustep.mbox") ("\\(andre.*reinald\\|bolet\\|anais\\|maminette60\\|henry\\|saubot\\|frederique\\|hyacinte\\|rene\\|francoise\\|franssoise\\|franck\\|\\|bernarderbertseder\\|phoenix_carmesi\\|anais.nouvet\\|anissa\\|michel.donnet\\|wies\\|petiaries\\|bernardbgn\\)" . "~/mail/2005/normal.mbox"))
-;; nil
-;; 
-;; 
-;; 
-;; (dolist (x (cadadr '(vm-auto-folder-alist (quote (("^Subject:" ("cs daily" . "~/mail/cs-papers.mbox") ("quotes/or\\|or/get-quote" . "~/mail/gold.mbox") ("Mutant Update" . "~/tmp/mutant/MAIL.mbox") ("CRYPTO.*GRAM" . "~/mail/lists/crypto-gram.mbox") ("hermes: mailstats" . "~/firms/afaa/MAILSTATS.mbox") ("TUNES" . "~/mail/lists/tunes.mbox") ("selfish_genes" . "~/mail/lists/selfish_genes.mbox") ("ipchains" . "~/firms/afaa/ipchains.mbox") ("ipnsig" . "~/mail/lists/ipnsig.mbox") ("\\(lispme\\|clisp\\|sbcl\\|cmucl\\|openmcl\\|ilisp\\|clocc\\|clump\\|cclan\\|ecls\\|nocrew.org\\|biolisp\\|lispweb\\|climacs\\)" . "~/mail/lists/lisp.mbox") ("\\(Cercle HAYEK\\|rationalistes-autrichiens\\)" . "~/mises/MAIL.mbox") ("\\(\\[gweekly\\]\\|gutvol-\\)" . "~/mail/lists/gutenberg.mbox") ("\\(jlnlabs\\|brown_effect\\|lifters\\|cfr_project\\)" . "~/mail/lists/jlnlabs.mbox")) ("^To:" ("statistiques@afaa.asso.fr" . "~/firms/afaa/STATS.mbox")) ("^From:" ("@palm.*\\.\\(com\\|net\\)" . "~/mail/lists/palm.mbox") ("@Computerworld.com" . "~/mail/lists/sharktank.mbox") ("\\(root@linux.local\\|root@thalassa\\|root@triton\\|root@despina\\)" . "~/mail/lists/root-admin.mbox") ("spammit.com" . "/tmp/SPAM.mbox") ("root@.*afaa.asso.fr" . "~/firms/afaa/REPORTS.mbox") ("arpwatch@afaa.asso.fr" . "~/firms/afaa/ARP.mbox")) ("^\\(From:\\|To:\\|Cc:\\)" ("@parroquias-manga.org" . "~/mail/lists/parroquias-manga.mbox") ("sicp-vsg.*@yahoogroups.com" . "~/mail/lists/sicp-vsg.mbox") ("turnkey-mvs.*@yahoogroups.com" . "~/mail/lists/turnkey-mvs.mbox") ("fink" . "~/mail/lists/fink.mbox") ("info-cvs" . "~/mail/lists/cvs.mbox") ("\\(bese.*common-lisp\\)" . "~/mail/lists/ucw.mbox") ("\\(lispme\\|clisp\\|sbcl\\|cmucl\\|openmcl\\|ilisp\\|clocc\\|clump\\|cclan\\|ecls\\|nocrew.org\\|biolisp\\|lispweb\\|climacs\\)" . "~/mail/lists/lisp.mbox") ("\\(paypal\\|supportwebsite\\|interdomain\\|godaddy\\)" . "~/jobs/free-lance/MAIL.mbox") ("cert-advisory@cert.org" . "~/mail/lists/cert.mbox") ("\\([Ss]tock\\|[Ii]nvest\\|[Ww]arrant\\|AllThePlanet.com\\|consultant.com\\|health.gr\\|ccinews@bolt.com\\|Daily Reckoning\\)" . "~/private/bourse/MAIL.mbox") ("@reseauvoltaire" . "~/mail/lists/reseauvoltaire.mbox") ("selftrade" . "~/private/bourse/selftrade/MAIL.mbox") ("\\(datek\\|ameritrade\\)" . "~/private/bourse/datek/MAIL.mbox") ("\\(@yahoo-inc.com\\|@jazzfree.com\\|Infored@offcampus.es\\|colt\\|worldonline\\)" . "~/mail/lists/internet-providers.mbox") ("squeak.*@cs.uiuc.edu" . "~/mail/lists/squeak.mbox") ("@sbuilders.com" . "~/firms/sbuilders/MAIL.mbox") ("\\(eros-os.org\\|capros\\|bitc\\)" . "~/mail/lists/eros.mbox") ("oreo@cubiculum.com" . "~/mail/lists/oreo.mbox") ("postfix" . "~/mail/lists/postfix.mbox") ("\\(adc\\|lists.apple.com\\|devdepot\\|macgenerat\\)" . "~/mail/lists/adc.mbox") ("rpm-list" . "~/mail/lists/rpm.mbox") ("\\(security-request.*\\|mandrake.*.com\\)" . "~/mail/lists/mandrake.mbox") ("\\(suse-security\\)" . "~/mail/lists/suse.mbox") (".debian.org" . "~/mail/lists/debian.mbox") ("gentoo" . "~/mail/lists/gentoo.mbox") ("megproject" . "~/mail/lists/megproject.mbox") ("\\(jose.remy\\|paritate\\)" . "~/jobs/latymer-designs-ltd/paritate/MAIL.mbox") ("@\\(larural.es\\|cajamar.es\\|si-100.com\\)" . "~/private/comptabilite/cajamar/MAIL.mbox") ("\\(patagon.com\\|openbank.es\\)" . "~/private/comptabilite/openbank/MAIL.mbox") ("evolvebank" . "~/private/comptabilite/evolvebank/MAIL.mbox") ("BEDV Newsletter" . "~/firms/hbedv/Newsletter.mbox") ("\\(Ritter\\|marty@landsberg.org\\|antivir.de\\)" . "~/firms/hbedv/MAIL.mbox") ("jem-consulting.com" . "~/firms/jem/MAIL.mbox") ("intergruas.com" . "~/firms/intergruas/MAIL.mbox") ("AvMailGate@afaa.asso.fr" . "~/firms/afaa/VIRUS.mbox") ("afaa.asso.fr" . "~/firms/afaa/MAIL.mbox") ("\\(mappy\\|snv.fr\\)" . "~/firms/mappy/MAIL.mbox") ("\\(mises.org\\|cerclehayek\\|capitalismmag\\)" . "~/mises/MAIL.mbox") ("dc-y2k-WRP" . "~/mail/lists/dc-y2k-WRP.mbox") ("\\(prolog\\|swi\\)" . "~/mail/lists/prolog.mbox") ("selfish_genes" . "~/mail/lists/selfish_genes.mbox") ("gnustep" . "~/mail/lists/gnustep.mbox") ("\\(andre.*reinald\\|bolet\\|anais\\|maminette60\\|henry\\|saubot\\|frederique\\|hyacinte\\|rene\\|francoise\\|franssoise\\|franck\\|\\|bernarderbertseder\\|phoenix_carmesi\\|anais.nouvet\\|anissa\\|michel.donnet\\|wies\\|petiaries\\|bernardbgn\\)" . "~/mail/2005/normal.mbox")))))))
-;;  (print x))
+  (defvar *auto-folder-regexps*
+    '(("Subject"   vm-subject-of  "^Subject:")
+      ("To"        vm-to-of       "^To:")
+      ("From"      vm-from-of     "^From:")
+      ("FromToCc"  vm-from-of     "^\\(From:\\|To:\\|Cc:\\)")))
 
-;;;; pjb-mail.el                      --                     --          ;;;;
+  (defun vm-current-message () (car vm-message-pointer))
+
+  ;; (defun pjb-vm-create-auto-folder-and-save-message (selector)
+  ;;   (interactive
+  ;;    (list
+  ;;     (completing-read 
+  ;;      "Selector: " (mapcar (afr-label) *auto-folder-regexps*) nil t "From")))
+  ;;   (let ((
+  ;; 
+  ;;          (vm-subject-of message)
+  ;;          (vm-from-of    message)
+  ;;          (vm-to-of      message)
+  ;;          (vm-cc-of      message)
+  ;;          
+  ;; (vm-auto-select-folder vm-message-pointer vm-auto-folder-alist)
+  
+  );; when require
+
+
+
+(provide 'pjb-mail)
+;;;; THE END ;;;;

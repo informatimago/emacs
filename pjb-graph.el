@@ -37,7 +37,7 @@
 
 (require 'pjb-cl);; Common-Lisp (cl.el, and some more functions).
 (require 'eieio);; CLOS like.
-(require 'pjb-objecjt)
+(require 'pjb-object)
 
 (require 'pjb-class)
 (require 'pjb-strings)

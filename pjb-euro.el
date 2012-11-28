@@ -38,7 +38,7 @@
 
 (require 'pjb-utilities)
 (require 'pjb-strings)
-(provide 'pjb-euro)
+(require 'pjb-html)
 
 
 (defvar euro-parities '(
@@ -80,11 +80,31 @@ To update the devises with variable quotes, use get-devises.
 
 
 
+
+(defun euro-parity-replace-ratio (parity new-ratio)
+  "PRIVATE"
+  (cons (car parity) (cons new-ratio (cddr parity))))
+
+
+(defun euro-update-devise-body (cours devise parities)
+  "PRIVATE"
+  (cond ((null parities) parities)
+        ((eq (caar parities) devise) 
+         (cons (euro-parity-replace-ratio (car parities) cours) 
+               (cdr parities)))
+        (t 
+         (cons (car parities) 
+               (euro-update-devise-body cours devise (cdr parities))))))
+
+(defun euro-update-devise (cours devise)
+  "PRIVATE"
+  (setq euro-parities (euro-update-devise-body cours devise euro-parities)))
+
+
 (defvar *devise-url* "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml")
 
 (defun get-devises ()
-  "DO:      Retrieves the devise quotes, 
-         stores them in ~/.emacs-devises and loads them."
+  "DO:  Retrieves the devise quotes from the url at `*devise-url*'."
   (interactive)
   ;; (shell-command-to-string 
   ;;  "get-devises boursorama > ~/.emacs-devises~ && mv ~/.emacs-devises~  ~/.emacs-devises ")
@@ -105,29 +125,6 @@ To update the devises with variable quotes, use get-devises.
      for rate     = (car (read-from-string (cdr (assoc 'rate entry))))
      do (insert (format "%S\n" (list 'euro-update-devise rate currency)))
      do (euro-update-devise rate currency)))
-
-(get-devises)
-
-
-
-(defun euro-parity-replace-ratio (parity new-ratio)
-  "PRIVATE"
-  (cons (car parity) (cons new-ratio (cddr parity))))
-
-
-(defun euro-update-devise-body (cours devise parities)
-  "PRIVATE"
-  (cond ((null parities) parities)
-        ((eq (caar parities) devise) 
-         (cons (euro-parity-replace-ratio (car parities) cours) 
-               (cdr parities)))
-        (t 
-         (cons (car parities) 
-               (euro-update-devise-body cours devise (cdr parities))))))
-
-(defun euro-update-devise (cours devise)
-  "PRIVATE"
-  (setq euro-parities (euro-update-devise-body cours devise euro-parities)))
 
 
 (defun euro-get-devises ()
@@ -426,4 +423,7 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
 
 ;; (format-table (make-gold-table))
 
-;;;; pjb-euro.el                      --                     --          ;;;;
+
+(get-devises)
+(provide 'pjb-euro)
+;;;; THE END ;;;;

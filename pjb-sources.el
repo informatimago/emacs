@@ -59,8 +59,7 @@
 
 (require 'pjb-cl)
 (require 'pjb-utilities)
-(require 'pjb-emacs)
-(provide 'pjb-sources)
+
 
 ;; egrep 'defun|defmacro' pjb-sources.el|sed -e 's/(def\(un\|macro\) /;; /'
 
@@ -3427,5 +3426,5 @@ the FUNCTION can take."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
-;;;; pjb-sources.el                   --                     --          ;;;;
+(provide 'pjb-sources)
+;;;; THE END ;;;;

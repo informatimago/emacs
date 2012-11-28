@@ -36,7 +36,6 @@
 ;;;;******************************************************************************
 (require 'cl)
 (require 'pjb-strings)
-(provide 'pjb-advices)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -371,7 +370,7 @@ There's too much spam sent to addresses flowing on the newsgroups..."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; jumping to register
-(load-library "register")
+(require 'register)
 
 (defvar *jump-to-register-offset* (lambda () 10)
   "A function that returns the number of lines that should show above the 
@@ -391,5 +390,8 @@ delete any existing frames that the frame configuration doesn't mention.
 \(Otherwise, these frames are iconified.)"
   (interactive "cJump to register: \nP")
   (recenter (funcall *jump-to-register-offset*)))
+
+
+(provide 'pjb-advices)
 ;;;; THE END ;;;;
 
