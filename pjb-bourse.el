@@ -180,18 +180,18 @@ for each devise [See: pjb-euro].")
   );;DeviseAccount
 
 
-(defmethod amount-at-devise ((self DeviseAccount) devise)
+(defmethod* amount-at-devise ((self DeviseAccount) devise)
   "Retourne le montant de la devise indiquée dans le devise-account.
 Voir account-valuation pour la valeur totale du devise-account."
   (cdr (assoc devise (amounts self)))
   );;amount-at-devise
 
-(defmethod devises ((self DeviseAccount))
+(defmethod* devises ((self DeviseAccount))
   "Retourne la liste des devises dans le compte."
   (mapcar 'car (amounts self))
   );;devises
 
-(defmethod account-valuation ((self DeviseAccount) devise)
+(defmethod* account-valuation ((self DeviseAccount) devise)
   "Retourne la valeur du devise-account dans la devise indiquée.
 Utilise pjb-euro, et nécessite pour les devises flottantes, des cours à jour."
   (let ((total-euro 0.0))
@@ -203,7 +203,7 @@ Utilise pjb-euro, et nécessite pour les devises flottantes, des cours à jour."
   );;account-valuation
 
 
-(defmethod account-add ((self DeviseAccount) devise montant)
+(defmethod* account-add ((self DeviseAccount) devise montant)
   "Additionne au devise-account le montant indiqué dans la devise indiquée.
 Pour additionner deux comptes, utiliser account-add-account.
 Return: self."
@@ -215,7 +215,7 @@ Return: self."
   self);;account-add
 
 
-(defmethod account-sub ((self DeviseAccount) devise montant)
+(defmethod* account-sub ((self DeviseAccount) devise montant)
   "Soustrait du devise-account le montant indiqué dans la devise indiquée.
 Pour soustraire deux comptes, utiliser account-sub-account.
 Return: self."
@@ -227,7 +227,7 @@ Return: self."
   self);;account-sub
 
 
-(defmethod account-mul ((self DeviseAccount) facteur)
+(defmethod* account-mul ((self DeviseAccount) facteur)
   "Multiplie le devise-account par le facteur.
 RETURN: self"
   (mapc (lambda (devise-amount)
@@ -255,13 +255,13 @@ RETURN: self"
                 (symbol-name  b))
   );;compare-slessp-sn
 
-(defmethod sorted-accounts ((self DeviseAccount))
+(defmethod* sorted-accounts ((self DeviseAccount))
   "Returns a list of assoc (devise . amount) sorted on the devise."
   (sort (copy-sequence (slot-value self 'amounts)) 'compare-slessp-sn-c)
   );;sorted-accounts
 
 
-(defmethod account-operation-account ((self DeviseAccount)
+(defmethod* account-operation-account ((self DeviseAccount)
                                       (other DeviseAccount) op-lambda)
   "Retourne un devise-account résultat de l'opération op-lambda sur
 les paires de montants de même devise, et ajoute les montants-devise
@@ -297,12 +297,12 @@ restants."
   );;account-operation-account
 
 
-(defmethod account-add-account ((self DeviseAccount) (other DeviseAccount))
+(defmethod* account-add-account ((self DeviseAccount) (other DeviseAccount))
   "Additionne les deux comptes-devises."
   (account-operation-account self other  '+)
   );;account-add-account
 
-(defmethod account-sub-account ((self DeviseAccount) (other DeviseAccount))
+(defmethod* account-sub-account ((self DeviseAccount) (other DeviseAccount))
   "Soustrait le devise-account compte-b du devise-account compte-a."
   (account-operation-account self other  '-)
   );;account-sub-account
@@ -344,7 +344,7 @@ Instances of theses subclasses are made by make-operation.
   );;Operation
 
 
-(defmethod apply-to-position ((self Operation) (position Position))
+(defmethod* apply-to-position ((self Operation) (position Position))
   "NOTE:   This method must be overriden by subclasses.
 PRE:    (equal (symbol self) (symbol (owner-line position)))
 DO:     Apply self operation onto the position."
@@ -370,7 +370,7 @@ DO:     Apply self operation onto the position."
   "%-10s SPLIT %4d NEW SHARES FOR %4d OLD SHARES  %s"
   "Format to print a split operation.");;operation-format-split
 
-(defmethod as-string ((self Operation))
+(defmethod* as-string ((self Operation))
   "RETURN: A human readable string representing the operation."
   (format operation-format-bad (date self) (symbol self))
   );;as-string
@@ -454,7 +454,7 @@ instances, of which all but the last must be closed.
   );;Position
 
 
-(defmethod as-string ((self Position))
+(defmethod* as-string ((self Position))
   "RETURN: a human readable string describing the position."
   ;; (insert (apply 'concat
   ;;         (mapcar (lambda (x) (format "(format \"    %-20s=%%S\\n\" (%s self))\n"
@@ -477,7 +477,7 @@ instances, of which all but the last must be closed.
 
 
 
-(defmethod state ((self Position))
+(defmethod* state ((self Position))
   "RETURN: the state of the Position.
         Either: 'newborn when no operation has been included;
                 'running when operations have been included,
@@ -490,19 +490,19 @@ instances, of which all but the last must be closed.
   );;state
 
 
-(defmethod is-closed ((self Position))
+(defmethod* is-closed ((self Position))
   "RETURN: Whether (equal (state self) 'closed)."
   (equal (state self) 'closed)
   );;is-closed
 
 
-(defmethod is-running ((self Position))
+(defmethod* is-running ((self Position))
   "RETURN: Whether (equal (state self) 'running)."
   (equal (state self) 'running)
   );;is-running
 
 
-(defmethod update-with-operation ((self Position) (operation Operation))
+(defmethod* update-with-operation ((self Position) (operation Operation))
   "PRE:    (not (is-closed self))
 DO:     Updates this position with the given operation.
 RETURN: self."
@@ -520,7 +520,7 @@ RETURN: self."
 
 
 
-(defmethod amount-invested   ((self Position))
+(defmethod* amount-invested   ((self Position))
   "RETURN: The amount mobilized on this position.
         amount-invested =  (- (buy-amount self) (sell-amount self)).
         When is-closed, this is the lost (if positive)
@@ -529,14 +529,14 @@ RETURN: self."
   );;amount-invested
 
 
-(defmethod quantity ((self Position))
+(defmethod* quantity ((self Position))
   "RETURN: The number of share remaining in the position.
         quantity = (- (buy-quantity self) (sell-quantity self))"
   (- (buy-quantity self) (sell-quantity self))
   );;quantity
 
 
-(defmethod gain ((self Position))
+(defmethod* gain ((self Position))
   "RETURN: The gain on this position, negative if there's a loss.
         This is valid only when the position is closed:
         is-closed       => gain = (- sell-amount buy-amount)
@@ -547,7 +547,7 @@ RETURN: self."
   );;gain
 
 
-(defmethod paid-per-share ((self Position))
+(defmethod* paid-per-share ((self Position))
   "RETURN: The cost of the remaining shares.
         This is valid only when running.
         when the position is not running, or if the amount-invested is negative,
@@ -598,7 +598,7 @@ oldQuantity required to the newQuantity = number of new share + oldQuantity.
   );;SplitOp
 
 
-(defmethod apply-to-position ((self SplitOp) (position Position))
+(defmethod* apply-to-position ((self SplitOp) (position Position))
   "NOTE:   This method must be overriden by subclasses.
 PRE:    (equal (symbol self) (symbol (owner-line position)))
 DO:     Apply this split operation onto the position."
@@ -616,7 +616,7 @@ DO:     Apply this split operation onto the position."
   );;apply-to-position
 
 
-(defmethod as-string ((self SplitOp))
+(defmethod* as-string ((self SplitOp))
   "RETURN: A human readable string representing the operation."
   (format operation-format-split
     (date self) (newQuantity self)  (oldQuantity self) (symbol self))
@@ -678,32 +678,32 @@ Instances of theses subclasses are made by make-operation.
 
 
 
-(defmethod amount-base ((self BuySellOp))
+(defmethod* amount-base ((self BuySellOp))
   "RETURN: The total amount of this operation, excluding the comission."
   (* (quantity self) (price self))
   );;amount-base
 
 
-(defmethod comission-percent ((self BuySellOp))
+(defmethod* comission-percent ((self BuySellOp))
   "RETURN: The percentage the comission represents relatively to the share value."
   (percent (comission self) (amount-base self))
   );;comission-percent
 
 
-(defmethod amount-paid ((self BuySellOp))
+(defmethod* amount-paid ((self BuySellOp))
   "RETURN: The amount paid for the operation. Negative when it's a sell operation."
   (+ (* (signed-quantity self) (price self)) (comission self))
   );;amount-paid
 
 
-(defmethod signed-quantity ((self BuySellOp))
+(defmethod* signed-quantity ((self BuySellOp))
   "RETURN: The quantity.
 NOTE:   Should be overriden by sell operation to return the opposite."
   (quantity self)
   );;signed-quantity
 
          
-(defmethod as-string ((self BuySellOp))
+(defmethod* as-string ((self BuySellOp))
   "RETURN: A human readable string representing the operation."
   (format operation-format-buy-sell
     (date self) (devise self) 
@@ -727,14 +727,14 @@ Reification of a buy operation.
   );;BuyOp
 
 
-(defmethod amount  ((self BuySellOp))
+(defmethod* amount  ((self BuySellOp))
   "RETURN: The total amount aid of this operation, including the comission.
         For buys, it's quantity*price+comission."
   (+ (* (quantity self) (price self)) (comission self))
   );;amount
 
 
-(defmethod apply-to-position ((self BuyOp) (position Position))
+(defmethod* apply-to-position ((self BuyOp) (position Position))
   "PRE:    (equal (symbol self) (symbol (owner-line position))),
         (equal (devise self) (devise (owner-line position)))
 DO:     Apply this buy operation onto the position."
@@ -771,19 +771,19 @@ Reification of a sell operation.
 ")
   );;SellOp
 
-(defmethod amount  ((self BuySellOp))
+(defmethod* amount  ((self BuySellOp))
   "RETURN: The total amount paid for this operation, including the comission.
         For sells, it's quantity*price-comission"
   (- (* (quantity self) (price self)) (comission self))
   );;amount
 
-(defmethod signed-quantity ((self SellOp))
+(defmethod* signed-quantity ((self SellOp))
   "RETURN: The opposite of the quantity, to denote a sell."
   (- 0 (quantity self))
   );;signed-quantity
 
 
-(defmethod apply-to-position ((self SellOp) (position Position))
+(defmethod* apply-to-position ((self SellOp) (position Position))
   "PRE:    (equal (symbol self) (symbol (owner-line position))),
         (equal (devise self) (devise (owner-line position)))
 DO:     Apply this sell operation onto the position."
@@ -879,7 +879,7 @@ are accumulated.
   );;Line
 
 
-(defmethod update-with-operation ((self Line) (operation BuySellOp))
+(defmethod* update-with-operation ((self Line) (operation BuySellOp))
   "PRE:    (and (or (null (devise self)) (equal (devise self) (devise operation)))
              (or (null (symbol self)) (equal (symbol self) (symbol operation))))
 POST:   (and (equal (devise self) (devise operation))
@@ -902,7 +902,7 @@ RETURN: self."
   );;update-with-operation
 
 
-(defmethod open-new-position ((self Line))
+(defmethod* open-new-position ((self Line))
   "PRE:   (is-closed (last-position self))
 POST:   self has a new newbord position ready to be filled with operations.
 RETURN: self"
@@ -917,7 +917,7 @@ RETURN: self"
   self);;open-new-position
 
 
-(defmethod last-position ((self Line))
+(defmethod* last-position ((self Line))
   "RETURN: The last position of the line."
   (if (null (slot-value self 'positions))
     (open-new-position self))
@@ -927,70 +927,70 @@ RETURN: self"
 
 ;; Last position data:
 
-(defmethod quantity ((self Line))
+(defmethod* quantity ((self Line))
   "RETURN: The number of share of the last postion.
         (All the previous positions have a number of 0 share remaining...)."
   (quantity (last-position self))
   );;quantity
 
-(defmethod amount-invested ((self Line))
+(defmethod* amount-invested ((self Line))
   "RETURN: The amount-invested of the last position."
   (if (is-running (last-position self))
     (amount-invested (last-position self))
     0.0)
   );;amount-invested
 
-(defmethod comission ((self Line))
+(defmethod* comission ((self Line))
   "RETURN: The comission paid for the last position."
   (if (is-running (last-position self))
     (comission (last-position self))
     0.0)
   );;comission
 
-(defmethod nb-operations ((self Line))
+(defmethod* nb-operations ((self Line))
   "RETURN: The number of operation of the last position.
         (used for average-comission)"
   (nb-operations (last-position self))
   );;nb-operations
 
 
-(defmethod average-comission ((self Line))
+(defmethod* average-comission ((self Line))
   "RETURN: The average comission paid for the last position."
   (/ (comission self) (nb-operations self))
   );;average-comission
 
 
-(defmethod paid-per-share ((self Line))
+(defmethod* paid-per-share ((self Line))
   "RETURN: The price paid per share for the last position."
   (paid-per-share (last-position self))
   );;paid-per-share
 
 
-(defmethod gain ((self Line))
+(defmethod* gain ((self Line))
   "RETURN: The gain of the last position."
   (gain (last-position self))
   );;gain
 
 
-(defmethod buy-amount ((self Line))
+(defmethod* buy-amount ((self Line))
   "RETURN: The buy amount of the last position of the line."
   (buy-amount (last-position self))
   );;buy-amount
 
 
-(defmethod sell-amount ((self Line))
+(defmethod* sell-amount ((self Line))
   "RETURN: The sell amount of the last position of the line."
   (sell-amount (last-position self))
   );;sell-amount
 
 
-(defmethod buy-quantity ((self Line))
+(defmethod* buy-quantity ((self Line))
   "RETURN: The buy quantity of the last position of the line."
   (buy-quantity (last-position self))
   );;buy-quantity
 
 
-(defmethod sell-quantity ((self Line))
+(defmethod* sell-quantity ((self Line))
   "RETURN: The sell quantity of the last position of the line."
   (sell-quantity (last-position self))
   );;sell-quantity
@@ -998,7 +998,7 @@ RETURN: self"
 
 ;; Totals over closed positions:
 
-(defmethod closed-buy-amount ((self Line))
+(defmethod* closed-buy-amount ((self Line))
   "RETURN: The sum over closed positions of (amount-base position).
         (used to compute the percentage gain)."
   (apply '+ (mapcar (lambda (pos) (buy-amount pos)) 
@@ -1007,7 +1007,7 @@ RETURN: self"
                       (cdr (positions self)))))
   );;closed-buy-amount
 
-(defmethod closed-gain ((self Line))
+(defmethod* closed-gain ((self Line))
   "RETURN: The sum over closed positions of (gain position)."
   (apply '+ (mapcar (lambda (pos) (gain pos)) 
                     (if (is-closed (last-position self))
@@ -1113,7 +1113,7 @@ Reification of a Portfolio.
   );;Portfolio
 
 
-(defmethod add-operation ((self Portfolio) (op BuySellOp))
+(defmethod* add-operation ((self Portfolio) (op BuySellOp))
   "DO:     Add an operation.
 PRE:    (date (last (operations self))) <= (date operation)
         to ensure that the positions in the lines are not closed unduly.
@@ -1140,7 +1140,7 @@ RETURN: self."
   self);;add-operation
 
 
-(defmethod compute-operation-totals ((self Portfolio))
+(defmethod* compute-operation-totals ((self Portfolio))
   "DO:     compute the following totals from the operations.
         total-opcom, total-amount-base, total-comissions, 
         total-credit, total-debit 
@@ -1178,7 +1178,7 @@ RETURN: self."
 
 
 
-(defmethod add-line ((self Portfolio) (line Line))
+(defmethod* add-line ((self Portfolio) (line Line))
   "
 DO:   Add the line to the portfolio.
 PRE:  No other line with the same symbol should exist in the portfolio.
@@ -1190,7 +1190,7 @@ POST: (eq (line-with-symbol self (symbol line)) line)"
   self);;add-line
 
 
-(defmethod sort-portfolio-lines ((self Portfolio))
+(defmethod* sort-portfolio-lines ((self Portfolio))
   ;; sort-lines is an emacs function!
   "DO:     Sort the lines list on the symbol.
 RETURN: self."
@@ -1213,7 +1213,7 @@ RETURN: self."
   self);;sort-portfolio-lines
 
 
-(defmethod compute-line-totals ((self Portfolio))
+(defmethod* compute-line-totals ((self Portfolio))
   "DO:     compute the following totals from the lines.
            total-invested, total-closed-gains, total-closed-base.
 RETURN: self."
@@ -1239,7 +1239,7 @@ RETURN: self."
   self);;compute-line-totals
 
 
-(defmethod line-with-symbol ((self Portfolio) symbol)
+(defmethod* line-with-symbol ((self Portfolio) symbol)
   "RETURN: the line whose symbol is SYMBOL,
         or nil if none exist in the portfolio."
   (cdr (assoc symbol (lines self)))

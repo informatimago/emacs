@@ -34,7 +34,7 @@
 ;;;;**************************************************************************
 (require 'cl)
 (require 'cc-mode)
-(require 'semantics)
+(require 'semantic)
 
 
 (defparameter *operators*

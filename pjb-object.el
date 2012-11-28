@@ -64,5 +64,33 @@
 
 
 
+(defmacro defmethod* (name &rest things)
+  "In emacs-24 eieio rejects defmethod with more than one specialization."
+  (let* ((qualifiers (loop while (and (atom (car things)) (not (null (car things))))
+			collect (pop things)))
+	 (lambda-list (pop things))
+	 (body things)
+	 (mandatories (loop
+			 while (and lambda-list
+				    (not (member (car lambda-list) '(&optional &rest &body &key &allow-other-keys &aux))))
+			 collect (pop lambda-list)))
+	 (other-parameters lambda-list)
+	 (first-parameter (pop mandatories))
+	 (checks '()))
+    `(defmethod ,name ,@qualifiers
+       (,first-parameter
+	,@(mapcar (lambda (parameter)
+		    (if (listp parameter)
+			(progn
+			  (push parameter checks)
+			  (first parameter))
+			parameter))
+		  mandatories)
+	,@other-parameters)
+       ,@(mapcar (lambda (check)
+		   (cons 'check-type check))
+		 checks)
+       ,@body)))
 
-;;;; pjb-object.el                    -- 2002-09-08 23:32:54 -- pascal   ;;;;
+
+;;;; THE END ;;;;
