@@ -79,6 +79,7 @@
         "pjb-utilities.el"
         "pjb-work.el"
         "pjb-xresources.el"
+        "pjb-thi.el"
 
         "pjb-pl1.el" ; testing
         ))
