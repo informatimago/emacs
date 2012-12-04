@@ -139,9 +139,15 @@
                                          ;; Subsequent lines in a K&R C argument declaration.
                                          (topmost-intro      . 0)
                                          ;; The first line in a topmost construct definition.
+<<<<<<< HEAD
                                          (topmost-intro-cont . ++)
                                          ;; Topmost definition continuation lines.
                                          (member-init-intro  . 0)
+=======
+                                         (topmost-intro-cont . 0)
+                                         ;; Topmost definition continuation lines.
+                                         (member-init-intro  . +)
+>>>>>>> b18bb4bad3d00ec410c9b8553fd9b30d2a4da0ab
                                          ;; First line in a member initialization list.
                                          (member-init-cont   . ++)
                                          ;; Subsequent member initialization list lines.
@@ -166,7 +172,11 @@
                                          ;; list that start with an open brace.
                                          (statement          . 0)
                                          ;; A C (or like) statement.
+<<<<<<< HEAD
                                          (statement-cont     . 0)
+=======
+                                         (statement-cont     . ++)
+>>>>>>> b18bb4bad3d00ec410c9b8553fd9b30d2a4da0ab
                                          ;; A continuation of a C (or like) statement.
                                          (statement-block-intro . +)
                                          ;; The first line in a new statement block.

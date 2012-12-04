@@ -3426,5 +3426,33 @@ the FUNCTION can take."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defvar *sources*)
+
+(defun set-sources (directory)
+  (interactive "DSource directory: ")
+  (setf *sources* directory)
+  (setf grep-find-command
+        (format "find %s \\( \\( -name build -o -name debug -o -name release -o -name .svn \\) -prune \\) -o -type f  \\(  -name \\*.h -o -name \\*.m -o -name \\*.mm -o -name \\*.c -name \\*.hh -o -name \\*.hxx -o -name \\*.cc  -o -name \\*.cxx -o -name \\*.lisp -o -name \\*.rb -o -name \\*.logs \\) -print0 | xargs -0 grep -niH -e "
+                *sources**)
+        grep-host-defaults-alist nil))
+
+(defun directory-recursive-find-files-named (directory name)
+  (split-string (shell-command-to-string (format "find %S -name %S -print0" directory name)) "\0" t))
+
+(defun sources-find-file-named (name)
+  (interactive "sFile name: ")
+  (let ((files (directory-recursive-find-files-named *sources* name)))
+    (case (length files)
+      ((0) (message "No such file."))
+      ((1) (find-file (first files)))
+      (otherwise (x-popup-menu (list '(0 0) (selected-window))
+                               (list "Source Find File Named"
+                                     (cons "Select a file"
+                                           (mapcar (lambda (path) (cons path path))
+                                                   files))))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'pjb-sources)
 ;;;; THE END ;;;;

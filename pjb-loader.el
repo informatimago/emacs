@@ -80,7 +80,8 @@
         "pjb-work.el"
         "pjb-xresources.el"
         "pjb-thi.el"
-
+        "pjb-c-style.el"
+        
         "pjb-pl1.el" ; testing
         ))
 
