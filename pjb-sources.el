@@ -3433,7 +3433,7 @@ the FUNCTION can take."
   (setf *sources* directory)
   (setf grep-find-command
         (format "find %s \\( \\( -name build -o -name debug -o -name release -o -name .svn \\) -prune \\) -o -type f  \\(  -name \\*.h -o -name \\*.m -o -name \\*.mm -o -name \\*.c -name \\*.hh -o -name \\*.hxx -o -name \\*.cc  -o -name \\*.cxx -o -name \\*.lisp -o -name \\*.rb -o -name \\*.logs \\) -print0 | xargs -0 grep -niH -e "
-                *sources**)
+                *sources*)
         grep-host-defaults-alist nil))
 
 (defun directory-recursive-find-files-named (directory name)
