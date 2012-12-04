@@ -42,6 +42,37 @@
 ;;;;    Boston, MA 02111-1307 USA
 ;;;;**************************************************************************
 
+(require 'cl)
+(require 'pjb-cl)
+
+
+(defun pjb-http-get (url)
+  "Fetches a resource at URL, and returns it."
+  (shell-command-to-string
+   (format "wget --no-convert-links -q -nv -o /dev/null -t 3  -O -  %s" (shell-quote-argument url))))
+
+(defun pjb-parse-xml (xml)
+  "Parse the XML string."
+  (with-temp-buffer
+    (insert xml)
+    (xml-parse-region (point-min) (point-max))))
+
+(defun pjb-parse-html (html)
+  "Parse the HTML string."
+  (pjb-parse-xml html))
+
+
+(defun pjb-find-html-tag (tag html)
+  (cond
+    ((atom html) nil)
+    ((eq tag (car html)) html)
+    (t (or (pjb-find-html-tag tag (car html))
+           (pjb-find-html-tag tag (cdr html))))))
+
+
+
+
+
 
 (defun beginning-of-buffer-p (point)
   ;; (message "Please implement beginning-of-buffer-p again...")
@@ -150,3 +181,6 @@
   (local-set-key "\C-c."    'forward-tag)
   (local-set-key "\C-c,"    'backward-tag))
 
+
+(provide 'pjb-html)
+;;;; THE END ;;;;

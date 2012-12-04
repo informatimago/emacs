@@ -40,6 +40,7 @@
 ;;;;
 ;;;;****************************************************************************
 (require 'cl)
+(require 'eieio)
 (require 'devices nil t)
 (require 'font nil t)
 (require 'browse-url)
@@ -47,10 +48,10 @@
 (require 'sgml-mode)
 
 (require 'pjb-cl)
-(require 'eieio)
 (require 'pjb-euro)
 (require 'pjb-font)
-(provide 'pjb-emacs)
+(require 'pjb-sources)
+
 
 
 (defvar html-quick-keys t )
@@ -2414,4 +2415,5 @@ recursive search.  Backup files (name ending in ~) are ignored too.
       (replace-regexp regexp to-string delimited))))
 
 
+(provide 'pjb-emacs)
 ;;;: THE END ;;;;

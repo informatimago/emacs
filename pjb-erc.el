@@ -67,6 +67,7 @@
 
 (require 'pjb-cl)
 (require 'pjb-make-depends)
+(require 'pjb-html)
 
 (eval-when (compile load exec)
   (require 'erc-auto     nil t)
@@ -82,6 +83,8 @@
   (require 'erc-button   nil t)
   (require 'erc-truncate nil t)
   (require 'erc-nickserv nil t))
+
+(require 'erc)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -113,29 +116,6 @@
   (current-kill (cond ((listp arg) 0)
                       ((eq arg '-) -2)
                       (t           (1- arg)))))
-
-(defun pjb-http-get (url)
-  "Fetches a resource at URL, and returns it."
-  (shell-command-to-string
-   (format "wget --no-convert-links -q -nv -o /dev/null -t 3  -O -  %s" (shell-quote-argument url))))
-
-(defun pjb-parse-xml (xml)
-  "Parse the XML string."
-  (with-temp-buffer
-    (insert xml)
-    (xml-parse-region (point-min) (point-max))))
-
-(defun pjb-parse-html (html)
-  "Parse the HTML string."
-  (pjb-parse-xml html))
-
-
-(defun pjb-find-html-tag (tag html)
-  (cond
-    ((atom html) nil)
-    ((eq tag (car html)) html)
-    (t (or (pjb-find-html-tag tag (car html))
-           (pjb-find-html-tag tag (cdr html))))))
 
 
 (defvar *lisp-paste-url*        "http://paste.lisp.org/new")
