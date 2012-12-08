@@ -123,7 +123,7 @@ To update the devises with variable quotes, use get-devises.
                                                                (pjb-http-get *devise-url*)))))))
      for currency = (intern (format ":%s" (cdr (assoc 'currency entry))))
      for rate     = (car (read-from-string (cdr (assoc 'rate entry))))
-     do (insert (format "%S\n" (list 'euro-update-devise rate currency)))
+     ;; do (insert (format "%S\n" (list 'euro-update-devise rate currency)))
      do (euro-update-devise rate currency)))
 
 
