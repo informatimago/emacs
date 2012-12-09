@@ -46,10 +46,6 @@
 (require 'pjb-cl)
 
 
-(defun pjb-http-get (url)
-  "Fetches a resource at URL, and returns it."
-  (shell-command-to-string
-   (format "wget --no-convert-links -q -nv -o /dev/null -t 3  -O -  %s" (shell-quote-argument url))))
 
 (defun pjb-parse-xml (xml)
   "Parse the XML string."

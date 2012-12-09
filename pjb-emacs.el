@@ -1,4 +1,4 @@
-;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8; lexical-binding:t -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-emacs.el
 ;;;;LANGUAGE:           emacs lisp
@@ -51,6 +51,7 @@
 (require 'pjb-euro)
 (require 'pjb-font)
 (require 'pjb-sources)
+(require 'pjb-strings)
 
 
 
@@ -254,14 +255,11 @@ DO:    Draws the pixels of pix-list (a list of (cons x y))
       (goto-line      (+ sl (cdr point))) ;; goto-line first for
       (move-to-column (+ sc (car point)) t)
       (picture-update-desired-column t)
-      (picture-insert pixel 1)
-      ) ;;dolist
+      (picture-insert pixel 1))
 
     (goto-line sl)
-    (move-to-column sc t)
-    ) ;;let*
-  nil
-  ) ;;picture-draw-pixels
+    (move-to-column sc t))
+  nil)
 
 
 (defun ellipse-quart (a b)
@@ -269,21 +267,19 @@ DO:    Draws the pixels of pix-list (a list of (cons x y))
 RETURN: A list of integer coordinates approximating a quart (x>=0, y>=0) of
         an ellipse of half width a and half height b.
 "
-  (let ( (step  (/ pi 4 (sqrt (+ (* a a) (* b b)))))
+  (let ((step  (/ pi 4 (sqrt (+ (* a a) (* b b)))))
         (limit (/ pi 2))
          (alpha 0.0)
          (result (list (cons 0 0)))
          x y )
-
     (while (<= alpha limit)
       (setq x (round (* a (cos alpha)))
             y (round (* b (sin alpha))) )
       (if (or  (/= y (cdar result)) (/= x (caar result)))
           (push (cons x y) result))
       (setq alpha (+ alpha step)))
-    (cdr (nreverse result))
-    ) ;;let
-  )   ;;ellipse-quart
+    (cdr (nreverse result))))
+
 
 
 (defun ellipse-full (a b)
@@ -291,7 +287,7 @@ RETURN: A list of integer coordinates approximating a quart (x>=0, y>=0) of
 RETURN: A list of integer coordinates approximating the whole ellipse
         of half width a and half height b.
 "
-  (let ( (quart (ellipse-quart a b)) )
+  (let ((quart (ellipse-quart a b)))
     (append
      quart
      (mapcar (lambda (item) (cons (- 0 (car item)) (cdr item))) quart)
@@ -321,29 +317,24 @@ cPlot character: ") ;; start <= end
          (top    (min r1 r2))
          (bottom (max r1 r2))
          (width  (+ 0.0 (- right left)))
-         (height (+ 0.0 (- bottom top)))
-         )
+         (height (+ 0.0 (- bottom top))))
     (goto-line            top)
     (move-to-column left t)
     (picture-update-desired-column t)
-    (flet ((fun (x) nil))
-      (fset 'fun `(function (lambda (x) ,fun)))
+    (flet ((fun (x) (funcall fun x)))
       (picture-draw-pixels 
        (do* ((xi 0 (1+ xi))
              (x) (y) (yi)
-             (pixels nil)
-             )
+             (pixels nil))
             ((> xi width) pixels)
          (setq x  (/ xi width))
          (setq y  (let ((y (unwind-protect (fun x))))
                     (if (< y 0.0) 0.0 (if (< 1.0 y) 1.0 y))))
          (setq yi (round (* height (- 1.0 y))))
          (push (cons xi yi) pixels)) 
-       plot-char)
-      ) ;;flet
+       plot-char))
     (goto-line sl)
-    (move-to-column sc t))
-  ) ;;picture-draw-function
+    (move-to-column sc t)))
 
 
 
@@ -375,8 +366,7 @@ BUG:    Only draws ellipse of even width and height.
     (picture-draw-pixels (ellipse-full a b) ?*)
 
     (goto-line sl)
-    (move-to-column sc t))
-  ) ;;picture-draw-ellipse
+    (move-to-column sc t)))
 
 
 (defvar x-cell-size  7 "Width  in pixel of one cell.")
@@ -407,23 +397,19 @@ BUG:    Only draws ellipse of even width and height.
     (picture-update-desired-column t)
     (picture-draw-pixels (ellipse-full (round (/ r x-cell-size))
                                        (round (/ r y-cell-size)))?*)
-
     (goto-line sl)
-    (move-to-column sc t)
-    ) ;;let*
-  )   ;;picture-draw-circle
+    (move-to-column sc t)))
 
 
 
 (defvar picture-fill-pixel ?* 
-  "The default pixel used to fill forms.") ;;picture-fill-pixel
+  "The default pixel used to fill forms.")
 
 
 (defun picture-fill-rectangle (start end)
   "Fills a rectangle with `picture-fill-pixel', or when a prefix
   argument is given, with the character given in minibuf."
   (interactive "*rP")                   ; start will be less than end
-    
   (let* ((sl     (picture-current-line))
          (sc     (current-column))
          (pvs    picture-vertical-step)
@@ -451,17 +437,14 @@ BUG:    Only draws ellipse of even width and height.
       (picture-insert fill-pixel width))
     (picture-set-motion  pvs phs)
     (goto-line sl)
-    (move-to-column sc t)
-    ) ;;let*
-  )   ;;picture-fill-rectangle
+    (move-to-column sc t)))
 
 
 (defun picture-horizontal-segment (line left right)
   (goto-line            line)
   (move-to-column right t)
   (picture-update-desired-column t)
-  (buffer-substring (- (point) (- right left)) (1+ (point)))
-  ) ;;picture-horizontal-segment
+  (buffer-substring (- (point) (- right left)) (1+ (point))))
 
 
 (defun picture-draw-text (line column text)
@@ -476,8 +459,7 @@ BUG:    Only draws ellipse of even width and height.
          ((<= (length text) i))
       (picture-insert (char text i) 1))
     (goto-line sl)
-    (move-to-column sc t)
-    )) ;;picture-draw-text
+    (move-to-column sc t)))
 
 
 (defun picture-mirror-vertical (start end)
@@ -508,8 +490,7 @@ BUG:    Only draws ellipse of even width and height.
       )
     (picture-set-motion  pvs phs)
     (goto-line sl)
-    (move-to-column sc t)
-    )) ;;picture-mirror-vertical
+    (move-to-column sc t)))
 
 
 (defun picture-mirror-horizontal (start end)
@@ -539,8 +520,7 @@ BUG:    Only draws ellipse of even width and height.
       (picture-draw-text line left (car lines)))
     (picture-set-motion  pvs phs)
     (goto-line sl)
-    (move-to-column sc t)
-    )) ;;picture-mirror-horizontal
+    (move-to-column sc t)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -585,23 +565,63 @@ DO:      Apply wc on the file visited in the current buffer.
     
 
 
-(when nil
-  (defun url-retrieve-as-string (url)
-    "RETURN: A string containing the data found at the url."
-    ;; This version uses w3.
-    ;; An alternative could be:
-    ;; (shell-command-to-string (format "lynx -source '%s'" url))
-    (save-excursion
-      (let* ((status (url-retrieve url))
-             (cached (car status))
-             (url-working-buffer (cdr status)))
-        (set-buffer url-working-buffer)
-        (buffer-string)))))
+
+(defun* tempfile (&key directory prefix suffix name mode)
+  (flet ((option (flag value)
+                 (if value
+                     (format "%s %s" 
+                             (shell-quote-argument flag)
+                             (shell-quote-argument value)))))
+    (let ((lines (split-string (shell-command-to-string
+                                (format "tempfile %s %s %s %s %s || echo $?"
+                                        (option "-d" directory)
+                                        (option "-p" prefix)
+                                        (option "-s" suffix)
+                                        (option "-n" name)
+                                        (option "-m" mode)))
+                               "\n" t)))
+      (case (length lines)
+        ((1) (first lines))
+        (otherwise (error "%s\nstatus %s"
+                          (join (butlast lines) "\n")
+                          (car (last lines))))))))
 
 
-(defun url-retrieve-as-string (url)
+(defun* url-retrieve-as-string (url)
   "RETURN: A string containing the data found at the url."
-  (shell-command-to-string (format "lynx -source '%s'" url)))
+  (if (fboundp 'url-retrieve-synchronously)
+      (with-current-buffer (url-retrieve-synchronously url)
+        (goto-char (point-min))
+        (prog1 (buffer-substring (search-forward "\n\n" nil t) (point-max))
+          (kill-buffer)))
+      (let ((tmpfile (or (ignore-errors (tempfile))
+                         (format "/tmp/url-retrieve-as-string-%d-%d.data"
+                                 (emacs-pid) (random 10000000)))))
+        (unwind-protect
+             (progn
+               (loop
+                  for fetch-command
+                  in (list
+                      (lambda ()
+                        (format "wget --no-convert-links -q -nv -o /dev/null -t 3  -O %s %s 2>/dev/null"
+                                (shell-quote-argument tmpfile)
+                                (shell-quote-argument url)))
+                      (lambda ()
+                        (format "lynx -source %s > %s 2>/dev/null"
+                                (shell-quote-argument url)
+                                (shell-quote-argument tmpfile))))
+                  for command = (format "%s && ( echo $? ; cat %s ) || echo $?"
+                                        (funcall fetch-command)
+                                        (shell-quote-argument tmpfile))
+                  do (let* ((output (shell-command-to-string command))
+                            (result (read-from-string output))
+                            (status (car result)))
+                       (when (zerop status)
+                         (return (subseq output (1+ (cdr result))))))
+                  finally (error "url-retrieve-as-string cannot find a command to fetch URLs.")))
+          (ignore-errors (delete-file tmpfile))))))
+
+
 
 
 (defun pjb-browse-url-lynx-xterm (url &optional new-window)
@@ -789,8 +809,7 @@ DO:      get-devises and insert some eurotunnel data.
        (let* ((fields   (split-string line ";"))
               (sym      (nth 0 fields))
               (quo      (string-to-number 
-                         (replace-regexp-in-string "," "." (nth 1 fields) nil nil)))
-              )
+                         (replace-regexp-in-string "," "." (nth 1 fields) nil nil))))
          (cond
 
            ((string-match "22457" sym)
@@ -854,15 +873,13 @@ DO:     Chronometre the execution of `lambda-body'.
         Writes a message indicating the time it took.
 RETURN: (cons seconds the result of `lambda-body').
 "
-  (let* ( (start  (current-time))
+  (let* ((start  (current-time))
          (result (funcall lambda-body))
-          (stop   (current-time)) 
-          (time   (- (emacs-time-to-seconds stop) 
-                     (emacs-time-to-seconds start))) )
+         (stop   (current-time)) 
+         (time   (- (emacs-time-to-seconds stop) 
+                    (emacs-time-to-seconds start))) )
     (printf outstream "Took %f seconds." time)
-    (cons time result)
-    ) ;;let*
-  )   ;;chronometre
+    (cons time result)))
 
 
 
@@ -947,7 +964,7 @@ space does not end a sentence, so don't break a line there."
         (insert (format "%s "
                   (if (and (listp word) (eq 'quote (car word))) 
                       (cadr word) word))))
-      (insert "\n")))) ;;perm-words
+      (insert "\n"))))
 
 
 (defvar *fortune-file* "/data/cookies/bopcs.cookies")
@@ -964,8 +981,7 @@ Add the selection to the local fortune file.
     (insert fortune)
     (insert "\n#\n")
     (save-buffer 1)
-    (bury-buffer))
-  ) ;;add-fortune
+    (bury-buffer)))
 (defalias 'add-cookie 'add-fortune)
 
 
@@ -1677,7 +1693,7 @@ DO:    Apply the function fun(character)->string to the region from
 
 (defun is-space (c)
   "RETURN: Whether C is a space."
-  (member c '(9 10 11 12 13 32))) ;;is-space
+  (member c '(9 10 11 12 13 32)))
 
 
 (defun blind-text-region (start end)

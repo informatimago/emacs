@@ -114,13 +114,14 @@ To update the devises with variable quotes, use get-devises.
   ;;   (erase-buffer)
   ;; )
   (loop
-     for (nil entry) in (flet ((clean (xml) (find-if 'consp (cddr xml))))
-                          (remove-if-not 'consp
-                                         (cddr
-                                          (clean
-                                           (pjb-find-html-tag 'Cube
-                                                              (pjb-parse-xml
-                                                               (pjb-http-get *devise-url*)))))))
+     for (nil entry)
+     in (remove-if-not 'consp
+                       (flet ((clean (xml) (cddr (find-if 'consp xml))))
+                         (clean (clean
+                                 (pjb-find-html-tag
+                                  'Cube
+                                  (pjb-parse-xml
+                                   (url-retrieve-as-string *devise-url*)))))))
      for currency = (intern (format ":%s" (cdr (assoc 'currency entry))))
      for rate     = (car (read-from-string (cdr (assoc 'rate entry))))
      ;; do (insert (format "%S\n" (list 'euro-update-devise rate currency)))
