@@ -3445,11 +3445,11 @@ the FUNCTION can take."
     (case (length files)
       ((0) (message "No such file."))
       ((1) (find-file (first files)))
-      (otherwise (x-popup-menu (list '(0 0) (selected-window))
-                               (list "Source Find File Named"
-                                     (cons "Select a file"
-                                           (mapcar (lambda (path) (cons path path))
-                                                   files))))))))
+      (otherwise (find-file (x-popup-menu (list '(0 0) (selected-window))
+                                          (list "Source Find File Named"
+                                                (cons "Select a file"
+                                                      (mapcar (lambda (path) (cons path path))
+                                                              files)))))))))
 
 
 
