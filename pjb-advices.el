@@ -207,6 +207,7 @@ Email addresses are not case sensitive."
 
 (require 'cus-edit)
 
+
 (defadvice custom-save-variables 
   (around pjb-custom-save-variables-sorted ())
   ;; we won't call ad-do-it because we mustn't let the original write any 

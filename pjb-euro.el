@@ -39,6 +39,7 @@
 (require 'pjb-utilities)
 (require 'pjb-strings)
 (require 'pjb-html)
+(require 'pjb-emacs)
 
 
 (defvar euro-parities '(
@@ -423,6 +424,48 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
 
 
 ;; (format-table (make-gold-table))
+
+
+(defun pjb-eurotunnel ()
+  "
+DO:      get-devises and insert some eurotunnel data.
+"
+  (interactive)
+  (let ((today (calendar-current-date)))
+    (get-devises)
+    (mapcar
+     (lambda (line) 
+       (let* ((fields   (split-string line ";"))
+              (sym      (nth 0 fields))
+              (quo      (string-to-number 
+                         (replace-regexp-in-string "," "." (nth 1 fields) nil nil))))
+         (cond
+
+           ((string-match "22457" sym)
+            (printf
+             "  | %4d-%02d-%02d    %8.6f   %4d %10s = %7.2f %11s |\n"
+             (nth 2 today) (nth 0 today) (nth 1 today)
+             quo 4400 sym (* quo 4400) " "))
+
+           ((string-match "12537" sym)
+            (printf
+             "  | %4d-%02d-%02d    %8.6f        %10s    %18s |\n"
+             (nth 2 today) (nth 0 today) (nth 1 today)
+             quo  sym  " "))
+
+           ((string-equal sym "GBP=X")
+            (printf
+             "  | %4d-%02d-%02d    %8.6f          %3s      ~ %7.4f %11s |\n"
+             (nth 2 today) (nth 0 today) (nth 1 today)
+             (/ (euro-from-value 10000 UKL) 10000.0) 'UKL
+             (/ (+ (euro-from-value (* 1495 0.68) UKL) (* 1495 1.0214)) 1495)
+             "EUR/12537"))
+
+           (t))))
+
+     (split-string 
+      (url-retrieve-as-string 
+       "http://fr.finance.yahoo.com/d/quos.csv?s=22456+22457+12537+GBP=X&m=PA&f=sl1d1t1c1ohgv&e=.csv")))))
 
 
 (get-devises)

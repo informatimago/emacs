@@ -48,7 +48,6 @@
 (require 'sgml-mode)
 
 (require 'pjb-cl)
-(require 'pjb-euro)
 (require 'pjb-font)
 (require 'pjb-sources)
 (require 'pjb-strings)
@@ -797,50 +796,6 @@ DO:      Grep current directory for sources containing the current word.
 
 
 
-(defun pjb-eurotunnel ()
-  "
-DO:      get-devises and insert some eurotunnel data.
-"
-  (interactive)
-  (let ((today (calendar-current-date)))
-    (get-devises)
-    (mapcar
-     (lambda (line) 
-       (let* ((fields   (split-string line ";"))
-              (sym      (nth 0 fields))
-              (quo      (string-to-number 
-                         (replace-regexp-in-string "," "." (nth 1 fields) nil nil))))
-         (cond
-
-           ((string-match "22457" sym)
-            (printf
-             "  | %4d-%02d-%02d    %8.6f   %4d %10s = %7.2f %11s |\n"
-             (nth 2 today) (nth 0 today) (nth 1 today)
-             quo 4400 sym (* quo 4400) " "))
-
-           ((string-match "12537" sym)
-            (printf
-             "  | %4d-%02d-%02d    %8.6f        %10s    %18s |\n"
-             (nth 2 today) (nth 0 today) (nth 1 today)
-             quo  sym  " "))
-
-           ((string-equal sym "GBP=X")
-            (printf
-             "  | %4d-%02d-%02d    %8.6f          %3s      ~ %7.4f %11s |\n"
-             (nth 2 today) (nth 0 today) (nth 1 today)
-             (/ (euro-from-value 10000 UKL) 10000.0) 'UKL
-             (/ (+ (euro-from-value (* 1495 0.68) UKL) (* 1495 1.0214)) 1495)
-             "EUR/12537"))
-
-           (t))))
-
-     (split-string 
-      (url-retrieve-as-string 
-       "http://fr.finance.yahoo.com/d/quos.csv?s=22456+22457+12537+GBP=X&m=PA&f=sl1d1t1c1ohgv&e=.csv")))))
-
-
-
-
 
 (defun pjb-backcolors ()
   "
@@ -1032,54 +987,55 @@ RETURN: The current frame.
 
 (defmacro define-frame-parameter (name)
   `(defun ,(intern (format "frame-%s" name)) (&optional frame)
+     ,(format "Returns the %s parameter of the `frame'." name)
      (frame-parameter (or frame (selected-frame)) ',name)))
 
 ;; (dolist (p (frame-parameters)) (insert (format "(define-frame-parameter %s)\n" (car p))))
 
-(define-frame-parameter parent-id)
-(define-frame-parameter display)
-(define-frame-parameter visibility)
-(define-frame-parameter icon-name)
-(define-frame-parameter outer-window-id)
-(define-frame-parameter window-id)
-(define-frame-parameter top)
-(define-frame-parameter left)
-(define-frame-parameter buffer-list)
-(define-frame-parameter unsplittable)
-(define-frame-parameter minibuffer)
-(define-frame-parameter modeline)
-(define-frame-parameter width)
-(define-frame-parameter height)
-(define-frame-parameter name)
-(define-frame-parameter background-mode)
-(define-frame-parameter display-type)
-(define-frame-parameter horizontal-scroll-bars)
-(define-frame-parameter scroll-bar-width)
-(define-frame-parameter cursor-type)
-(define-frame-parameter auto-lower)
-(define-frame-parameter auto-raise)
-(define-frame-parameter icon-type)
-(define-frame-parameter wait-for-wm)
-(define-frame-parameter title)
-(define-frame-parameter buffer-predicate)
-(define-frame-parameter tool-bar-lines)
-(define-frame-parameter menu-bar-lines)
-(define-frame-parameter scroll-bar-background)
-(define-frame-parameter scroll-bar-foreground)
-(define-frame-parameter right-fringe)
-(define-frame-parameter left-fringe)
-(define-frame-parameter line-spacing)
-(define-frame-parameter screen-gamma)
-(define-frame-parameter border-color)
-(define-frame-parameter cursor-color)
-(define-frame-parameter mouse-color)
-(define-frame-parameter background-color)
-(define-frame-parameter foreground-color)
-(define-frame-parameter vertical-scroll-bars)
-(define-frame-parameter internal-border-width)
-(define-frame-parameter border-width)
-(define-frame-parameter font)
-
+(progn
+  (define-frame-parameter parent-id)
+  (define-frame-parameter display)
+  (define-frame-parameter visibility)
+  (define-frame-parameter icon-name)
+  (define-frame-parameter outer-window-id)
+  (define-frame-parameter window-id)
+  (define-frame-parameter top)
+  (define-frame-parameter left)
+  (define-frame-parameter buffer-list)
+  (define-frame-parameter unsplittable)
+  (define-frame-parameter minibuffer)
+  (define-frame-parameter modeline)
+  (define-frame-parameter width)
+  (define-frame-parameter height)
+  (define-frame-parameter name)
+  (define-frame-parameter background-mode)
+  (define-frame-parameter display-type)
+  (define-frame-parameter horizontal-scroll-bars)
+  (define-frame-parameter scroll-bar-width)
+  (define-frame-parameter cursor-type)
+  (define-frame-parameter auto-lower)
+  (define-frame-parameter auto-raise)
+  (define-frame-parameter icon-type)
+  (define-frame-parameter wait-for-wm)
+  (define-frame-parameter title)
+  (define-frame-parameter buffer-predicate)
+  (define-frame-parameter tool-bar-lines)
+  (define-frame-parameter menu-bar-lines)
+  (define-frame-parameter scroll-bar-background)
+  (define-frame-parameter scroll-bar-foreground)
+  (define-frame-parameter right-fringe)
+  (define-frame-parameter left-fringe)
+  (define-frame-parameter line-spacing)
+  (define-frame-parameter screen-gamma)
+  (define-frame-parameter border-color)
+  (define-frame-parameter cursor-color)
+  (define-frame-parameter mouse-color)
+  (define-frame-parameter background-color)
+  (define-frame-parameter foreground-color)
+  (define-frame-parameter vertical-scroll-bars)
+  (define-frame-parameter internal-border-width)
+  (define-frame-parameter border-width)
+  (define-frame-parameter font))
 
 (defalias 'frame-pixel-top  'frame-top)
 (defalias 'frame-pixel-left 'frame-left)
@@ -2311,7 +2267,11 @@ FILE-AND-OPTION: either an atom evaluated to a path,
                   `(kill-buffer (current-buffer)))))))
 
 
-(defun constantly (value) (byte-compile `(lambda (&rest arguments) ',value)))
+(defun constantly (value)
+  (lambda (&rest arguments)
+    (declare (ignore arguments))
+    value))
+
 
 (defun mapfiles (thunk directory &optional recursive exceptions)
   "
