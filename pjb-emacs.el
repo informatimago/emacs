@@ -1564,8 +1564,24 @@ only display one window with the scratch buffer"
            (t                                         (full-frame 3))))))))
 
 (when (and window-system (not (getenv "RATPOISON")))
-  (pushnew (function after-make-frame/full-frame-meat) after-make-frame-functions))
+  (pushnew (quote after-make-frame/full-frame-meat) after-make-frame-functions))
 
+
+(defun after-make-frame/emacsformacosx-bug-meat (&optional frame)
+  (interactive)
+  (let ((frame (or frame (selected-frame))))
+    (run-at-time 0.5   ; delay in seconds.
+                 nil ; no repeat
+                 (lambda () ; a closure, thanks to lexical-binding above :-)
+                   (toggle-tool-bar-mode-from-frame +1)
+                   (set-frame-size frame (1- (frame-width frame)) (1- (frame-height frame)))
+                   (forward-font -1)
+                   (forward-font +1)
+                   (set-frame-size frame (1+ (frame-width frame)) (1+ (frame-height frame)))
+                   (toggle-tool-bar-mode-from-frame -1)))))
+
+(when (eq window-system 'ns)
+  (pushnew (quote after-make-frame/emacsformacosx-bug-meat) after-make-frame-functions))
 ;; (setf  after-make-frame-functions  (remove (function after-make-frame/full-frame-meat) after-make-frame-functions))
 
 
