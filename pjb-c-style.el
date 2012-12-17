@@ -49,7 +49,7 @@
    (c-backslash-max-column         . 128)
 
    (c-basic-offset                 . 4)  ; Amount of basic offset used by `+' and
-					; `-' symbols in `c-offsets-alist'.
+                                        ; `-' symbols in `c-offsets-alist'.
 
    (c-block-comment-prefix         .  "")
 
@@ -65,33 +65,34 @@
 
    (c-doc-comment-style            . javadoc)
 
-   (c-hanging-braces-alist         . (
-                                      ;; (statement-cont)
-                                      ;; (brace-list-intro)
-                                      (inexpr-class-open    . (after))
-                                      (inexpr-class-close   . (before))
+   (c-hanging-braces-alist
+    . (
+       ;; (statement-cont)
+       ;; (brace-list-intro)
+       (inexpr-class-open    . (after))
+       (inexpr-class-close   . (before))
 
-                                      (defun-open           . (after))         ; Brace that opens a function definition.
-                                      (defun-close          . (before))        ; Brace that closes a function definition.
-                                      (class-open           . (before after))  ; Brace that opens a class definition.
-                                      (class-close          . ())              ; Brace that closes a class definition.
-                                      (inline-open          . (before after))  ; Brace that opens an in-class inline method.
-                                      (inline-close         . (before))        ; Brace that closes an in-class inline method.
-                                      (block-open           . ())              ; Statement block open brace.
-                                      (block-close          . c-snug-do-while) ; Statement block close brace.
-                                      (brace-list-open      . (after))         ; Open brace of an enum or static array list.
-                                      (brace-list-close     . (before after))  ; Close brace of an enum or static array list.
-                                      (brace-entry-open     . (before after))  ; Subsequent lines in an enum or static array
-                                      (statement-case-open  . (after))         ; The first line in a case block starting with brace.
-                                      (substatement-open    . (after))         ; The brace that opens a substatement block.
-                                      (extern-lang-open     . (after))         ; Brace that opens an "extern" block.
-                                      (extern-lang-close    . (before after))  ; Brace that closes an "extern" block.
-                                      (namespace-open       . (after))
-                                      (namespace-close      . ())
-                                      (module-open          . (after))
-                                      (module-close         . ())
-                                      (composition-open     . (after))
-                                      (composition-close)   . ()))
+       (defun-open           . (after))         ; Brace that opens a function definition.
+       (defun-close          . (before))        ; Brace that closes a function definition.
+       (class-open           . (before after))  ; Brace that opens a class definition.
+       (class-close          . ())              ; Brace that closes a class definition.
+       (inline-open          . (before after))  ; Brace that opens an in-class inline method.
+       (inline-close         . (before))        ; Brace that closes an in-class inline method.
+       (block-open           . ())              ; Statement block open brace.
+       (block-close          . c-snug-do-while) ; Statement block close brace.
+       (brace-list-open      . (after))         ; Open brace of an enum or static array list.
+       (brace-list-close     . (before after))  ; Close brace of an enum or static array list.
+       (brace-entry-open     . (before after))  ; Subsequent lines in an enum or static array
+       (statement-case-open  . (after))         ; The first line in a case block starting with brace.
+       (substatement-open    . (after))         ; The brace that opens a substatement block.
+       (extern-lang-open     . (after))         ; Brace that opens an "extern" block.
+       (extern-lang-close    . (before after))  ; Brace that closes an "extern" block.
+       (namespace-open       . (after))
+       (namespace-close      . ())
+       (module-open          . (after))
+       (module-close         . ())
+       (composition-open     . (after))
+       (composition-close)   . ()))
 
    (c-hanging-colons-alist         . ((case-label           . (after))
                                       (label                . (after))
@@ -107,170 +108,245 @@
 
    (c-label-minimum-indentation       . 2)
 
-   (c-offsets-alist                   . (
-                                         (string             . 0)
-                                         ;; Inside multi-line string.
-                                         (c                  . 0)
-                                         ;; Inside a multi-line C style block comment.
-                                         (defun-open         . 0)
-                                         ;; Brace that opens a function definition.
-                                         (defun-close        . 0)
-                                         ;; Brace that closes a function definition.
-                                         (defun-block-intro  . +)
-                                         ;; The first line in a top-level defun.
-                                         (class-open         . 0)
-                                         ;; Brace that opens a class definition.
-                                         (class-close        . 0)
-                                         ;; Brace that closes a class definition.
-                                         (inline-open        . 0)
-                                         ;; Brace that opens an in-class inline method.
-                                         (inline-close       . 0)
-                                         ;; Brace that closes an in-class inline method.
-                                         (func-decl-cont     . +)
-                                         ;; The region between a function definition's
-                                         ;; argument list and the function opening brace
-                                         ;; (excluding K&R argument declarations).  In C, you
-                                         ;; cannot put anything but whitespace and comments
-                                         ;; between them; in C++ and Java, throws declarations
-                                         ;; and other things can appear in this context.
-                                         (knr-argdecl-intro  . +)
-                                         ;; First line of a K&R C argument declaration.
-                                         (knr-argdecl        . +)
-                                         ;; Subsequent lines in a K&R C argument declaration.
-                                         (topmost-intro      . 0)
-                                         ;; The first line in a topmost construct definition.
-<<<<<<< HEAD
-                                         (topmost-intro-cont . ++)
-                                         ;; Topmost definition continuation lines.
-                                         (member-init-intro  . 0)
-=======
-                                         (topmost-intro-cont . 0)
-                                         ;; Topmost definition continuation lines.
-                                         (member-init-intro  . +)
->>>>>>> b18bb4bad3d00ec410c9b8553fd9b30d2a4da0ab
-                                         ;; First line in a member initialization list.
-                                         (member-init-cont   . ++)
-                                         ;; Subsequent member initialization list lines.
-                                         (inher-intro        . +)
-                                         ;; First line of a multiple inheritance list.
-                                         (inher-cont         . ++)
-                                         ;; Subsequent multiple inheritance lines.
-                                         (block-open         . 0)
-                                         ;; Statement block open brace.
-                                         (block-close        . 0)
-                                         ;; Statement block close brace.
-                                         (brace-list-open    . 0)
-                                         ;; Open brace of an enum or static array list.
-                                         (brace-list-close   . 0)
-                                         ;; Close brace of an enum or static array list.
-                                         (brace-list-intro   . +)
-                                         ;; First line in an enum or static array list.
-                                         (brace-list-entry   . +)
-                                         ;; Subsequent lines in an enum or static array list.
-                                         (brace-entry-open   . +)
-                                         ;; Subsequent lines in an enum or static array
-                                         ;; list that start with an open brace.
-                                         (statement          . 0)
-                                         ;; A C (or like) statement.
-<<<<<<< HEAD
-                                         (statement-cont     . 0)
-=======
-                                         (statement-cont     . ++)
->>>>>>> b18bb4bad3d00ec410c9b8553fd9b30d2a4da0ab
-                                         ;; A continuation of a C (or like) statement.
-                                         (statement-block-intro . +)
-                                         ;; The first line in a new statement block.
-                                         (statement-case-intro  . +)
-                                         ;; The first line in a case "block".
-                                         (statement-case-open   . +)
-                                         ;; The first line in a case block starting with brace.
-                                         (substatement          . +)
-                                         ;; The first line after an if/while/for/do/else.
-                                         (substatement-open     . 0)
-                                         ;; The brace that opens a substatement block.
-                                         (substatement-label    . /)
-                                         ;; Labelled line after an if/while/for/do/else.
-                                         (case-label            . 0)
-                                         ;; A "case" or "default" label.
-                                         (access-label          . -)
-                                         ;; C++ private/protected/public access label.
-                                         (label                 . /)
-                                         ;; Any ordinary label.
-                                         (do-while-closure      . 0)
-                                         ;; The "while" that ends a do/while construct.
-                                         (else-clause           . 0)
-                                         ;; The "else" of an if/else construct.
-                                         (catch-clause          . 0)
-                                         ;; The "catch" or "finally" of a try/catch construct.
-                                         (comment-intro         . 0)
-                                         ;; A line containing only a comment introduction.
-                                         (arglist-intro         . +)
-                                         ;; The first line in an argument list.
-                                         (arglist-cont          . +)
-                                         ;; Subsequent argument list lines when no
-                                         ;; arguments follow on the same line as the
-                                         ;; arglist opening paren.
-                                         (arglist-cont-nonempty . +)
-                                         ;; Subsequent argument list lines when at
-                                         ;; least one argument follows on the same
-                                         ;; line as the arglist opening paren.
-                                         (arglist-close         . c-lineup-arglist)
-                                         ;; The solo close paren of an argument list.
-                                         (stream-op             . +)
-                                         ;; Lines continuing a stream operator construct.
-                                         (inclass               . +)
-                                         ;; The construct is nested inside a class definition.
-                                         ;; Used together with e.g. `topmost-intro'.
-                                         (cpp-macro             . [0])
-                                         ;; The start of a C preprocessor macro definition.
-                                         (cpp-macro-cont        . [8])
-                                         ;; Inside a multi-line C preprocessor macro definition.
-                                         (friend                . 0)
-                                         ;; A C++ friend declaration.
-                                         (objc-method-intro     . 0)
-                                         ;; The first line of an Objective-C method definition.
-                                         (objc-method-args-cont . 0)
-                                         ;; Lines continuing an Objective-C method definition.
-                                         (objc-method-call-cont . +)
-                                         ;; Lines continuing an Objective-C method call.
-                                         (extern-lang-open      . 0)
-                                         ;; Brace that opens an "extern" block.
-                                         (extern-lang-close     . 0)
-                                         ;; Brace that closes an "extern" block.
-                                         (inextern-lang         . +)
-                                         ;; Analogous to the `inclass' syntactic symbol,
-                                         ;; but used inside "extern" blocks.
-                                         (namespace-open        . 0)
-                                         (namespace-close       . 0)
-                                         (innamespace           . +)
-                                         ;; Similar to the three `extern-lang' symbols, but for
-                                         ;; C++ "namespace" blocks.
-                                         (module-open           . 0)
-                                         (module-close          . 0)
-                                         (inmodule              . +)
-                                         ;; Similar to the three `extern-lang' symbols, but for
-                                         ;; CORBA IDL "module" blocks.
-                                         (composition-open      . 0)
-                                         (composition-close     . 0)
-                                         (incomposition         . +)
-                                         ;; Similar to the three `extern-lang' symbols, but for
-                                         ;; CORBA CIDL "composition" blocks.
-                                         (template-args-cont    . +)
-                                         ;; C++ template argument list continuations.
-                                         (inlambda              . +)
-                                         ;; In the header or body of a lambda function.
-                                         (lambda-intro-cont     . ++)
-                                         ;; Continuation of the header of a lambda function.
-                                         (inexpr-statement      . +)
-                                         ;; The statement is inside an expression.
-                                         (inexpr-class          . +)
-                                         ;; The class is inside an expression.  Used e.g. for
-                                         ;; Java anonymous classes.
-                                         ))
+   (c-offsets-alist
+    . (
+
+       (string                . 0)
+       ;; Inside multi-line string.
+
+       (c                     . 0)
+       ;; Inside a multi-line C style block comment.
+
+       (defun-open            . 0)
+       ;; Brace that opens a function definition.
+
+       (defun-close           . 0)
+       ;; Brace that closes a function definition.
+
+       (defun-block-intro     . +)
+       ;; The first line in a top-level defun.
+       
+       (class-open            . 0)
+       ;; Brace that opens a class definition.
+       
+       (class-close           . 0)
+       ;; Brace that closes a class definition.
+       
+       (inline-open           . 0)
+       ;; Brace that opens an in-class inline method.
+       
+       (inline-close          . 0)
+       ;; Brace that closes an in-class inline method.
+       
+       (func-decl-cont        . +)
+       ;; The region between a function definition's
+       ;; argument list and the function opening brace
+       ;; (excluding K&R argument declarations).  In C, you
+       ;; cannot put anything but whitespace and comments
+       ;; between them; in C++ and Java, throws declarations
+       ;; and other things can appear in this context.
+       
+       (knr-argdecl-intro     . +)
+       ;; First line of a K&R C argument declaration.
+       
+       (knr-argdecl           . +)
+       ;; Subsequent lines in a K&R C argument declaration.
+       
+       (topmost-intro         . 0)
+       ;; The first line in a topmost construct definition.
+       
+       (topmost-intro-cont    . (c-lineup-string-cont
+                                 0))
+       ;; Topmost definition continuation lines.
+       
+       (member-init-intro     . +)
+       ;; First line in a member initialization list.
+       
+       (member-init-cont      . ++)
+       ;; Subsequent member initialization list lines.
+       
+       (inher-intro           . +)
+       ;; First line of a multiple inheritance list.
+       
+       (inher-cont            . ++)
+       ;; Subsequent multiple inheritance lines.
+       
+       (block-open            . 0)
+       ;; Statement block open brace.
+       
+       (block-close           . 0)
+       ;; Statement block close brace.
+       
+       (brace-list-open       . 0)
+       ;; Open brace of an enum or static array list.
+       
+       (brace-list-close      . 0)
+       ;; Close brace of an enum or static array list.
+       
+       (brace-list-intro      . +)
+       ;; First line in an enum or static array list.
+       
+       (brace-list-entry      . +)
+       ;; Subsequent lines in an enum or static array list.
+       
+       (brace-entry-open      . +)
+       ;; Subsequent lines in an enum or static array
+       ;; list that start with an open brace.
+       
+       (statement             . (c-lineup-runin-statements
+                                 0))
+       ;; A C (or like) statement.
+       
+       (statement-cont        . (c-lineup-string-cont
+                                 ++))
+       ;; A continuation of a C (or like) statement.
+       
+       (statement-block-intro . +)
+       ;; The first line in a new statement block.
+       
+       (statement-case-intro  . +)
+       ;; The first line in a case "block".
+       
+       (statement-case-open   . +)
+       ;; The first line in a case block starting with brace.
+       
+       (substatement          . +)
+       ;; The first line after an if/while/for/do/else.
+       
+       (substatement-open     . 0)
+       ;; The brace that opens a substatement block.
+       
+       (substatement-label    . /)
+       ;; Labelled line after an if/while/for/do/else.
+       
+       (case-label            . 0)
+       ;; A "case" or "default" label.
+       
+       (access-label          . -)
+       ;; C++ private/protected/public access label.
+       
+       (label                 . /)
+       ;; Any ordinary label.
+       
+       (do-while-closure      . 0)
+       ;; The "while" that ends a do/while construct.
+       
+       (else-clause           . 0)
+       ;; The "else" of an if/else construct.
+       
+       (catch-clause          . 0)
+       ;; The "catch" or "finally" of a try/catch construct.
+       
+       (comment-intro         . 0)
+       ;; A line containing only a comment introduction.
+       
+       (arglist-intro         . (c-lineup-arglist-intro-after-paren
+                                 +))
+       ;; The first line in an argument list.
+       
+       (arglist-cont          . (c-lineup-string-cont
+                                 c-lineup-arglist-intro-after-paren
+                                 c-lineup-argcont
+                                 +))
+       ;; Subsequent argument list lines when no
+       ;; arguments follow on the same line as the
+       ;; arglist opening paren.
+       
+       (arglist-cont-nonempty . (c-lineup-string-cont
+                                 c-lineup-arglist-intro-after-paren
+                                 c-lineup-argcont
+                                 +))
+       ;; Subsequent argument list lines when at
+       ;; least one argument follows on the same
+       ;; line as the arglist opening paren.
+       
+       (arglist-close         . (c-lineup-argcont
+                                 c-lineup-arglist-intro-after-paren
+                                 -))
+       ;; The solo close paren of an argument list.
+       
+       (stream-op             . (c-lineup-streamop +))
+       ;; Lines continuing a stream operator construct.
+       
+       (inclass               . +)
+       ;; The construct is nested inside a class definition.
+       ;; Used together with e.g. `topmost-intro'.
+       
+       (cpp-macro             . [0])
+       ;; The start of a C preprocessor macro definition.
+       
+       (cpp-macro-cont        . [8])
+       ;; Inside a multi-line C preprocessor macro definition.
+       
+       (friend                . 0)
+       ;; A C++ friend declaration.
+       
+       (objc-method-intro     . 0)
+       ;; The first line of an Objective-C method definition.
+       
+       (objc-method-args-cont . (c-lineup-ObjC-method-args-2
+                                 +))
+       ;; Lines continuing an Objective-C method definition.
+       
+       (objc-method-call-cont . (c-lineup-ObjC-method-call-colons
+                                 c-lineup-ObjC-method-call
+                                 +))
+       ;; Lines continuing an Objective-C method call.
+       
+       (extern-lang-open      . 0)
+       ;; Brace that opens an "extern" block.
+       
+       (extern-lang-close     . 0)
+       ;; Brace that closes an "extern" block.
+       
+       (inextern-lang         . +)
+       ;; Analogous to the `inclass' syntactic symbol,
+       ;; but used inside "extern" blocks.
+       
+       (namespace-open        . 0)
+       
+       (namespace-close       . 0)
+       
+       (innamespace           . +)
+       ;; Similar to the three `extern-lang' symbols, but for
+       ;; C++ "namespace" blocks.
+       
+       (module-open           . 0)
+       
+       (module-close          . 0)
+       
+       (inmodule              . +)
+       ;; Similar to the three `extern-lang' symbols, but for
+       ;; CORBA IDL "module" blocks.
+       
+       (composition-open      . 0)
+       
+       (composition-close     . 0)
+       
+       (incomposition         . +)
+       ;; Similar to the three `extern-lang' symbols, but for
+       ;; CORBA CIDL "composition" blocks.
+       
+       (template-args-cont    . (c-lineup-template-args +))
+       ;; C++ template argument list continuations.
+       
+       (inlambda              . +)
+       ;; In the header or body of a lambda function.
+       
+       (lambda-intro-cont     . ++)
+       ;; Continuation of the header of a lambda function.
+       
+       (inexpr-statement      . +)
+       ;; The statement is inside an expression.
+       
+       (inexpr-class          . +)
+       ;; The class is inside an expression.  Used e.g. for
+       ;; Java anonymous classes.
+       ))
 
    ;; Only called when c-syntactic-indentation is non nil.
    ;; (c-special-indent-hook . user-fun)
-   (c-label-minimum-indentation        . 2)
+   (c-label-minimum-indentation    . 2)
 
    ;; other emacs variables:
    ;; (c-comment-continuation-stars "" t)
@@ -283,40 +359,40 @@
    (tab-width                      . 4)  ; the true one!
 
    (c-indent-level                 . 4)  ; Indentation of C statements with
-					; respect to containing block.
+                                        ; respect to containing block.
 
    (c-brace-imaginary-offset       . 0)  ; Imagined indentation of a C open brace
-					; that actually follows a statement.
+                                        ; that actually follows a statement.
 
    (c-brace-offset                 . 0)  ; Extra indentation for braces, compared
-					; with other text in same context.
+                                        ; with other text in same context.
 
    (c-argdecl-indent               . 4)  ; Indentation level of declarations of
-					; C function arguments.
+                                        ; C function arguments.
 
    (c-label-offset                 . -)  ; Offset of C label lines and case
-					; statements relative to usual
-					; indentation.
+                                        ; statements relative to usual
+                                        ; indentation.
 
    (c-continued-statement-offset   . 4)  ; Extra indent for lines not starting
-					; new statements.
+                                        ; new statements.
 
    (c-continued-brace-offset       . 0)  ; Extra indent for substatements that
-					; start with open-braces.
+                                        ; start with open-braces.
 
 
    (c-auto-newline                . nil) ; Non-nil means automatically newline
-					; before and after braces, and after
-					; colons and semicolons, inserted in C
-					; code. If you do not want a leading
-					; newline before braces then use:
-					; (define-key c-mode-map \"{\"
-					;          'electric-c-semi)"
+                                        ; before and after braces, and after
+                                        ; colons and semicolons, inserted in C
+                                        ; code. If you do not want a leading
+                                        ; newline before braces then use:
+                                        ; (define-key c-mode-map \"{\"
+                                        ;          'electric-c-semi)"
 
    (c-tab-always-indent           . nil) ; Non-nil means TAB in C mode should
-					; always reindent the current line,
-					; regardless of where in the line point
-					; is when the TAB command is used.
+                                        ; always reindent the current line,
+                                        ; regardless of where in the line point
+                                        ; is when the TAB command is used.
    ))
 
 
