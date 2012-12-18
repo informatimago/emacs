@@ -193,7 +193,6 @@ Always replaces the region with the yank, whether the region was
 selected via keyboard or mouse.  Also works for normal
 yank even with ARGS (thus it can be mapped to \C-y)"
   (interactive "*P")                    ; raw, like yank.
-  (message "arg=%S" arg)
   (cond
     (mark-active                        ; delete region
      (let ((str (buffer-substring (point) (mark))))
