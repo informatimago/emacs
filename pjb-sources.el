@@ -3398,14 +3398,18 @@ defun defmacro defgeneric defmethod"
 
 (defun function-parameter-list (function)
   "Return the parameter list of the emacs FUNCTION."
-  (cdar (read-from-string
-         (first
-          (let* ((def  (if (symbolp function)
-                           (symbol-function function)
-                           function))
-                 (help (help-function-arglist def))
-                 (doc  (documentation function)))
-            (help-split-fundoc doc function))))))
+  (let* ((def   (if (symbolp function)
+                    (if (subrp (symbol-function function))
+                        function
+                        (symbol-function function))
+                    function))
+         (help  (help-function-arglist def))
+         (doc   (documentation function))
+         (split (help-split-fundoc doc function)))
+    (or help
+        (when  (first split) (cdar (read-from-string (first split))))
+        split
+        :unknown)))
 
 
 (defun function-argument-counts (function)
