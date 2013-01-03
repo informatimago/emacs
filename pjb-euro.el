@@ -69,7 +69,7 @@
     )
 "This is the list of the devises that are in the euro, 
 with their conversion ratios.
-To update the devises with variable quotes, use get-devises.
+To update the devises with variable quotes, use update-devises.
 ")
 
 ;; Create the devise symbols.
@@ -104,11 +104,11 @@ To update the devises with variable quotes, use get-devises.
 
 (defvar *devise-url* "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml")
 
-(defun get-devises ()
+(defun update-devisess ()
   "DO:  Retrieves the devise quotes from the url at `*devise-url*'."
   (interactive)
   ;; (shell-command-to-string 
-  ;;  "get-devises boursorama > ~/.emacs-devises~ && mv ~/.emacs-devises~  ~/.emacs-devises ")
+  ;;  "update-devisess boursorama > ~/.emacs-devises~ && mv ~/.emacs-devises~  ~/.emacs-devises ")
   ;;  (load "~/.emacs-devises")
   
   ;; (with-file ("~/.emacs-devises" :save t :kill t)
@@ -129,7 +129,7 @@ To update the devises with variable quotes, use get-devises.
      do (euro-update-devise rate currency)))
 
 
-(defun euro-get-devises ()
+(defun euro-update-devisess ()
   "RETURN: The list of known devises."
   (mapcar 'car euro-parities))
 
@@ -169,7 +169,7 @@ NOTE:   This value is used to round the values in the device."
 decimals needed for the devise, followed by a space, then by the 
 three-letter devise code. The value is euro-round'ed before formating."
   (if (not (euro-is-devise devise))
-      (error "DEVISE must be a devise. See (euro-get-devises)."))
+      (error "DEVISE must be a devise. See (euro-update-devisess)."))
   (setq value (euro-round value devise))
   (chop-spaces (format (concat (euro-get-format devise) " %3s") value devise)))
 
@@ -227,7 +227,7 @@ three-letter devise code. The value is euro-round'ed before formating."
                       (euro-from-devise (euro-to-value dev 33) dev)
                       (euro-from-devise 33 dev)
                       (euro-to-devise dev (euro-from-value 33 dev))))
-            (euro-get-devises)))))
+            (euro-update-devisess)))))
 
 
 
@@ -428,11 +428,11 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
 
 (defun pjb-eurotunnel ()
   "
-DO:      get-devises and insert some eurotunnel data.
+DO:      update-devisess and insert some eurotunnel data.
 "
   (interactive)
   (let ((today (calendar-current-date)))
-    (get-devises)
+    (update-devisess)
     (mapcar
      (lambda (line) 
        (let* ((fields   (split-string line ";"))
@@ -468,6 +468,6 @@ DO:      get-devises and insert some eurotunnel data.
        "http://fr.finance.yahoo.com/d/quos.csv?s=22456+22457+12537+GBP=X&m=PA&f=sl1d1t1c1ohgv&e=.csv")))))
 
 
-(get-devises)
+;; (update-devises)
 (provide 'pjb-euro)
 ;;;; THE END ;;;;
