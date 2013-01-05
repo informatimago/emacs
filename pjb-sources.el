@@ -123,7 +123,7 @@ nExperience Ratio [0.0,1.0]: ")
          (total-class-count    (* key-class-count 
                                   (+ 1.0 user-interface-complexity)))
          (total-person-days (* total-class-count person-day-per-class))
-         (total-months (/ total-person-days 20.0 person-count)))
+         (total-months (/ total-person-days 20.000000 person-count)))
     (insert
      (concatenate 'string
        (format "OOEstimate for Project %s:\n\n" project-name)
