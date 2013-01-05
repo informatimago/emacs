@@ -58,8 +58,12 @@
 ;;;;    Boston, MA 02111-1307 USA
 ;;;;**************************************************************************
 (require 'cl)
-(require 'w3           nil t)
+
+(require 'w3           nil t) ; not anymore. we should clean them up.
 (require 'w3-forms     nil t)
+
+(require 'xml) ; parse-xml-region 
+
 
 (require 'pjb-cl)
 (require 'pjb-make-depends)
@@ -113,21 +117,25 @@
 (defun pjb-http-get (url)
   "Fetches a resource at URL, and returns it."
   (shell-command-to-string
-   (format "wget %s -O -" (shell-quote-argument url))))
+   (format "wget --no-convert-links -q -nv -o /dev/null -t 3  -O -  %s" (shell-quote-argument url))))
+
+(defun pjb-parse-xml (xml)
+  "Parse the XML string."
+  (with-temp-buffer
+    (insert xml)
+    (xml-parse-region (point-min) (point-max))))
 
 (defun pjb-parse-html (html)
   "Parse the HTML string."
-  (with-temp-buffer
-    (insert html)
-    (when (fboundp 'w3-parse-buffer)
-      (w3-parse-buffer (current-buffer)))))
+  (pjb-parse-xml html))
 
 
 (defun pjb-find-html-tag (tag html)
   (cond
     ((atom html) nil)
     ((eq tag (car html)) html)
-    (t (or (find-html-tag tag (car html)) (find-html-tag tag (cdr html))))))
+    (t (or (pjb-find-html-tag tag (car html))
+           (pjb-find-html-tag tag (cdr html))))))
 
 
 (defvar *lisp-paste-url*        "http://paste.lisp.org/new")
