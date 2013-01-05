@@ -42,7 +42,11 @@
   "Moves the messages to the Trash mailbox specified in `*pjb-gnus-trash-mailbox*'."
   (interactive "p")
   (gnus-summary-move-article n *pjb-gnus-trash-mailbox*)
-  (gnus-summary-next-unread-article))
+  (let ((pt (point)))
+    (gnus-summary-next-unread-article)
+    (when (eql pt (point))
+      (gnus-summary-next-article))))
+
 
 
 (defvar *pjb-gnus-junk-mailbox* nil
