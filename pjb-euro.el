@@ -69,7 +69,7 @@
 "This is the list of the devises that are in the euro, 
 with their conversion ratios.
 To update the devises with variable quotes, use get-devises.
-");;euro-parities
+")
 
 ;; Create the devise symbols.
 (mapc (lambda (x)
@@ -79,20 +79,40 @@ To update the devises with variable quotes, use get-devises.
 
 
 
+
+(defvar *devise-url* "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml")
+
 (defun get-devises ()
   "DO:      Retrieves the devise quotes, 
          stores them in ~/.emacs-devises and loads them."
   (interactive)
-  (shell-command-to-string 
-   "get-devises boursorama > ~/.emacs-devises~ && mv ~/.emacs-devises~  ~/.emacs-devises ")
-  (load "~/.emacs-devises") 
-  );;get-devises
+  ;; (shell-command-to-string 
+  ;;  "get-devises boursorama > ~/.emacs-devises~ && mv ~/.emacs-devises~  ~/.emacs-devises ")
+  ;;  (load "~/.emacs-devises")
+  
+  ;; (with-file ("~/.emacs-devises" :save t :kill t)
+  ;;   (erase-buffer)
+  ;; )
+  (loop
+     for (nil entry) in (flet ((clean (xml) (find-if 'consp (cddr xml))))
+                          (remove-if-not 'consp
+                                         (cddr
+                                          (clean
+                                           (pjb-find-html-tag 'Cube
+                                                              (pjb-parse-xml
+                                                               (pjb-http-get *devise-url*)))))))
+     for currency = (intern (format ":%s" (cdr (assoc 'currency entry))))
+     for rate     = (car (read-from-string (cdr (assoc 'rate entry))))
+     do (insert (format "%S\n" (list 'euro-update-devise rate currency)))
+     do (euro-update-devise rate currency)))
+
+(get-devises)
 
 
 
 (defun euro-parity-replace-ratio (parity new-ratio)
   "PRIVATE"
-  (cons (car parity) (cons new-ratio (cddr parity))));;euro-parity-replace-ratio
+  (cons (car parity) (cons new-ratio (cddr parity))))
 
 
 (defun euro-update-devise-body (cours devise parities)
@@ -103,46 +123,46 @@ To update the devises with variable quotes, use get-devises.
                (cdr parities)))
         (t 
          (cons (car parities) 
-               (euro-update-devise-body cours devise (cdr parities))))));;euro-update-devise-body
+               (euro-update-devise-body cours devise (cdr parities))))))
 
 (defun euro-update-devise (cours devise)
   "PRIVATE"
-  (setq euro-parities (euro-update-devise-body cours devise euro-parities)));;euro-update-devise
+  (setq euro-parities (euro-update-devise-body cours devise euro-parities)))
 
 
 (defun euro-get-devises ()
   "RETURN: The list of known devises."
-  (mapcar 'car euro-parities));;euro-get-devises
+  (mapcar 'car euro-parities))
 
 
 (defun euro-get-parity (parities devise)
   "PRIVATE"
   (cond ((null parities) parities)
 		((equal (caar parities) devise) (car parities))
-		(t (euro-get-parity (cdr parities) devise))));;euro-get-parity
+		(t (euro-get-parity (cdr parities) devise))))
 
 (defun euro-is-devise (devise)
   "RETURN: Whether devise is a known devise."
-  (euro-get-parity euro-parities devise));;euro-is-devise
+  (euro-get-parity euro-parities devise))
 
 
 (defun euro-get-ratio (devise)
   "RETURN: The ratio between devise and euro."
-  (cadr (euro-get-parity euro-parities devise)));;euro-get-ratio
+  (cadr (euro-get-parity euro-parities devise)))
 
 (defun euro-get-round (devise)
   "RETURN: The smallest strictly positive value that can be expressed 
         in the devise.
 NOTE:   This value is used to round the values in the device."
-  (caddr (euro-get-parity euro-parities devise)));;euro-get-round
+  (caddr (euro-get-parity euro-parities devise)))
 
 (defun euro-get-format (devise)
   "RETURN: The string  used to format values in the devise."
-  (cadddr (euro-get-parity euro-parities devise)));;euro-get-format
+  (cadddr (euro-get-parity euro-parities devise)))
 
 (defun euro-get-label (devise)
   "RETURN: The name of the devise."
-  (cadddr (cdr (euro-get-parity euro-parities devise))));;euro-get-label
+  (cadddr (cdr (euro-get-parity euro-parities devise))))
 
 
 (defun euro-value-to-string (value devise)
@@ -152,7 +172,7 @@ three-letter devise code. The value is euro-round'ed before formating."
   (if (not (euro-is-devise devise))
       (error "DEVISE must be a devise. See (euro-get-devises)."))
   (setq value (euro-round value devise))
-  (chop-spaces (format (concat (euro-get-format devise) " %3s") value devise)));;euro-value-to-string
+  (chop-spaces (format (concat (euro-get-format devise) " %3s") value devise)))
 
 
 (defun euro-round (value devise)
@@ -160,16 +180,16 @@ three-letter devise code. The value is euro-round'ed before formating."
   (let ((round (euro-get-round devise)))
     (if (< 0.0 value)
         (* round (truncate (/ (+ value (/ round 2.0)) round)))
-      (* round (truncate (/ (- value (/ round 2.0)) round))))));;euro-round
+      (* round (truncate (/ (- value (/ round 2.0)) round))))))
 
 
 (defun euro-from-value (value devise)
   "RETURN: The value converted into euro from devise."
-  (euro-round (/ value (euro-get-ratio devise)) :EUR));;euro-from-value
+  (euro-round (/ value (euro-get-ratio devise)) :EUR))
 
 (defun euro-to-value (devise value-euro)
   "RETURN: The value converted into devise, from euro."
-  (euro-round (* value-euro (euro-get-ratio devise)) devise));;euro-to-value
+  (euro-round (* value-euro (euro-get-ratio devise)) devise))
 
 
 (defun euro-from-devise (value devise)
@@ -180,7 +200,7 @@ three-letter devise code. The value is euro-round'ed before formating."
                    (euro-get-format devise) " %s = " 
                    (euro-get-format :EUR) " %s")
            value devise
-           (euro-round (/ value (euro-get-ratio devise)) :EUR) :EUR)));;euro-from-devise
+           (euro-round (/ value (euro-get-ratio devise)) :EUR) :EUR)))
 
 (defun euro-to-devise (devise value-euro)
   "DO:     Inserts a line with the value expressed in euro and in devise."
@@ -190,7 +210,7 @@ three-letter devise code. The value is euro-round'ed before formating."
                    (euro-get-format :EUR) " %s = " 
                    (euro-get-format devise) " %s")
            value-euro :EUR
-           (euro-round (* value-euro (euro-get-ratio devise)) devise) devise)));;euro-to-devise
+           (euro-round (* value-euro (euro-get-ratio devise)) devise) devise)))
 
 
 (defun euro-test ()
@@ -208,7 +228,7 @@ three-letter devise code. The value is euro-round'ed before formating."
                       (euro-from-devise (euro-to-value dev 33) dev)
                       (euro-from-devise 33 dev)
                       (euro-to-devise dev (euro-from-value 33 dev))))
-            (euro-get-devises)))));;euro-test
+            (euro-get-devises)))))
 
 
 
