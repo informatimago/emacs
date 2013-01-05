@@ -67,6 +67,12 @@
   :success)
 
 
+(defmacro* with-parens (parens &body body)
+  `(progn
+     (insert ,(elt parens 0))
+     (prog1 (progn ,@body)
+       (insert ,(elt parens 1)))))
+
 
 (defun generate (node)
   (if (typep node 'c-node)
@@ -138,11 +144,7 @@
 
 
 
-(defmacro* with-parens (parens &body body)
-  `(progn
-     (insert ,(elt parens 0))
-     (prog1 (progn ,@body)
-       (insert ,(elt parens 1)))))
+
 
 
 
@@ -247,9 +249,6 @@ containing a type, and a property name or a list (getter setter).
 				      :body (list (make-objc-send :recipient target
 								  :selector setter
 								  :arguments '(value))))))))
-
-
-
 
 
 
