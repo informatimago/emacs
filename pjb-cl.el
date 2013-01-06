@@ -263,7 +263,22 @@ IMPLEMENTATION: The clause variable symbols are substituted by one single
     new))
 
 
+(defun symbol-package (sym)
+  "Return the name of the package of the symbol.  This is
+\"emacs-lisp\" if the symbol doesn't contain any colon, \"keyword\" if
+it starts with a colon, or the substring before the colon if it
+contains one."
+  (let* ((name (symbol-name sym))
+         (colon (position (character ":") name)))
+    (case colon
+      ((nil) "emacs-lisp")
+      ((0)   "keyword")
+      (otherwise (subseq name 0 colon)))))
+
+
 (defun symbol-name* (sym)
+  "REturn the name of the symbol. This is what's after the colon or
+double colon if any, or the symbol name."
   (let* ((name (symbol-name sym))
          (colon (position (character ":") name)))
     (cond 
@@ -559,8 +574,8 @@ IMPLEMENTATION: Assume ISO-8859-1!
   (or (and (char<= (character "0") ch) (char<= ch (character "9")))
       (and (char<= (character "A") ch) (char<= ch (character "Z")))
       (and (char<= (character "a") ch) (char<= ch (character "z")))
-      (and (char<= (character "À") ch) (char<= ch (character "Ö")))
-      (and (char<= (character "Ø") ch) (char<= ch (character "ö")))
+      (and (char<= (character "à") ch) (char<= ch (character "ö")))
+      (and (char<= (character "ø") ch) (char<= ch (character "ö")))
       (and (char<= (character "ø") ch) (char<= ch (character "ÿ"))))
 ;;;   (string-match 
 ;;;    "\\(\\c0\\|\\c1\\|\\c2\\|\\c3\\|\\c4\\|\\c6\\|\\c7\\|\\c8\\|\\c9\\)" 
@@ -1160,8 +1175,8 @@ by the corresponding lowercase characters.
 
 
 (defun string* (x)
-  "Common-Lisp: If X is a string, then X, else if it's a symbol, \
-then (symbol-name X)
+  "Common-Lisp: If X is a string, then X, else if it's a symbol, then (symbol-name* X).
+
 X---a string, a symbol, or a character.
 
 Returns a string described by x; specifically:
@@ -1560,7 +1575,8 @@ Bi-directional stream.")
 
 
 (defun get-internal-real-time ()
-  (FLOAT (GET-INTERNAL-REAL-TIME)))
+  (destructuring-bind (high low microsec) (current-time)
+    (+ (* high 65536.0) low (* 1e-6 microsec))))
 
 
 (defmacro time (&rest body)
@@ -1982,4 +1998,5 @@ Valid clauses are:
 
 
 (provide 'pjb-cl)
-;;;; pjb-cl.el                        --                     --          ;;;;
+;;;; THE END ;;;;
+

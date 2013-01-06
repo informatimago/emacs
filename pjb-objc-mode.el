@@ -367,6 +367,30 @@ Key bindings:
             (define-key c-mode-map "{"  'self-insert-command)))
 
 
+
+(defun gdb-object-to-sexp (start end)
+  "Transforms a gdb object dump {<NSButton> = …} into a sexp."
+  (interactive "r")
+  (with-marker (end end)
+    (goto-char start)
+    (replace-string " = " " " nil start end)
+    (replace-string "{" "((" nil start end)
+    (replace-string "}" "))" nil start end)
+    (replace-string ", " ")\n(" nil start end)))
+
+
+;; (defun objc-implementation-from-interface ()
+;;   (goto-char (point-min))
+;;   (when(re-search-forward "@interface")))
+
+(defun objc-synthesize-properties ()
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward "^[ \t]*@property\\>.*\\(\\<[_A-Za-z][_A-Za-z0-9]*\\)[ \t\n]*;" (point-max) t)
+    (let ((name (match-string 1)))
+     (delete-region (match-beginning 0) (match-end 0))
+     (insert (format "@synthesize %s;" name)))))
+
 (provide 'pjb-objc-mode)
 ;;;; THE END ;;;;
 

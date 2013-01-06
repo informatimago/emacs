@@ -79,7 +79,9 @@
         "pjb-utilities.el"
         "pjb-work.el"
         "pjb-xresources.el"
-
+        "pjb-thi.el"
+        "pjb-c-style.el"
+        
         "pjb-pl1.el" ; testing
         ))
 
@@ -396,7 +398,6 @@ RETURN: A list of NODES sorted topologically according to
                        (pjb-sources-lessp from to)
                        (pjb-sources-lessp to from))
              do (print (list from to))))))
-
 
 (let ((sorted (topological-sort
                (mapcar (lambda (path) (intern (pathname-name* path))) *pjb-sources*)

@@ -80,6 +80,23 @@
       (insert (format "%S" node))))
 
 
+(defmacro* defclass/c (class-name (&rest superclasses) (&rest slots) &rest options)
+  `(progn
+     (defclass ,class-name ,superclasses ,slots ,@options)
+     (defun* ,(intern (format "make-%s" class-name)) (&rest arguments &key &allow-other-keys)
+       (apply 'make-instance ',class-name arguments))
+     ',class-name))
+
+
+(defmacro* with-parens (parens &body body)
+  `(progn
+     (insert ,(elt parens 0))
+     (prog1 (progn ,@body)
+       (insert ,(elt parens 1)))))
+
+
+
+
 (defclass c-node ()
   ())
 
@@ -101,8 +118,41 @@
   ())
 
 
+(defclass/c c-dot    (c-expression)
+  ((object :initarg :object :accessor c-dot-object)
+   (slot   :initarg :slot :accessor c-dot-slot)))
 
-(defclass c-return (c-statement)
+(defmethod generate-node ((node c-dot))
+  (insert (format "%s.%s" (c-dot-object node) (c-dot-slot node))))
+
+
+(defclass/c c-assign    (c-expression)
+  ((lval :initarg :lval :accessor c-assign-lval)
+   (rval :initarg :rval :accessor c-assign-rval)))
+
+(defmethod generate-node ((node c-assign))
+  (generate (c-assign-lval node))
+  (insert " = ")
+  (generate (c-assign-rval node)))
+
+
+(defclass/c c-cond   (c-statement)
+  ((clauses :initarg :clauses :accessor c-cond-clauses
+            :documentation "A list, the first element is the condition expression, the rest is a list of statement body."))) 
+
+(defmethod generate-node ((node c-cond))
+  (loop
+     for insert-else = nil then t
+     for (condition . body) in (c-cond-clauses node)
+     do (progn
+          (when insert-else
+            (insert "else "))
+          (with-parens ("if(" ")\n")
+            (generate condition))
+          (generate (make-c-block :statements body)))))
+
+
+(defclass/c c-return (c-statement)
   ((result :initarg :result :accessor c-return-result)))
 
 (defmethod generate-node ((node c-return))
@@ -111,7 +161,7 @@
 
 
 
-(defclass c-block (c-statement)
+(defclass/c c-block (c-statement)
   ((statements :initarg :statements :accessor c-block-statements)))
 
 (defmethod generate-node ((node c-block))
@@ -143,11 +193,6 @@
      ',class-names))
 
 
-
-
-
-
-
 (defun generate-intermingled-selector-and-things (selector things)
   "Inserts a method signature, or a message sending.
 `selector': an Objective-C selector designator.
@@ -156,12 +201,10 @@
   (loop
      with selector-parts = (split-selector selector)
      with arguments = things
-     with first-time = t
+     for sep = "" then " "
      while selector-parts
      do (progn
-	  (unless first-time
-	    (insert " ")
-	    (setf first-time nil))
+          (insert sep)
 	  (generate (pop selector-parts))
 	  (when arguments
 	    (generate (pop arguments))))
@@ -170,14 +213,25 @@
 
 
 
-(defclass objc-method (objc-definition)
+(defclass/c objc-string (objc-expression)
+  ((string :initarg :string :accessor objc-string-string)))
+
+(defmethod generate-node ((node objc-string))
+  (let ((string (objc-string-string node)))
+   (insert (format "@%S" (typecase string
+                           (string string)
+                           (symbol (symbol-name string))
+                           (t      (prin1-to-string string)))))))
+
+
+(defclass/c objc-method (objc-definition)
   ((instance-method :initform t :reader objc-method-instance-method-p)
    (result-type :initform 'void :initarg :result-type :accessor objc-method-result-type)
    (selector :initarg :selector :accessor objc-method-selector)
    (parameters :initform '() :initarg :parameters :accessor objc-method-parameters)
    (body :initform '() :initarg :body :accessor objc-method-body)))
 
-(defclass objc-class-method (objc-method)
+(defclass/c objc-class-method (objc-method)
   ((instance-method :initform nil :reader objc-method-instance-method-p)))
 
 (defmethod objc-method-sign ((node objc-method))       "-")
@@ -195,7 +249,7 @@
 
 
 
-(defclass objc-send (objc-expression)
+(defclass/c objc-send (objc-expression)
   ((recipient :initarg :recipient :accessor objc-send-recipient)
    (selector :initarg :selector :accessor objc-send-selector)
    (arguments :initform '() :initarg :arguments :accessor objc-send-arguments)))
@@ -208,7 +262,7 @@
 
 
 
-(defclass objc-parameter (objc-declaration)
+(defclass/c objc-parameter (objc-declaration)
   ((type :initarg :type :accessor objc-parameter-type)
    (name :initarg :name :accessor objc-parameter-name)))
 
@@ -216,10 +270,6 @@
   (insert (format "(%s)%s " (objc-parameter-type node) (objc-parameter-name node))))
 
 
-
-(generate-constructor  c-return c-block
-		       objc-method objc-class-method objc-parameter
-		       objc-send)
 
 
 

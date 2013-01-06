@@ -38,7 +38,8 @@
 
 (require 'pjb-utilities)
 (require 'pjb-strings)
-(provide 'pjb-euro)
+(require 'pjb-html)
+(require 'pjb-emacs)
 
 
 (defvar euro-parities '(
@@ -80,36 +81,6 @@ To update the devises with variable quotes, use get-devises.
 
 
 
-(defvar *devise-url* "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml")
-
-(defun get-devises ()
-  "DO:      Retrieves the devise quotes, 
-         stores them in ~/.emacs-devises and loads them."
-  (interactive)
-  ;; (shell-command-to-string 
-  ;;  "get-devises boursorama > ~/.emacs-devises~ && mv ~/.emacs-devises~  ~/.emacs-devises ")
-  ;;  (load "~/.emacs-devises")
-  
-  ;; (with-file ("~/.emacs-devises" :save t :kill t)
-  ;;   (erase-buffer)
-  ;; )
-  (loop
-     for (nil entry) in (flet ((clean (xml) (find-if 'consp (cddr xml))))
-                          (remove-if-not 'consp
-                                         (cddr
-                                          (clean
-                                           (pjb-find-html-tag 'Cube
-                                                              (pjb-parse-xml
-                                                               (pjb-http-get *devise-url*)))))))
-     for currency = (intern (format ":%s" (cdr (assoc 'currency entry))))
-     for rate     = (car (read-from-string (cdr (assoc 'rate entry))))
-     do (insert (format "%S\n" (list 'euro-update-devise rate currency)))
-     do (euro-update-devise rate currency)))
-
-(get-devises)
-
-
-
 (defun euro-parity-replace-ratio (parity new-ratio)
   "PRIVATE"
   (cons (car parity) (cons new-ratio (cddr parity))))
@@ -128,6 +99,33 @@ To update the devises with variable quotes, use get-devises.
 (defun euro-update-devise (cours devise)
   "PRIVATE"
   (setq euro-parities (euro-update-devise-body cours devise euro-parities)))
+
+
+(defvar *devise-url* "http://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml")
+
+(defun get-devises ()
+  "DO:  Retrieves the devise quotes from the url at `*devise-url*'."
+  (interactive)
+  ;; (shell-command-to-string 
+  ;;  "get-devises boursorama > ~/.emacs-devises~ && mv ~/.emacs-devises~  ~/.emacs-devises ")
+  ;;  (load "~/.emacs-devises")
+  
+  ;; (with-file ("~/.emacs-devises" :save t :kill t)
+  ;;   (erase-buffer)
+  ;; )
+  (loop
+     for (nil entry)
+     in (remove-if-not 'consp
+                       (flet ((clean (xml) (cddr (find-if 'consp xml))))
+                         (clean (clean
+                                 (pjb-find-html-tag
+                                  'Cube
+                                  (pjb-parse-xml
+                                   (url-retrieve-as-string *devise-url*)))))))
+     for currency = (intern (format ":%s" (cdr (assoc 'currency entry))))
+     for rate     = (car (read-from-string (cdr (assoc 'rate entry))))
+     ;; do (insert (format "%S\n" (list 'euro-update-devise rate currency)))
+     do (euro-update-devise rate currency)))
 
 
 (defun euro-get-devises ()
@@ -426,4 +424,49 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
 
 ;; (format-table (make-gold-table))
 
-;;;; pjb-euro.el                      --                     --          ;;;;
+
+(defun pjb-eurotunnel ()
+  "
+DO:      get-devises and insert some eurotunnel data.
+"
+  (interactive)
+  (let ((today (calendar-current-date)))
+    (get-devises)
+    (mapcar
+     (lambda (line) 
+       (let* ((fields   (split-string line ";"))
+              (sym      (nth 0 fields))
+              (quo      (string-to-number 
+                         (replace-regexp-in-string "," "." (nth 1 fields) nil nil))))
+         (cond
+
+           ((string-match "22457" sym)
+            (printf
+             "  | %4d-%02d-%02d    %8.6f   %4d %10s = %7.2f %11s |\n"
+             (nth 2 today) (nth 0 today) (nth 1 today)
+             quo 4400 sym (* quo 4400) " "))
+
+           ((string-match "12537" sym)
+            (printf
+             "  | %4d-%02d-%02d    %8.6f        %10s    %18s |\n"
+             (nth 2 today) (nth 0 today) (nth 1 today)
+             quo  sym  " "))
+
+           ((string-equal sym "GBP=X")
+            (printf
+             "  | %4d-%02d-%02d    %8.6f          %3s      ~ %7.4f %11s |\n"
+             (nth 2 today) (nth 0 today) (nth 1 today)
+             (/ (euro-from-value 10000 UKL) 10000.0) 'UKL
+             (/ (+ (euro-from-value (* 1495 0.68) UKL) (* 1495 1.0214)) 1495)
+             "EUR/12537"))
+
+           (t))))
+
+     (split-string 
+      (url-retrieve-as-string 
+       "http://fr.finance.yahoo.com/d/quos.csv?s=22456+22457+12537+GBP=X&m=PA&f=sl1d1t1c1ohgv&e=.csv")))))
+
+
+(get-devises)
+(provide 'pjb-euro)
+;;;; THE END ;;;;

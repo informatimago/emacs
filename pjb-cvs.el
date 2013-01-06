@@ -33,6 +33,7 @@
 ;;;;    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
 ;;;;
 ;;;;****************************************************************************
+(require 'pjb-object)
 (require 'pjb-graph)
 (require 'pjb-dot)
 (provide 'pjb-cvs)
@@ -67,7 +68,7 @@
   );;CvsAttributedMixin
 
 
-(defmethod setAttribute ((self CvsAttributedMixin) 
+(defmethod* setAttribute ((self CvsAttributedMixin) 
                          (attrName (or symbol string)) (attrValue string))
   "
 POST:   (string-equal attrValue (getAttribute self attrName))
@@ -79,7 +80,7 @@ POST:   (string-equal attrValue (getAttribute self attrName))
   );;setAttribute
 
 
-(defmethod getAttribute ((self CvsAttributedMixin) 
+(defmethod* getAttribute ((self CvsAttributedMixin) 
                          (attrName (or symbol string)))
   "
 RETURN: The value of the attribute attrName.
@@ -216,7 +217,7 @@ Note however that merges can't be known from the file revision numbers alone.")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; CvsFile methods:
 
-(defmethod description ((self CvsFile))
+(defmethod* description ((self CvsFile))
   "
 RETURN: A string describing this element.
 "
@@ -227,7 +228,7 @@ RETURN: A string describing this element.
   );;description
 
 
-(defmethod setName ((self CvsFile) (newName string))
+(defmethod* setName ((self CvsFile) (newName string))
   "
 POST:   (string-equal name (name self))
 "
@@ -235,7 +236,7 @@ POST:   (string-equal name (name self))
   );;setName
 
 
-(defmethod addRevision ((self CvsFile) (newRevision CvsRevision))
+(defmethod* addRevision ((self CvsFile) (newRevision CvsRevision))
   "
 PRE:    (eq (file newRevision) self)
 DO:     Add the newRevision to the list of revisions of this file.
@@ -246,7 +247,7 @@ DO:     Add the newRevision to the list of revisions of this file.
 
 
 
-(defmethod revisionWithVersion ((self CvsFile) (aVersion string))
+(defmethod* revisionWithVersion ((self CvsFile) (aVersion string))
   "
 RETURN: The revision with the version.
 "
@@ -258,7 +259,7 @@ RETURN: The revision with the version.
   );;revisionWithVersion
 
 
-(defmethod addRootRevisionIfMissing ((self CvsFile))
+(defmethod* addRootRevisionIfMissing ((self CvsFile))
   "
 DO:     If there's no revision 1.1, then add one.
 RETURN: The root revision (ie. the revision 1.1).
@@ -301,7 +302,7 @@ PRIVATE. Used by `computeRevisionGraph'.
   );;pjb-cvs$$eat-revision
 
 
-(defmethod computeRevisionGraph ((self CvsFile))
+(defmethod* computeRevisionGraph ((self CvsFile))
   "
 DO:     Compute the revision graph from the revision numbers of this file.
 POST:   (revision-graph self) is a directed tree (directed cycleless graph).
@@ -331,7 +332,7 @@ RETURN: (revision-graph self)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; CvsRevision methods:
 
-(defmethod description ((self CvsRevision))
+(defmethod* description ((self CvsRevision))
   "
 RETURN: A string describing this element.
 "
@@ -342,7 +343,7 @@ RETURN: A string describing this element.
   );;description
 
 
-(defmethod name ((self CvsRevision))
+(defmethod* name ((self CvsRevision))
   "
 RETURN: A name for this revision instance.
 "
@@ -354,7 +355,7 @@ RETURN: A name for this revision instance.
 
 
 
-;; (defmethod identicalTo ((self CvsRevision) (other PjbElement))
+;; (defmethod* identicalTo ((self CvsRevision) (other PjbElement))
 ;;   "
 ;; RETURN:  Whether self and other are identical, that is, if they have the 
 ;;          same file and their versions are equal.
@@ -367,7 +368,7 @@ RETURN: A name for this revision instance.
 
 
 
-(defmethod addTag ((self CvsRevision) (tag CvsTag))
+(defmethod* addTag ((self CvsRevision) (tag CvsTag))
   "
 POST:    (containsElement (tags self) tag)
 "
@@ -375,7 +376,7 @@ POST:    (containsElement (tags self) tag)
   );;addTag
 
 
-(defmethod isMagicBranchRevision ((self CvsRevision))
+(defmethod* isMagicBranchRevision ((self CvsRevision))
   "
 RETURN: Whether this revision file-version is a magic branch revision number.
 "
@@ -408,7 +409,7 @@ RETURN: Whether this revision file-version is a magic branch revision number.
   );;CvsTag
 
 
-(defmethod description ((self CvsTag))
+(defmethod* description ((self CvsTag))
   "
 RETURN: A string describing this element.
 "
@@ -418,7 +419,7 @@ RETURN: A string describing this element.
   );;description
 
 
-;; (defmethod identicalTo ((self CvsTag) (other PjbElement))
+;; (defmethod* identicalTo ((self CvsTag) (other PjbElement))
 ;;   "
 ;; RETURN:  Whether self and other are identical, that is,
 ;;          if they have the same name.
@@ -429,7 +430,7 @@ RETURN: A string describing this element.
 ;;   );;identicalTo
 
 
-(defmethod setName ((self CvsTag) (newName (or string symbol)))
+(defmethod* setName ((self CvsTag) (newName (or string symbol)))
   "
 POST:    (eq (intern newName) (name self))
 "
@@ -448,7 +449,7 @@ RETURN: A list containing the dates of the revisions of tag.
           (elements tag)))
 
 
-(defmethod date ((self CvsTag))
+(defmethod* date ((self CvsTag))
   "
 RETURN: The date of the youngest revision in this tag.
 "
@@ -462,7 +463,7 @@ RETURN: The date of the youngest revision in this tag.
   );;date
 
 
-(defmethod revisionForFile ((self CvsTag) (file CvsFile))
+(defmethod* revisionForFile ((self CvsTag) (file CvsFile))
   "
 RETURN: The revision of the file `file' in this tag.
 "
@@ -471,7 +472,7 @@ RETURN: The revision of the file `file' in this tag.
   );;revisionForFile
 
 
-(defmethod isBranchTagForFile ((self CvsTag) (file CvsFile))
+(defmethod* isBranchTagForFile ((self CvsTag) (file CvsFile))
   "
 RETURN: Whether this tag is a branch tag for the given `file', that is,
         the penultimian number of the version number of the file's revision
@@ -483,7 +484,7 @@ RETURN: Whether this tag is a branch tag for the given `file', that is,
 
 
 
-(defmethod getRevisionList ((self CvsTag))
+(defmethod* getRevisionList ((self CvsTag))
   "
 RETURN: A list containing the file revisions in the form of conses 
         (file-name . version) of this tag.
@@ -507,7 +508,7 @@ RETURN: The tag named `tag-name' in the set of CvsTag `tags'.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Generating dot files 
 
-(defmethod generate-dot ((self CvsRevision))
+(defmethod* generate-dot ((self CvsRevision))
   "
 RETURN: A string containing the dot file data for this CvsRevision node.
 "
@@ -523,7 +524,7 @@ RETURN: A string containing the dot file data for this CvsRevision node.
   );;generate-dot
 
 
-(defmethod generate-dot ((self CvsTag))
+(defmethod* generate-dot ((self CvsTag))
   "
 RETURN: A string containing the dot file data for this CvsTag node.
 "

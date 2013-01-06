@@ -59,8 +59,7 @@
 
 (require 'pjb-cl)
 (require 'pjb-utilities)
-(require 'pjb-emacs)
-(provide 'pjb-sources)
+
 
 ;; egrep 'defun|defmacro' pjb-sources.el|sed -e 's/(def\(un\|macro\) /;; /'
 
@@ -2236,8 +2235,41 @@ by pjb-add-change-log-entry.")
      "You should have received a copy of the  GNU Lesser General"
      "Public License along with this library."
      "If not, see <http://www.gnu.org/licenses/>.")
+
+    ("BSD-2"
+     t
+     "All rights reserved."
+     ""
+     "Redistribution and use in source and binary forms, with or without"
+     "modification, are permitted provided that the following conditions are"
+     "met: "
+     ""
+     "1. Redistributions of source code must retain the above copyright"
+     "   notice, this list of conditions and the following disclaimer. "
+     ""
+     "2. Redistributions in binary form must reproduce the above copyright"
+     "   notice, this list of conditions and the following disclaimer in the"
+     "   documentation and/or other materials provided with the"
+     "   distribution. "
+     ""
+     "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS"
+     "\"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT"
+     "LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR"
+     "A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT"
+     "OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,"
+     "SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT"
+     "LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,"
+     "DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY"
+     "THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT"
+     "(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE"
+     "OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+     ""
+     "The views and conclusions contained in the software and documentation"
+     "are those of the authors and should not be interpreted as representing"
+     "official policies,  either expressed or implied, of the FreeBSD"
+     "Project.")
     
-    ("BSD"
+    ("BSD-3"
      t
      "Redistribution and use in source and binary forms, with or"
      "without modification, are permitted provided that the following"
@@ -2297,7 +2329,7 @@ by pjb-add-change-log-entry.")
      ""
      "All Rights Reserved.")
     )
-  "An a-list of license name, ( copyright-flag copyright-line...).
+  "An a-list of (license name,  copyright-flag copyright-line...).
    When the copyright-flag is not nil, a copyright line is displayed.
    URL: http://www.gnu.org/licenses/license-list.html")
 
@@ -3366,14 +3398,18 @@ defun defmacro defgeneric defmethod"
 
 (defun function-parameter-list (function)
   "Return the parameter list of the emacs FUNCTION."
-  (cdar (read-from-string
-         (first
-          (let* ((def  (if (symbolp function)
-                           (symbol-function function)
-                           function))
-                 (help (help-function-arglist def))
-                 (doc  (documentation function)))
-            (help-split-fundoc doc function))))))
+  (let* ((def   (if (symbolp function)
+                    (if (subrp (symbol-function function))
+                        function
+                        (symbol-function function))
+                    function))
+         (help  (help-function-arglist def))
+         (doc   (documentation function))
+         (split (help-split-fundoc doc function)))
+    (or help
+        (when  (first split) (cdar (read-from-string (first split))))
+        split
+        :unknown)))
 
 
 (defun function-argument-counts (function)
@@ -3394,5 +3430,33 @@ the FUNCTION can take."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defvar *sources*)
 
-;;;; pjb-sources.el                   --                     --          ;;;;
+(defun set-sources (directory)
+  (interactive "DSource directory: ")
+  (setf *sources* directory)
+  (setf grep-find-command
+        (format "find %s \\( \\( -name build -o -name debug -o -name release -o -name .svn \\) -prune \\) -o -type f  \\(  -name \\*.h -o -name \\*.m -o -name \\*.mm -o -name \\*.c -name \\*.hh -o -name \\*.hxx -o -name \\*.cc  -o -name \\*.cxx -o -name \\*.lisp -o -name \\*.rb -o -name \\*.logs \\) -print0 | xargs -0 grep -niH -e "
+                *sources*)
+        grep-host-defaults-alist nil))
+
+(defun directory-recursive-find-files-named (directory name)
+  (split-string (shell-command-to-string (format "find %S -name %S -print0" directory name)) "\0" t))
+
+(defun sources-find-file-named (name)
+  (interactive "sFile name: ")
+  (let ((files (directory-recursive-find-files-named *sources* name)))
+    (case (length files)
+      ((0) (message "No such file."))
+      ((1) (find-file (first files)))
+      (otherwise (find-file (x-popup-menu (list '(0 0) (selected-window))
+                                          (list "Source Find File Named"
+                                                (cons "Select a file"
+                                                      (mapcar (lambda (path) (cons path path))
+                                                              files)))))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'pjb-sources)
+;;;; THE END ;;;;

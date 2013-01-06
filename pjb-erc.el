@@ -67,6 +67,7 @@
 
 (require 'pjb-cl)
 (require 'pjb-make-depends)
+(require 'pjb-html)
 
 (eval-when (compile load exec)
   (require 'erc-auto     nil t)
@@ -82,6 +83,8 @@
   (require 'erc-button   nil t)
   (require 'erc-truncate nil t)
   (require 'erc-nickserv nil t))
+
+(require 'erc)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -475,8 +478,10 @@ RETURN: a list of sublists of list (the conses from list are reused),
           (nreverse result))))))
 
 
-(defvar server erc-server        "For get-password")
-(defvar nick   (first erc-nick)  "For get-password")
+(defvar server (if (boundp 'erc-server) erc-server "irc.freenode.org")
+  "For get-password")
+(defvar nick   (first erc-nick)
+  "For get-password")
 (defun get-password (server nick)
   (cdr (assoc "password"
               (car

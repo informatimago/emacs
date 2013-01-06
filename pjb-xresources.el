@@ -116,12 +116,15 @@ RETURN: The current frame.
 
 
 (defun frame-geometry (&optional frame)
+  "Return the position and size of the `frame' as an X geometry specification string."
   (let ((frame (or frame (current-frame))))
     (format "%dx%d-%d+%d"
             (frame-width frame) (frame-height frame)
             (frame-pixel-left frame) (frame-pixel-top frame))))
 
+
 (defun frame-full-screen (&optional frame)
+  "Return the full-screen X resource parameter for the `frame'."
   (let* ((frame    (or frame (current-frame)))
          (fwidth   (frame-pixel-width))
          (fheight  (frame-pixel-height))

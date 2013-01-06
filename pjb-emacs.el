@@ -1,4 +1,4 @@
-;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8; lexical-binding:t -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-emacs.el
 ;;;;LANGUAGE:           emacs lisp
@@ -40,6 +40,7 @@
 ;;;;
 ;;;;****************************************************************************
 (require 'cl)
+(require 'eieio)
 (require 'devices nil t)
 (require 'font nil t)
 (require 'browse-url)
@@ -47,10 +48,10 @@
 (require 'sgml-mode)
 
 (require 'pjb-cl)
-(require 'eieio)
-(require 'pjb-euro)
 (require 'pjb-font)
-(provide 'pjb-emacs)
+(require 'pjb-sources)
+(require 'pjb-strings)
+
 
 
 (defvar html-quick-keys t )
@@ -192,7 +193,6 @@ Always replaces the region with the yank, whether the region was
 selected via keyboard or mouse.  Also works for normal
 yank even with ARGS (thus it can be mapped to \C-y)"
   (interactive "*P")                    ; raw, like yank.
-  (message "arg=%S" arg)
   (cond
     (mark-active                        ; delete region
      (let ((str (buffer-substring (point) (mark))))
@@ -253,14 +253,11 @@ DO:    Draws the pixels of pix-list (a list of (cons x y))
       (goto-line      (+ sl (cdr point))) ;; goto-line first for
       (move-to-column (+ sc (car point)) t)
       (picture-update-desired-column t)
-      (picture-insert pixel 1)
-      ) ;;dolist
+      (picture-insert pixel 1))
 
     (goto-line sl)
-    (move-to-column sc t)
-    ) ;;let*
-  nil
-  ) ;;picture-draw-pixels
+    (move-to-column sc t))
+  nil)
 
 
 (defun ellipse-quart (a b)
@@ -268,21 +265,19 @@ DO:    Draws the pixels of pix-list (a list of (cons x y))
 RETURN: A list of integer coordinates approximating a quart (x>=0, y>=0) of
         an ellipse of half width a and half height b.
 "
-  (let ( (step  (/ pi 4 (sqrt (+ (* a a) (* b b)))))
+  (let ((step  (/ pi 4 (sqrt (+ (* a a) (* b b)))))
         (limit (/ pi 2))
          (alpha 0.0)
          (result (list (cons 0 0)))
          x y )
-
     (while (<= alpha limit)
       (setq x (round (* a (cos alpha)))
             y (round (* b (sin alpha))) )
       (if (or  (/= y (cdar result)) (/= x (caar result)))
           (push (cons x y) result))
       (setq alpha (+ alpha step)))
-    (cdr (nreverse result))
-    ) ;;let
-  )   ;;ellipse-quart
+    (cdr (nreverse result))))
+
 
 
 (defun ellipse-full (a b)
@@ -290,7 +285,7 @@ RETURN: A list of integer coordinates approximating a quart (x>=0, y>=0) of
 RETURN: A list of integer coordinates approximating the whole ellipse
         of half width a and half height b.
 "
-  (let ( (quart (ellipse-quart a b)) )
+  (let ((quart (ellipse-quart a b)))
     (append
      quart
      (mapcar (lambda (item) (cons (- 0 (car item)) (cdr item))) quart)
@@ -320,29 +315,24 @@ cPlot character: ") ;; start <= end
          (top    (min r1 r2))
          (bottom (max r1 r2))
          (width  (+ 0.0 (- right left)))
-         (height (+ 0.0 (- bottom top)))
-         )
+         (height (+ 0.0 (- bottom top))))
     (goto-line            top)
     (move-to-column left t)
     (picture-update-desired-column t)
-    (flet ((fun (x) nil))
-      (fset 'fun `(function (lambda (x) ,fun)))
+    (flet ((fun (x) (funcall fun x)))
       (picture-draw-pixels 
        (do* ((xi 0 (1+ xi))
              (x) (y) (yi)
-             (pixels nil)
-             )
+             (pixels nil))
             ((> xi width) pixels)
          (setq x  (/ xi width))
          (setq y  (let ((y (unwind-protect (fun x))))
                     (if (< y 0.0) 0.0 (if (< 1.0 y) 1.0 y))))
          (setq yi (round (* height (- 1.0 y))))
          (push (cons xi yi) pixels)) 
-       plot-char)
-      ) ;;flet
+       plot-char))
     (goto-line sl)
-    (move-to-column sc t))
-  ) ;;picture-draw-function
+    (move-to-column sc t)))
 
 
 
@@ -374,8 +364,7 @@ BUG:    Only draws ellipse of even width and height.
     (picture-draw-pixels (ellipse-full a b) ?*)
 
     (goto-line sl)
-    (move-to-column sc t))
-  ) ;;picture-draw-ellipse
+    (move-to-column sc t)))
 
 
 (defvar x-cell-size  7 "Width  in pixel of one cell.")
@@ -406,23 +395,19 @@ BUG:    Only draws ellipse of even width and height.
     (picture-update-desired-column t)
     (picture-draw-pixels (ellipse-full (round (/ r x-cell-size))
                                        (round (/ r y-cell-size)))?*)
-
     (goto-line sl)
-    (move-to-column sc t)
-    ) ;;let*
-  )   ;;picture-draw-circle
+    (move-to-column sc t)))
 
 
 
 (defvar picture-fill-pixel ?* 
-  "The default pixel used to fill forms.") ;;picture-fill-pixel
+  "The default pixel used to fill forms.")
 
 
 (defun picture-fill-rectangle (start end)
   "Fills a rectangle with `picture-fill-pixel', or when a prefix
   argument is given, with the character given in minibuf."
   (interactive "*rP")                   ; start will be less than end
-    
   (let* ((sl     (picture-current-line))
          (sc     (current-column))
          (pvs    picture-vertical-step)
@@ -450,17 +435,14 @@ BUG:    Only draws ellipse of even width and height.
       (picture-insert fill-pixel width))
     (picture-set-motion  pvs phs)
     (goto-line sl)
-    (move-to-column sc t)
-    ) ;;let*
-  )   ;;picture-fill-rectangle
+    (move-to-column sc t)))
 
 
 (defun picture-horizontal-segment (line left right)
   (goto-line            line)
   (move-to-column right t)
   (picture-update-desired-column t)
-  (buffer-substring (- (point) (- right left)) (1+ (point)))
-  ) ;;picture-horizontal-segment
+  (buffer-substring (- (point) (- right left)) (1+ (point))))
 
 
 (defun picture-draw-text (line column text)
@@ -475,8 +457,7 @@ BUG:    Only draws ellipse of even width and height.
          ((<= (length text) i))
       (picture-insert (char text i) 1))
     (goto-line sl)
-    (move-to-column sc t)
-    )) ;;picture-draw-text
+    (move-to-column sc t)))
 
 
 (defun picture-mirror-vertical (start end)
@@ -507,8 +488,7 @@ BUG:    Only draws ellipse of even width and height.
       )
     (picture-set-motion  pvs phs)
     (goto-line sl)
-    (move-to-column sc t)
-    )) ;;picture-mirror-vertical
+    (move-to-column sc t)))
 
 
 (defun picture-mirror-horizontal (start end)
@@ -538,8 +518,7 @@ BUG:    Only draws ellipse of even width and height.
       (picture-draw-text line left (car lines)))
     (picture-set-motion  pvs phs)
     (goto-line sl)
-    (move-to-column sc t)
-    )) ;;picture-mirror-horizontal
+    (move-to-column sc t)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -584,23 +563,63 @@ DO:      Apply wc on the file visited in the current buffer.
     
 
 
-(when nil
-  (defun url-retrieve-as-string (url)
-    "RETURN: A string containing the data found at the url."
-    ;; This version uses w3.
-    ;; An alternative could be:
-    ;; (shell-command-to-string (format "lynx -source '%s'" url))
-    (save-excursion
-      (let* ((status (url-retrieve url))
-             (cached (car status))
-             (url-working-buffer (cdr status)))
-        (set-buffer url-working-buffer)
-        (buffer-string)))))
+
+(defun* tempfile (&key directory prefix suffix name mode)
+  (flet ((option (flag value)
+                 (if value
+                     (format "%s %s" 
+                             (shell-quote-argument flag)
+                             (shell-quote-argument value)))))
+    (let ((lines (split-string (shell-command-to-string
+                                (format "tempfile %s %s %s %s %s || echo $?"
+                                        (option "-d" directory)
+                                        (option "-p" prefix)
+                                        (option "-s" suffix)
+                                        (option "-n" name)
+                                        (option "-m" mode)))
+                               "\n" t)))
+      (case (length lines)
+        ((1) (first lines))
+        (otherwise (error "%s\nstatus %s"
+                          (join (butlast lines) "\n")
+                          (car (last lines))))))))
 
 
-(defun url-retrieve-as-string (url)
+(defun* url-retrieve-as-string (url)
   "RETURN: A string containing the data found at the url."
-  (shell-command-to-string (format "lynx -source '%s'" url)))
+  (if (fboundp 'url-retrieve-synchronously)
+      (with-current-buffer (url-retrieve-synchronously url)
+        (goto-char (point-min))
+        (prog1 (buffer-substring (search-forward "\n\n" nil t) (point-max))
+          (kill-buffer)))
+      (let ((tmpfile (or (ignore-errors (tempfile))
+                         (format "/tmp/url-retrieve-as-string-%d-%d.data"
+                                 (emacs-pid) (random 10000000)))))
+        (unwind-protect
+             (progn
+               (loop
+                  for fetch-command
+                  in (list
+                      (lambda ()
+                        (format "wget --no-convert-links -q -nv -o /dev/null -t 3  -O %s %s 2>/dev/null"
+                                (shell-quote-argument tmpfile)
+                                (shell-quote-argument url)))
+                      (lambda ()
+                        (format "lynx -source %s > %s 2>/dev/null"
+                                (shell-quote-argument url)
+                                (shell-quote-argument tmpfile))))
+                  for command = (format "%s && ( echo $? ; cat %s ) || echo $?"
+                                        (funcall fetch-command)
+                                        (shell-quote-argument tmpfile))
+                  do (let* ((output (shell-command-to-string command))
+                            (result (read-from-string output))
+                            (status (car result)))
+                       (when (zerop status)
+                         (return (subseq output (1+ (cdr result))))))
+                  finally (error "url-retrieve-as-string cannot find a command to fetch URLs.")))
+          (ignore-errors (delete-file tmpfile))))))
+
+
 
 
 (defun pjb-browse-url-lynx-xterm (url &optional new-window)
@@ -776,51 +795,6 @@ DO:      Grep current directory for sources containing the current word.
 
 
 
-(defun pjb-eurotunnel ()
-  "
-DO:      get-devises and insert some eurotunnel data.
-"
-  (interactive)
-  (let ((today (calendar-current-date)))
-    (get-devises)
-    (mapcar
-     (lambda (line) 
-       (let* ((fields   (split-string line ";"))
-              (sym      (nth 0 fields))
-              (quo      (string-to-number 
-                         (replace-regexp-in-string "," "." (nth 1 fields) nil nil)))
-              )
-         (cond
-
-           ((string-match "22457" sym)
-            (printf
-             "  | %4d-%02d-%02d    %8.6f   %4d %10s = %7.2f %11s |\n"
-             (nth 2 today) (nth 0 today) (nth 1 today)
-             quo 4400 sym (* quo 4400) " "))
-
-           ((string-match "12537" sym)
-            (printf
-             "  | %4d-%02d-%02d    %8.6f        %10s    %18s |\n"
-             (nth 2 today) (nth 0 today) (nth 1 today)
-             quo  sym  " "))
-
-           ((string-equal sym "GBP=X")
-            (printf
-             "  | %4d-%02d-%02d    %8.6f          %3s      ~ %7.4f %11s |\n"
-             (nth 2 today) (nth 0 today) (nth 1 today)
-             (/ (euro-from-value 10000 UKL) 10000.0) 'UKL
-             (/ (+ (euro-from-value (* 1495 0.68) UKL) (* 1495 1.0214)) 1495)
-             "EUR/12537"))
-
-           (t))))
-
-     (split-string 
-      (url-retrieve-as-string 
-       "http://fr.finance.yahoo.com/d/quos.csv?s=22456+22457+12537+GBP=X&m=PA&f=sl1d1t1c1ohgv&e=.csv")))))
-
-
-
-
 
 (defun pjb-backcolors ()
   "
@@ -853,15 +827,13 @@ DO:     Chronometre the execution of `lambda-body'.
         Writes a message indicating the time it took.
 RETURN: (cons seconds the result of `lambda-body').
 "
-  (let* ( (start  (current-time))
+  (let* ((start  (current-time))
          (result (funcall lambda-body))
-          (stop   (current-time)) 
-          (time   (- (emacs-time-to-seconds stop) 
-                     (emacs-time-to-seconds start))) )
+         (stop   (current-time)) 
+         (time   (- (emacs-time-to-seconds stop) 
+                    (emacs-time-to-seconds start))) )
     (printf outstream "Took %f seconds." time)
-    (cons time result)
-    ) ;;let*
-  )   ;;chronometre
+    (cons time result)))
 
 
 
@@ -946,7 +918,7 @@ space does not end a sentence, so don't break a line there."
         (insert (format "%s "
                   (if (and (listp word) (eq 'quote (car word))) 
                       (cadr word) word))))
-      (insert "\n")))) ;;perm-words
+      (insert "\n"))))
 
 
 (defvar *fortune-file* "/data/cookies/bopcs.cookies")
@@ -963,8 +935,7 @@ Add the selection to the local fortune file.
     (insert fortune)
     (insert "\n#\n")
     (save-buffer 1)
-    (bury-buffer))
-  ) ;;add-fortune
+    (bury-buffer)))
 (defalias 'add-cookie 'add-fortune)
 
 
@@ -1015,54 +986,55 @@ RETURN: The current frame.
 
 (defmacro define-frame-parameter (name)
   `(defun ,(intern (format "frame-%s" name)) (&optional frame)
+     ,(format "Returns the %s parameter of the `frame'." name)
      (frame-parameter (or frame (selected-frame)) ',name)))
 
 ;; (dolist (p (frame-parameters)) (insert (format "(define-frame-parameter %s)\n" (car p))))
 
-(define-frame-parameter parent-id)
-(define-frame-parameter display)
-(define-frame-parameter visibility)
-(define-frame-parameter icon-name)
-(define-frame-parameter outer-window-id)
-(define-frame-parameter window-id)
-(define-frame-parameter top)
-(define-frame-parameter left)
-(define-frame-parameter buffer-list)
-(define-frame-parameter unsplittable)
-(define-frame-parameter minibuffer)
-(define-frame-parameter modeline)
-(define-frame-parameter width)
-(define-frame-parameter height)
-(define-frame-parameter name)
-(define-frame-parameter background-mode)
-(define-frame-parameter display-type)
-(define-frame-parameter horizontal-scroll-bars)
-(define-frame-parameter scroll-bar-width)
-(define-frame-parameter cursor-type)
-(define-frame-parameter auto-lower)
-(define-frame-parameter auto-raise)
-(define-frame-parameter icon-type)
-(define-frame-parameter wait-for-wm)
-(define-frame-parameter title)
-(define-frame-parameter buffer-predicate)
-(define-frame-parameter tool-bar-lines)
-(define-frame-parameter menu-bar-lines)
-(define-frame-parameter scroll-bar-background)
-(define-frame-parameter scroll-bar-foreground)
-(define-frame-parameter right-fringe)
-(define-frame-parameter left-fringe)
-(define-frame-parameter line-spacing)
-(define-frame-parameter screen-gamma)
-(define-frame-parameter border-color)
-(define-frame-parameter cursor-color)
-(define-frame-parameter mouse-color)
-(define-frame-parameter background-color)
-(define-frame-parameter foreground-color)
-(define-frame-parameter vertical-scroll-bars)
-(define-frame-parameter internal-border-width)
-(define-frame-parameter border-width)
-(define-frame-parameter font)
-
+(progn
+  (define-frame-parameter parent-id)
+  (define-frame-parameter display)
+  (define-frame-parameter visibility)
+  (define-frame-parameter icon-name)
+  (define-frame-parameter outer-window-id)
+  (define-frame-parameter window-id)
+  (define-frame-parameter top)
+  (define-frame-parameter left)
+  (define-frame-parameter buffer-list)
+  (define-frame-parameter unsplittable)
+  (define-frame-parameter minibuffer)
+  (define-frame-parameter modeline)
+  (define-frame-parameter width)
+  (define-frame-parameter height)
+  (define-frame-parameter name)
+  (define-frame-parameter background-mode)
+  (define-frame-parameter display-type)
+  (define-frame-parameter horizontal-scroll-bars)
+  (define-frame-parameter scroll-bar-width)
+  (define-frame-parameter cursor-type)
+  (define-frame-parameter auto-lower)
+  (define-frame-parameter auto-raise)
+  (define-frame-parameter icon-type)
+  (define-frame-parameter wait-for-wm)
+  (define-frame-parameter title)
+  (define-frame-parameter buffer-predicate)
+  (define-frame-parameter tool-bar-lines)
+  (define-frame-parameter menu-bar-lines)
+  (define-frame-parameter scroll-bar-background)
+  (define-frame-parameter scroll-bar-foreground)
+  (define-frame-parameter right-fringe)
+  (define-frame-parameter left-fringe)
+  (define-frame-parameter line-spacing)
+  (define-frame-parameter screen-gamma)
+  (define-frame-parameter border-color)
+  (define-frame-parameter cursor-color)
+  (define-frame-parameter mouse-color)
+  (define-frame-parameter background-color)
+  (define-frame-parameter foreground-color)
+  (define-frame-parameter vertical-scroll-bars)
+  (define-frame-parameter internal-border-width)
+  (define-frame-parameter border-width)
+  (define-frame-parameter font))
 
 (defalias 'frame-pixel-top  'frame-top)
 (defalias 'frame-pixel-left 'frame-left)
@@ -1547,8 +1519,24 @@ only display one window with the scratch buffer"
            (t                                         (full-frame 3))))))))
 
 (when (and window-system (not (getenv "RATPOISON")))
-  (pushnew (function after-make-frame/full-frame-meat) after-make-frame-functions))
+  (pushnew (quote after-make-frame/full-frame-meat) after-make-frame-functions))
 
+
+(defun after-make-frame/emacsformacosx-bug-meat (&optional frame)
+  (interactive)
+  (let ((frame (or frame (selected-frame))))
+    (run-at-time 0.5   ; delay in seconds.
+                 nil ; no repeat
+                 (lambda () ; a closure, thanks to lexical-binding above :-)
+                   (toggle-tool-bar-mode-from-frame +1)
+                   (set-frame-size frame (1- (frame-width frame)) (1- (frame-height frame)))
+                   (forward-font -1)
+                   (forward-font +1)
+                   (set-frame-size frame (1+ (frame-width frame)) (1+ (frame-height frame)))
+                   (toggle-tool-bar-mode-from-frame -1)))))
+
+(when (eq window-system 'ns)
+  (pushnew (quote after-make-frame/emacsformacosx-bug-meat) after-make-frame-functions))
 ;; (setf  after-make-frame-functions  (remove (function after-make-frame/full-frame-meat) after-make-frame-functions))
 
 
@@ -1676,7 +1664,7 @@ DO:    Apply the function fun(character)->string to the region from
 
 (defun is-space (c)
   "RETURN: Whether C is a space."
-  (member c '(9 10 11 12 13 32))) ;;is-space
+  (member c '(9 10 11 12 13 32)))
 
 
 (defun blind-text-region (start end)
@@ -2294,7 +2282,11 @@ FILE-AND-OPTION: either an atom evaluated to a path,
                   `(kill-buffer (current-buffer)))))))
 
 
-(defun constantly (value) (byte-compile `(lambda (&rest arguments) ',value)))
+(defun constantly (value)
+  (lambda (&rest arguments)
+    (declare (ignore arguments))
+    value))
+
 
 (defun mapfiles (thunk directory &optional recursive exceptions)
   "
@@ -2414,4 +2406,5 @@ recursive search.  Backup files (name ending in ~) are ignored too.
       (replace-regexp regexp to-string delimited))))
 
 
+(provide 'pjb-emacs)
 ;;;: THE END ;;;;
