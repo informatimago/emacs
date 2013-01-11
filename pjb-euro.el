@@ -81,7 +81,6 @@ To update the devises with variable quotes, use update-devises.
 
 
 
-
 (defun euro-parity-replace-ratio (parity new-ratio)
   "PRIVATE"
   (cons (car parity) (cons new-ratio (cddr parity))))

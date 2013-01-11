@@ -67,6 +67,12 @@
   :success)
 
 
+(defmacro* with-parens (parens &body body)
+  `(progn
+     (insert ,(elt parens 0))
+     (prog1 (progn ,@body)
+       (insert ,(elt parens 1)))))
+
 
 (defun generate (node)
   (if (typep node 'c-node)
@@ -178,6 +184,13 @@
 
 
 
+(defmacro generate-constructor (&rest class-names)
+  `(progn
+     ,@(mapcar (lambda (class-name)
+		 `(defun* ,(intern (format "make-%s" class-name)) (&rest arguments &key &allow-other-keys)
+		    (apply 'make-instance ',class-name arguments)))
+	       class-names)
+     ',class-names))
 
 
 (defun generate-intermingled-selector-and-things (selector things)
@@ -286,9 +299,6 @@ containing a type, and a property name or a list (getter setter).
 				      :body (list (make-objc-send :recipient target
 								  :selector setter
 								  :arguments '(value))))))))
-
-
-
 
 
 
