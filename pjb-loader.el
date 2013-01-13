@@ -375,9 +375,13 @@ RETURN: A list of NODES sorted topologically according to
 
 
 
+ 
 (defparameter *pjb-sources-order*
   (mapcar (lambda (file)
-            (let ((path (concat (getenv "HOME") "/src/public/emacs/" file)))
+            (let ((path (concat (if load-file-name
+                                  (file-name-directory load-file-name)
+                                  (concat (getenv "HOME") "/src/public/emacs/")) 
+                                file)))
               (cons (intern (pathname-name* file))
                     (source-file-requires path))))
           *pjb-sources*))

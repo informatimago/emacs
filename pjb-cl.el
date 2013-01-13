@@ -1332,11 +1332,12 @@ URL:        http://www.informatimago.com/local/lisp/HyperSpec/Body/f_namest.htm
 NOTE:       in current implementation pathname=namestring.
 RETURN:     the 'basename' of the pathname.
 "
-  (if (string-match "\\(^.*/\\([^/][^/]*\\)/*$\\)\\|\\(^\\([^/][^/]*\\)/*$\\)"
-                    pathname)
-      (let ((res (match-string 2 pathname)))
-        (if res res (match-string 4 pathname)))
-      pathname))
+  ;; (if (string-match "\\(^.*/\\([^/][^/]*\\)/*$\\)\\|\\(^\\([^/][^/]*\\)/*$\\)"
+  ;;                   pathname)
+  ;;     (let ((res (match-string 2 pathname)))
+  ;;       (if res res (match-string 4 pathname)))
+  ;;     pathname)
+  (file-name-nondirectory pathname))
 
 
 (defun directory-namestring (pathname)
@@ -1347,9 +1348,10 @@ URL:        http://www.informatimago.com/local/lisp/HyperSpec/Body/f_namest.htm
 NOTE:       in current implementation pathname=namestring.
 RETURN:     the 'basename' of the pathname.
 "
-  (if (string-match "\\(^.*[^/].*\\)/[^/][^/]*/*$" pathname)
-      (match-string 1 pathname)
-      (if (= ?/ (aref pathname 0)) "/" ".")))
+  ;; (if (string-match "\\(^.*[^/].*\\)/[^/][^/]*/*$" pathname)
+  ;;     (match-string 1 pathname)
+  ;;     (if (= ?/ (aref pathname 0)) "/" "."))
+  (file-name-directory pathname))
 
 
 (defun host-namestring (pathname)
