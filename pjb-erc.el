@@ -117,6 +117,29 @@
                       ((eq arg '-) -2)
                       (t           (1- arg)))))
 
+(defun pjb-http-get (url)
+  "Fetches a resource at URL, and returns it."
+  (shell-command-to-string
+   (format "wget --no-convert-links -q -nv -o /dev/null -t 3  -O -  %s" (shell-quote-argument url))))
+
+(defun pjb-parse-xml (xml)
+  "Parse the XML string."
+  (with-temp-buffer
+    (insert xml)
+    (xml-parse-region (point-min) (point-max))))
+
+(defun pjb-parse-html (html)
+  "Parse the HTML string."
+  (pjb-parse-xml html))
+
+
+(defun pjb-find-html-tag (tag html)
+  (cond
+    ((atom html) nil)
+    ((eq tag (car html)) html)
+    (t (or (pjb-find-html-tag tag (car html))
+           (pjb-find-html-tag tag (cdr html))))))
+
 
 (defvar *lisp-paste-url*        "http://paste.lisp.org/new")
 (defvar *lisp-paste-action-url* "http://paste.lisp.org/submit")

@@ -1577,7 +1577,8 @@ Bi-directional stream.")
 
 
 (defun get-internal-real-time ()
-  (FLOAT (GET-INTERNAL-REAL-TIME)))
+  (destructuring-bind (high low microsec) (current-time)
+    (+ (* high 65536.0) low (* 1e-6 microsec))))
 
 
 (defmacro time (&rest body)
