@@ -226,7 +226,7 @@
                                          ;; The first line of an Objective-C method definition.
                                          (objc-method-args-cont . 0)  
                                          ;; Lines continuing an Objective-C method definition.
-                                         (objc-method-call-cont . ++)  
+                                         (objc-method-call-cont . (c-lineup-ObjC-method-call-colons ++))
                                          ;; Lines continuing an Objective-C method call.
                                          (extern-lang-open      . 0)       
                                          ;; Brace that opens an "extern" block.
