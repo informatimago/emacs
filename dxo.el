@@ -360,6 +360,33 @@
    (indent-region start end)))
 
 
+(defun dxo-remove-interlines ()
+  "Remove duplicate lines after toplevel closing braces."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\(}\\|@end\\) *\\(\n *\\)*\n" nil t)
+      (let ((token (match-string 1)))
+        (delete-region (match-beginning 0) (match-end 0))
+        (insert (cond
+                  ((string= token "}")    "}\n\n")
+                  ((string= token "@end") "@end\n\n")
+                  (t                      (format "%s\n\n" token))))))))
+
+
+(defun dxo-insert-interlines ()
+  "Insert duplicate lines after toplevel closing braces."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\(}\\|@end\\) *\\(\n *\\)*\n" nil t)
+      (let ((token (match-string 1)))
+        (delete-region (match-beginning 0) (match-end 0))
+        (insert (cond
+                  ((string= token "}")    "}\n\n\n")
+                  ((string= token "@end") "@end\n\n\n\n")
+                  (t                      (format "%s\n\n" token))))))))
+
 
 (provide 'dxo)
 ;;;; THE END ;;;;
