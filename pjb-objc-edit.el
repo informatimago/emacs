@@ -58,7 +58,7 @@
   '(";"))
 
 
-(defun poe-insert-special-character (n)
+(defun pjb-objc-edit-insert-special-character (n)
   (interactive "P")
   (cond
     ((listp n)    (self-insert-command n))
@@ -78,6 +78,39 @@
      )))
 
 
+(defun pjb-objc-edit-forward-sexp (&optional argument)
+  (interactive "P")
+  (if (and argument (minusp argument))
+      (pjb-objc-edit-backward-sexp (- argument))
+      (progn
+        (forward-sexp)
+        (backward-sexp)
+        (if (looking-at "@\\(interface\\|implementation\\|protocol\\)\\>")
+            (loop repeat (or argument 1)
+               do (re-search-forward "^\\s-*@end\\>" nil t))
+            (forward-sexp argument)))))
+
+
+(defun pjb-objc-edit-backward-sexp (&optional argument)
+  (interactive "P")
+  (if (and argument (minusp argument))
+      (pjb-objc-edit-forward-sexp (- argument))
+      (let ((from (point)))
+        (backward-sexp)
+        (if (looking-at "@end\\>")
+            (loop repeat (or argument 1)
+               do (re-search-backward "@\\(interface\\|implementation\\|protocol\\)\\>" nil t)
+               finally (goto-char (match-beginning 0)))
+            (unless (or (null argument) (= 1 argument))
+              (goto-char from)
+              (backward-sexp argument))))))
+
+
+
+(defun pjb-objc-edit-meat ()
+  (interactive)
+  (local-set-key (kbd "C-M-f") 'pjb-objc-edit-forward-sexp)
+  (local-set-key (kbd "C-M-b") 'pjb-objc-edit-backward-sexp))
 
 
 (provide 'pjb-objc-edit)
