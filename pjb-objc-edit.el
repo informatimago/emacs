@@ -107,10 +107,24 @@
 
 
 
+
+(defun pjb-objc-kill-ring-save-selector ()
+  (interactive)
+  (if (looking-at "\\(\\s-\\|\n\\)*\\[")
+      (kill-new (pjb-objc-selector-name (pjb-objc-message-send-selector  (pjb-objc-parser--parse-message-send))))
+      (progn
+        (up-list)
+        (backward-sexp)
+        (pjb-objc-kill-ring-save-selector))))
+
+
 (defun pjb-objc-edit-meat ()
   (interactive)
   (local-set-key (kbd "C-M-f") 'pjb-objc-edit-forward-sexp)
-  (local-set-key (kbd "C-M-b") 'pjb-objc-edit-backward-sexp))
+  (local-set-key (kbd "C-M-b") 'pjb-objc-edit-backward-sexp)
+  (local-set-key (kbd "C-c C-o C-f") 'pjb-objc-edit-forward-sexp)
+  (local-set-key (kbd "C-c C-o C-b") 'pjb-objc-edit-backward-sexp)
+  (local-set-key (kbd "C-c C-o s")   'pjb-objc-kill-ring-save-selector))
 
 
 (provide 'pjb-objc-edit)
