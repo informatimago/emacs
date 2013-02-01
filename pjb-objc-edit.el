@@ -85,7 +85,7 @@
       (progn
         (forward-sexp)
         (backward-sexp)
-        (if (looking-at "@\\(interface\\|implementation\\|protocol\\)\\>")
+        (if (looking-at "@\\(interface\\|implementation\\|protocol *[^(]\\)\\>")
             (loop repeat (or argument 1)
                do (re-search-forward "^\\s-*@end\\>" nil t))
             (forward-sexp argument)))))
@@ -99,7 +99,7 @@
         (backward-sexp)
         (if (looking-at "@end\\>")
             (loop repeat (or argument 1)
-               do (re-search-backward "@\\(interface\\|implementation\\|protocol\\)\\>" nil t)
+               do (re-search-backward "@\\(interface\\|implementation\\|protocol *[^(]\\)\\>" nil t)
                finally (goto-char (match-beginning 0)))
             (unless (or (null argument) (= 1 argument))
               (goto-char from)
@@ -110,12 +110,37 @@
 
 (defun pjb-objc-kill-ring-save-selector ()
   (interactive)
-  (if (looking-at "\\(\\s-\\|\n\\)*\\[")
-      (kill-new (pjb-objc-selector-name (pjb-objc-message-send-selector  (pjb-objc-parser--parse-message-send))))
-      (progn
-        (up-list)
-        (backward-sexp)
-        (pjb-objc-kill-ring-save-selector))))
+  (cond
+    ((looking-at "\\(\\s-\\|\n\\)*\\[")
+     (let ((selector  (pjb-objc-selector-name (pjb-objc-message-send-selector  (pjb-objc-parser--parse-message-send)))))
+       (kill-new selector)
+       (message "Kill-ring'ed %S" selector)))
+    ((looking-at "\\(\\s-\\|\n\\)*[-+]")
+     (let ((selector  (pjb-objc-selector-name (pjb-objc-method-signature-selector (pjb-objc-parser--parse-method-signature)))))
+       (kill-new selector)
+       (message "Kill-ring'ed %S" selector)))
+    (t
+     (up-list)
+     (backward-sexp)
+     (pjb-objc-kill-ring-save-selector))))
+
+
+(defun pjb-objc-edit-add-font-lock-keywords ()
+  (interactive)
+  ;; Try with overlays, not compose-region!
+  ;; (font-lock-add-keywords
+  ;;  nil
+  ;;  '(("^ *# *pragma +mark +- *$"
+  ;;     (0 (progn (compose-region (match-beginning 0) (match-end 0)
+  ;;                               "/\\-"
+  ;;                               'decompose-region)
+  ;;               nil)))
+  ;;    ("^ *# *pragma +mark +\\([^-].*\\) *$"
+  ;;     (0 (progn (compose-region (match-beginning 0) (match-end 0)
+  ;;                               "=!"
+  ;;                               'decompose-region)
+  ;;               nil)))))
+  )
 
 
 (defun pjb-objc-edit-meat ()
@@ -124,7 +149,12 @@
   (local-set-key (kbd "C-M-b") 'pjb-objc-edit-backward-sexp)
   (local-set-key (kbd "C-c C-o C-f") 'pjb-objc-edit-forward-sexp)
   (local-set-key (kbd "C-c C-o C-b") 'pjb-objc-edit-backward-sexp)
-  (local-set-key (kbd "C-c C-o s")   'pjb-objc-kill-ring-save-selector))
+  (local-set-key (kbd "C-c C-o s")   'pjb-objc-kill-ring-save-selector)
+  (local-set-key (kbd "C-c C-o c")   'pjb-objc-ide-find-superclass-file)
+  (local-set-key (kbd "C-c C-o u")   'pjb-objc-ide-beginning-of-class)
+  (pjb-objc-edit-add-font-lock-keywords))
+
+
 
 
 (provide 'pjb-objc-edit)
