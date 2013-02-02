@@ -186,7 +186,7 @@
        (brace-list-intro      . +)
        ;; First line in an enum or static array list.
        
-       (brace-list-entry      . +)
+       (brace-list-entry      . 0)
        ;; Subsequent lines in an enum or static array list.
        
        (brace-entry-open      . +)
@@ -219,7 +219,7 @@
        (substatement-label    . /)
        ;; Labelled line after an if/while/for/do/else.
        
-       (case-label            . 0)
+       (case-label            . *)
        ;; A "case" or "default" label.
        
        (access-label          . -)
