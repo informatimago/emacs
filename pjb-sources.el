@@ -3441,7 +3441,10 @@ the FUNCTION can take."
         grep-host-defaults-alist nil))
 
 (defun directory-recursive-find-files-named (directory name)
-  (split-string (shell-command-to-string (format "find %S -name %S -print0" directory name)) "\0" t))
+  (split-string (shell-command-to-string (format "find %s -name %s -print0 | head -40"
+                                                 (shell-quote-argument directory)
+                                                 (shell-quote-argument name)))
+                "\0" t))
 
 (defun sources-find-file-named (name)
   (interactive "sFile name: ")
@@ -3452,8 +3455,14 @@ the FUNCTION can take."
       (otherwise (find-file (x-popup-menu (list '(0 0) (selected-window))
                                           (list "Source Find File Named"
                                                 (cons "Select a file"
-                                                      (mapcar (lambda (path) (cons path path))
-                                                              files)))))))))
+                                                      (sort (mapcar (lambda (path) (cons path path))
+                                                                    files)
+                                                            (lambda (a b)
+                                                              (let ((a (car a))
+                                                                    (b (car b)))
+                                                               (or (< (length a) (length b))
+                                                                   (and (= (length a) (length b))
+                                                                        (string< a b))))))))))))))
 
 
 

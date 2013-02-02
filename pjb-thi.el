@@ -75,11 +75,8 @@ The order matters, since invert-alist keeps the same order for the couples (valu
   (format "%s.%s" (file-name-sans-extension path) type))
 
 
-(defun toggle-header/implementation ()
-  "Toggles between the header or the implementation file."
-  (interactive)
-  (let* ((fname (buffer-file-name (current-buffer)))
-	 (ftype (file-name-extension fname))
+(defun pjb-thi-other-file (fname)
+  (let* ((ftype (file-name-extension fname))
 	 (other-extensions (or (cdr (assoc ftype *implementation/header-map*))
 			       (cdr (assoc ftype *header/implementation-map*)))))
     (if other-extensions
@@ -89,16 +86,21 @@ The order matters, since invert-alist keeps the same order for the couples (valu
 	   for newfile = (change-file-type fname newext)
 	   for buffer = (find-buffer-visiting newfile)
 	   do (cond
-		(buffer
-		 (switch-to-buffer buffer)
-		 (return-from toggle))
-		((file-exists-p newfile)
-		 (find-file newfile)
-		 (return-from toggle)))
-	   finally (switch-to-buffer (get-buffer-create
-				      (file-name-nondirectory
-				       (change-file-type fname (first other-extensions))))))
+		(buffer                  (return-from toggle buffer))
+		((file-exists-p newfile) (return-from toggle newfile)))
+	   finally (return-from toggle (file-name-nondirectory
+                                        (change-file-type fname (first other-extensions)))))
 	(error "File type not known (update `*implementation/header-map*')."))))
+
+
+(defun toggle-header/implementation ()
+  "Toggles between the header or the implementation file."
+  (interactive)
+  (let* ((fname (buffer-file-name (current-buffer)))
+         (other (pjb-thi-other-file fname)))
+    (typecase other
+      (buffer (switch-to-buffer other))
+      (string (find-file other)))))
 
 
 

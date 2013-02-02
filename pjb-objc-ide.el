@@ -149,6 +149,7 @@ The excursion is saved while running `processor'.
      while (or (minusp count) (< i count))
      do
        (incf i)
+       (c-forward-comments)
        (if (re-search-forward "\\(\\s-\\|\n\\)*[-+]\\(\\s-\\|\n\\)*(" nil t)
            (progn
              (goto-char (match-beginning 0))
@@ -261,33 +262,65 @@ The excursion is saved while running `processor'.
 
 
 
+(defun pjb-objc-ide-synthesize-properties ()
+  "Replace all @property <type> <identifier>; lines by @synthesize <identifier>; lines."
+  ;; TODO: The right thing would be to search all properties in class
+  ;;       headers and superclasses headers, and to synthesize those
+  ;;       that need to be synthesized, depending of the @property
+  ;;       declaration and the presence of methods in the source
+  ;;       files...
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward "^[ \t]*@property\\>.*\\(\\<[_A-Za-z][_A-Za-z0-9]*\\)[ \t\n]*;" (point-max) t)
+    (let ((name (match-string 1)))
+     (delete-region (match-beginning 0) (match-end 0))
+     (insert (format "@synthesize %s;" name)))))
+
+
+
+(defun pjb-objc-ide-beginning-of-class ()
+  (interactive)
+  (when (re-search-backward "@\\(\\(interface\\|implementation\\|prototype\\) +\\([A-Za-z0-9_]+\\)\\|end\\)" nil t)
+    (goto-char (match-beginning 0))))
+
+(defun pjb-objc-ide-current-class ()
+  (save-excursion
+   (when (re-search-backward "@\\(\\(interface\\|implementation\\|prototype\\) +\\([A-Za-z0-9_]+\\)\\|end\\)" nil t)
+     (let ((token (match-string 2))
+           (name  (match-string 3)))
+       (and token name)))))
+
+
+(defun pjb-objc-ide-current-superclass ()
+  (save-window-excursion
+    (save-excursion
+      (when (re-search-backward "@\\(\\(\\(interface\\|implementation\\|prototype\\) +\\([A-Za-z0-9_]+\\)\\( *: *\\([A-Za-z0-9_]+\\)\\)?\\)\\|end\\)" nil t)
+        (let ((token (match-string 3))
+              (name  (match-string 4))
+              (super (match-string 6)))
+          (when token
+            (or super
+                ;; TODO: search all @interface/@implementation/@prototype
+                ;;       in the current file, in pjb-thi-other-file, and
+                ;;       in all the files in the same directory.
+                (progn
+                  ;; Quick and dirty:
+                  (toggle-header/implementation)
+                  (goto-char (point-min))
+                  (when (re-search-forward (format "@interface +%s *: *\\([A-Za-z0-9_]+\\)" name) nil t)
+                    (match-string 1))))))))))
+
+(defun pjb-objc-ide-find-superclass-file ()
+  (interactive)
+  (let ((superclass (pjb-objc-ide-current-superclass)))
+    (when superclass
+      (message "superclass = %s" superclass)
+      (sources-find-file-named (format "%s.h" superclass))
+      (goto-char (point-min))
+      (re-search-forward (format "@interface +%s" superclass) nil t))))
+
 
 
 
 (provide 'pjb-objc-ide)
-
-
-
-
-(defun dxo-objc-ide--dxo-class-type-p (type)
-  ;; TODO: It would be better to collect the exact list of OPM classes…
-  (and (listp type)
-       (eq (second type) '*)
-       (null (cddr type))
-       (symbolp (first type))
-       (member* (substring (symbol-name (first type)) 0 3) '("DOP" "DXF")
-                :test (function string=))))
-
-
-(defun dxo-objc-ide-settings ()
-  (interactive)
-  (setf *pjb-objc-ide--nslog-function* "DXFLogDebug"
-        *pjb-objc-ide--entry-log-tag*  "PJB-DEBUG")
-  (pushnew '((ZoomMode) . "%d")  *pjb-objc-ide--type-formatter-map*
-           :test (function equal))
-  (pushnew '(dxo-objc-ide--dxo-class-type-p . "%@") *pjb-objc-ide--type-formatter-map*
-           :test (function equal)))
-
-
-(dxo-objc-ide-settings)
 
