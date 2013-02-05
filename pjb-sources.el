@@ -3431,14 +3431,7 @@ the FUNCTION can take."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar *sources*)
-
-(defun set-sources (directory)
-  (interactive "DSource directory: ")
-  (setf *sources* directory)
-  (setf grep-find-command
-        (format "find %s \\( \\( -name build -o -name debug -o -name release -o -name .svn \\) -prune \\) -o -type f  \\(  -name \\*.h -o -name \\*.m -o -name \\*.mm -o -name \\*.c -name \\*.hh -o -name \\*.hxx -o -name \\*.cc  -o -name \\*.cxx -o -name \\*.lisp -o -name \\*.rb -o -name \\*.logs \\) -print0 | xargs -0 grep -niH -e "
-                *sources*)
-        grep-host-defaults-alist nil))
+(defvar *sources-cache* '())
 
 (defun directory-recursive-find-files-named (directory name)
   (split-string (shell-command-to-string (format "find %s -name %s -print0 | head -40"
@@ -3446,8 +3439,28 @@ the FUNCTION can take."
                                                  (shell-quote-argument name)))
                 "\0" t))
 
+
+
+(require 'filecache)
+
+(defun set-sources (directory)
+  (interactive "DSource directory: ")
+  (setf *sources* directory)
+  (file-cache-add-directory-recursively *sources* ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|rb\\|logs\\|el\\)$")
+  (setf *sources-cache* (sort (mapcar (function car) file-cache-alist) (function string<)))
+  (setf grep-find-command
+        (format "find %s \\( \\( -name build -o -name debug -o -name release -o -name .svn \\) -prune \\) -o -type f  \\(  -name \\*.h -o -name \\*.m -o -name \\*.mm -o -name \\*.c -name \\*.hh -o -name \\*.hxx -o -name \\*.cc  -o -name \\*.cxx -o -name \\*.lisp -o -name \\*.rb -o -name \\*.logs \\) -print0 | xargs -0 grep -niH -e "
+                *sources*)
+        grep-host-defaults-alist nil))
+
 (defun sources-find-file-named (name)
-  (interactive "sFile name: ")
+  (interactive (list
+                (completing-read 
+                 "File name: "
+                 (mapcar (lambda (x) (cons x nil)) *sources-cache*)
+                 (constantly t)
+                 nil)))
+  ;; (interactive "sFile name: ")
   (let ((files (directory-recursive-find-files-named *sources* name)))
     (case (length files)
       ((0) (message "No such file."))

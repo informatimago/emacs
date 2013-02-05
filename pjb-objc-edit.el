@@ -156,6 +156,12 @@
 
 
 
+(defun pjb-objc-edit-convert-snail-to-camel (start end)
+  (interactive "r")
+  (goto-char start)
+  (while (re-search-forward "_\\(.\\)" end t)
+    (let ((ch (match-string 1)))
+      (replace-match (string-upcase ch) t t))))
 
 (provide 'pjb-objc-edit)
 ;;;; THE END ;;;;
