@@ -3445,6 +3445,7 @@ the FUNCTION can take."
 
 (defun set-sources (directory)
   (interactive "DSource directory: ")
+  (message "Wait 30 seconds…")
   (setf *sources* directory)
   (file-cache-add-directory-recursively *sources* ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|rb\\|logs\\|el\\)$")
   (setf *sources-cache* (sort (mapcar (function car) file-cache-alist) (function string<)))
