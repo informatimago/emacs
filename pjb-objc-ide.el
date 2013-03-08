@@ -112,14 +112,20 @@ formatter string, from the expression to be formatted.
                   (funcall type-match type)
                   (equal type-match type))
           (return formatter))
-     finally (return nil)))
-
+     finally (return (cond
+                       ((and (atom type) (char= ?* (last-char (ensure-string type))))
+                        (pjb-objc-ide--formatter-for-type (list (intern (butlast-char (ensure-string type))) '*)))
+                       ((and (listp type) (null (rest type)) (atom (first type))
+                              (char= ?* (last-char (ensure-string (first type)))))
+                        (pjb-objc-ide--formatter-for-type (list (intern (butlast-char (ensure-string (first type)))) '*)))
+                       (t
+                        nil)))))
 
 (assert (equal (mapcar 'pjb-objc-ide--formatter-for-type
                  '((NSInteger) (NSUInteter) (BOOL) (char) (char *) (const char *) (id)
                    (NSString *) (NSMutableString *) (NSDictionary *) (NSMutableArray *)
-                   (something *) (something)))
-               '("%d" nil "%d" "%c" "%s" "%s" "%@" "%@" "%@" "%@" "%@" nil nil)))
+                   (something *) (something) NSArray* (NSArray*)))
+               '("%d" nil "%d" "%c" "%s" "%s" "%@" "%@" "%@" "%@" "%@" nil nil "%@" "%@")))
 
 
 
@@ -129,7 +135,6 @@ formatter string, from the expression to be formatted.
 
 
 (defun pjb-objc-ide--process-method (processor &optional count)
-
   "Process method implementations.
 
 If `count' is negative then processes all the implementation methods
@@ -170,7 +175,15 @@ The excursion is saved while running `processor'.
   (insert (format "  /*** %s ***/ " *pjb-objc-ide--entry-log-tag*)))
 
 
-(defun pjb-objc-ide--add-method-entry-log (&optional count)
+(defun pjb-objc-ide--insert-method-entry-log (&optional count)
+    "Insert a logging statement at the entry of the objective-c method dumping the parameters.
+
+If `count' is negative then processes all the implementation methods
+from the point down to the end of the buffer, otherwise process the
+given number of methods (default 1).
+
+The excursion is saved.
+"
   (interactive "p")
   (let ((nil-types '()))
     (pjb-objc-ide--process-method
@@ -206,7 +219,15 @@ The excursion is saved while running `processor'.
 
 
 
-(defun pjb-objc-ide--add-method-return-log (&optional count)
+(defun pjb-objc-ide--insert-method-return-log (&optional count)
+      "Insert a logging statement before each return statement in the objective-c method dumping the returned result.
+
+If `count' is negative then processes all the implementation methods
+from the point down to the end of the buffer, otherwise process the
+given number of methods (default 1).
+
+The excursion is saved.
+"
   (interactive "p")
   (let ((nil-types '()))
     (pjb-objc-ide--process-method
@@ -251,7 +272,10 @@ The excursion is saved while running `processor'.
                           (insert (format "%s\", __PRETTY_FUNCTION__, %s"
                                           formatter
                                           (mapconcat (function pjb-objc-ide--princ-to-string) results  ", "))))
-                        (pushnew result-type nil-types :test (function equal))))
+                        (progn
+                          (insert (format "<%s>\", __PRETTY_FUNCTION__"
+                                          result-type))
+                          (pushnew result-type nil-types :test (function equal)))))
                   (insert ");\n")
                   (pjb-objc-ide--insert-tag) (insert (format "return %s;\n" result-variable)))
                 (goto-char mend)))))
