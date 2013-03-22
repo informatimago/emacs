@@ -76,21 +76,22 @@ The order matters, since invert-alist keeps the same order for the couples (valu
 
 
 (defun pjb-thi-other-file (fname)
-  (let* ((ftype (file-name-extension fname))
-	 (other-extensions (or (cdr (assoc ftype *implementation/header-map*))
-			       (cdr (assoc ftype *header/implementation-map*)))))
-    (if other-extensions
-	(loop
-	   named toggle
-	   for newext in other-extensions
-	   for newfile = (change-file-type fname newext)
-	   for buffer = (find-buffer-visiting newfile)
-	   do (cond
-		(buffer                  (return-from toggle buffer))
-		((file-exists-p newfile) (return-from toggle newfile)))
-	   finally (return-from toggle (file-name-nondirectory
-                                        (change-file-type fname (first other-extensions)))))
-	(error "File type not known (update `*implementation/header-map*')."))))
+  (when fname
+   (let* ((ftype (file-name-extension fname))
+          (other-extensions (or (cdr (assoc ftype *implementation/header-map*))
+                                (cdr (assoc ftype *header/implementation-map*)))))
+     (if other-extensions
+         (loop
+            named toggle
+            for newext in other-extensions
+            for newfile = (change-file-type fname newext)
+            for buffer = (find-buffer-visiting newfile)
+            do (cond
+                 (buffer                  (return-from toggle buffer))
+                 ((file-exists-p newfile) (return-from toggle newfile)))
+            finally (return-from toggle (file-name-nondirectory
+                                         (change-file-type fname (first other-extensions)))))
+         (error "File type not known (update `*implementation/header-map*').")))))
 
 
 (defun toggle-header/implementation ()
@@ -103,6 +104,8 @@ The order matters, since invert-alist keeps the same order for the couples (valu
       (string (find-file other)))))
 
 
+
+(defvar *shadow-directory-name* "shadow")
 
 (defvar *shadow-map* '()
   "

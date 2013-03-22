@@ -346,6 +346,19 @@ The excursion is saved.
 
 
 
+(defun insert-braces (&optional arg)
+  "Enclose following ARG sexps in braces.
+Leave point after open-paren.
+A negative ARG encloses the preceding ARG sexps instead.
+No argument is equivalent to zero: just insert `{}' and leave point between.
+If `parens-require-spaces' is non-nil, this command also inserts a space
+before and after, depending on the surrounding characters.
+If region is active, insert enclosing characters at region boundaries.
+
+This command assumes point is not in a string or comment."
+  (interactive "P")
+  (insert-pair arg ?\{ ?\}))
+
 
 (provide 'pjb-objc-ide)
 

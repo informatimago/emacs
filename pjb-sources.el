@@ -3435,7 +3435,7 @@ the FUNCTION can take."
 
 (defun directory-recursive-find-files-named (directory name)
   (split-string (shell-command-to-string (format "find %s -name %s -print0 | head -40"
-                                                 (shell-quote-argument directory)
+                                                 (shell-quote-argument (expand-file-name directory))
                                                  (shell-quote-argument name)))
                 "\0" t))
 
@@ -3443,16 +3443,27 @@ the FUNCTION can take."
 
 (require 'filecache)
 
+(defun remove-trailling-slashes (path)
+  (while (char= ?/ (aref path (1- (length path))))
+    (setf path (subseq path 0 (1- (length path)))))
+  (if (zerop (length path))
+      "/"
+      path))
+
 (defun set-sources (directory)
   (interactive "DSource directory: ")
   (message "Wait 30 seconds…")
-  (setf *sources* directory)
-  (file-cache-add-directory-recursively *sources* ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|rb\\|logs\\|el\\)$")
-  (setf *sources-cache* (sort (mapcar (function car) file-cache-alist) (function string<)))
-  (setf grep-find-command
-        (format "find %s \\( \\( -name build -o -name debug -o -name release -o -name .svn \\) -prune \\) -o -type f  \\(  -name \\*.h -o -name \\*.m -o -name \\*.mm -o -name \\*.c -name \\*.hh -o -name \\*.hxx -o -name \\*.cc  -o -name \\*.cxx -o -name \\*.lisp -o -name \\*.rb -o -name \\*.logs \\) -print0 | xargs -0 grep -niH -e "
-                *sources*)
-        grep-host-defaults-alist nil))
+  (let ((directory (remove-trailling-slashes directory)))
+    (setf *sources* directory)
+    (file-cache-add-directory-recursively *sources* ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|rb\\|logs\\|el\\)$")
+    (setf *sources-cache* (sort (mapcar (function car) file-cache-alist) (function string<)))
+    (let ((directory (expand-file-name directory)))
+      (set-shadow-map (list (cons (format "%s/" directory)
+                                  (format "%s%s/" (file-name-directory directory) *shadow-directory-name*)))))
+    (setf grep-find-command
+          (format "find %s \\( \\( -name build -o -name debug -o -name release -o -name .svn \\) -prune \\) -o -type f  \\(  -name \\*.h -o -name \\*.m -o -name \\*.mm -o -name \\*.c -name \\*.hh -o -name \\*.hxx -o -name \\*.cc  -o -name \\*.cxx -o -name \\*.lisp -o -name \\*.rb -o -name \\*.logs \\) -print0 | xargs -0 grep -niH -e "
+                  *sources*)
+          grep-host-defaults-alist nil)))
 
 (defun sources-find-file-named (name)
   (interactive (list
