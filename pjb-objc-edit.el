@@ -198,6 +198,7 @@ position is (member :prefix :infix :suffix)
 
 (defun pjb-objc-edit-insert-special-character (n)
   (interactive "P")
+  (error "Not implemented yet")
   (cond
     ((listp n)    (self-insert-command n))
     ((integerp n) (self-insert-command n))
@@ -281,18 +282,6 @@ position is (member :prefix :infix :suffix)
   )
 
 
-(defun pjb-objc-edit-meat ()
-  (interactive)
-  (local-set-key (kbd "C-M-f") 'pjb-objc-edit-forward-sexp)
-  (local-set-key (kbd "C-M-b") 'pjb-objc-edit-backward-sexp)
-  (local-set-key (kbd "C-c C-o C-f") 'pjb-objc-edit-forward-sexp)
-  (local-set-key (kbd "C-c C-o C-b") 'pjb-objc-edit-backward-sexp)
-  (local-set-key (kbd "C-c C-o s")   'pjb-objc-kill-ring-save-selector)
-  (local-set-key (kbd "C-c C-o c")   'pjb-objc-ide-find-superclass-file)
-  (local-set-key (kbd "C-c C-o u")   'pjb-objc-ide-beginning-of-class)
-  (pjb-objc-edit-add-font-lock-keywords))
-
-
 
 (defun pjb-objc-edit-convert-snail-to-camel (start end)
   (interactive "r")
@@ -309,6 +298,27 @@ position is (member :prefix :infix :suffix)
      (let ((ch1 (match-string 1))
            (ch2 (match-string 2)))
        (replace-match (format "%s_%s" ch1 (string-downcase ch2)) t t)))))
+
+
+(defun pjb-objc-edit-meat ()
+  (interactive)
+ 
+  (local-set-key (kbd "C-c C-o C-f") 'pjb-objc-edit-forward-sexp)
+  (local-set-key (kbd "C-M-f")       'pjb-objc-edit-forward-sexp)
+  (local-set-key (kbd "C-c C-o C-b") 'pjb-objc-edit-backward-sexp)
+  (local-set-key (kbd "C-M-b")       'pjb-objc-edit-backward-sexp)
+  
+  (local-set-key (kbd "C-c C-o k")   'pjb-objc-edit-convert-snail-to-camel)
+  (local-set-key (kbd "C-c C-o _")   'pjb-objc-edit-convert-camel-to-snail)
+  
+  (local-set-key (kbd "C-c C-o c")   'pjb-objc-ide-find-superclass-file)
+
+  (local-set-key (kbd "C-c C-o u")   'pjb-objc-ide-beginning-of-class)
+  (local-set-key (kbd "C-c C-o s")   'pjb-objc-kill-ring-save-selector)
+  
+  (pjb-objc-edit-add-font-lock-keywords))
+
+(global-set-key (kbd "C-c C-x C-f") 'sources-find-file-named)
 
 
 (provide 'pjb-objc-edit)
