@@ -46,21 +46,23 @@
 
 (defparameter *world-factbook-base* "/rest/mirrors/cia-factbook")
 
-(pjb-defclass Country ()
-  (:att name                    string "Name of this country.")
-   (:att GDP                     number "Gross Domestic Product.")
-   (:att GDP-per-capita          number "Gross Domestic Product per Capita.")
-   (:att budget-revenues         number "Budget revenues.")
-   (:att budget-expenditures     number "Budget expenditures.")
-   (:att inflation-rate          number "Inflation Rate.")
-   (:att unemployment-rate       number "Unemployment Rate.")
-   (:att population              number "Population.")
-   (:att life-expectancy-both    number "Life Expectancy (both).")
-   (:att life-expectancy-male    number "Life Expectancy (male).")
-   (:att life-expectancy-female  number "Life Expectancy (female).")
-   (:att mil-expenditure-dollar  number "Military expenditures - dollar figure")
-   (:att mil-expenditure-per-GDP number "Military expenditures - percent of GDP")
-   (:doc "Data about a country."))
+
+(defclass Country ()
+  ((name :accessor name :initarg :name :type string :documentation "Name of this country.")
+   (GDP :accessor GDP :initarg :GDP :type number :initform 0 :documentation "Gross Domestic Product.")
+   (GDP-per-capita :accessor GDP-per-capita :initarg :GDP-per-capita :type number :initform 0 :documentation "Gross Domestic Product per Capita.")
+   (budget-revenues :accessor budget-revenues :initarg :budget-revenues :type number :initform 0 :documentation "Budget revenues.")
+   (budget-expenditures :accessor budget-expenditures :initarg :budget-expenditures :type number :initform 0 :documentation "Budget expenditures.")
+   (inflation-rate :accessor inflation-rate :initarg :inflation-rate :type number :initform 0 :documentation "Inflation Rate.")
+   (unemployment-rate :accessor unemployment-rate :initarg :unemployment-rate :type number :initform 0 :documentation "Unemployment Rate.")
+   (population :accessor population :initarg :population :type number :initform 0 :documentation "Population.")
+   (life-expectancy-both :accessor life-expectancy-both :initarg :life-expectancy-both :type number :initform 0 :documentation "Life Expectancy (both).")
+   (life-expectancy-male :accessor life-expectancy-male :initarg :life-expectancy-male :type number :initform 0 :documentation "Life Expectancy (male).")
+   (life-expectancy-female :accessor life-expectancy-female :initarg :life-expectancy-female :type number :initform 0 :documentation "Life Expectancy (female).")
+   (mil-expenditure-dollar :accessor mil-expenditure-dollar :initarg :mil-expenditure-dollar :type number :initform 0 :documentation "Military expenditures - dollar figure")
+   (mil-expenditure-per-GDP :accessor mil-expenditure-per-GDP :initarg :mil-expenditure-per-GDP :type number :initform 0 :documentation "Military expenditures - percent of GDP"))
+  (:documentation "Data about a country."))
+
 
 
 (defmethod budget-deficit ((self Country))
@@ -70,8 +72,6 @@ RETURN:  The budget-deficit if it's known or else nil.
   (if (and (budget-revenues self) (budget-expenditures self))
     (- (budget-revenues self) (budget-expenditures self))
     nil))
-
-
 
 
 

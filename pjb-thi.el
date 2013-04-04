@@ -105,6 +105,8 @@ The order matters, since invert-alist keeps the same order for the couples (valu
 
 
 
+(defvar *shadow-directory-name* "shadow")
+
 (defvar *shadow-map* '()
   "
 An a-list mapping source directories to shadow directories.
