@@ -35,6 +35,7 @@
 (require 'cl)
 (require 'cc-mode)
 (require 'semantic)
+(require 'pjb-objc-ide)
 
 (defparameter pjb-objc-edit--*c++-operators*
   '((1 :left-to-right                     ;  highest
@@ -300,23 +301,115 @@ position is (member :prefix :infix :suffix)
        (replace-match (format "%s_%s" ch1 (string-downcase ch2)) t t)))))
 
 
+(defun pjb-objc-edit-electric-bracket-close ()
+  (interactive)
+  (let ((pt (point)))
+    (backward-sexp 2)
+    (insert "[")
+    (goto-char (1+ pt))
+    (insert "]")))
+
+(defun pjb-objc-edit-space-for-delimiter-p (endp delimiter)
+  (let ((result
+         (let ((one-before (- (point) 1)))
+           (not (and (not endp)
+                     (<= (point-min) one-before)
+                     (cond
+                       ((char= ?\" delimiter)
+                        (string= "@" (buffer-substring one-before (point))))
+                       ((find delimiter "(){}[]")
+                        (not (find (aref (buffer-substring one-before (point)) 0)
+                                   ",(){}[]")))
+                       (t nil)))))))
+    (message "%s(%c) -> %s" 'pjb-objc-edit-space-for-delimiter-p delimiter result)
+    result))
+
+(defun pjb-objc-edit-doublequote (&optional n)
+  (interactive "P")
+  (let ((paredit-space-for-delimiter-predicates '(pjb-objc-edit-space-for-delimiter-p)))
+    (paredit-doublequote n)))
+
+(setf (get 'pjb-objc-edit-define-wrapper 'lisp-indent-function) 2)
+(defmacro* pjb-objc-edit-define-wrapper (name paredit-function-name &body body)
+  (let ((closep (search "-close-" (symbol-name paredit-function-name)))
+        (lambda-list (help-function-arglist paredit-function-name)))
+    `(defun ,name ,lambda-list
+       ,(if (endp lambda-list) '(interactive) '(interactive "P"))
+       (let ((saved (list (symbol-function 'paredit-in-string-p)
+                          (symbol-function 'paredit-in-comment-p)))
+             (paredit-space-for-delimiter-predicates '(pjb-objc-edit-space-for-delimiter-p)))
+         (setf (symbol-function 'paredit-in-string-p)   (lambda () (save-excursion (in-string-p)))
+               (symbol-function 'paredit-in-comment-p)  (lambda () (save-excursion (c-in-comment-line-prefix-p))))
+         (unwind-protect
+              s(progn
+                ,(if (endp lambda-list)
+                     `(,paredit-function-name)
+                     `(apply (function ,paredit-function-name) ,@(set-difference lambda-list '(&optional &key))))
+                ,@body)
+           (setf (symbol-function 'paredit-in-string-p)   (first saved)
+                 (symbol-function 'paredit-in-comment-p)  (second saved)))))))
+
+(pjb-objc-edit-define-wrapper pjb-objc-edit-open-round           paredit-open-round   (&optional n))  
+(pjb-objc-edit-define-wrapper pjb-objc-edit-close-round          paredit-close-round) 
+(pjb-objc-edit-define-wrapper pjb-objc-edit-open-square          paredit-open-square) 
+(pjb-objc-edit-define-wrapper pjb-objc-edit-close-square         paredit-close-square)
+(pjb-objc-edit-define-wrapper pjb-objc-edit-open-curly           paredit-open-curly   
+  (backward-char 1)
+  (insert "\n") (c-indent-line-or-region)
+  (forward-char 1)
+  (insert "\n") (c-indent-line-or-region)
+  (insert "\n") (c-indent-line-or-region)
+  (previous-line) (c-indent-line-or-region))
+(pjb-objc-edit-define-wrapper pjb-objc-edit-close-curly          paredit-close-curly
+  (backward-char 1)
+  (insert "\n") (c-indent-line-or-region)
+  (forward-char 1)
+  (insert "\n") (c-indent-line-or-region))
+(pjb-objc-edit-define-wrapper pjb-objc-edit-close-curly          paredit-close-curly)
+(pjb-objc-edit-define-wrapper pjb-objc-edit-wrap-sexp            paredit-wrap-sexp)  
+(pjb-objc-edit-define-wrapper pjb-objc-edit-wrap-square          paredit-wrap-square)
+(pjb-objc-edit-define-wrapper pjb-objc-edit-wrap-curly           paredit-wrap-curly) 
+(pjb-objc-edit-define-wrapper pjb-objc-edit-backward-delete      paredit-backward-delete)
+(pjb-objc-edit-define-wrapper pjb-objc-edit-backward-kill-word   paredit-backward-kill-word)
+
+
 (defun pjb-objc-edit-meat ()
   (interactive)
- 
-  (local-set-key (kbd "C-c C-o C-f") 'pjb-objc-edit-forward-sexp)
-  (local-set-key (kbd "C-M-f")       'pjb-objc-edit-forward-sexp)
-  (local-set-key (kbd "C-c C-o C-b") 'pjb-objc-edit-backward-sexp)
-  (local-set-key (kbd "C-M-b")       'pjb-objc-edit-backward-sexp)
-  
-  (local-set-key (kbd "C-c C-o k")   'pjb-objc-edit-convert-snail-to-camel)
-  (local-set-key (kbd "C-c C-o _")   'pjb-objc-edit-convert-camel-to-snail)
-  
-  (local-set-key (kbd "C-c C-o c")   'pjb-objc-ide-find-superclass-file)
-
-  (local-set-key (kbd "C-c C-o u")   'pjb-objc-ide-beginning-of-class)
-  (local-set-key (kbd "C-c C-o s")   'pjb-objc-kill-ring-save-selector)
-  
+  (loop
+     for (command . keys)
+     in '((pjb-ide-insert-tag-comment           "C-c p")          
+          (paredit-forward-slurp-sexp           "C-<right>"   "A-<right>"   "A-f" "C-)")
+          (paredit-forward-barf-sexp            "C-<left>"    "A-<left>"    "A-g" "C-}")
+          (paredit-backward-slurp-sexp          "C-M-<right>" "A-s-<right>" "A-d" "C-(")
+          (paredit-backward-barf-sexp           "C-M-<left>"  "A-s-<left>"  "A-s" "C-{")
+          (paredit-splice-sexp-killing-backward "M-<up>")
+          (paredit-splice-sexp-killing-forward  "M-<down>")
+          (paredit-splice-sexp                  "M-s")
+          (pjb-objc-edit-doublequote            "\"")
+          (pjb-objc-edit-backward-delete        "DEL")
+          (pjb-objc-edit-backward-kill-word     "M-DEL")
+          (pjb-objc-edit-open-round             "(")
+          (pjb-objc-edit-close-round            ")")
+          (pjb-objc-edit-open-square            "[")
+          (pjb-objc-edit-close-square           "]") ; (pjb-objc-edit-electric-bracket-close "]")
+          (pjb-objc-edit-open-curly             "{")
+          (pjb-objc-edit-close-curly            "}")
+          (pjb-objc-edit-close-curly            "}")
+          (pjb-objc-edit-wrap-sexp              "M-(")
+          (pjb-objc-edit-wrap-square            "M-[")
+          (pjb-objc-edit-wrap-curly             "M-{")
+          (pjb-objc-edit-forward-sexp           "C-c C-o C-f" "C-M-f")
+          (pjb-objc-edit-backward-sexp          "C-c C-o C-b" "C-M-b")
+          (pjb-objc-edit-convert-snail-to-camel "C-c C-o k")
+          (pjb-objc-edit-convert-camel-to-snail "C-c C-o _")
+          (pjb-objc-ide-find-superclass-file    "C-c C-o c")
+          (pjb-objc-ide-beginning-of-class      "C-c C-o u")
+          (pjb-objc-kill-ring-save-selector     "C-c C-o s")
+          (sources-find-file-named              "C-c C-x C-f"))
+     do (loop for key in keys do (local-set-key (read-kbd-macro key) command)))
+  (auto-complete-mode 1)
   (pjb-objc-edit-add-font-lock-keywords))
+
 
 (global-set-key (kbd "C-c C-x C-f") 'sources-find-file-named)
 

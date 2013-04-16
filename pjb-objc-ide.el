@@ -360,5 +360,34 @@ This command assumes point is not in a string or comment."
   (insert-pair arg ?\{ ?\}))
 
 
+(defun pjb-ide-beginning-of-line-to-point ()
+  (buffer-substring (save-excursion
+                      (beginning-of-line)
+                      (point))
+                    (point)))
+
+(defun pjb-ide-tag-comment (tag)
+  (case tag
+     ((1)        "/*** PJB-DEBUG ***/")
+     ((-1)       "//*** PJB-DISABLED ***//")
+     (otherwise  "/*** PJB ***/")))
+
+(defun pjb-ide-insert-tag-comment (&optional tag)
+  (interactive "p")
+  (let ((tag   (or tag 0)))
+    (unless (string= "" (string-trim " \t" (pjb-ide-beginning-of-line-to-point)))
+      (insert "\n"))
+    (if (region-active-p)
+        (let ((start (region-beginning))
+              (end   (region-end)))
+          (message  "tag=%S start=%S end=%S" tag start end)
+          (goto-char start)
+          (with-marker (end end)
+            (while (< (point) end)
+              (insert (pjb-ide-tag-comment tag))
+              (beginning-of-line 2))))
+        (insert (pjb-ide-tag-comment tag)))))
+
+
 (provide 'pjb-objc-ide)
 

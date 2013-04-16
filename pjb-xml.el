@@ -197,3 +197,4 @@ children is a list of strings or sexp representing a XML tree.
 
 
 
+(provide 'pjb-xml)
