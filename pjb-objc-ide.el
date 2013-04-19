@@ -168,8 +168,6 @@ The excursion is saved while running `processor'.
            (return))))
 
 
-
-
 (defun pjb-objc-ide--insert-tag ()
   "Insert a tag comment on a newline."
   (insert (format "  /*** %s ***/ " *pjb-objc-ide--entry-log-tag*)))
@@ -193,7 +191,8 @@ The excursion is saved.
        (pjb-objc-ide--insert-tag)
        (insert (format "%s(@\"%%s" *pjb-objc-ide--nslog-function*))
        (let ((formatter-parameters '()))
-         (dolist (param (pjb-objc-method-signature-parameters signature))
+         (dolist (param (cons (pjb-objc-parameter :name 'self :type '(id))
+                              (pjb-objc-method-signature-parameters signature)))
            (let* ((type      (pjb-objc-parameter-type param))
                   (formatter (pjb-objc-ide--formatter-for-type type)))
              (if formatter
