@@ -1,4 +1,4 @@
-;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8;lexical-binding:t -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-sources.el
 ;;;;LANGUAGE:           emacs lisp
@@ -62,8 +62,6 @@
 
 
 ;; egrep 'defun|defmacro' pjb-sources.el|sed -e 's/(def\(un\|macro\) /;; /'
-
-;; pjb-find (item seq &rest cl-keys)
 
 ;; upcase-lisp-region (start end)
 ;; upcase-lisp ()
@@ -138,82 +136,6 @@ nExperience Ratio [0.0,1.0]: ")
        (format "   person day per class       %6.1f\n" person-day-per-class)
        (format "   total person days:         %6d\n" total-person-days)
        (format "   total months:              %6d\n" total-months)))))
-
-
-;; ------------------------------------------------------------------------
-
-
-;; TODO: move this to pjb-cl or somewhere...
-(defun pjb-find (item seq &rest cl-keys)
-  "
-DO:     Like Common-Lisp find, but we cannot use find from 'cl because
-        Common-Lisp does not specify which of the item and of the seq element
-        is passed first or second argument of test...
-        This one specify that item is passed as first argument and the
-        key from the seq as second element.
-        Common-Lisp does not specify either what happens when both 
-        :test and :test-not are given.
-        If both are given, this function calls both as in:
-         (if (and (test item key) (not (test-not item key))) :found :not-found)
-        Common-Lisp does not specify what test is done when :test and 
-        :test-not are not specified.
-        This function specify that the default for :test is (equal item key)
-        and the default for :test-not is no test.
-
-        The element tested are (elt seq :start), (elt seq (+ :start 1))
-        ... (elt seq (- :end 2)) (elt seq (- :end 1)).
-        The default for :start is 0 and for :end is (length seq).
-        (Note that Common-Lisp specifies as default for :end nil, but this
-        is not compatible with the definition of _bounded_ which ask for 
-        a numerical index!)
-"
-  (cl-parsing-keywords (:test :test-not :key (:start 0) :end :from-end) ()
-    (setf cl-key  (or cl-key (function identity)))
-    (flet ((found (item key) nil))
-      (if cl-test
-          (if cl-test-not 
-              (fset 'found (lambda (item key) 
-                             (and (funcall cl-test item key)
-                                  (not (funcall cl-test-not item key)))))
-              (fset 'found cl-test))
-          (if cl-test-not
-              (fset 'found (lambda (item key) (not (funcall cl-test item key))))
-              (fset 'found (function equal))))
-      (setf cl-end (or cl-end (length seq)))
-      ;;(show item seq cl-test cl-test-not cl-key cl-start cl-end cl-from-end)
-      (if cl-from-end
-          ;; loop does not specifies that loop variables are available in
-          ;; finally, so it's quite useless too.
-          ;; TODO: In case of consp, work on (nreverse (subseq seq start end))
-          (do ((i (1- cl-end) (1- i))
-               (element)
-               (key)
-               (result nil))
-              ((or result (< i cl-start)) result)
-            (setf element (elt seq i))
-            (setf key (funcall cl-key element))
-            (when (found item key) (setq result element)))
-          (if (consp seq)
-              (progn
-                (do ((i 0 (1+ i)))
-                    ((<= cl-start i))
-                  (setf seq (cdr seq)))
-                (do* ((i cl-start (1+ i))
-                      (elements seq (cdr elements))
-                      (element (car elements) (car elements))
-                      (key (funcall cl-key element) (funcall cl-key element)))
-                     ((or (<= cl-end i) (endp elements) (found item key)) 
-                      (if (or (<= cl-end i) (endp elements)) nil element))
-                  ))
-              (do ((i cl-start (1+ i))
-                   (element)
-                   (key)
-                   (result nil))
-                  ((or result (<= cl-end i)) result)
-                (setf element (elt seq i))
-                (setf key (funcall cl-key element))
-                (printf "%s %s %s %s \n" i  element key (found item key))
-                (when (found item key) (setq result element))))))))
 
 
 ;; ------------------------------------------------------------------------
@@ -356,11 +278,8 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
 
 
 (defun header-comment-description-for-mode (mode)
-  (pjb-find mode *header-comment-descriptions* 
-            :key  (function hcd-major-modes)
-            :test (lambda (item key)
-                      (member* item key :test (function eq)))))
-
+  (find-if (lambda (entry) (member* mode (hcd-major-modes entry) :test (function eq)))
+           *header-comment-descriptions*))
 
 
 (defun random-case-region (start end)
@@ -980,7 +899,7 @@ NOTE:   All positions are kept in markers, so modifying the buffer between
     (funcall *map-sexps-function* sexp start end))
   (setq *map-sexps-top-level* nil))
 
-(defun new-map-sexps (source-file fun &rest cl-keys)
+(defun* new-map-sexps (source-file fun &key (deeply t) (atoms nil))
    "
 DO:     Scan all sexps in the source file. 
         (skipping spaces and comment between top-level sexps).
@@ -998,13 +917,9 @@ KEYS:   :deeply   (boolean,  default nil)
 NOTE:   Scanning stops as soon as an error is detected by forward-sexp.
 RETURN: The list of results from fun.
 "
-  (cl-parsing-keywords ((:deeply   t)
-                        (:atoms    nil)) nil
-    
-    
-    ))
+   (error "Not implemented yet."))
 
-(defun new-map-sexps (source-file fun &rest cl-keys)
+(defun* new-map-sexps (source-file fun &key (deeply t) (atoms nil))
    "
 DO:     Scan all sexps in the source file. 
         (skipping spaces and comment between top-level sexps).
@@ -1022,16 +937,12 @@ KEYS:   :deeply   (boolean,  default nil)
 NOTE:   Scanning stops as soon as an error is detected by forward-sexp.
 RETURN: The list of results from fun.
 "
-  (cl-parsing-keywords ((:deeply   t)
-                        (:atoms    nil)) nil
-    
-    `(source-text:map-source-file ,fun ,source-file
-                                 :deeply ,cl-deeply
-                                 :atoms ,cl-atoms)
-    
-    ))
+   (error "Not implemented yet.")
+   `(source-text:map-source-file ,fun ,source-file
+                                 :deeply ,deeply
+                                 :atoms ,atoms))
 
-(defun map-sexps (source-file fun &rest cl-keys)
+(defun* map-sexps (source-file fun &key (deeply t) (atoms nil))
   "
 DO:     Scan all sexps in the source file. 
         (skipping spaces and comment between top-level sexps).
@@ -1050,29 +961,27 @@ NOTE:   Scanning stops as soon as an error is detected by forward-sexp.
 RETURN: The list of results from fun.
 "
   (error "Doesn't work, need re-implementation; see new-map-sexps.")
-  (cl-parsing-keywords ((:deeply   nil)
-                        (:atoms    nil)) ()
-    (message "map-sexps deeply %S  atoms %S" cl-deeply cl-atoms)
-    (save-excursion
-      (save-restriction
-        (let ((old-buffer            (current-buffer))
-              (existing-buffer       (buffer-named source-file))
-              (*map-sexps-deeply*    cl-deeply)
-              (*map-sexps-atoms*     cl-atoms)
-              (*map-sexps-top-level* t)
-              (*map-sexps-function*  fun)
-              last-bosexp)
-          (if existing-buffer
-              (switch-to-buffer existing-buffer)
-              (find-file source-file))
-          (widen)
-          (goto-char (point-min))
-          (while (< (point) (point-max))
-            (setq *map-sexps-top-level* t)
-            (walk-sexps (function map-sexps-filter)))
-          (if existing-buffer
-              (switch-to-buffer old-buffer)
-              (kill-buffer (current-buffer))))))))
+  (message "map-sexps deeply %S  atoms %S" cl-deeply cl-atoms)
+  (save-excursion
+    (save-restriction
+      (let ((old-buffer            (current-buffer))
+            (existing-buffer       (buffer-named source-file))
+            (*map-sexps-deeply*    cl-deeply)
+            (*map-sexps-atoms*     cl-atoms)
+            (*map-sexps-top-level* t)
+            (*map-sexps-function*  fun)
+            last-bosexp)
+        (if existing-buffer
+            (switch-to-buffer existing-buffer)
+            (find-file source-file))
+        (widen)
+        (goto-char (point-min))
+        (while (< (point) (point-max))
+          (setq *map-sexps-top-level* t)
+          (walk-sexps (function map-sexps-filter)))
+        (if existing-buffer
+            (switch-to-buffer old-buffer)
+            (kill-buffer (current-buffer)))))))
 
 
 (defun old-old-map-sexps (source-file fun)
@@ -1138,7 +1047,9 @@ RETURN: The list of results from fun.
 ;; selector function.
 ;;
 
-(defun get-sexps (source-file &rest cl-keys)
+(defun get-sexps (source-file &key (selector (function (lambda (s) t))) 
+                                (deeply   nil)
+                                (atoms    nil))
   "
 KEYS:    :selector (function: sexp --> boolean, default: (lambda (s) t))
          :deeply   (boolean,  default nil)
@@ -1153,17 +1064,14 @@ NOTE:    Scanning stops as soon as an error is detected by forward-sexp.
 RETURN:  A list of selected sexp.
 "
   (save-excursion
-    (cl-parsing-keywords ((:selector (function (lambda (s) t))) 
-                          (:deeply   nil)
-                          (:atoms    nil)) nil
-      (let ((get-sexps-result '()))
-        (map-sexps 
-         source-file 
-         (lambda (sexp start end)
-           (when (funcall cl-selector sexp)
-             (push sexp get-sexps-result)))
-         :deeply cl-deeply :atoms cl-atoms)
-        (nreverse get-sexps-result)))))
+    (let ((get-sexps-result '()))
+      (map-sexps 
+       source-file 
+       (lambda (sexp start end)
+         (when (funcall selector sexp)
+           (push sexp get-sexps-result)))
+       :deeply deeply :atoms atoms)
+      (nreverse get-sexps-result))))
 
 
 ;;; (show
@@ -1266,7 +1174,7 @@ RETURN:  A list of selected sexp.
 ;;;    (WRITE (QUOTE ~S )))"
 
 
-(defun replace-sexps (source-file transformer &rest cl-keys)
+(defun* replace-sexps (source-file transformer &key (deeply nil) (atoms nil))
   "
 DO:             Scan all sexp in the source-file.
                 Each sexps is given to the transformer function whose result 
@@ -1284,20 +1192,18 @@ transformer:    A function sexp --> sexp.
                 replaced by the returned sexp.  
 NOTE:           For now, no pretty-printing is done.
 "
-  (cl-parsing-keywords ((:deeply   nil)
-                        (:atoms    nil)) nil
-    (map-sexps 
-     source-file 
-     (lambda (sexp start end)
-       (let ((replacement (funcall transformer sexp)))
-         (unless (eq replacement sexp)
-           (delete-region start end)
-           (insert (let ((print-escape-newlines t)
-                         (print-level nil)
-                         (print-circle nil)
-                         (print-length nil)) (format "%S" replacement)))
-           (set-marker end (point)))))
-     :deeply cl-deeply :atoms cl-atoms))
+  (map-sexps 
+   source-file 
+   (lambda (sexp start end)
+     (let ((replacement (funcall transformer sexp)))
+       (unless (eq replacement sexp)
+         (delete-region start end)
+         (insert (let ((print-escape-newlines t)
+                       (print-level nil)
+                       (print-circle nil)
+                       (print-length nil)) (format "%S" replacement)))
+         (set-marker end (point)))))
+   :deeply deeply :atoms atoms)
   nil)
 
 
@@ -1418,25 +1324,24 @@ NOTE:           For now, no pretty-printing is done.
 ;;
 
 
-(defun integer-to-bool-list (n &rest cl-keys)
+(defun integer-to-bool-list (n &key length)
   "
 PRE:     n>=0
 RETURN:  The list of the binary digits of n, from the least significant.
 "
-  (cl-parsing-keywords (:length) nil
-    (unless (integerp n)
-      (error "Argument must be integer, not %S." n))
-    (when (< n 0) 
-      (setq n (abs n)))
-    (if cl-length
-        (loop for m = n then (/ m 2)
-           for i from 0 below cl-length
-           collect (/= 0 (mod m 2)) into digits
-           finally return digits)
-        (loop for m = n then (/ m 2)
-           while (< 0 m)
-           collect (/= 0 (mod m 2)) into digits
-           finally return digits))))
+  (unless (integerp n)
+    (error "Argument must be integer, not %S." n))
+  (when (< n 0) 
+    (setq n (abs n)))
+  (if length
+      (loop for m = n then (/ m 2)
+         for i from 0 below length
+         collect (/= 0 (mod m 2)) into digits
+         finally return digits)
+      (loop for m = n then (/ m 2)
+         while (< 0 m)
+         collect (/= 0 (mod m 2)) into digits
+         finally return digits)))
 
 
 ;;; (insert (karnaugh '(a b c d e) 
@@ -2411,12 +2316,11 @@ DO:         Assuming there's already a header with a LEGAL section,
          (author-abrev   *pjb-sources-initials*)
          (author         (or add-log-full-name (user-full-name)))
          (email          user-mail-address)
-         (year           (elt (MULTIPLE-VALUE-LIST (GET-DECODED-TIME)) 5))
+         (year           (nth 2 (calendar-current-date)))
          (line-length    78)
          lic-data
          start end
-         (copyrights '())
-         )
+         (copyrights '()))
     (unless data
       (error "Don't know how to handle this major mode %S." major-mode))
     (setq lic-data (cdr (assoc license pjb-sources-licenses)))
@@ -2449,7 +2353,7 @@ DO:         Assuming there's already a header with a LEGAL section,
         (delete-region start end)
         (pjb-insert-license  license lic-data copyrights
                              title-format comment-format))))
-  :changed)
+  :changed) 
 
 
 ;; ------------------------------------------------------------------------

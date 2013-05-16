@@ -57,7 +57,7 @@ RETURN: A new string containing the characters in char-list.
         (i 0))
     (dolist (char char-list)
       (aset result i char)
-      (setq i (1+ i)))
+      (setf i (1+ i)))
     result))
 
 
@@ -130,7 +130,7 @@ SEE-ALSO: string-position."
 ;;        (target (cond ((characterp char) char)
 ;;                      ((stringp char) (string-to-char char))
 ;;                         "Wrong type of argument: CHARACTERP, 2 (got: %S)" char))))))
-;;      (setq index (+ 1 index)))
+;;      (setf index (+ 1 index)))
 ;;        index
 ;;      nil)))
 
@@ -159,9 +159,9 @@ SEE-ALSO: string-index"
   "Does the inverse than split-string. If no separator is provided 
 then a simple space is used."
   (if (null separator)
-      (setq separator " ")
+      (setf separator " ")
       (if (= 1 (length separator))
-          (setq separator (car separator))
+          (setf separator (car separator))
           (error "unsplit-string: Too many separator arguments.")))
   (if (not (char-or-string-p separator))
       (error "unsplit-string: separator must be a string or a char."))
@@ -188,8 +188,8 @@ then a simple space is used."
 ;;;          (replace-length (length replace))
 ;;;     (while (< start max)
 ;;;           (progn
-;;;             (setq string (replace-match replace fixedcase literal  string))
-;;;             (setq max    (length string)))
+;;;             (setf string (replace-match replace fixedcase literal  string))
+;;;             (setf max    (length string)))
 ;;;   string
 ;;;   )
 
@@ -200,8 +200,8 @@ NOTE:   The default width is 72 characters, the default left-margin is 0.
         The width is counted from column 0.
         The word separators are those of split-string: [ \\f\\t\\n\\r\\v]+, which
         means that the string is justified as one paragraph."
-  (if (null width) (setq width 72))
-  (if (null left-margin) (setq left-margin 0))
+  (if (null width) (setf width 72))
+  (if (null left-margin) (setf left-margin 0))
   (if (not (stringp string)) 
       (error "string-justify-left: The first argument must be a string."))
   (if (not (and (integerp width) (integerp left-margin)))
@@ -216,20 +216,20 @@ NOTE:   The default width is 72 characters, the default left-margin is 0.
          (separator "")
          )
     (while splited
-      (setq word (car splited))
-      (setq splited (cdr splited))
-      (setq word-length (length word))
+      (setf word (car splited))
+      (setf splited (cdr splited))
+      (setf word-length (length word))
       (if (> word-length 0)
           (if (>= (+ col (length word)) width)
               (progn
-                (setq justified (concat justified "\n" margin word))
-                (setq col (+ left-margin word-length)))
+                (setf justified (concat justified "\n" margin word))
+                (setf col (+ left-margin word-length)))
               (progn
-                (setq justified (concat justified separator word))
-                (setq col (+ col 1 word-length)))))
-      (setq separator " "))
+                (setf justified (concat justified separator word))
+                (setf col (+ col 1 word-length)))))
+      (setf separator " "))
     (if (< col width)
-        (setq justified (concat justified (make-string (- width col) 32))))
+        (setf justified (concat justified (make-string (- width col) 32))))
     justified))
 
 
@@ -265,30 +265,6 @@ NOTE:   The default width is 72 characters, the default left-margin is 0.
 
 
 
-;;; (defmacro cl-parsing-keywords (kwords other-keys &rest body)
-;;;    'let*
-;;;    (cons (mapcar
-;;; 	  (function
-;;; 	   (lambda (x)
-;;; 		    (mem (list 'car (list 'cdr (list 'memq (list 'quote var)
-;;; 	       (if (eq var ':test-not)
-;;; 	       (if (eq var ':if-not)
-;;; 	       (list (intern
-;;; 		      (format "cl-%s" (substring (symbol-name var) 1)))
-;;; 	  kwords)
-;;; 	  (and (not (eq other-keys t))
-;;; 		(list 'let '((cl-keys-temp cl-keys))
-;;; 			    (list 'or (list 'memq '(car cl-keys-temp)
-;;; 						  (mapcar
-;;; 						   (function
-;;; 						    (lambda (x)
-;;; 							  (car x) x)))
-;;; 							   other-keys))))
-;;; 						   cl-keys)))
-;;; 					  (car cl-keys-temp)))
-;;; 	  body))))
-;;; (put 'cl-parsing-keywords 'edebug-form-spec '(sexp sexp &rest form))
-
 (defun copy-to-substring (src from-src to-src dst from-dst)
   "
 PRE:     (< (+ from-dst (- to-src from-src)) (length dst))
@@ -303,39 +279,38 @@ RETURN:  dst
 
 
 
-(defun string-pad (string length &rest cl-keys)
+(defun* string-pad (string length &key (padchar 32))
   "Append spaces before, after or at both end of string to pad it to length.
 RETURN: A padded string.
 "
   (let ((slen (length string)))
     (if (<= length slen)
         string
-        (cl-parsing-keywords ((:padchar 32))  t
-          (when (stringp cl-padchar) 
-            (setq cl-padchar (string-to-char cl-padchar)))
-          ;; (let ((result (make-string* length :initial-element cl-padchar)))
-          ;;   (cond
-          ;;     ((memq :right cl-keys)
-          ;;      (copy-to-substring string 0 (1- slen) 
-          ;;                         result (- length slen)))
-          ;;     ((memq :center cl-keys)
-          ;;      (copy-to-substring string 0 (1- slen) 
-          ;;                         result (/ (- length slen) 2)))
-          ;;     (t 
-          ;;      (copy-to-substring string 0 (1- slen) result 0))))
-          (cond
-            ((memq :right cl-keys)
-             (concat string
-                     (make-string (- length slen) cl-padchar)))
-            ((memq :center cl-keys)
-             (let* ((left  (/ (- length slen) 2))
-                    (right (- (- length slen) left)))
-               (concat (make-string left cl-padchar)
-                       string
-                       (make-string right cl-padchar))))
-            (t
-             (concat (make-string (- length slen) cl-padchar)
-                     string)))))))
+        (when (stringp padchar) 
+          (setf padchar (string-to-char padchar)))
+        ;; (let ((result (make-string* length :initial-element padchar)))
+        ;;   (cond
+        ;;     ((memq :right keys)
+        ;;      (copy-to-substring string 0 (1- slen) 
+        ;;                         result (- length slen)))
+        ;;     ((memq :center keys)
+        ;;      (copy-to-substring string 0 (1- slen) 
+        ;;                         result (/ (- length slen) 2)))
+        ;;     (t 
+        ;;      (copy-to-substring string 0 (1- slen) result 0))))
+        (cond
+          ((memq :right keys)
+           (concat string
+                   (make-string (- length slen) padchar)))
+          ((memq :center keys)
+           (let* ((left  (/ (- length slen) 2))
+                  (right (- (- length slen) left)))
+             (concat (make-string left padchar)
+                     string
+                     (make-string right padchar))))
+          (t
+           (concat (make-string (- length slen) padchar)
+                   string))))))
 
 
 (defun chop-spaces-old (string)
@@ -344,15 +319,15 @@ RETURN: A padded string.
         (l (1- (length string)))
         (space 32))
     (while (and (< 0 l) (eq (aref string l) space))
-      (setq l (1- l)))
-    (setq l (1+ l))
+      (setf l (1- l)))
+    (setf l (1+ l))
     (while (and (< i l) (eq (aref string i) space))
-      (setq i (1+ i)))
+      (setf i (1+ i)))
     (substring string i l)))
 
 
 
-(defun chop (string &rest cl-keys) 
+(defun* chop (string &key (characters (list (character " ")))) 
   "
 RETURN: A substring of string from which the characters in the set  of
         :characters (only space by default) are removed from left and
@@ -362,24 +337,22 @@ NOTE:   The argument passed with :characters can be a list of characters
         or a string.
 "
   (if string
-      (cl-parsing-keywords ((:characters (list (character " ")))) t
-        (let ((cl-right (not (member :only-left  cl-keys)))
-              (cl-left  (not (member :only-right cl-keys))))
-          (when (stringp cl-characters)
-            (setq cl-characters (string-to-list cl-characters)))
-          (let ((from 0)
-                (to   (1- (length string))))
-            (when cl-right
-              (loop while (and (<= 0 to)
-                               (member (aref string to) cl-characters))
-                 do (setq to (1- to))))
-            (when cl-left
-              (loop while (and (<= from to)
-                               (member (aref string from) cl-characters))
-                 do (setq from (1+ from))))
-            (if (<= from to)
-                (subseq string from (1+ to)) "")
-            )))
+      (let ((right (not (member :only-left  keys)))
+            (left  (not (member :only-right keys))))
+        (when (stringp characters)
+          (setf characters (string-to-list characters)))
+        (let ((from 0)
+              (to   (1- (length string))))
+          (when right
+            (loop while (and (<= 0 to)
+                             (member (aref string to) characters))
+               do (setf to (1- to))))
+          (when left
+            (loop while (and (<= from to)
+                             (member (aref string from) characters))
+               do (setf from (1+ from))))
+          (if (<= from to)
+              (subseq string from (1+ to)) "")))
       nil))
 
 
@@ -431,7 +404,7 @@ OPTIONS can contain :ignore-case in which case the case string and prefix
       nil
       (let ((mstring string))
         (if (member :ignore-case options) 
-            (setq mstring (upcase string)
+            (setf mstring (upcase string)
                   prefix  (upcase prefix)))
       
         (if (and (<= (length prefix) (length mstring))
@@ -439,7 +412,7 @@ OPTIONS can contain :ignore-case in which case the case string and prefix
             (substring string (length prefix))
             nil))))
 
-(defalias 'string-prefix-p 'chop-prefix)
+(defalias 'pjb-string-prefix-p 'chop-prefix)
 
 
 
@@ -448,7 +421,7 @@ OPTIONS can contain :ignore-case in which case the case string and prefix
 
 
 (defun make-iso-latin-1-approximation ()
-  (setq iso-latin-1-approximation (make-vector 256 0))
+  (setf iso-latin-1-approximation (make-vector 256 0))
   (loop for i from 0 to 127 
      do (aset iso-latin-1-approximation i i))
   (loop for i from 128 below 160 
@@ -482,7 +455,7 @@ DO:     replace in string all accented characters with an unaccented version.
 (defmacro deftranslation (table string language translated-string)
   `(progn
      (unless (and (boundp (quote ,table)) ,table)
-       (setq ,table (make-vector 7 0)))
+       (setf ,table (make-vector 7 0)))
      (put (intern ,string ,table)
           ,language 
           (if (eq ,translated-string :idem) ,string ,translated-string))))
@@ -544,7 +517,6 @@ RETURN:  Whether PREFIX is a prefix of the STRING.
 ;; This is for Emacs.
 ;; Local Variables:
 ;; eval: (put 'deftranslation 'lisp-indent-function 2)
-;; eval: (put 'cl-parsing-keywords 'lisp-indent-function 2)
 ;; End:
 
 ;;;; pjb-strings.el                   --                     --          ;;;;

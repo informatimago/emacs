@@ -625,7 +625,10 @@ IMPLEMENTATION: Since we make vector of vectors, there's no other limit than
 available memory.")
 
 
-(defun make-array (dimensions &rest cl-keys)
+(defun* make-array (dimensions &keys element-type initial-element
+                               initial-contents adjustable
+                               fill-pointer displaced-to
+                               displaced-index-offset)
   "Common-Lisp: Creates and returns an array constructed of the most \
 specialized type that can accommodate elements of type given by element-type. \
 If dimensions is nil then a zero-dimensional array is created.
@@ -638,59 +641,56 @@ NOTE:   :element-type is ignored.
         :displaced-index-offset is not supported.
 "
   (when (numberp dimensions) (setq dimensions (list dimensions)))
-  (cl-parsing-keywords (:element-type :initial-element :initial-contents
-                                      :adjustable  :fill-pointer :displaced-to
-                                      :displaced-index-offset) nil
-    (when (and cl-displaced-to (or cl-initial-element cl-initial-contents))
-      (error (concatenate 'string
-               ":displaced-to must not be specified along with "
-               ":initial-element or :initial-contents.")))
-    (when (and cl-initial-element (or cl-displaced-to cl-initial-contents))
-      (error (concatenate 'string
-               ":initial-element must not be specified along with "
-               " or :displaced-to :initial-contents.")))
-    (when (and cl-displaced-index-offset (null cl-displaced-to))
-      (error (concatenate 'string
-               ":displaced-index-offset must not be specified "
-               "without :displaced-to.")))
-    (when (and cl-fill-pointer (/= 1 (length dimensions)))
-      (error (concatenate 'string
-               ":fill-pointer can only be specified for vectors "
-               " (uni-dimensional arrays).")))
-    (when cl-fill-pointer
-      (error "fill-pointers not implemented. Sorry."))
-    (when cl-displaced-to
-      (error "displaced-to arrays are not implemented. Sorry."))
-    (cond
-      ((null dimensions)
-       (error "a-dimensional arrays are not implemented. Sorry."))
-      (cl-initial-contents
-       (if  (= 1 (length dimensions))
-            (loop with result = (make-vector (car dimensions) cl-initial-element)
-               for i from 0 below (length cl-initial-contents)
-               do (setf (aref result i) (elt cl-initial-contents i))
-               finally return result)
-            (loop with result = (make-vector (car dimensions) cl-initial-element)
-               for i from 0 below (length cl-initial-contents)
-               do (setf (aref result i)
-                        (make-array (cdr dimensions)
-                                    :initial-contents (elt cl-initial-contents i)
-                                    :adjustable cl-adjustable
-                                    ;; the rest is not implemented.
-                                    ))
-               finally return result)))
-      (t ;; let's use cl-initial-element
-       (if (= 1 (length dimensions))
-           (make-vector (car dimensions) cl-initial-element)
-           (loop with result = (make-vector (car dimensions) cl-initial-element)
-              for i from 0 below (car dimensions)
-              do (setf (aref result i)
-                       (make-array (cdr dimensions)
-                                   :initial-element cl-initial-element
-                                   :adjustable cl-adjustable
-                                   ;; the rest is not implemented.
-                                   ))
-              finally return result))))))
+  (when (and displaced-to (or initial-element initial-contents))
+    (error (concatenate 'string
+             ":displaced-to must not be specified along with "
+             ":initial-element or :initial-contents.")))
+  (when (and initial-element (or displaced-to initial-contents))
+    (error (concatenate 'string
+             ":initial-element must not be specified along with "
+             " or :displaced-to :initial-contents.")))
+  (when (and displaced-index-offset (null displaced-to))
+    (error (concatenate 'string
+             ":displaced-index-offset must not be specified "
+             "without :displaced-to.")))
+  (when (and fill-pointer (/= 1 (length dimensions)))
+    (error (concatenate 'string
+             ":fill-pointer can only be specified for vectors "
+             " (uni-dimensional arrays).")))
+  (when fill-pointer
+    (error "fill-pointers not implemented. Sorry."))
+  (when displaced-to
+    (error "displaced-to arrays are not implemented. Sorry."))
+  (cond
+    ((null dimensions)
+     (error "a-dimensional arrays are not implemented. Sorry."))
+    (initial-contents
+     (if  (= 1 (length dimensions))
+          (loop with result = (make-vector (car dimensions) initial-element)
+             for i from 0 below (length initial-contents)
+             do (setf (aref result i) (elt initial-contents i))
+             finally return result)
+          (loop with result = (make-vector (car dimensions) initial-element)
+             for i from 0 below (length initial-contents)
+             do (setf (aref result i)
+                      (make-array (cdr dimensions)
+                                  :initial-contents (elt initial-contents i)
+                                  :adjustable adjustable
+                                  ;; the rest is not implemented.
+                                  ))
+             finally return result)))
+    (t ;; let's use initial-element
+     (if (= 1 (length dimensions))
+         (make-vector (car dimensions) initial-element)
+         (loop with result = (make-vector (car dimensions) initial-element)
+            for i from 0 below (car dimensions)
+            do (setf (aref result i)
+                     (make-array (cdr dimensions)
+                                 :initial-element initial-element
+                                 :adjustable adjustable
+                                 ;; the rest is not implemented.
+                                 ))
+            finally return result)))))
 
 
 (defun array-dimension (array axis-number)
@@ -991,11 +991,10 @@ DO:     [cltl2] string= compares two strings and is true if they are
   (not (apply 'string= string1 string2 cl-keys)))
 
 
-(defun make-string* (size &rest cl-keys)
+(defun* make-string* (size &key (initial-element 0) (element-type 'character))
   "Common-Lisp: MAKE-STRING takes a key :initial-element argument
 "
-  (cl-parsing-keywords ((:initial-element 0) (:element-type 'character)) nil
-    (make-string size cl-initial-element)))
+  (make-string size initial-element))
 
 
 (defun string-trim (character-bag string-designator)
@@ -1425,7 +1424,7 @@ RETURN:     (system-name)
 ;; --------------
 
 
-(defun directory (pathspec &rest cl-keys)
+(defun* directory (pathspec &key relative-paths)
   "Common-Lisp: Determines which, if any, files that are present in the \
 file system have names matching pathspec, and returns a fresh list of \
 pathnames corresponding to the truenames of those files.
@@ -1437,8 +1436,7 @@ NOTE:      this implementation accepts an :relative-paths  key
            that can be set to t to avoid forcing absolute paths result.
 URL:       http://www.informatimago.com/local/lisp/HyperSpec/Body/f_dir.htm
 "
-  (cl-parsing-keywords (:relative-paths ) t
-    (file-expand-wildcards pathspec (not cl-relative-paths))))
+  (file-expand-wildcards pathspec (not relative-paths)))
 
 
 (defun probe-file (pathspec)

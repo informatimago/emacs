@@ -1,6 +1,15 @@
 ;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 (require 'pjb-cl)
 
+;; With Emacs >= 24.1 do either
+;; 
+;; (split-window (frame-root-window))
+;; 
+;; or
+;; 
+;; (split-window (window-parent))
+
+
 ;; Some time ago I wrote some suggestions about how to rewrite
 ;; balance-windows to use the windows split tree. I have tried to do
 ;; that. The file bw.el at
@@ -210,6 +219,9 @@
         (split-or-window-top sow)
         (split-or-window-right sow)
         (split-or-window-bottom sow)))
+
+(defun* make-split-or-window (&key right bottom parent children direction)
+  (error "Not implemented yet."))
 
 (defvar *current-window*   (make-split-or-window  :right 42 :bottom 42))
 (defvar *frame-split-root* *current-window*)
@@ -581,16 +593,15 @@
 
 (defun more-than-one-p (set) (cdr set))
 (defun choose&extract (set) (values (first set) (rest set) set))
-(defun find&extract   (item set &rest cl-keys)
-  (cl-parsing-keywords ((:test (function eql)) (:key (function identity))) nil
-    (let ((index (position item set :test cl-test :key cl-key)))
-      (cond
-        ((null index)  (values nil set nil))
-        ((zerop index) (values (first set) (rest set) t))
-        (t             (values (nth index set)
-                               (delete-if (constantly t) set
-                                          :start index :end (1+ index))
-                               t))))))
+(defun* find&extract   (item set &key (test (function eql)))
+  (let ((index (position item set :test test :key key)))
+    (cond
+      ((null index)  (values nil set nil))
+      ((zerop index) (values (first set) (rest set) t))
+      (t             (values (nth index set)
+                             (delete-if (constantly t) set
+                                        :start index :end (1+ index))
+                             t)))))
                                          
 (defun make-chainlet    (list)   (cons list (last list)))
 (defun chainlet-list    (c) (car c))
