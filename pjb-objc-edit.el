@@ -338,10 +338,10 @@ position is (member :prefix :infix :suffix)
        (let ((saved (list (symbol-function 'paredit-in-string-p)
                           (symbol-function 'paredit-in-comment-p)))
              (paredit-space-for-delimiter-predicates '(pjb-objc-edit-space-for-delimiter-p)))
-         (setf (symbol-function 'paredit-in-string-p)   (lambda () (save-excursion (in-string-p)))
-               (symbol-function 'paredit-in-comment-p)  (lambda () (save-excursion (c-in-comment-line-prefix-p))))
+         (setf (symbol-function 'paredit-in-string-p)   (lambda (&rest ignored) (save-excursion (in-string-p)))
+               (symbol-function 'paredit-in-comment-p)  (lambda (&rest ignored) (save-excursion (c-in-comment-line-prefix-p))))
          (unwind-protect
-              s(progn
+              (progn
                 ,(if (endp lambda-list)
                      `(,paredit-function-name)
                      `(apply (function ,paredit-function-name) ,@(set-difference lambda-list '(&optional &key))))
@@ -349,7 +349,7 @@ position is (member :prefix :infix :suffix)
            (setf (symbol-function 'paredit-in-string-p)   (first saved)
                  (symbol-function 'paredit-in-comment-p)  (second saved)))))))
 
-(pjb-objc-edit-define-wrapper pjb-objc-edit-open-round           paredit-open-round   (&optional n))  
+(pjb-objc-edit-define-wrapper pjb-objc-edit-open-round           paredit-open-round)  
 (pjb-objc-edit-define-wrapper pjb-objc-edit-close-round          paredit-close-round) 
 (pjb-objc-edit-define-wrapper pjb-objc-edit-open-square          paredit-open-square) 
 (pjb-objc-edit-define-wrapper pjb-objc-edit-close-square         paredit-close-square)
