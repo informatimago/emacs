@@ -49,6 +49,7 @@
     (mapcar (lambda (entry) (cons (car entry) (nreverse (cdr entry))))
             new)))
 
+
 (defparameter *implementation/header-map*
   '(("m"    "h")
     ("c"    "h")
@@ -62,37 +63,107 @@ The order matters, since invert-alist keeps the same order for the couples (valu
 (defparameter *header/implementation-map* (invert-alist *implementation/header-map*)
   "A map of header file types to the corresponding implementation file types.")
 
+(defun set-implementation/header-map (new-implementation/header-map)
+  "Sets the `*implementation/header-map*', updating the `*header/implementation-map*' too."
+  (setf *implementation/header-map* new-implementation/header-map
+        *header/implementation-map* (invert-alist *implementation/header-map*))
+  *implementation/header-map*)
+
+
 
 (defun change-file-type (path type)
   (format "%s.%s" (file-name-sans-extension path) type))
 
 
+(defun pjb-thi-other-file (fname)
+  (when fname
+   (let* ((ftype (file-name-extension fname))
+          (other-extensions (or (cdr (assoc ftype *implementation/header-map*))
+                                (cdr (assoc ftype *header/implementation-map*)))))
+     (if other-extensions
+         (loop
+            named toggle
+            for newext in other-extensions
+            for newfile = (change-file-type fname newext)
+            for buffer = (find-buffer-visiting newfile)
+            do (cond
+                 (buffer                  (return-from toggle buffer))
+                 ((file-exists-p newfile) (return-from toggle newfile)))
+            finally (return-from toggle (file-name-nondirectory
+                                         (change-file-type fname (first other-extensions)))))
+         (error "File type not known (update `*implementation/header-map*').")))))
+
+
 (defun toggle-header/implementation ()
+  "Toggles between the header or the implementation file."
   (interactive)
   (let* ((fname (buffer-file-name (current-buffer)))
-	 (ftype (file-name-extension fname))
-	 (other-extensions (or (cdr (assoc ftype *implementation/header-map*))
-			       (cdr (assoc ftype *header/implementation-map*)))))
-    (if other-extensions
-	(loop
-	   named toggle
-	   for newext in other-extensions
-	   for newfile = (change-file-type fname newext)
-	   for buffer = (find-buffer-visiting newfile)
-	   do (cond
-		(buffer
-		 (switch-to-buffer buffer)
-		 (return-from toggle))
-		((file-exists-p newfile)
-		 (find-file newfile)
-		 (return-from toggle)))
-	   finally (switch-to-buffer (get-buffer-create
-				      (file-name-nondirectory
-				       (change-file-type fname (first other-extensions))))))
-	(error "File type not known (update `*implementation/header-map*')."))))
+         (other (pjb-thi-other-file fname)))
+    (typecase other
+      (buffer (switch-to-buffer other))
+      (string (find-file other)))))
 
-(global-set-key (kbd "C-c C-SPC") 'toggle-header/implementation)
+
+
+(defvar *shadow-directory-name* "shadow")
+
+(defvar *shadow-map* '()
+  "
+An a-list mapping source directories to shadow directories.
+  '((\"~/src/\" . \"~/shadow/\"))
+It's preferable to make it a bijection, otherwise the reverse map will
+select the first source.
+
+Set it using `set-shadow-map'.
+")
+
+(defparameter *inverse-shadow-map* (invert-alist *shadow-map*)
+  "An inverse map of the *shadow-map*. See `*shadow-map*'")
+
+(defun set-shadow-map (new-shadow-map)
+  "Sets the *shadow-map*, updating the *inverse-shadow-map* too."
+  (setf *shadow-map* new-shadow-map
+        *inverse-shadow-map* (invert-alist *shadow-map*))
+  *shadow-map*)
+
+(defun toggle-shadow-file ()
+  "Find files with the same subpath as the current buffer, in some
+other \(shadow) directory, and back.  The mapping between directory
+and shadow directory is given by `*shadow-map'."
+  (interactive)
+  (let ((fname (buffer-file-name (current-buffer))))
+    (when fname
+      (let ((fdire (expand-file-name (file-name-directory fname))))
+        (flet ((find-others (map)
+                 (loop
+                    for (src . others) in map
+                    for src-dir = (file-name-as-directory (expand-file-name src))
+                    append (loop
+                              for other in (ensure-list others)
+                              when (string-match (format "^%s.*" (regexp-quote src-dir)) fdire)
+                              collect (format "%s%s%s"
+                                              (file-name-as-directory (expand-file-name other))
+                                              (subseq fdire (length src-dir))
+                                              (file-name-nondirectory fname))))))
+          (let ((shadows (find-others *shadow-map*)))
+            (if shadows
+                (mapcar (function find-file) shadows)
+                (let ((originals (find-others *inverse-shadow-map*)))
+                  (if originals
+                      (let ((got-some nil))
+                        (dolist (original originals)
+                          (when (file-exists-p original)
+                            (find-file original)
+                            (setf got-some t)))
+                        (unless got-some
+                          (error "No original file for the shadow %S (update `*shadow-map*')." fname)))
+                      (error "No shadow mapping for %S (update `*shadow-map*')." fname))))))))))
+
+
+
+(global-set-key (kbd "C-c SPC") 'toggle-header/implementation)
+(global-set-key (kbd "C-c s")   'toggle-shadow-file)
+
 
 (provide 'pjb-thi)
 ;;;; THE END ;;;;
-

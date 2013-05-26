@@ -1301,7 +1301,7 @@ indent of the current line in parameterlist."
   (let ((all (car pl1-completion-cache)))
     ;; Check the cache's freshness.
     (unless (and pl1-completion-cache
-                 (string-prefix-p (nth 1 pl1-completion-cache) pl1-str)
+                 (pjb-string-prefix-p (nth 1 pl1-completion-cache) pl1-str)
                  (eq (current-buffer) (nth 2 pl1-completion-cache))
                  (eq (field-beginning) (nth 3 pl1-completion-cache)))
       (let ((state (car (pl1-calculate-indent))))

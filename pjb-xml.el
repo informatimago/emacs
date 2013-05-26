@@ -41,9 +41,10 @@
     (first doc)))
 
 (defun doc-root (doc)
-  (if (doc-has-dtd doc)
-      (second doc)
-      (first doc)))
+  (cond
+    ((doc-has-dtd doc) (second doc))
+    ((null (first doc)) (second doc))
+    (t (first doc))))
 
 
 ;;; xml nodes additions.
@@ -197,3 +198,4 @@ children is a list of strings or sexp representing a XML tree.
 
 
 
+(provide 'pjb-xml)

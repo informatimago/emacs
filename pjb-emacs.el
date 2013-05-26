@@ -921,7 +921,13 @@ space does not end a sentence, so don't break a line there."
       (insert "\n"))))
 
 
+
 (defvar *fortune-file* "/data/cookies/bopcs.cookies")
+(when (require 'fortune nil t)
+  (setf fortune-program "cookie"
+        fortune-always-compile nil
+        fortune-dir (dirname *fortune-file*)
+        fortune-file *fortune-file*))
 
 (defun add-fortune (start end)
   "

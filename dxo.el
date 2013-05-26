@@ -226,7 +226,7 @@
                                          ;; The first line of an Objective-C method definition.
                                          (objc-method-args-cont . 0)  
                                          ;; Lines continuing an Objective-C method definition.
-                                         (objc-method-call-cont . ++)  
+                                         (objc-method-call-cont . (c-lineup-ObjC-method-call-colons ++))
                                          ;; Lines continuing an Objective-C method call.
                                          (extern-lang-open      . 0)       
                                          ;; Brace that opens an "extern" block.
@@ -359,6 +359,33 @@
         (forward-char 1))))
    (indent-region start end)))
 
+
+(defun dxo-remove-interlines ()
+  "Remove duplicate lines after toplevel closing braces."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\(}\\|@end\\) *\\(\n *\\)*\n" nil t)
+      (let ((token (match-string 1)))
+        (delete-region (match-beginning 0) (match-end 0))
+        (insert (cond
+                  ((string= token "}")    "}\n\n")
+                  ((string= token "@end") "@end\n\n")
+                  (t                      (format "%s\n\n" token))))))))
+
+
+(defun dxo-insert-interlines ()
+  "Insert duplicate lines after toplevel closing braces."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\(}\\|@end\\) *\\(\n *\\)*\n" nil t)
+      (let ((token (match-string 1)))
+        (delete-region (match-beginning 0) (match-end 0))
+        (insert (cond
+                  ((string= token "}")    "}\n\n\n")
+                  ((string= token "@end") "@end\n\n\n\n")
+                  (t                      (format "%s\n\n" token))))))))
 
 
 (provide 'dxo)

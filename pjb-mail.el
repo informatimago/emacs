@@ -235,7 +235,7 @@ POST:   the current buffer contains a MIME multipart/mixed message,
          (progn (widen) (goto-char (point-min)) (mail-header-extract)))
         boundary)
 
-    (unless (string-prefix-p  (mail-header 'content-type headers) 
+    (unless (pjb-string-prefix-p  (mail-header 'content-type headers) 
                               "multipart/mixed" :ignore-case)
       ;; already a MIME, but not a mixed
       ;; let's move the content- headers to the existing body and
@@ -261,7 +261,7 @@ POST:   the current buffer contains a MIME multipart/mixed message,
                        (cdr item)))
                (pjb-mail$$select 
                  (lambda (item)
-                   (string-prefix-p (symbol-name (car item))
+                   (pjb-string-prefix-p (symbol-name (car item))
                                     "content-" :ignore-case))
                  headers)
                )))
@@ -573,7 +573,7 @@ DO:      Encrypt the current mail and put it into a multipart/encrypted MIME.
                      (cdr item)))
              (pjb-mail$$select 
                (lambda (item)
-                 (string-prefix-p (symbol-name (car item))
+                 (pjb-string-prefix-p (symbol-name (car item))
                                   "content-" :ignore-case))
                headers)
              )))
@@ -684,7 +684,7 @@ P")
       ) ;;unless not already a MIME message.
 
 
-    (unless (string-prefix-p  (mail-header 'content-type headers) 
+    (unless (pjb-string-prefix-p  (mail-header 'content-type headers) 
                               "multipart/mixed" :ignore-case)
       ;; already a MIME, but not a mixed
       ;; let's move the content- headers to the existing body and
@@ -710,7 +710,7 @@ P")
                        (cdr item)))
                (pjb-mail$$select 
                  (lambda (item)
-                   (string-prefix-p (symbol-name (car item))
+                   (pjb-string-prefix-p (symbol-name (car item))
                                     "content-" :ignore-case))
                  headers)
                )))

@@ -101,7 +101,11 @@ RETURN: The font height in pixel.
      collect item)))
 
 
-(defun make-font-pattern (&rest cl-keys)
+(defun* make-font-pattern (&key foundry family weight slant width
+                                style pixel-size point-size
+                                resolution-x resolution-y spacing
+                                average-width registry encoding
+                                (defaults "-*-*-*-*-*-*-*-*-*-*-*-*-*-*"))
   "Builds a X font pattern from the keyword arguments
 DEFAULTS:  either a X font pattern (string) or a plist used as default
            when the corresponding keyword is not given.
@@ -109,50 +113,43 @@ EXAMPLE:   Changing the size of a font:
           (make-font-pattern
                :defaults \"-lispm-fixed-medium-r-normal-*-13-*-*-*-*-*\"
                :pixel-size 12)"
-  (cl-parsing-keywords ((:foundry nil) (:family nil)
-                        (:weight nil) (:slant nil) (:width nil)
-                        (:style nil) (:pixel-size nil) (:point-size nil)
-                        (:resolution-x nil) (:resolution-y nil)
-                        (:spacing nil) (:average-width nil)
-                        (:registry nil) (:encoding nil)
-                        (:defaults "-*-*-*-*-*-*-*-*-*-*-*-*-*-*")) nil
-    (when (stringp cl-defaults)
-      (setf cl-defaults (split-font-pattern cl-defaults)))
-    (macrolet ((field (name)
-                      `(or ,(intern (format "cl-%s" name))
-                           (getf cl-defaults ,(intern (format ":%s" name)))
-                           "*")))
-      (format "-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s"
-
-              (field foundry) (field family) (field weight) (field slant)
-              (field width) (field style) (field pixel-size) (field point-size)
-              (field resolution-x) (field resolution-y) (field spacing)
-              (field average-width) (field registry) (field encoding)))))
+  (when (stringp defaults)
+    (setf defaults (split-font-pattern defaults)))
+  (macrolet ((field (name)
+               `(or ,name (getf defaults ,(intern (format ":%s" name))) "*")))
+    (format "-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s-%s"
+            (field foundry) (field family) (field weight) (field slant)
+            (field width) (field style) (field pixel-size) (field point-size)
+            (field resolution-x) (field resolution-y) (field spacing)
+            (field average-width) (field registry) (field encoding))))
 
 
-(defun get-font-parts (pattern &rest cl-keys)
+(defun* get-font-parts (pattern &key foundry family weight slant width
+                                style pixel-size point-size
+                                resolution-x resolution-y spacing
+                                average-width registry encoding)
   "
 RETURN: A list of unique property lists containing the selected keys
         with all unique tuples in the fonts selected by the pattern.
 "
-  (cl-parsing-keywords ((:foundry nil) (:family nil)
-                        (:weight nil) (:slant nil) (:width nil)
-                        (:style nil) (:pixel-size nil) (:point-size nil)
-                        (:resolution-x nil) (:resolution-y nil)
-                        (:spacing nil) (:average-width nil)
-                        (:registry nil) (:encoding nil)) nil
-    (let ((parts nil)
-          (plist)
-          (res nil))
-      (dolist (font (split-string
-                     (shell-command-to-string
-                      (format "xlsfonts -fn '%s'|sort -u" pattern)) "\n"))
-        (pushnew (split-font-pattern font) res :test (function equalp)))
-      res)))
+  (let ((parts nil)
+        (plist)
+        (res nil))
+    (dolist (font (split-string
+                   (shell-command-to-string
+                    (format "xlsfonts -fn '%s'|sort -u" pattern)) "\n"))
+      (pushnew (split-font-pattern font) res :test (function equalp)))
+    res))
 
 
 
-(defun get-independant-font-parts (pattern &rest cl-keys)
+(defun get-independant-font-parts (pattern &key foundry family weight
+                                             slant width style
+                                             pixel-size point-size
+                                             resolution-x resolution-y
+                                             spacing average-width
+                                             registry encoding
+                                             registry-encoding)
   "
 RETURN:  An a-list with entries for the selected keywords,
          each being the list of unique values for the corresponding
@@ -161,76 +158,69 @@ EXAMPLE: All families in the Adobe foundry:
          (get-independant-font-parts (make-font-pattern :foundry \"adobe\") 
                                      :family t)
 "
-  (cl-parsing-keywords ((:foundry nil) (:family nil)
-                        (:weight nil) (:slant nil) (:width nil)
-                        (:style nil) (:pixel-size nil) (:point-size nil)
-                        (:resolution-x nil) (:resolution-y nil)
-                        (:spacing nil) (:average-width nil)
-                        (:registry nil) (:encoding nil)
-                        (:registry-encoding nil)) nil ; body:
-    (let ((p-foundry nil)      (p-family nil)
-          (p-weight nil)       (p-slant nil)
-          (p-width nil)        (p-style nil)
-          (p-pixel-size nil)   (p-point-size nil)
-          (p-resolution-x nil) (p-resolution-y nil)
-          (p-spacing nil)      (p-average-width nil)
-          (p-registry nil)     (p-encoding nil)
-          (p-registry-encoding nil)
-          (parts nil)
-          (res nil)
-          (test (function string-equal)))
-      (dolist (font (split-string
-                     (shell-command-to-string
-                      (format "xlsfonts -fn '%s'|sort -u" pattern)) "\n"))
-        (setf parts (split-string font "-"))
-        (when cl-foundry
-          (pushnew (elt parts  1) p-foundry       :test test))
-        (when cl-family
-          (pushnew (elt parts  2) p-family        :test test))
-        (when cl-weight
-          (pushnew (elt parts  3) p-weight        :test test))
-        (when cl-slant
-          (pushnew (elt parts  4) p-slant         :test test))
-        (when cl-width
-          (pushnew (elt parts  5) p-width         :test test))
-        (when cl-style
-          (pushnew (elt parts  6) p-style         :test test))
-        (when cl-pixel-size
-          (pushnew (elt parts  7) p-pixel-size    :test test))
-        (when cl-point-size
-          (pushnew (elt parts  8) p-point-size    :test test))
-        (when cl-resolution-x
-          (pushnew (elt parts  9) p-resolution-x  :test test))
-        (when cl-resolution-y
-          (pushnew (elt parts 10) p-resolution-y  :test test))
-        (when cl-spacing
-          (pushnew (elt parts 11) p-spacing       :test test))
-        (when cl-average-width
-          (pushnew (elt parts 12) p-average-width :test test))
-        (when cl-registry
-          (pushnew (elt parts 13) p-registry      :test test))
-        (when cl-encoding
-          (pushnew (elt parts 14) p-encoding      :test test))
-        (when cl-registry-encoding
-          (pushnew (format "%s-%s" (elt parts 13) (elt parts 14))
-                   p-registry-encoding      :test test)))
-      (when cl-registry-encoding
-        (push (cons :registry-encoding      p-registry-encoding     ) res))
-      (when cl-encoding      (push (cons :encoding      p-encoding     ) res))
-      (when cl-registry      (push (cons :registry      p-registry     ) res))
-      (when cl-average-width (push (cons :average-width p-average-width) res))
-      (when cl-spacing       (push (cons :spacing       p-spacing      ) res))
-      (when cl-resolution-y  (push (cons :resolution-y  p-resolution-y ) res))
-      (when cl-resolution-x  (push (cons :resolution-x  p-resolution-x ) res))
-      (when cl-point-size    (push (cons :point-size    p-point-size   ) res))
-      (when cl-pixel-size    (push (cons :pixel-size    p-pixel-size   ) res))
-      (when cl-style         (push (cons :style         p-style        ) res))
-      (when cl-width         (push (cons :width         p-width        ) res))
-      (when cl-slant         (push (cons :slant         p-slant        ) res))
-      (when cl-weight        (push (cons :weight        p-weight       ) res))
-      (when cl-family        (push (cons :family        p-family       ) res))
-      (when cl-foundry       (push (cons :foundry       p-foundry      ) res))
-      res)))
+  (let ((p-foundry nil)      (p-family nil)
+        (p-weight nil)       (p-slant nil)
+        (p-width nil)        (p-style nil)
+        (p-pixel-size nil)   (p-point-size nil)
+        (p-resolution-x nil) (p-resolution-y nil)
+        (p-spacing nil)      (p-average-width nil)
+        (p-registry nil)     (p-encoding nil)
+        (p-registry-encoding nil)
+        (parts nil)
+        (res nil)
+        (test (function string-equal)))
+    (dolist (font (split-string
+                   (shell-command-to-string
+                    (format "xlsfonts -fn '%s'|sort -u" pattern)) "\n"))
+      (setf parts (split-string font "-"))
+      (when foundry
+        (pushnew (elt parts  1) p-foundry       :test test))
+      (when family
+        (pushnew (elt parts  2) p-family        :test test))
+      (when weight
+        (pushnew (elt parts  3) p-weight        :test test))
+      (when slant
+        (pushnew (elt parts  4) p-slant         :test test))
+      (when width
+        (pushnew (elt parts  5) p-width         :test test))
+      (when style
+        (pushnew (elt parts  6) p-style         :test test))
+      (when pixel-size
+        (pushnew (elt parts  7) p-pixel-size    :test test))
+      (when point-size
+        (pushnew (elt parts  8) p-point-size    :test test))
+      (when resolution-x
+        (pushnew (elt parts  9) p-resolution-x  :test test))
+      (when resolution-y
+        (pushnew (elt parts 10) p-resolution-y  :test test))
+      (when spacing
+        (pushnew (elt parts 11) p-spacing       :test test))
+      (when average-width
+        (pushnew (elt parts 12) p-average-width :test test))
+      (when registry
+        (pushnew (elt parts 13) p-registry      :test test))
+      (when encoding
+        (pushnew (elt parts 14) p-encoding      :test test))
+      (when registry-encoding
+        (pushnew (format "%s-%s" (elt parts 13) (elt parts 14))
+                 p-registry-encoding      :test test)))
+    (when registry-encoding
+      (push (cons :registry-encoding      p-registry-encoding     ) res))
+    (when encoding      (push (cons :encoding      p-encoding     ) res))
+    (when registry      (push (cons :registry      p-registry     ) res))
+    (when average-width (push (cons :average-width p-average-width) res))
+    (when spacing       (push (cons :spacing       p-spacing      ) res))
+    (when resolution-y  (push (cons :resolution-y  p-resolution-y ) res))
+    (when resolution-x  (push (cons :resolution-x  p-resolution-x ) res))
+    (when point-size    (push (cons :point-size    p-point-size   ) res))
+    (when pixel-size    (push (cons :pixel-size    p-pixel-size   ) res))
+    (when style         (push (cons :style         p-style        ) res))
+    (when width         (push (cons :width         p-width        ) res))
+    (when slant         (push (cons :slant         p-slant        ) res))
+    (when weight        (push (cons :weight        p-weight       ) res))
+    (when family        (push (cons :family        p-family       ) res))
+    (when foundry       (push (cons :foundry       p-foundry      ) res))
+    res))
 
 
 

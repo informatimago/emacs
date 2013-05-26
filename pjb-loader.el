@@ -81,7 +81,13 @@
         "pjb-xresources.el"
         "pjb-thi.el"
         "pjb-c-style.el"
-        
+
+        "pjb-objc-edit.el" 
+        "pjb-objc-gen.el"
+        "pjb-objc-ide.el"
+        ;; not yet ;; "pjb-objc-mode.el"
+        "pjb-objc-parser.el"
+
         "pjb-pl1.el" ; testing
         ))
 

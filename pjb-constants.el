@@ -644,5 +644,5 @@ RETURN: x' ; t' ; dx' ; dt' such as
 ;;;    :test (function equalp)))
 
 
-
-;;;; pjb-constants.el                 --                     --          ;;;;
+(provide 'pjb-constants)
+;;;; THE END ;;;;
