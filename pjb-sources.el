@@ -144,7 +144,7 @@ nExperience Ratio [0.0,1.0]: ")
 
 
 ;; TODO: move this to pjb-cl or somewhere...
-(defun pjb-find (item seq &rest cl-keys)
+(defun* pjb-find (item seq  &key test test-not key (start 0) end from-end)
   "
 DO:     Like Common-Lisp find, but we cannot use find from 'cl because
         Common-Lisp does not specify which of the item and of the seq element
@@ -167,53 +167,52 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
         is not compatible with the definition of _bounded_ which ask for 
         a numerical index!)
 "
-  (cl-parsing-keywords (:test :test-not :key (:start 0) :end :from-end) ()
-    (setf cl-key  (or cl-key (function identity)))
+  (let ((key (or key (function identity)))
+        (end (or end (length seq))))
     (flet ((found (item key) nil))
-      (if cl-test
-          (if cl-test-not 
+      (if test
+          (if test-not 
               (fset 'found (lambda (item key) 
-                             (and (funcall cl-test item key)
-                                  (not (funcall cl-test-not item key)))))
-              (fset 'found cl-test))
-          (if cl-test-not
-              (fset 'found (lambda (item key) (not (funcall cl-test item key))))
+                             (and (funcall test item key)
+                                  (not (funcall test-not item key)))))
+              (fset 'found test))
+          (if test-not
+              (fset 'found (lambda (item key) (not (funcall test item key))))
               (fset 'found (function equal))))
-      (setf cl-end (or cl-end (length seq)))
       ;;(show item seq cl-test cl-test-not cl-key cl-start cl-end cl-from-end)
-      (if cl-from-end
+      (if from-end
           ;; loop does not specifies that loop variables are available in
           ;; finally, so it's quite useless too.
           ;; TODO: In case of consp, work on (nreverse (subseq seq start end))
-          (do ((i (1- cl-end) (1- i))
+          (do ((i (1- end) (1- i))
                (element)
                (key)
                (result nil))
-              ((or result (< i cl-start)) result)
+              ((or result (< i start)) result)
             (setf element (elt seq i))
-            (setf key (funcall cl-key element))
+            (setf key (funcall key element))
             (when (found item key) (setq result element)))
           (if (consp seq)
               (progn
                 (do ((i 0 (1+ i)))
-                    ((<= cl-start i))
+                    ((<= start i))
                   (setf seq (cdr seq)))
-                (do* ((i cl-start (1+ i))
+                (do* ((i start (1+ i))
                       (elements seq (cdr elements))
                       (element (car elements) (car elements))
-                      (key (funcall cl-key element) (funcall cl-key element)))
-                     ((or (<= cl-end i) (endp elements) (found item key)) 
-                      (if (or (<= cl-end i) (endp elements)) nil element))
+                      (the-key (funcall key element) (funcall key element)))
+                     ((or (<= end i) (endp elements) (found item the-key)) 
+                      (if (or (<= end i) (endp elements)) nil element))
                   ))
-              (do ((i cl-start (1+ i))
+              (do ((i start (1+ i))
                    (element)
-                   (key)
+                   (the-key)
                    (result nil))
-                  ((or result (<= cl-end i)) result)
+                  ((or result (<= end i)) result)
                 (setf element (elt seq i))
-                (setf key (funcall cl-key element))
-                (printf "%s %s %s %s \n" i  element key (found item key))
-                (when (found item key) (setq result element))))))))
+                (setf the-key (funcall key element))
+                (printf "%s %s %s %s \n" i  element the-key (found item the-key))
+                (when (found item the-key) (setq result element))))))))
 
 
 ;; ------------------------------------------------------------------------
