@@ -3285,8 +3285,16 @@ the FUNCTION can take."
       (set-shadow-map (list (cons (format "%s/" directory)
                                   (format "%s%s/" (file-name-directory directory) *shadow-directory-name*)))))
     (setf grep-find-command
-          (format "find %s \\( \\( -name build -o -name debug -o -name release -o -name .svn \\) -prune \\) -o -type f  \\(  -name \\*.xib -o -name \\*.h -o -name \\*.m -o -name \\*.mm -o -name \\*.c -name \\*.hh -o -name \\*.hxx -o -name \\*.cc  -o -name \\*.cxx -o -name \\*.lisp -o -name \\*.rb -o -name \\*.logs \\) -print0 | xargs -0 grep -niH -e "
-                  *sources*)
+          (let ((exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
+                (include-types '("xib" "h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
+                                 "lisp" "asd" "cl"
+                                 "rb"
+                                 "java" "xml"
+                                 "logs" "txt")))
+            (format "find %s \\( \\( %s \\) -prune \\) -o -type f  \\( %s \\) -print0 | xargs -0 grep -niH -e "
+                    *sources*
+                    (mapconcat (lambda (name) (format "-name %s" name)) exclude-names " -o ")
+                    (mapconcat (lambda (type) (format "-name \\*.%s" type)) include-types " -o ")))
           grep-host-defaults-alist nil)))
 
 (defun sources-find-file-named (name)

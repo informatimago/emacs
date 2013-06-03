@@ -1292,6 +1292,21 @@ in screen.              out of screen.
 +------+------+------+  No decorationless here.
 |  112 |  122 |  132 |
 +------+------+------+
+
+Wishes:
+
++------+------+------+
+|             |      |
+|    1112     |  13  |  -1112 -13
+|             |      |
++------+------+------+
+
++------+------+------+
+|      |             |
+|  11  |     1213    |  -11 -1213
+|      |             |
++------+------+------+
+
 "
   (interactive "p")
   (let* ((frame (current-frame))
@@ -1300,15 +1315,19 @@ in screen.              out of screen.
          (screen-top    (second area))
          (screen-width  (third  area))
          (screen-height (fourth area)))
+    (when (member (abs prefix) '(1112 1213))
+      (warn "NOT IMPLEMENTED YET."))
     (if (not (member (abs prefix) '(1 2 3 4 5 6 7
                                     -1 -2 -3 -4 -5 -6 -7
                                     11 12 13 -11 -12 -13
                                     111 112 121 122 131 132 -111 -112 -121 -122 -131 -132
                                     21 22 31 32
-                                    41 42 51 52 61 62 71 72)))
+                                    41 42 51 52 61 62 71 72
+                                    1112 -1112
+                                    1213 -1213)))
         (message "Invalid prefix %S; expecting: %s"
                  prefix
-                 "[   1   ]   [ 2 | 3 ]*   [4|5|6|7]*   [11|12|13]*
+                 "[   1   ]   [ 2 | 3 ]*   [4|5|6|7]*   [11|12|13]*  [11|1213] [1112|13]
 Multiply by -1 = without decoration.
 *: Multiply by 10 and add 1 for top half, and 2 for bottom half.
 ")
@@ -1318,30 +1337,32 @@ Multiply by -1 = without decoration.
                                   0 (- *window-manager-y-offset*)))
                (prefix (abs prefix))
                (hpref  (if (< prefix 20) prefix (truncate prefix 10))) ; 1..19
-               (vpref  (if (< prefix 20) 0 (mod prefix 10))) ; 0,1,2
+               (vpref  (if (< prefix 20) 0 (mod prefix 10))) ; 0,1,2,3
                (left   (+ screen-left
                           (case hpref
-                            ((1 2 4 11) 0)
-                            ((3 6)   (truncate screen-width 2))
-                            ((5)     (truncate screen-width 4))
-                            ((7)     (* 3 (truncate screen-width 4)))
-                            ((12)    (truncate screen-width 3))
-                            ((13)    (* 2 (truncate screen-width 3))))))
+                            ((1 2 4 11 111) 0)
+                            ((3 6)          (truncate screen-width 2))
+                            ((5)            (truncate screen-width 4))
+                            ((7)            (* 3 (truncate screen-width 4)))
+                            ((12 121)       (truncate screen-width 3))
+                            ((13)           (* 2 (truncate screen-width 3))))))
                (width  (truncate screen-width (case hpref
-                                                ((1)        1)
-                                                ((2 3)      2)
-                                                ((11 12 13) 3)
-                                                ((4 5 6 7)  4))))
+                                                ((1)         1)
+                                                ((2 3)       2)
+                                                ((11 12 13)  3)
+                                                ((4 5 6 7)   4)
+                                                ((111 121)   1.5))))
                (top    (+ screen-top
                           (case vpref
                             ((0 1) 0)
                             ((2)   (truncate (- screen-height
                                                 *window-manager-y-offset*)
-                                             2)))))
+                                             2))
+                            ((3)))))
                (height (case vpref
-                         ((0)   screen-height)
-                         ((1 2) (truncate (- screen-height
-                                             *window-manager-y-offset*) 2)))))
+                         ((0)     screen-height)
+                         ((1 2 3) (truncate (- screen-height
+                                               *window-manager-y-offset*) 2)))))
           (labels ((mesframe (frame)
                      (message "0: x=%8S y=%8S w=%8S h=%8S"
                               (frame-pixel-left frame)

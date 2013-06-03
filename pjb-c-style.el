@@ -389,7 +389,7 @@
                                         ; (define-key c-mode-map \"{\"
                                         ;          'electric-c-semi)"
 
-   (c-tab-always-indent           . nil) ; Non-nil means TAB in C mode should
+   (c-tab-always-indent           . t)  ; Non-nil means TAB in C mode should
                                         ; always reindent the current line,
                                         ; regardless of where in the line point
                                         ; is when the TAB command is used.
