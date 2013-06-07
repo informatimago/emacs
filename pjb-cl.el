@@ -556,27 +556,20 @@ URL:      http://www.informatimago.com/local/lisp/HyperSpec/Body/f_chareq.htm
   (apply (function char>=) (mapcar 'upcase characters)))
 
 
-(defun alphanumericp (ch)
+(defun ensure-character (ch)
+  (cond 
+    ((characterp ch) ch)
+    ((stringp ch)    (char ch 0))
+    ((symbolp ch)    (char (symbol-name* ch) 0))
+    ((numberp ch)    (code-char* ch))
+    (t               (error "Expected a character, not: %S" ch))))
+
+
+(defun alpha-char-p (ch)
   "
 COMMON-LISP
-IMPLEMENTATION: Assume ISO-8859-1!
+IMPLEMENTATION: Assumes ISO-8859-1!
 "
-  (cond 
-    ((characterp ch))
-    ((stringp ch) 
-     (setq ch (char ch 0)))
-    ((symbolp ch)
-     (setq ch (char (symbol-name* ch) 0)))
-    ((numberp ch)
-     (code-char* ch))
-    (t
-     (error "Expected a character, not: %S" ch)))
-  (or (and (char<= (character "0") ch) (char<= ch (character "9")))
-      (and (char<= (character "A") ch) (char<= ch (character "Z")))
-      (and (char<= (character "a") ch) (char<= ch (character "z")))
-      (and (char<= (character "à") ch) (char<= ch (character "ö")))
-      (and (char<= (character "ø") ch) (char<= ch (character "ö")))
-      (and (char<= (character "ø") ch) (char<= ch (character "ÿ"))))
 ;;;   (string-match 
 ;;;    "\\(\\c0\\|\\c1\\|\\c2\\|\\c3\\|\\c4\\|\\c6\\|\\c7\\|\\c8\\|\\c9\\)" 
 ;;;    (format "%c" ch))
@@ -590,7 +583,21 @@ IMPLEMENTATION: Assume ISO-8859-1!
   ;; 7: vowel-modifying diacritical mark
   ;; 8: vowel-signs
   ;; 9: semivowel lower
-  )
+  (let ((ch (ensure-character ch)))
+    (or (and (char<= (character "A") ch) (char<= ch (character "Z")))
+        (and (char<= (character "a") ch) (char<= ch (character "z")))
+        (and (char<= (character "à") ch) (char<= ch (character "ö")))
+        (and (char<= (character "ø") ch) (char<= ch (character "ö")))
+        (and (char<= (character "ø") ch) (char<= ch (character "ÿ"))))))
+
+(defun alphanumericp (ch)
+  "
+COMMON-LISP
+IMPLEMENTATION: Assumes ISO-8859-1!
+"
+  (let ((ch (ensure-character ch)))
+   (or (digit-char-p ch)
+       (alpha-char-p ch))))
 
 
 ;; ---------------
