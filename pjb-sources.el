@@ -3279,7 +3279,7 @@ the FUNCTION can take."
   (message "Wait 30 seconds…")
   (let ((directory (remove-trailling-slashes directory)))
     (setf *sources* directory)
-    (file-cache-add-directory-recursively *sources* ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|rb\\|logs\\|el\\)$")
+    (file-cache-add-directory-recursively *sources* ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$")
     (setf *sources-cache* (sort (mapcar (function car) file-cache-alist) (function string<)))
     (let ((directory (expand-file-name directory)))
       (set-shadow-map (list (cons (format "%s/" directory)
@@ -3287,7 +3287,7 @@ the FUNCTION can take."
     (setf grep-find-command
           (let ((exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
                 (include-types '("xib" "h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
-                                 "lisp" "asd" "cl"
+                                 "lisp" "asd" "cl" "el"
                                  "rb"
                                  "java" "xml"
                                  "logs" "txt"
