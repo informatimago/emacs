@@ -3290,7 +3290,9 @@ the FUNCTION can take."
                                  "lisp" "asd" "cl"
                                  "rb"
                                  "java" "xml"
-                                 "logs" "txt")))
+                                 "logs" "txt"
+                                 "html" "iml" "json" "md" "prefs" "project" "properties" "sh" 
+                                 )))
             (format "find %s \\( \\( %s \\) -prune \\) -o -type f  \\( %s \\) -print0 | xargs -0 grep -niH -e "
                     *sources*
                     (mapconcat (lambda (name) (format "-name %s" name)) exclude-names " -o ")
