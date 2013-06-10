@@ -408,6 +408,7 @@ position is (member :prefix :infix :suffix)
           (sources-find-file-named              "C-c C-x C-f"))
      do (loop for key in keys do (local-set-key (read-kbd-macro key) command)))
   (auto-complete-mode 1)
+  (global-set-key (kbd "C-c C-x C-f") 'sources-find-file-named)
   (pjb-objc-edit-add-font-lock-keywords))
 
 
@@ -446,6 +447,7 @@ position is (member :prefix :infix :suffix)
           ;; (pjb-objc-kill-ring-save-selector     "C-c C-o s")
           (sources-find-file-named              "C-c C-x C-f"))
      do (loop for key in keys do (local-set-key (read-kbd-macro key) command)))
+  (global-set-key (kbd "C-c C-x C-f") 'sources-find-file-named)
   (auto-complete-mode 1))
 
 
