@@ -3254,7 +3254,7 @@ the FUNCTION can take."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar *sources*)
+(defvar *sources* "/tmp")
 (defvar *sources-cache* '())
 
 (defun directory-recursive-find-files-named (directory name)
@@ -3278,8 +3278,13 @@ the FUNCTION can take."
   (interactive "DSource directory: ")
   (message "Wait 30 seconds…")
   (let ((directory (remove-trailling-slashes directory)))
-    (setf *sources* directory)
-    (file-cache-add-directory-recursively *sources* ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$")
+    (handler-case
+        (progn
+          (let ((*sources* directory))
+            (file-cache-add-directory-recursively directory ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$"))
+          (setf *sources* directory))
+      (error (err)
+        (message (format "%s" err))))
     (setf *sources-cache* (sort (mapcar (function car) file-cache-alist) (function string<)))
     (let ((directory (expand-file-name directory)))
       (set-shadow-map (list (cons (format "%s/" directory)
