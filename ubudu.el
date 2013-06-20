@@ -117,7 +117,7 @@
        (string                . 0)
        ;; Inside multi-line string.
 
-       (c                     . 0)
+       (c                     . 1)
        ;; Inside a multi-line C style block comment.
 
        (defun-open            . 0)

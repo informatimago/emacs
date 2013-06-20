@@ -82,6 +82,8 @@
         "pjb-thi.el"
         "pjb-c-style.el"
 
+        "pjb-java"
+        
         "pjb-objc-edit.el" 
         "pjb-objc-gen.el"
         "pjb-objc-ide.el"
