@@ -403,7 +403,8 @@
 (defun ubudu-c-mode-common-meat ()
   (interactive)
   (c-set-style "ubudu")
-  (c-toggle-auto-newline 1))
+  (c-toggle-auto-newline 1)
+  (setf c-basic-offset 2))
 
 (add-hook 'c-mode-common-hook 'ubudu-c-mode-common-meat)
 
