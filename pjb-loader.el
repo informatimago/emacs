@@ -343,6 +343,8 @@ RETURN: The list of results from fun.
          (match-string 2 path))
         ((string-match "^\\(.*/\\)?\\(.*\\)\\.\\([^.]*\\)$" path)
          (match-string 2 path))
+	((string-match "^\\(.*/\\)?\\(.*\\)$" path)
+         (match-string 2 path))
         (t :unspecific)))
 
 
