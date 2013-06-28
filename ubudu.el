@@ -113,6 +113,7 @@
 
    (c-offsets-alist
     . (
+       (annotation-var-cont   . 0)
 
        (string                . 0)
        ;; Inside multi-line string.
@@ -140,7 +141,6 @@
        
        (inline-close          . 0)
        ;; Brace that closes an in-class inline method.
-       
        (func-decl-cont        . +)
        ;; The region between a function definition's
        ;; argument list and the function opening brace
