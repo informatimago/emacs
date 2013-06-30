@@ -279,7 +279,7 @@ RETURN:  dst
 
 
 
-(defun* string-pad (string length &key (padchar 32))
+(defun* string-pad (string length &key (padchar 32) (justification :left))
   "Append spaces before, after or at both end of string to pad it to length.
 RETURN: A padded string.
 "
@@ -288,29 +288,16 @@ RETURN: A padded string.
         string
         (when (stringp padchar) 
           (setf padchar (string-to-char padchar)))
-        ;; (let ((result (make-string* length :initial-element padchar)))
-        ;;   (cond
-        ;;     ((memq :right keys)
-        ;;      (copy-to-substring string 0 (1- slen) 
-        ;;                         result (- length slen)))
-        ;;     ((memq :center keys)
-        ;;      (copy-to-substring string 0 (1- slen) 
-        ;;                         result (/ (- length slen) 2)))
-        ;;     (t 
-        ;;      (copy-to-substring string 0 (1- slen) result 0))))
-        (cond
-          ((memq :right keys)
-           (concat string
-                   (make-string (- length slen) padchar)))
-          ((memq :center keys)
-           (let* ((left  (/ (- length slen) 2))
-                  (right (- (- length slen) left)))
-             (concat (make-string left padchar)
-                     string
-                     (make-string right padchar))))
-          (t
-           (concat (make-string (- length slen) padchar)
-                   string))))))
+        (ecase justification
+          ((:right)  (concat string
+                             (make-string (- length slen) padchar)))
+          ((:center) (let* ((left  (/ (- length slen) 2))
+                            (right (- (- length slen) left)))
+                       (concat (make-string left padchar)
+                               string
+                               (make-string right padchar))))
+          ((:left)   (concat (make-string (- length slen) padchar)
+                             string))))))
 
 
 (defun chop-spaces-old (string)

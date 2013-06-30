@@ -1536,14 +1536,14 @@ SEE ALSO:     `karnaugh-solve' and `gentable'.
       (loop for item in conditions
          for i from 0 below c-count
          collect (concatenate 'string 
-                   " " (string-pad item (aref sizes i) :center) " |") 
+                   " " (string-pad item (aref sizes i) :justification :center) " |") 
          into title
          finally return (apply 'concatenate 'string title))
          
       (loop for item in a-title
          for i from c-count below s-count
          collect (concatenate 'string 
-                   " " (string-pad item (aref sizes i) :center) " |") 
+                   " " (string-pad item (aref sizes i) :justification :center) " |") 
          into title
          finally return  (apply 'concatenate 'string title))
       new-line
@@ -1558,7 +1558,7 @@ SEE ALSO:     `karnaugh-solve' and `gentable'.
                       for l = (+ 3 (aref sizes k))
                       for s = (string-pad 
                                (if c (cdr bool-vals) (car bool-vals))
-                               l :center)
+                               l :justification :center)
                       do (setf (char s (1- l)) (character "|"))
                       collect s into items
                       finally return (apply 'concatenate 'string "|" items))
@@ -1573,7 +1573,7 @@ SEE ALSO:     `karnaugh-solve' and `gentable'.
                                    (if f (if (apply f conditions) 
                                              (cdr action-vals)
                                              (car action-vals)) "")
-                                   l :center)
+                                   l :justification :center)
                           do (setf (char s (1- l)) (character "|"))
                           collect s into items
                           finally return (apply 'concatenate 'string items)))

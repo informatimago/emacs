@@ -632,7 +632,7 @@ IMPLEMENTATION: Since we make vector of vectors, there's no other limit than
 available memory.")
 
 
-(defun* make-array (dimensions &keys element-type initial-element
+(defun* make-array (dimensions &key element-type initial-element
                                initial-contents adjustable
                                fill-pointer displaced-to
                                displaced-index-offset)
