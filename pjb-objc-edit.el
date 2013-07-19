@@ -353,9 +353,10 @@ position is (member :prefix :infix :suffix)
 (pjb-objc-edit-define-wrapper pjb-objc-edit-close-round          paredit-close-round) 
 (pjb-objc-edit-define-wrapper pjb-objc-edit-open-square          paredit-open-square) 
 (pjb-objc-edit-define-wrapper pjb-objc-edit-close-square         paredit-close-square)
-(pjb-objc-edit-define-wrapper pjb-objc-edit-open-curly           paredit-open-curly   
+(pjb-objc-edit-define-wrapper pjb-objc-edit-open-curly           paredit-open-curly
   (backward-char 1)
-  (insert "\n") (c-indent-line-or-region)
+  ;; (insert "\n")
+  (c-indent-line-or-region)
   (forward-char 1)
   (insert "\n") (c-indent-line-or-region)
   (insert "\n") (c-indent-line-or-region)
