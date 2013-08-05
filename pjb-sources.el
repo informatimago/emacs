@@ -179,10 +179,10 @@ nExperience Ratio [0.0,1.0]: ")
     ((c++-mode c-initialize-cc-mode c-mode cperl-mode cwarn-mode
                idl-mode idlwave-mode java-mode objc-mode pike-mode
                prolog-mode )
-     "/*%s"
-     "%s"
-     "    %s"
-     "%s*/"
+     "//%s"
+     "//%s"
+     "//    %s"
+     "//%s"
      "/*** %-32s -- %19s -- %-8s ***/" 
      "\\(/\\*.*?\\*/\\)\\|\\(//.*$\\)")
     (,(append '(asm-mode dsssl-mode zone-mode) *lisp-modes*)
@@ -2165,6 +2165,16 @@ by pjb-add-change-log-entry.")
      "Copyright 2008 Medical Information Systems. "
      ""
      "All Rights Reserved.")
+
+    ("ubudu"
+     t
+     "Copyright 2013 Ubudu SAS."
+     ""
+     "All Rights Reserved."
+     ""
+     "This program and its documentation constitute intellectual property "
+     "of Ubudu SAS and is protected by the copyright laws of "
+     "the European Union and other countries.")
     )
   "An a-list of (license name,  copyright-flag copyright-line...).
    When the copyright-flag is not nil, a copyright line is displayed.
