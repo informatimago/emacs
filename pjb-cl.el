@@ -1443,6 +1443,8 @@ NOTE:      this implementation accepts an :relative-paths  key
            that can be set to t to avoid forcing absolute paths result.
 URL:       http://www.informatimago.com/local/lisp/HyperSpec/Body/f_dir.htm
 "
+  (when (search "**" pathspec)
+    (error "CL ** wild-inferior is not implemented."))
   (file-expand-wildcards pathspec (not relative-paths)))
 
 
