@@ -216,7 +216,7 @@ nExperience Ratio [0.0,1.0]: ")
     ;;  "\\(^;.*$\\)")
     
     ((awk-mode eshell-mode icon-mode m4-mode makefile-mode makefile-gmake-mode makefile-bsdmake-mode
-               octave-mode perl-mode sh-mode shell-script-mode
+               octave-mode perl-mode sh-mode shell-script-mode ruby-mode
                tcl-mode )
      "#%s"
      "#%s"
