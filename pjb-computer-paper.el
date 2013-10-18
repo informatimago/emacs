@@ -62,6 +62,7 @@
                                     (concatenate 'string color "-face")))
                           (face (make-face facesym)))
                      (copy-face 'default face)
+                     (set-face-foreground face "black")
                      (set-face-background face color)
                      face))
                  +computer-paper-colors+)))
@@ -95,4 +96,4 @@
     (put-computer-paper-overlay modulo block)))
   
 
-;;;; pjb-computer-paper.el            --                     --          ;;;;
+;;;; THE END ;;;;

@@ -701,7 +701,16 @@ Show LAMBDA keyword as a greek letter lambda in lisp source code.
 ;; think this also works with clisp.
 
 
-(defvar update-def-names t)
+
+
+;;;---------------------------------------------------------------------
+;;; update-def-names implements an obsolete style.
+
+(defvar update-def-names nil
+  "Whether update-def-names should add comment with the name of the
+definition at the end of the form when it's longer than
+`update-def-names-minimum-lines' lines.")
+
 (defvar update-def-names-minimum-lines 20)
 
 (defun def-name (def arg)
@@ -710,7 +719,6 @@ Show LAMBDA keyword as a greek letter lambda in lisp source code.
     ((atom arg) arg)
     ((STRING-EQUAL (string* (first arg)) "SETF") arg)
     (t (first arg)))) ;;def-name
-
 
 (defun update-def-names (&optional verbose)
   "
@@ -756,7 +764,13 @@ DO:      Update comments at the end of each defmacro,defun,defwhatever
             (skip-to-next-sexp))
           (message "signal 2 %S %S" (car err) (cdr err))
           (signal (car err) (cdr err)))))))
+
+;;;
+;;;---------------------------------------------------------------------
+
   
+
+
 
 ;; ------------------------------------------------------------------------
 ;; map-sexps
@@ -2715,7 +2729,8 @@ silent:     When non-nil, don't issue any message whent the file type can't
 
 
 
-;; ------------------------------------------------------------------------
+;;;---------------------------------------------------------------------
+;;;
 
 
 (defun lse-newline ()
@@ -2798,8 +2813,10 @@ silent:     When non-nil, don't issue any message whent the file type can't
         (setq number (1+ number))))))
 
 
-;; ------------------------------------------------------------------------
-
+;;;------------------------------------------------------------------------
+;;;
+;;; Some commands used to convert C headers into sbcl alien definitions.
+;;;
 
 (defun c-function-to-lisp-alien ()
   (interactive)
@@ -2900,10 +2917,14 @@ from the point down to the end of the buffer."
                 (split-string comment "\n"))
         "\n")))))
 
+;;;
+;;;---------------------------------------------------------------------
 
 
 
-;; ------------------------------------------------------------------------
+
+;;;---------------------------------------------------------------------
+;;;
 
 (defun arg-name (num)
   "RETURN: a one letter named argument name."
