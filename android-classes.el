@@ -1,8 +1,17 @@
 (require 'pjb-html)
 
-(defun android-packages-and-classes ()
+(defun make-android-package-info (name documentation-url) (list name documentation-url))
+(defun android-class-info-name (info) (first info))
+(defun android-class-info-documentation-url (info) (second info))
+
+(defun make-android-class-info (name package documentation-url) (list name package documentation-url))
+(defun android-class-info-name (info) (first info))
+(defun android-class-info-package (info) (second info))
+(defun android-class-info-documentation-url (info) (third info))
+
+(defun android-packages-and-classes (android-classes-xhtml)
  (let* ((root "http://developer.android.com/reference/")
-        (android-xml (with-file "~/src/public/emacs/a.xhtml"
+        (android-xml (with-file android-classes-xhtml
                        (pjb-parse-html (buffer-substring (point-min) (point-max)))))
         (body  (get-first-child-tagged (car android-xml) 'body))
         (ul    (get-first-child-tagged body 'ul))
@@ -11,7 +20,7 @@
                             (let* ((a (get-first-child-tagged li 'a))
                                    (href (attribute-value (get-attribute-named a 'href )))
                                    (name (string-trim " \n\t" (first (element-children a)))))
-                              (list name href)))
+                              (make-android-package-info name href)))
                           lis))
         (table (get-first-child-tagged body 'table))
         (trs   (get-children-tagged table 'tr))
@@ -25,14 +34,14 @@
                                                (substitute (character ".") (character "/")
                                                            (substring url (length root) (- (length url) (length ".html"))))
                                                name)))
-                             (list name package url)))
+                             (make-android-class-info name package url)))
                          trs)))
    (list packages classes)))
 
 (defvar *android-packages* '())
 (defvar *android-classes*  '())
 
-(let ((pc (android-packages-and-classes)))
+(let ((pc (android-packages-and-classes "~/src/public/emacs/android-classes.xhtml")))
   (setf *android-packages* (first pc)
         *android-classes* (second pc))
   nil)
@@ -53,10 +62,11 @@
                                                                     (- (length class-path)
                                                                        (length ".java")))
                                                             "/")))
-                              (list (car (last components))
-                                    (mapconcat (function identity)
-                                               components
-                                               "."))))
+                              (make-android-class-info (car (last components))
+                                                       (mapconcat (function identity)
+                                                                  components
+                                                                  ".")
+                                                       nil)))
                           (let ((result (quote())))
                             (mapfiles (lambda (path) 
                                         (when (suffixp ".java" path)
@@ -68,12 +78,22 @@
 (defun android-all-classes ()
   "Return a list of fully qualified names of  all the android classes found in the buffer."
   (let ((packages '())
-        (class-package-alist (append (java-all-program-classes)
-                                     *android-classes*)))
+        (class-package-alist (append (java-all-program-classes) *android-classes*)))
     (dolist (class-name (jde-import-all-find-classes-to-import) packages)
       (let ((class (assoc class-name class-package-alist)))
         (when class
-          (pushnew (second class) packages :test (function string=)))))))
+          (pushnew (android-class-info-package class) packages :test (function string=)))))))
+
+
+(defun android-browse-documentation-of-class (class-name)
+  (let ((class-info (assoc class-name *android-classes*)))
+    (if class-info
+      (browse-url (android-class-info-documentation-url class-info))
+      (error "Not a known android class: %s" class-name))))
+
+(defun android-browse-documentation-of-class-at-point ()
+  (interactive)
+  (android-browse-documentation-of-class (thing-at-point 'symbol)))
 
 
 (defun android-import-all ()

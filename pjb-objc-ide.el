@@ -388,5 +388,16 @@ This command assumes point is not in a string or comment."
         (insert (pjb-ide-tag-comment tag)))))
 
 
+(defun pjb-ide-insert-documentation-comment ()
+  (interactive)
+  (insert "
+/**
+ *
+ *
+ *
+ */
+"))
+
+
 (provide 'pjb-objc-ide)
 
