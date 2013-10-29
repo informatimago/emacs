@@ -242,9 +242,9 @@
        
        (comment-intro         . 0)
        ;; A line containing only a comment introduction.
-       
-       (arglist-intro         . (;; c-lineup-arglist-intro-after-paren
-                                 ++))
+
+       ;; (arglist-intro . (c-lineup-arglist-intro-after-paren))
+       (arglist-intro         . +)
        ;; The first line in an argument list.
        
        (arglist-cont          . (c-lineup-string-cont
