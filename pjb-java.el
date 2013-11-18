@@ -34,6 +34,50 @@
 
 (require 'pjb-http)
 
+(defun lastcar (x) (car (last x)))
+
+(defun pjb-java--trace-method ()
+  (interactive)
+  (while (re-search-forward "\\(public\\|protected\\) \\([^ ]+\\) \\([^ ]+\\)(\\(.*\\)) *{" (point-max) t)
+    (let* ((start     (match-beginning 1))
+           (access    (match-string 1))
+           (retype    (match-string 2))
+           (name      (match-string 3))
+           (arguments (match-string 4))
+           (arguments (mapcar (lambda (arg) (split-string arg " " t))
+                              (split-string arguments " *, *")))
+           (arguments (if (equal '(nil) arguments)
+                          nil
+                          arguments))
+           (result1   " --> %s")
+           (result2   ",result")
+           (result3   "    return result;\n"))
+      (message "%s(%s)" name (mapconcat (function lastcar) arguments ","))
+      (goto-char start)
+      (insert "@Override\n  ")
+      (end-of-line)
+      (insert "\n")
+      (if (string= "void" retype)
+          (progn
+            (setf result1 ""
+                  result2 ""
+                  result3 "")
+            (insert (format "    super.%s(%s);\n" name (mapconcat (function lastcar) arguments ","))))
+          (insert (format "    %s result=super.%s(%s);\n" retype name (mapconcat (function lastcar) arguments ","))))
+      (if (equal '(nil) arguments)
+          (insert (format "    trace(String.format(\"%%s.%s()%s\",this%s));\n"
+                          name result1 result2))
+          (insert (format "    trace(String.format(\"%%s.%s(%s)%s\",this%s%s%s));\n"
+                          name
+                          (mapconcat (lambda (arg) (format "%s=%%s" (lastcar arg))) arguments ",")
+                          result1
+                          (if arguments "," "")
+                          (mapconcat  (function lastcar) arguments ",")
+                          result2)))
+      (insert result3)
+      (insert  "  }\n\n"))))
+
+
 (defun pjb-java--single-line (start end)
   (interactive "*r")
   (with-marker (end (if (= ?\n (char-before end)) (1- end) end))

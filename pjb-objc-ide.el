@@ -270,6 +270,7 @@ The excursion is saved.
                                              formatter)))
                           (insert (format "%s\", __PRETTY_FUNCTION__, %s"
                                           formatter
+
                                           (mapconcat (function pjb-objc-ide--princ-to-string) results  ", "))))
                         (progn
                           (insert (format "<%s>\", __PRETTY_FUNCTION__"
