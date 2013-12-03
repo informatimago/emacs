@@ -482,19 +482,83 @@ DO:      Replace the selection with a case insensitive regexp,
           (incf rlen)))))
 
 
-(defun pjb-regexp-not-string-1 (string)
+
+
+
+(defun pjb-rx-not-string (string)
   (case  (length string)
-    ((0) ".*")
-    ((1) (format "[^%s]*" string))
-    (otherwise
-     (format "\\([^%c]*\\|%c%s\\)" (aref string 0)
-             (aref string 0)
-             (pjb-regexp-not-string-1 (subseq string 1))))))
+    ((0)        `(* anything))
+    ((1)        `(not (any ,string)))
+    (otherwise  `(or (not (any ,(subseq string 0 1)))
+                     (seq ,(subseq string 0 1)
+                          ,(pjb-regexp-not-string-1rx (subseq string 1)))))))
+
+;; (pjb-rx-not-string "Hello")
+;; (or (not (any "H")) (seq "H" (or (not (any "e")) (seq "e" (or (not (any "l")) (seq "l" (or (not (any "l")) (seq "l" (not (any "o"))))))))))
+
 
 (defun pjb-regexp-not-string (string)
   (let ((all (coerce (delete-duplicates
                       (sort (coerce string 'list) (function <))) 'string)))
-    (format "^[^%s]*%s[^%s]*$" all (pjb-regexp-not-string-1 string) all)))
+    (rx-to-string `(seq bot
+                        (* (not (any ,string)))
+                        ,(pjb-regexp-not-string-1rx string)
+                        (* (not (any ,string)))
+                        eot))))
+
+
+;; (list (pjb-regexp-not-string "hello")
+;;       (pjb-regexp-not-string "WORLD"))
+;; ("\\(?:\\`[^ehlo]*\\(?:[^h]\\|h\\(?:[^e]\\|e\\(?:[^l]\\|l\\(?:[^l]\\|l[^o]\\)\\)\\)\\)[^ehlo]*\\'\\)"
+;;  "\\(?:\\`[^DLORW]*\\(?:[^W]\\|W\\(?:[^O]\\|O\\(?:[^R]\\|R\\(?:[^L]\\|L[^D]\\)\\)\\)\\)[^DLORW]*\\'\\)")
+
+
+;; (pp (pjb-rx-not-string "hello"))
+;; (pp (pjb-rx-not-string "WORLD"))
+;; 
+;; (both
+;;  (or
+;;   (not
+;;    (any "h"))
+;;   (seq "h"
+;;        (or
+;;         (not
+;;          (any "e"))
+;;         (seq "e"
+;;              (or
+;;               (not
+;;                (any "l"))
+;;               (seq "l"
+;;                    (or
+;;                     (not
+;;                      (any "l"))
+;;                     (seq "l"
+;;                          (not
+;;                           (any "o"))))))))))
+;; 
+;;  (or
+;;   (not
+;;    (any "W"))
+;;   (seq "W"
+;;        (or
+;;         (not
+;;          (any "O"))
+;;         (seq "O"
+;;              (or
+;;               (not
+;;                (any "R"))
+;;               (seq "R"
+;;                    (or
+;;                     (not
+;;                      (any "L"))
+;;                     (seq "L"
+;;                          (not
+;;                           (any "D")))))))))))
+;; 
+;; 
+;; (defun pjb-rx-both  (r1 r2)
+;; 
+;;   )
 
 
 (defconstant *apl-letters*
@@ -3307,12 +3371,16 @@ the FUNCTION can take."
 
 (defun set-sources (directory)
   (interactive "DSource directory: ")
-  (message "Wait 30 seconds…")
+  (message "Caching paths…")
   (let ((directory (remove-trailling-slashes directory)))
     (handler-case
         (progn
           (let ((*sources* directory))
-            (file-cache-add-directory-recursively directory ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$"))
+            (file-cache-add-directory-recursively
+             directory
+             ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$"
+             (regexp-or (pjb-regexp-not-string "/documentations/specifications/ios/")
+                        (pjb-regexp-not-string "/documentations/specifications/android/"))))
           (setf *sources* directory))
       (error (err)
         (message (format "%s" err))))
@@ -3320,6 +3388,7 @@ the FUNCTION can take."
     (let ((directory (expand-file-name directory)))
       (set-shadow-map (list (cons (format "%s/" directory)
                                   (format "%s%s/" (file-name-directory directory) *shadow-directory-name*)))))
+    (message "Caching paths… Complete.")
     (setf grep-find-command
           (let ((exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
                 (include-types '("xib" "h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
@@ -3358,6 +3427,7 @@ the FUNCTION can take."
                                                                (or (< (length a) (length b))
                                                                    (and (= (length a) (length b))
                                                                         (string< a b))))))))))))))
+(global-set-key (kbd "A-f") 'sources-find-file-named)
 
 
 
