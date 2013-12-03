@@ -89,7 +89,7 @@
         "pjb-objc-ide.el"
         ;; not yet ;; "pjb-objc-mode.el"
         "pjb-objc-parser.el"
-
+        "android-classes.el"
         "pjb-pl1.el" ; testing
         ))
 

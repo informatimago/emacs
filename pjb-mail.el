@@ -127,7 +127,7 @@ NOTE:   See original code: message-remove-header
           (if (re-search-forward "^[^ \t]" nil t)
               (goto-char (match-beginning 0))
               (point-max))))
-    number)) ;;pjb-mail-remove-header
+    number))
 
 
 
@@ -135,7 +135,7 @@ NOTE:   See original code: message-remove-header
   "
 RETURN:  A unique string that can be used as a boundary.
 "
-  (let ((ut (MULTIPLE-VALUE-LIST (DECODE-UNIVERSAL-TIME (GET-UNIVERSAL-TIME)))))
+  (let ((ut (decode-time)))
     (format "%s.%08d.%04d-%02d-%02d-%02d-%02d-%02d/%02d" 
       (system-name) (random 100000000)
       (elt ut 5) (elt ut 4) (elt ut 3)
@@ -635,7 +635,7 @@ DO:      Encrypt the current mail and put it into a multipart/encrypted MIME.
           (switch-to-buffer-other-window "*PGP*")
           (fit-window-to-buffer)
           ))
-    )) ;;pjb-mail-encrypt
+    ))
 
 
 

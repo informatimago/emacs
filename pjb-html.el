@@ -178,5 +178,102 @@
   (local-set-key "\C-c,"    'backward-tag))
 
 
+
+
+
+
+(defun make-element (name attributes children) (list* name attributes children))
+(defun element-name (element) (and (listp element) (car element)))
+(defun element-attributes (element) (and (listp element) (cadr element)))
+(defun element-children (element) (and (listp element) (cddr element)))
+(defun set-element-name (element new-name) (setf (car element) new-name))
+(defun set-element-attributes (element new-attributes) (setf (cadr element) new-attributes))
+(defun set-element-children (new-element children) (setf (cddr element) new-children))
+(defsetf element-name set-element-name)
+(defsetf element-attributes set-element-attributes)
+(defsetf element-children set-element-children)
+
+
+(defun make-attribute (name value) (list* name value))
+(defun attribute-name (attribute) (car attribute))
+(defun attribute-value (attribute) (cdr attribute))
+(defun set-attribute-name (attribute new-name) (setf (car attribute) new-name))
+(defun set-attribute-value (new-attribute value) (setf (cdr attribute) new-value))
+(defsetf attribute-name set-attribute-name)
+(defsetf attribute-value set-attribute-value)
+
+
+(defun entity-name-equal-p (a b)
+  "xmls entity name may go in namespaces in which case they're lists: (name namespace)"
+  (cond
+   ((and (stringp a) (stringp b)) (string= a b))
+   ((and (stringp a) (symbolp b)) (string= a b))
+   ((and (symbolp a) (stringp b)) (string= a b))
+   ((and (symbolp a) (symbolp b)) (string= a b))
+   ((and (consp a)   (consp b))   (entity-name-equal-p (car a) (car b)))
+   ((and (consp a)   (stringp b)) (entity-name-equal-p (car a) b))
+   ((and (consp a)   (symbolp b)) (entity-name-equal-p (car a) b))
+   ((and (stringp a) (consp b))   (entity-name-equal-p a (car b)))
+   ((and (symbolp a) (consp b))   (entity-name-equal-p a (car b)))))
+
+
+(defun get-attribute-named (element attribute-name)
+  (find attribute-name (element-attributes element)
+        :test (function string=)
+        :key (function attribute-name)))
+
+(defun value-of-attribute-named (element attribute-name)
+  (attribute-value (get-attribute-named element attribute-name)))
+
+(defun get-first-child (element)
+  (first (element-children element)))
+
+(defun single-string-child-p (element)
+  (and (= 1 (length (element-children element)))
+       (stringp (get-first-child element))))
+
+
+(defun get-first-child-tagged (element element-name)
+  (find element-name
+        (element-children element)
+        :test (function entity-name-equal-p)
+        :key (function element-name)))
+
+(defun get-first-child-valued (element attribute value)
+  (find-if
+   (lambda (child) (string= value (value-of-attribute-named child attribute)))
+   (element-children element)))
+
+(defun get-children-tagged (element element-name)
+  (remove* element-name
+          (element-children element)
+          :test-not (function entity-name-equal-p)
+          :key (lambda (x) (if (consp x) (element-name x) ""))))
+
+
+(defun get-children-with-tag-and-attribute (element element-name attribute-name attribute-value)
+  (remove-if-not (lambda (child)
+                   (and (consp child)
+                        (entity-name-equal-p (element-name child) element-name)
+                        (string= (value-of-attribute-named child attribute-name) attribute-value)))
+                 (element-children element)))
+
+
+(defun find-children-tagged (element element-name)
+  (append (get-children-tagged element element-name)
+          (mapcan (lambda (child) (find-children-tagged child element-name))
+                  (element-children element))))
+
+
+(defun value-to-boolean (value)
+  (string= "true" value))
+
+
+(defun element-at-path (root path)
+  (if (null path)
+      root
+      (element-at-path (get-first-child-tagged root (first path)) (rest path))))
+
+
 (provide 'pjb-html)
 ;;;; THE END ;;;;

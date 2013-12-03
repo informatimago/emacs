@@ -270,6 +270,7 @@ The excursion is saved.
                                              formatter)))
                           (insert (format "%s\", __PRETTY_FUNCTION__, %s"
                                           formatter
+
                                           (mapconcat (function pjb-objc-ide--princ-to-string) results  ", "))))
                         (progn
                           (insert (format "<%s>\", __PRETTY_FUNCTION__"
@@ -386,6 +387,17 @@ This command assumes point is not in a string or comment."
               (insert (pjb-ide-tag-comment tag))
               (beginning-of-line 2))))
         (insert (pjb-ide-tag-comment tag)))))
+
+
+(defun pjb-ide-insert-documentation-comment ()
+  (interactive)
+  (insert "
+/**
+ *
+ *
+ *
+ */
+"))
 
 
 (provide 'pjb-objc-ide)
