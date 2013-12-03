@@ -119,8 +119,13 @@
 
 (defun pjb-http-get (url)
   "Fetches a resource at URL, and returns it."
-  (shell-command-to-string
-   (format "wget --no-convert-links -q -nv -o /dev/null -t 3  -O -  %s" (shell-quote-argument url))))
+  (let ((result (shell-command-to-string
+                 (format "PATH='%s' wget --no-convert-links -q -nv -o /dev/null -t 3  -O -  %s"
+                         (mapconcat (function identity) exec-path ":")
+                         (shell-quote-argument url)))))
+    (if (string= result "/bin/bash: wget: command not found\n")
+        (error result)
+        result)))
 
 (defun pjb-parse-xml (xml)
   "Parse the XML string."
