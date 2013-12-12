@@ -3369,6 +3369,8 @@ the FUNCTION can take."
       "/"
       path))
 
+
+
 (defun set-sources (directory)
   (interactive "DSource directory: ")
   (message "Caching paths…")
@@ -3378,13 +3380,12 @@ the FUNCTION can take."
           (let ((*sources* directory))
             (file-cache-add-directory-recursively
              directory
-             ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$"
-             (regexp-or (pjb-regexp-not-string "/documentations/specifications/ios/")
-                        (pjb-regexp-not-string "/documentations/specifications/android/"))))
+             ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$"))
           (setf *sources* directory))
       (error (err)
         (message (format "%s" err))))
-    (setf *sources-cache* (sort (mapcar (function car) file-cache-alist) (function string<)))
+    (setf *sources-cache* (sort (mapcar (function car) file-cache-alist)
+                                (function string<)))
     (let ((directory (expand-file-name directory)))
       (set-shadow-map (list (cons (format "%s/" directory)
                                   (format "%s%s/" (file-name-directory directory) *shadow-directory-name*)))))
@@ -3403,6 +3404,7 @@ the FUNCTION can take."
                     (mapconcat (lambda (name) (format "-name %s" name)) exclude-names " -o ")
                     (mapconcat (lambda (type) (format "-name \\*.%s" type)) include-types " -o ")))
           grep-host-defaults-alist nil)))
+
 
 (defun sources-find-file-named (name)
   (interactive (list
@@ -3426,8 +3428,8 @@ the FUNCTION can take."
                                                                     (b (car b)))
                                                                (or (< (length a) (length b))
                                                                    (and (= (length a) (length b))
-                                                                        (string< a b))))))))))))))
-(global-set-key (kbd "A-f") 'sources-find-file-named)
+                                                                        (string< a b)))))))))))))
+  (global-set-key (kbd "A-f") 'sources-find-file-named))
 
 
 
