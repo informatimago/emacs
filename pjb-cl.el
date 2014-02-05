@@ -127,6 +127,16 @@ RETURN: Whether `char' is in `bag'.
 ;; Common-Lisp
 
 
+(defun integer-length (x)
+  (if (minusp x)
+    (integer-length (- x))
+    (loop
+     until (zerop x)
+     do (setf x (ash x -1))
+     sum 1 into result
+     finally (return result))))
+
+
 ;; -----------------------------
 ;; - 5 - Data and Control Flow -
 ;; -----------------------------
