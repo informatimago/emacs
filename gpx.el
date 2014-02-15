@@ -2,7 +2,7 @@
   ;; http://www.topografix.com/GPX/1/1/#type_wptType
   ;; http://www.topografix.com/gpx.asp
 
-  (java-defstruct x
+  (java-defstruct gpx
     (provider String)
     (parsed boolean)
     (waypoints ArrayList<Point> )
@@ -53,148 +53,8 @@
     (number Integer)
     (type String)
     (points ArrayList<Point>)))
-public class x {
-  public x(){}
-  protected String mProvider;
-  public String getProvider(){return mProvider;}
-  public void setProvider(String aProvider){mProvider=aProvider;}
-  protected boolean mParsed;
-  public boolean getParsed(){return mParsed;}
-  public void setParsed(boolean aParsed){mParsed=aParsed;}
-  protected ArrayList<Point> mWaypoints;
-  public ArrayList<Point> getWaypoints(){return mWaypoints;}
-  public void setWaypoints(ArrayList<Point> aWaypoints){mWaypoints=aWaypoints;}
-  protected ArrayList<Route> mRoutes;
-  public ArrayList<Route> getRoutes(){return mRoutes;}
-  public void setRoutes(ArrayList<Route> aRoutes){mRoutes=aRoutes;}
-  protected ArrayList<Track> mTracks;
-  public ArrayList<Track> getTracks(){return mTracks;}
-  public void setTracks(ArrayList<Track> aTracks){mTracks=aTracks;}
-}
 
-public class Point {
-  public Point(){}
-  protected Double mLatitude;
-  public Double getLatitude(){return mLatitude;}
-  public void setLatitude(Double aLatitude){mLatitude=aLatitude;}
-  protected Double mLongitude;
-  public Double getLongitude(){return mLongitude;}
-  public void setLongitude(Double aLongitude){mLongitude=aLongitude;}
-  protected Double mElevation;
-  public Double getElevation(){return mElevation;}
-  public void setElevation(Double aElevation){mElevation=aElevation;}
-  protected longMillis mTime;
-  public longMillis getTime(){return mTime;}
-  public void setTime(longMillis aTime){mTime=aTime;}
-  protected Double mMagneticVariation;
-  public Double getMagneticVariation(){return mMagneticVariation;}
-  public void setMagneticVariation(Double aMagneticVariation){mMagneticVariation=aMagneticVariation;}
-  protected Double mGeoidHeight;
-  public Double getGeoidHeight(){return mGeoidHeight;}
-  public void setGeoidHeight(Double aGeoidHeight){mGeoidHeight=aGeoidHeight;}
-  protected String mName;
-  public String getName(){return mName;}
-  public void setName(String aName){mName=aName;}
-  protected String mComment;
-  public String getComment(){return mComment;}
-  public void setComment(String aComment){mComment=aComment;}
-  protected String mDescription;
-  public String getDescription(){return mDescription;}
-  public void setDescription(String aDescription){mDescription=aDescription;}
-  protected String mSource;
-  public String getSource(){return mSource;}
-  public void setSource(String aSource){mSource=aSource;}
-  protected String mLink;
-  public String getLink(){return mLink;}
-  public void setLink(String aLink){mLink=aLink;}
-  protected String mSymbol;
-  public String getSymbol(){return mSymbol;}
-  public void setSymbol(String aSymbol){mSymbol=aSymbol;}
-  protected String mType;
-  public String getType(){return mType;}
-  public void setType(String aType){mType=aType;}
-  protected String mFix;
-  public String getFix(){return mFix;}
-  public void setFix(String aFix){mFix=aFix;}
-  protected Integer mSatellite;
-  public Integer getSatellite(){return mSatellite;}
-  public void setSatellite(Integer aSatellite){mSatellite=aSatellite;}
-  protected Double mHorizontalDilutionOfPrecision;
-  public Double getHorizontalDilutionOfPrecision(){return mHorizontalDilutionOfPrecision;}
-  public void setHorizontalDilutionOfPrecision(Double aHorizontalDilutionOfPrecision){mHorizontalDilutionOfPrecision=aHorizontalDilutionOfPrecision;}
-  protected Double mVerticalDilutionOfPrecision;
-  public Double getVerticalDilutionOfPrecision(){return mVerticalDilutionOfPrecision;}
-  public void setVerticalDilutionOfPrecision(Double aVerticalDilutionOfPrecision){mVerticalDilutionOfPrecision=aVerticalDilutionOfPrecision;}
-  protected Double mAgeOfGpsData;
-  public Double getAgeOfGpsData(){return mAgeOfGpsData;}
-  public void setAgeOfGpsData(Double aAgeOfGpsData){mAgeOfGpsData=aAgeOfGpsData;}
-  protected Integer mDGpsId;
-  public Integer getDGpsId(){return mDGpsId;}
-  public void setDGpsId(Integer aDGpsId){mDGpsId=aDGpsId;}
-}
 
-public class Segment {
-  public Segment(){}
-  protected ArrayList<Point> mPoints;
-  public ArrayList<Point> getPoints(){return mPoints;}
-  public void setPoints(ArrayList<Point> aPoints){mPoints=aPoints;}
-}
-
-public class Track {
-  public Track(){}
-  protected String mName;
-  public String getName(){return mName;}
-  public void setName(String aName){mName=aName;}
-  protected String mComment;
-  public String getComment(){return mComment;}
-  public void setComment(String aComment){mComment=aComment;}
-  protected String mDescription;
-  public String getDescription(){return mDescription;}
-  public void setDescription(String aDescription){mDescription=aDescription;}
-  protected String mSource;
-  public String getSource(){return mSource;}
-  public void setSource(String aSource){mSource=aSource;}
-  protected String mLink;
-  public String getLink(){return mLink;}
-  public void setLink(String aLink){mLink=aLink;}
-  protected Integer mNumber;
-  public Integer getNumber(){return mNumber;}
-  public void setNumber(Integer aNumber){mNumber=aNumber;}
-  protected String mType;
-  public String getType(){return mType;}
-  public void setType(String aType){mType=aType;}
-  protected ArrayList<Segment> mSegments;
-  public ArrayList<Segment> getSegments(){return mSegments;}
-  public void setSegments(ArrayList<Segment> aSegments){mSegments=aSegments;}
-}
-
-public class Route {
-  public Route(){}
-  protected String mName;
-  public String getName(){return mName;}
-  public void setName(String aName){mName=aName;}
-  protected String mComment;
-  public String getComment(){return mComment;}
-  public void setComment(String aComment){mComment=aComment;}
-  protected String mDescription;
-  public String getDescription(){return mDescription;}
-  public void setDescription(String aDescription){mDescription=aDescription;}
-  protected String mSource;
-  public String getSource(){return mSource;}
-  public void setSource(String aSource){mSource=aSource;}
-  protected String mLink;
-  public String getLink(){return mLink;}
-  public void setLink(String aLink){mLink=aLink;}
-  protected Integer mNumber;
-  public Integer getNumber(){return mNumber;}
-  public void setNumber(Integer aNumber){mNumber=aNumber;}
-  protected String mType;
-  public String getType(){return mType;}
-  public void setType(String aType){mType=aType;}
-  protected ArrayList<Point> mPoints;
-  public ArrayList<Point> getPoints(){return mPoints;}
-  public void setPoints(ArrayList<Point> aPoints){mPoints=aPoints;}
-}
 
 
 
@@ -309,10 +169,49 @@ public class Route {
   ;; http://www.topografix.com/GPX/1/1/#type_wptType
   ;; http://www.topografix.com/gpx.asp
 
+
   (gpx-parse Gpx
+    (metadata Metadata metadata)
     (waypoints ArrayList<Point> wpt)
     (routes ArrayList<Route> rte)
     (tracks ArrayList<Track> trk))
+
+  (gpx-parse Metadata
+    (name String name)
+    (description String desc)
+    (author Person author)
+    (copyright Copyright copyright)
+    (link Link link)
+    (time String time)
+    (keywords String keywords)
+    (bounds Bounds bounds)
+    (extensions String extensions))
+
+  (gpx-parse Copyright
+    (author String author)
+    (year Integer year)
+    (license String license))
+  
+  (gpx-parse Person
+    (name String name)
+    (email Email email)
+    (link Link link))
+  
+  (gpx-parse Bounds
+    (minimum-latitude Double minlat)
+    (minimum-longitude Double minlon)
+    (maximum-latitude Double maxlat)
+    (maximum-latitude Double maxlat))
+
+  (gpx-parse Email
+    (id String id)
+    (domain String domain))
+
+  (gpx-parse Link
+    (href String href)
+    (text String text)
+    (type String type))
+  
   
   (gpx-parse Point 
     (latitude Double lat :attribute)
