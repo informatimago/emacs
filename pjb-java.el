@@ -73,9 +73,9 @@
 (defun lastcar (x) (car (last x)))
 
 
-(defun pjb-java--trace-method ()
+(defun pjb-java--trace-one-method ()
   (interactive)
-  (while (re-search-forward "\\(public\\|protected\\) \\([^ ]+\\) \\([^ ]+\\)(\\(.*\\)) *{" (point-max) t)
+  (when (re-search-forward "\\(public\\|protected\\) \\([^ ]+\\) \\([^ ]+\\)(\\(.*\\)) *{" (point-max) t)
     (let* ((start     (match-beginning 1))
            (access    (match-string 1))
            (retype    (match-string 2))
@@ -84,8 +84,8 @@
            (arguments (mapcar (lambda (arg) (split-string arg " " t))
                               (split-string arguments " *, *")))
            (arguments (if (equal '(nil) arguments)
-                          nil
-                          arguments))
+                        nil
+                        arguments))
            (result1   " --> %s")
            (result2   ",result")
            (result3   "    return result;\n"))
@@ -95,24 +95,29 @@
       (end-of-line)
       (insert "\n")
       (if (string= "void" retype)
-          (progn
-            (setf result1 ""
-                  result2 ""
-                  result3 "")
-            (insert (format "    super.%s(%s);\n" name (mapconcat (function lastcar) arguments ","))))
-          (insert (format "    %s result=super.%s(%s);\n" retype name (mapconcat (function lastcar) arguments ","))))
+        (progn
+          (setf result1 ""
+                result2 ""
+                result3 "")
+          (insert (format "    super.%s(%s);\n" name (mapconcat (function lastcar) arguments ","))))
+        (insert (format "    %s result=super.%s(%s);\n" retype name (mapconcat (function lastcar) arguments ","))))
       (if (equal '(nil) arguments)
-          (insert (format "    trace(String.format(\"%%s.%s()%s\",this%s));\n"
-                          name result1 result2))
-          (insert (format "    trace(String.format(\"%%s.%s(%s)%s\",this%s%s%s));\n"
-                          name
-                          (mapconcat (lambda (arg) (format "%s=%%s" (lastcar arg))) arguments ",")
-                          result1
-                          (if arguments "," "")
-                          (mapconcat  (function lastcar) arguments ",")
-                          result2)))
+        (insert (format "    trace(String.format(\"%%s.%s()%s\",this%s));\n"
+                        name result1 result2))
+        (insert (format "    trace(String.format(\"%%s.%s(%s)%s\",this%s%s%s));\n"
+                        name
+                        (mapconcat (lambda (arg) (format "%s=%%s" (lastcar arg))) arguments ",")
+                        result1
+                        (if arguments "," "")
+                        (mapconcat  (function lastcar) arguments ",")
+                        result2)))
       (insert result3)
-      (insert  "  }\n\n"))))
+      (insert  "  }\n\n"))
+    t))
+
+(defun pjb-java--trace-all-methods ()
+  (interactive)
+  (while (pjb-java--trace-one-method)))
 
 
 (defun pjb-java--single-line (start end)
