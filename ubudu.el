@@ -141,7 +141,7 @@
        
        (inline-close          . 0)
        ;; Brace that closes an in-class inline method.
-       (func-decl-cont        . +)
+       (func-decl-cont        . (c-lineup-java-throws ++))
        ;; The region between a function definition's
        ;; argument list and the function opening brace
        ;; (excluding K&R argument declarations).  In C, you
@@ -243,8 +243,8 @@
        (comment-intro         . 0)
        ;; A line containing only a comment introduction.
 
-       ;; (arglist-intro . (c-lineup-arglist-intro-after-paren))
-       (arglist-intro         . +)
+       (arglist-intro . (c-lineup-arglist-intro-after-paren))
+       ;; (arglist-intro         . +)
        ;; The first line in an argument list.
        
        (arglist-cont          . (c-lineup-string-cont
