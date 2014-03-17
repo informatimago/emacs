@@ -236,9 +236,9 @@ RET   q       hide the buffer, calling `quit' with the current color
     (pjb-color-picker--create-color-picker
      "*test color picker*" "gray33"
      :update (lambda (color)
-               (set-background-color (pjb-color-picker--rgb-color color))
                (message "update %s" color))
      :quit   (lambda (color)
+               (set-background-color (pjb-color-picker--rgb-color color))
                (message "quit   %s" color)
                t)
      :abort  (lambda (color)

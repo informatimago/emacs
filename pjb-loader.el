@@ -61,6 +61,8 @@
         "pjb-dodo.el"
         "pjb-emacs.el"
         "pjb-erc.el"
+        "pjb-erc-filter.el"
+        "pjb-erc-speak.el"
         "pjb-euro.el"
         "pjb-font.el"
         "pjb-html.el"
@@ -99,8 +101,7 @@
         (append *pjb-sources*
                 '(
 
-                  "pjb-vm-kill-file.el"
-
+                 
                   "pjb-computer-paper.el"
                   "pjb-constants.el"
                   "pjb-cvs.el"
@@ -131,14 +132,18 @@
                   ))))
 
 
- (when nil
+ (unless :obsolete
    '(
+     "pjb-vm"
+     "pjb-vm-kill-file.el"
+
      "pjb-banks-old.el"
      "pjb-c.el"
      "pjb-objc-mode.el"
      "pjb-comint"
      "slime-rpc.el"
      "split.el"
+
      ))
 
 
