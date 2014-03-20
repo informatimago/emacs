@@ -68,7 +68,7 @@ OPTIONS can contain :ignore-case in which case the case string and prefix
     (loop for clist = slist then (cddr clist)
        while clist
        for sprop = (if ignore-case (upcase (car clist)) (car clist))
-       while (STRING/= sprop prop)
+       while (string/= sprop prop)
        finally return (cadr clist))
     )) ;;slist-get
 
@@ -870,7 +870,7 @@ DO:     Insert a file attachment at the point, prefixed with Content- headers
      :description description)
     (insert "\n\n")
     (previous-line 1)
-    (if (STRING= "8bit" transfer-encoding)
+    (if (string= "8bit" transfer-encoding)
         (insert-file-contents file-name)
         (if compress
             (shell-command (format "gzip<%s|base64-encode" 
