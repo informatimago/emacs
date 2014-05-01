@@ -491,20 +491,23 @@ DO:      Replace the selection with a case insensitive regexp,
     ((1)        `(not (any ,string)))
     (otherwise  `(or (not (any ,(subseq string 0 1)))
                      (seq ,(subseq string 0 1)
-                          ,(pjb-regexp-not-string-1rx (subseq string 1)))))))
+                          ,(pjb-rx-not-string (subseq string 1)))))))
 
 ;; (pjb-rx-not-string "Hello")
 ;; (or (not (any "H")) (seq "H" (or (not (any "e")) (seq "e" (or (not (any "l")) (seq "l" (or (not (any "l")) (seq "l" (not (any "o"))))))))))
 
 
 (defun pjb-regexp-not-string (string)
-  (let ((all (coerce (delete-duplicates
+  (let ((chars (coerce (delete-duplicates
                       (sort (coerce string 'list) (function <))) 'string)))
     (rx-to-string `(seq bot
-                        (* (not (any ,string)))
-                        ,(pjb-regexp-not-string-1rx string)
-                        (* (not (any ,string)))
+                        (* (not (any ,chars)))
+                        ,(pjb-rx-not-string string)
+                        (* (not (any ,chars)))
                         eot))))
+
+;; (pjb-regexp-not-string "abc")
+;; "\\(?:\\`[^a-c]*\\(?:[^a]\\|a\\(?:[^b]\\|b[^c]\\)\\)[^a-c]*\\'\\)"
 
 
 ;; (list (pjb-regexp-not-string "hello")
