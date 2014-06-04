@@ -67,6 +67,5 @@
             (insert (melange word))
             (goto-char end-word)))))))
 
-
 ;;;; THE END ;;;;
 

@@ -168,15 +168,13 @@ RETURN: the buffer which has as name `name'.
         (setq result (car buffers))
         (setq buffers nil))
       (setq buffers (cdr buffers)))
-    result)
-  ) ;;old-buffer-named
+    result))
 
 
 (defun pjb-custom-set-variables (&rest l)
   (while l
     (custom-set-variables (append (car l) (list t)))
-    (setq l (cdr l)))
-  ) ;;pjb-custom-set-variables
+    (setq l (cdr l))))
 
 
 (defun set-default-directory (path)
@@ -218,8 +216,7 @@ yank even with ARGS (thus it can be mapped to \C-y)"
   ;; Translate `C-h' to <DEL>.
   (keyboard-translate ?\C-h ?\C-?)
   ;; Translate <DEL> to `C-h'.
-  (keyboard-translate ?\C-? ?\C-h)
-  ) ;;exch-del-ctrl-h
+  (keyboard-translate ?\C-? ?\C-h))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -544,9 +541,6 @@ DO:      Apply wc on the file visited in the current buffer.
 
 
 (defun pjb-search-in-all-buffers (string)
-  "
-
-"
   (interactive "sString: ")
   (let ( (list (buffer-list)) 
         buffer )
@@ -685,8 +679,7 @@ with possible additional arguments `browse-url-xterm-args'."
           (setq done t))
       (narrow-to-page)
       (sit-for delay)
-      (force-mode-line-update t)
-      ) ;;while
+      (force-mode-line-update t))
     (message "Done.")))
 
 
@@ -738,23 +731,6 @@ DO:      Colorize the region with group of lines (normaly 1 by 1)
       (setq color (cons (cdr color) (car color))))))
 
 
-(defun pjb-old-look ()
-  "
-DO:      Set the background, foreground and font to look like an oldie tty.
-"
-  (interactive)
-  (set-background-color "#000")
-  (set-foreground-color "#0f2")
-  (set-cursor-color     "#3f1")
-  (mouse-set-font "-adobe-courier-bold-r-normal--*-120-*-*-m-*-iso8859-1")
-  (setq global-font-lock-mode nil)
-  (save-excursion
-    (dolist (buffer (buffer-list))
-      (set-buffer buffer)
-      (font-lock-mode -1)))
-  ) ;;pjb-old-look
-
-
 (defun pjb-address (pattern)
   "
 DO:      Search an address in my address book (~/private/info/personnes.form)
@@ -768,12 +744,10 @@ DO:      Search an address in my address book (~/private/info/personnes.form)
   (forms-search-forward pattern))
 
 
-
 (defvar pjb-cross-references-rejected-regexp
   "\\(^\\.?#\\|~$\\|\\.\\(elc\\|o\\|a\\)$\\)"
   "A regexp matching file names that should not be searched 
-for cross references.") ;;pjb-cross-references-rejected-regexp
-
+for cross references.")
 
 (defun pjb-cross-references ()
   "
@@ -1641,8 +1615,7 @@ See also: `exclude-frame' and `include-frame'
       ((null text) (error "No text to search."))
       ((search-backward text nil t)
        (set-mark (match-end 0)))
-      (t (error "Can't find %S" text))))
-  ) ;;pjb-search-backward-region
+      (t (error "Can't find %S" text)))))
 
 
 (defun pjb-search-forward-region ()
@@ -1658,8 +1631,7 @@ See also: `exclude-frame' and `include-frame'
       ((null text) (error "No text to search."))
       ((search-forward text nil t)
        (set-mark (match-beginning 0)))
-      (t (error "Can't find %S" text))))
-  ) ;;pjb-search-forward-region
+      (t (error "Can't find %S" text)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

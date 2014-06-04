@@ -72,9 +72,7 @@ RETURN: A string containing the dot file data for this PjbElement node.
                         "\n")
                        (dot-ident (ident self)))))
     (format "%S [ style=%s color=%s fillcolor=%s label=\"%s\" ];\n"
-            (dot-ident (ident self)) style color fillcolor label)
-    ));;generate-dot
-
+            (dot-ident (ident self)) style color fillcolor label)))
 
 
 
@@ -84,8 +82,7 @@ RETURN: A string containing the dot file data for this edge.
 "
   (format "%S -> %S ;\n"
           (dot-ident (ident (from self)))
-          (dot-ident (ident (to   self))))
-  );;generate-dot
+          (dot-ident (ident (to   self)))))
 
 
 (defmethod generate-dot ((self PjbWeightedDirectedEdge))
@@ -101,9 +98,7 @@ RETURN: A string containing the dot file data for this edge.
            ((< (weight self) 10) "dashed")
            ((< (weight self) 15) "solid")
            (t                    "bold"))
-          "black"
-          );;format
-  );;generate-dot
+          "black"))
 
 
 ;;; (description (car (element-list (nodes g))))
@@ -136,8 +131,8 @@ NOTE:   dot graphs are directed.
      ;; common attributes of edges:
      "  edge [style=solid];\n" 
      (mapElements (edges self) (lambda (edge) (generate-dot edge)))
-     "}\n")))
-  );;generate-dot
+     "}\n"))))
 
 
-;;;; pjb-dot.el                       --                     --          ;;;;
+;;;; THE END ;;;;
+

@@ -60,6 +60,7 @@
         "pjb-class.el"
         "pjb-dodo.el"
         "pjb-emacs.el"
+        "pjb-echo-keys.el"
         "pjb-erc.el"
         "pjb-erc-filter.el"
         "pjb-erc-speak.el"
