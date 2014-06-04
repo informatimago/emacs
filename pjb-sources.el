@@ -2249,7 +2249,7 @@ by pjb-add-change-log-entry.")
 
     ("ubudu"
      t
-     "Copyright 2013 Ubudu SAS."
+     "Copyright 2014 Ubudu SAS."
      ""
      "All Rights Reserved."
      ""
