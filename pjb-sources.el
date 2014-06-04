@@ -1765,8 +1765,8 @@ EXAMPLE: (COMBINE '(WWW FTP) '(EXA) '(COM ORG)))
                          (print-row title)
                          (princ line) (terpri))
              for row in rows
-             do (print-row row)
-             finally (princ line) (terpri))))))
+             do (print-row row) (princ line)  (terpri)
+             finally (terpri))))))
 
 
 
@@ -1895,6 +1895,7 @@ NOTE:  only for Copyright Pascal Bourguignon.
         (with-file (path :save t :kill t :literal nil)
           (message "Updating copyright in file %S" path)
           (pjb-update-copyright))))))
+
 
 
 
