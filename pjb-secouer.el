@@ -48,7 +48,7 @@
       ((< count 0) str)
     (when (/= i j)
       (psetf (char str i) (char str j)
-             (char str j) (char str i)))));;melange
+             (char str j) (char str i)))))
 
 
 (defun secouer (start end)
@@ -61,10 +61,9 @@
              (end-word   (progn (forward-word 1) (point))))
         (when (and (<= end-word end) (<= 4 (- end-word start-word)))
           (let  ((word (buffer-substring (1+ start-word)  (- end-word 1))))
-            (message word)
             (delete-region (1+ start-word) (- end-word 1))
             (goto-char (1+ start-word))
             (insert (melange word))
-            (goto-char end-word)))))));;secouer
+            (goto-char end-word)))))))
 
 ;;;; pjb-secouer.el                   -- 2004-02-22 02:27:40 -- pascal   ;;;;
