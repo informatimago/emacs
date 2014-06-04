@@ -875,7 +875,7 @@ DO:     Insert a file attachment at the point, prefixed with Content- headers
         (if compress
             (shell-command (format "gzip<%s|base64-encode" 
                              (shell-quote-argument file-name))  t nil)
-            (shell-command (format "base64-encode<%s" 
+            (shell-command (format "base64<%s" 
                              (shell-quote-argument file-name))  t nil)))))
 
 
