@@ -37,34 +37,36 @@
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
 ;;;;    Boston, MA 02111-1307 USA
 ;;;;****************************************************************************
-(require 'pjb-cl)
-
+(require 'cl)
 
 (defun melange (str)
-  (setq str (copy-seq str))
-  (do ((count (+ 3 (random (length str))) (1- count))
-       (i (random (length str))  (random (length str)))
-       (j (random (length str))  (random (length str))))
-      ((< count 0) str)
-    (when (/= i j)
-      (psetf (char str i) (char str j)
-             (char str j) (char str i)))));;melange
+  "Return a new string containing the characters in `str' in random order."
+  (let ((str (copy-seq str)))
+    (do ((count (+ 3 (random (length str))) (1- count))
+         (i (random (length str))  (random (length str)))
+         (j (random (length str))  (random (length str))))
+        ((< count 0) str)
+      (when (/= i j)
+        (psetf (char str i) (char str j)
+               (char str j) (char str i))))))
 
 
 (defun secouer (start end)
+  "Put the letters inside each word in the region `start' - `end' in random order, leaving the first and last letter in place."
   (interactive "*r")
-  (let ((start (min end start))
-        (end (max end start)))
+  (let ((start (min start end))
+        (end   (max start end)))
     (goto-char start)
     (while (< (point) end)
-      (let* ((start-word (progn (forward-word 1) (forward-word -1) (point)))
-             (end-word   (progn (forward-word 1) (point))))
+      (let ((end-word   (progn (forward-word  1) (point)))
+            (start-word (progn (forward-word -1) (point))))
         (when (and (<= end-word end) (<= 4 (- end-word start-word)))
-          (let  ((word (buffer-substring (1+ start-word)  (- end-word 1))))
-            (message word)
+          (let ((word (buffer-substring (1+ start-word)  (- end-word 1))))
             (delete-region (1+ start-word) (- end-word 1))
             (goto-char (1+ start-word))
             (insert (melange word))
-            (goto-char end-word)))))));;secouer
+            (goto-char end-word)))))))
 
-;;;; pjb-secouer.el                   -- 2004-02-22 02:27:40 -- pascal   ;;;;
+
+;;;; THE END ;;;;
+
