@@ -90,8 +90,7 @@ Choose either 'pgp-pgp-command or 'pgp-gpg-command, or implement your own.")
   "PRIVATE"
   (if signer
       (format " -u %s" (shell-quote-argument signer))
-    "")
-  );;pgp-pgp-signer
+    ""))
 
 
 (defun pgp-pgp-recipients (recipients)
@@ -138,8 +137,7 @@ Choose either 'pgp-pgp-command or 'pgp-gpg-command, or implement your own.")
     (format "PGPPASS=%s pgp +batchmode -f" 
             (shell-quote-argument (nth 0 args)));; passphrase
     )
-   (t (error "Unknown selector '%s'." selector)))
-  );;pgp-pgp-command
+   (t (error "Unknown selector '%s'." selector))))
 
 
 
@@ -148,8 +146,7 @@ Choose either 'pgp-pgp-command or 'pgp-gpg-command, or implement your own.")
   "PRIVATE"
   (if signer
       (format " --local-user %s" (shell-quote-argument signer))
-    "")
-  );;pgp-gpg-signer
+    ""))
 
 
 (defun pgp-gpg-recipients (recipients)
@@ -157,76 +154,67 @@ Choose either 'pgp-pgp-command or 'pgp-gpg-command, or implement your own.")
   (apply 'concat
          (mapcar (lambda (elem) 
                    (concat " --recipient " (shell-quote-argument elem)))
-                 (split-string recipients)))
-  );;pgp-gpg-recipients
+                 (split-string recipients))))
 
 
 (defun pgp-gpg-command (selector &rest args)
   "Build the gpg command."
   (let* ((pipe-name (format "/tmp/pipe-%d-%s" (emacs-pid) (gensym "gpg-")))
+         (path      (format "PATH=%S" (mapconcat (function identity) exec-path path-separator)))
          (prefix    (format ;; TODO: Here the password is put in args!
-                     "trap 'rm -f %s' 0 ; mknod %s p ; echo %%s >> %s & " 
+                     (if (eq system-type 'darwin)
+                         "trap 'rm -f %s' 0 ; mkfifo -m 600 %s ; echo %%s >> %s & "
+                         "trap 'rm -f %s' 0 ; mknod %s p ; echo %%s >> %s & ") 
                      pipe-name pipe-name pipe-name))
          (gpg       "gpg --no-utf8-strings --batch --no-tty --textmode"))
     (cond
      ((eq selector 'list-keys)
-      "gpg --no-utf8-strings --batch --no-tty --list-keys"
-      )
+      (concat path " " "gpg --no-utf8-strings --batch --no-tty --list-keys"))
      ((eq selector 'add-keys)
-      "gpg --no-utf8-strings --batch --no-tty --import"
-      )
+      (concat path " " "gpg --no-utf8-strings --batch --no-tty --import"))
      ((eq selector 'encrypt-conventional)
-      (format (concat prefix 
-                      "%s --armor --symmetric "
+      (format (concat prefix
+                      "%s %s --armor --symmetric "
                       " --passphrase-fd 6 6< %s")
               (shell-quote-argument (nth 0 args));; passphrase
-              gpg pipe-name)
-      )
+              path gpg pipe-name))
      ((eq selector 'decrypt-conventional)
       (format (concat prefix 
-                      "%s --decrypt "
+                      "%s %s --decrypt "
                       " --passphrase-fd 6 6< %s")
               (shell-quote-argument (nth 0 args));; passphrase
-              gpg pipe-name)
-      )
+              path gpg pipe-name))
      ((eq selector 'sign)
       (format (concat prefix 
-                      "%s %s --clearsign "
+                      "%s %s %s --clearsign "
                       " --passphrase-fd 6 6< %s")
               (shell-quote-argument (nth 0 args));; passphrase
-              gpg 
+              path gpg 
               (pgp-gpg-signer (nth 1 args));; signer
-              pipe-name)
-      )
+              pipe-name))
      ((eq selector 'check-sign)
-      (format "%s --verify" gpg)
-      )
+      (format "%s %s --verify" path gpg))
      ((eq selector 'sign-encrypt)
-      (format (concat prefix 
-                      "%s --armor %s  %s "
+      (format (concat prefix
+                      "%s %s --armor %s  %s "
                       " --sign --encrypt "
                       " --passphrase-fd 6 6< %s")
               (shell-quote-argument (nth 0 args));; passphrase
-              gpg 
+              path gpg 
               (pgp-gpg-signer (nth 1 args));; signer
               (pgp-gpg-recipients (nth 2 args)) ;; recipients
-              pipe-name)
-      )
+              pipe-name))
      ((eq selector 'encrypt)
-      (format "%s --armor  %s --encrypt  " 
-              gpg 
-              (pgp-gpg-recipients (nth 0 args)) ;; recipients
-              )
-      )
+      (format "%s %s --armor  %s --encrypt  "
+              path gpg 
+              (pgp-gpg-recipients (nth 0 args)))) ;; recipients
      ((eq selector 'decrypt)
-      (format (concat prefix 
-                      "%s --decrypt "
+      (format (concat prefix
+                      "%s %s --decrypt "
                       " --passphrase-fd 6 6< %s")
               (shell-quote-argument (nth 0 args));; passphrase
-              gpg pipe-name)
-      )
-     (t (error "Unknown selector '%s'." selector)))
-    ));;pgp-gpg-command
+              path gpg pipe-name))
+     (t (error "Unknown selector '%s'." selector)))))
 
 
 
@@ -234,8 +222,7 @@ Choose either 'pgp-pgp-command or 'pgp-gpg-command, or implement your own.")
   "Prepare the buffer where pgp stderr will be put."
   (save-excursion
     (switch-to-buffer (get-buffer-create pgp-err-buffer-name))
-    (erase-buffer))
-  );;pgp-prepare-err-buffer
+    (erase-buffer)))
 
 
 (defun pgp-bury-err-buffer-if-empty ()
@@ -244,9 +231,7 @@ Choose either 'pgp-pgp-command or 'pgp-gpg-command, or implement your own.")
     (set-buffer  pgp-err-buffer-name)
     (when (= 0 (buffer-size))
       (bury-buffer)
-      (switch-to-buffer pgp$*out-buffer*))
-    );;save-excursion
-  );;pgp-bury-err-buffer-if-empty
+      (switch-to-buffer pgp$*out-buffer*))))
 
 
 (defun pgp-prepare-out-buffer (action)
@@ -268,8 +253,7 @@ otherwise we keep the current buffer."
 
 (defun pgp-remove-key-from-history (key)
   "Remove the given KEY from the minibuffer-history."
-  (setq minibuffer-history (delete key minibuffer-history))
-  );;pgp-remove-key-from-history
+  (setq minibuffer-history (delete key minibuffer-history)))
 
 
 (defun pgp-encrypt-conventional-range (key begin end) 
@@ -282,9 +266,7 @@ otherwise we keep the current buffer."
      begin end
      (funcall pgp-command 'encrypt-conventional key)
      out-buffer (eq out-buffer (current-buffer))  pgp-err-buffer-name))
-  (pgp-bury-err-buffer-if-empty)
-  );;pgp-encrypt-conventional-range
-
+  (pgp-bury-err-buffer-if-empty))
 
 (defun pgp-decrypt-conventional-range (key begin end) 
   "Decrypt conventionaly the range BEGIN, END with the KEY."
@@ -296,8 +278,7 @@ otherwise we keep the current buffer."
      begin end
      (funcall pgp-command 'decrypt-conventional key)
      out-buffer (eq out-buffer (current-buffer)) pgp-err-buffer-name))
-  (pgp-bury-err-buffer-if-empty)
-  );;pgp-decrypt-conventional-range
+  (pgp-bury-err-buffer-if-empty))
 
 
 (defun pgp-sign-range (pass-phrase begin end) 
@@ -311,8 +292,7 @@ unlocked with the pass-phrase."
      begin end
      (funcall pgp-command 'sign pass-phrase pgp-signer)
      out-buffer (eq out-buffer (current-buffer)) pgp-err-buffer-name))
-  (pgp-bury-err-buffer-if-empty)
-  );;pgp-sign-range 
+  (pgp-bury-err-buffer-if-empty))
 
 
 (defun pgp-check-sign-range (begin end) 
@@ -323,8 +303,7 @@ unlocked with the pass-phrase."
    begin end
    (funcall pgp-command 'check-sign)
    pgp-err-buffer-name nil pgp-err-buffer-name)
-  (pgp-bury-err-buffer-if-empty)
-  );;pgp-check-sign-range
+  (pgp-bury-err-buffer-if-empty))
 
 
 (defun pgp-encrypt-pk-range (pass-phrase recipients begin end) 
@@ -344,10 +323,8 @@ otherwise only encrypt the range BEGIN to END, for the RECIPIENTS."
        begin end
        (funcall pgp-command 'encrypt recipients)
        out-buffer (eq out-buffer (current-buffer)) pgp-err-buffer-name))
-    (switch-to-buffer out-buffer)
-  );;let
-  (pgp-bury-err-buffer-if-empty)
-  );;pgp-encrypt-pk-range
+    (switch-to-buffer out-buffer))
+  (pgp-bury-err-buffer-if-empty))
 
 
 (defun pgp-decrypt-pk-range (pass-phrase begin end) 
@@ -360,11 +337,8 @@ otherwise only encrypt the range BEGIN to END, for the RECIPIENTS."
      begin end
      (funcall pgp-command 'decrypt pass-phrase)
      out-buffer (eq out-buffer (current-buffer)) pgp-err-buffer-name)
-    (switch-to-buffer out-buffer)
-  );;let
-  (pgp-bury-err-buffer-if-empty)
-  );;pgp-decrypt-pk-range
-
+    (switch-to-buffer out-buffer))
+  (pgp-bury-err-buffer-if-empty))
 
 
 
@@ -372,60 +346,52 @@ otherwise only encrypt the range BEGIN to END, for the RECIPIENTS."
 (defun pgp-encrypt-conventional-region (key) 
   "Encrypt conventionaly the region with the KEY."
   (interactive "sKey: ")
-  (pgp-encrypt-conventional-range key (region-beginning) (region-end))
-  );;pgp-encrypt-conventional-region
+  (pgp-encrypt-conventional-range key (region-beginning) (region-end)))
 
 
 (defun pgp-encrypt-conventional-buffer (key) 
   "Encrypt conventionaly the buffer with the KEY."
   (interactive "sKey: ")
-  (pgp-encrypt-conventional-range key (point-min) (point-max))
-  );;pgp-encrypt-conventional-buffer
+  (pgp-encrypt-conventional-range key (point-min) (point-max)))
 
 
 (defun pgp-decrypt-conventional-region (key) 
   "Decrypt conventionaly the region with the KEY."
   (interactive "sKey: ")
   (auto-save-mode -1);; Decrypted buffers must not be auto-saved!
-  (pgp-decrypt-conventional-range key (region-beginning) (region-end))
-  );;pgp-decrypt-conventional-region
+  (pgp-decrypt-conventional-range key (region-beginning) (region-end)))
 
 
 (defun pgp-decrypt-conventional-buffer (key) 
   "Decrypt conventionaly the buffer with the KEY."
   (interactive "sKey: ")
   (auto-save-mode -1);; Decrypted buffers must not be auto-saved!
-  (pgp-decrypt-conventional-range key (point-min) (point-max))
-  );;pgp-decrypt-conventional-buffer
+  (pgp-decrypt-conventional-range key (point-min) (point-max)))
 
 
 
 (defun pgp-sign-region (pass-phrase) 
   "Sign the region with the pgp-signer key, unlocked by the PASS-PHRASE."
   (interactive "sPass phrase: ")
-  (pgp-sign-range pass-phrase (region-beginning) (region-end))
-  );;pgp-sign-region
+  (pgp-sign-range pass-phrase (region-beginning) (region-end)))
 
 
 (defun pgp-sign-buffer (pass-phrase) 
   "Sign the buffer with the pgp-signer key, unlocked by the PASS-PHRASE."
   (interactive "sPass phrase: ")
-  (pgp-sign-range pass-phrase (point-min) (point-max))
-  );;pgp-sign-buffer
+  (pgp-sign-range pass-phrase (point-min) (point-max)))
 
 
 (defun pgp-check-sign-region () 
   "Check the signature of the region."
   (interactive)
-  (pgp-check-sign-range (region-beginning) (region-end))
-  );;pgp-check-sign-region
+  (pgp-check-sign-range (region-beginning) (region-end)))
 
 
 (defun pgp-check-sign-buffer () 
   "Check the signature of the buffer."
   (interactive)
-  (pgp-check-sign-range (point-min) (point-max))
-  );;pgp-check-sign-buffer
+  (pgp-check-sign-range (point-min) (point-max)))
 
 
 
@@ -435,16 +401,14 @@ BUG:    The handling of output buffer (whether read-only or not) should be
         done before calling this function!
 "
   (interactive "r")
-  (shell-command-on-region start end "iconv -f ISO8859-1 -t UTF-8" t t)
-  );;pgp-convert-to-utf-8
+  (shell-command-on-region start end "iconv -f ISO8859-1 -t UTF-8" t t))
 
 
 (defun pgp-convert-from-utf-8 (start end)
   "PRIVATE
 "
   (interactive "r")
-  (shell-command-on-region start end "iconv -f UTF-8 -t ISO8859-1" t t)
-  );;pgp-convert-from-utf-8
+  (shell-command-on-region start end "iconv -f UTF-8 -t ISO8859-1" t t))
 
 
 (defun pgp-sign-encrypt-region (pass-phrase recipients &optional conv-utf-8) 
@@ -455,8 +419,7 @@ sRecipients:
 P")
   (when conv-utf-8
     (pgp-convert-to-utf-8 (region-beginning) (region-end)) )
-  (pgp-encrypt-pk-range pass-phrase recipients (region-beginning) (region-end))
-  );;pgp-sign-encrypt-region
+  (pgp-encrypt-pk-range pass-phrase recipients (region-beginning) (region-end)))
 
 
 (defun pgp-sign-encrypt-buffer (pass-phrase recipients &optional conv-utf-8) 
@@ -467,8 +430,7 @@ sRecipients:
 P")
   (when conv-utf-8
     (pgp-convert-to-utf-8 (point-min) (point-max)) )
-  (pgp-encrypt-pk-range pass-phrase recipients (point-min) (point-max))
-  );;pgp-sign-encrypt-buffer
+  (pgp-encrypt-pk-range pass-phrase recipients (point-min) (point-max)))
 
 
 (defun pgp-just-encrypt-region (recipients &optional conv-utf-8) 
@@ -477,8 +439,7 @@ P")
 P")
   (when conv-utf-8
     (pgp-convert-to-utf-8 (region-beginning) (region-end)) )
-  (pgp-encrypt-pk-range nil recipients (region-beginning) (region-end))
-  );;pgp-just-encrypt-region
+  (pgp-encrypt-pk-range nil recipients (region-beginning) (region-end)))
 
 
 (defun pgp-just-encrypt-buffer (recipients &optional conv-utf-8) 
@@ -487,8 +448,7 @@ P")
 P")
   (when conv-utf-8
     (pgp-convert-to-utf-8 (point-min) (point-max)) )
-  (pgp-encrypt-pk-range nil recipients (point-min) (point-max))
-  );;pgp-just-encrypt-buffer
+  (pgp-encrypt-pk-range nil recipients (point-min) (point-max)))
 
 
 
@@ -499,8 +459,7 @@ P")
   (auto-save-mode -1);; Decrypted buffers must not be auto-saved!
   (pgp-decrypt-pk-range pass-phrase (region-beginning) (region-end))
   (when conv-utf-8
-    (pgp-convert-from-utf-8 (point-min) (point-max)) )
-  );;pgp-decrypt-region
+    (pgp-convert-from-utf-8 (point-min) (point-max)) ))
 
 
 (defun pgp-decrypt-buffer (pass-phrase &optional conv-utf-8) 
@@ -510,8 +469,7 @@ P")
   (auto-save-mode -1);; Decrypted buffers must not be auto-saved!
   (pgp-decrypt-pk-range pass-phrase (point-min) (point-max))
   (when conv-utf-8
-    (pgp-convert-from-utf-8 (point-min) (point-max)) )
-  );;pgp-decrypt-buffer
+    (pgp-convert-from-utf-8 (point-min) (point-max))))
 
 
 
@@ -526,19 +484,14 @@ P")
      out-buffer (eq out-buffer (current-buffer)) nil)
     (set-buffer out-buffer)
     (view-mode 1)
-    (delete-other-windows (get-buffer-window out-buffer))
-    );;let
-  );;gunzip
+    (delete-other-windows (get-buffer-window out-buffer))))
 
 
 (defun invoke-ding-dictionary ()
   "Retrieve the definition of the selected word with the Ding dictionary."
   (interactive)
   (save-excursion
-  (shell-command "( ding -R -x > /dev/null < /dev/null 2>&1  & )" nil))
-  );;invoke-ding-dictionary
-
-
+  (shell-command "( ding -R -x > /dev/null < /dev/null 2>&1  & )" nil)))
 
 
 
@@ -555,8 +508,7 @@ P")
       (funcall pgp-command 'list-keys)
       "| sed -n -e 'y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/' "
       "         -e 's/.*\(<.*@.*>\).*/\1/p' "
-      "|sort -u")))
-  );;get-emails-in-public-key-ring
+      "|sort -u"))))
 
 
 
@@ -573,8 +525,7 @@ P")
                 (substring email (match-beginning 1) (match-end 1)))
                ((string-match "@" email 0)
                 (format "<%s>" email))
-               (t email))
-              );;lambda
+               (t email)))
             (apply 'append
                    (mapcar (lambda (ass) 
                              ;; lets select the to, cc, and bcc headers
@@ -616,37 +567,33 @@ NOTE:    We don't use gpg --recv-keys because this feature does not exist with
           ;; let's report stderr...
           (set-buffer pgp-err-buffer-name)
           (message (buffer-string))
-          (erase-buffer)
-          );;let
+          (erase-buffer))
         (pgp-bury-err-buffer-if-empty)
-        t
-        )));;let
-  );;pgp-lookup-keys
+        t))))
 
 
 
-(defun mail-test ()
-  (interactive)
-  (let ( (pkr-emails (get-emails-in-public-key-ring))
-         (recipients (mail-get-recipients))
-         (cryppients nil) ;; there is a pubkey for them.
-         (clearients nil) ;; no pubkey found for them.
-         )
-    (while recipients
-      (let ((recipient (car recipients)))
-        (if (member recipient pkr-emails)
-            (setq cryppients (cons recipient cryppients))
-          ;; else lookup in wwwkeys.eu.pgp.net
-          (if (and (string-match "<.*@.*>" recipient) 
-                   (pgp-lookup-keys recipient))
-              (setq cryppients (cons recipient cryppients))
-            (setq clearients (cons recipient clearients))))
-        );;let
-      (setq recipients (cdr recipients)));;while
-    (message "\ncryppients=%S\nclearients=%S\n" cryppients  clearients)
-    (when (null clearients)
-      
-      )))
+;; (defun mail-test ()
+;;   (interactive)
+;;   (let ( (pkr-emails (get-emails-in-public-key-ring))
+;;          (recipients (mail-get-recipients))
+;;          (cryppients nil) ;; there is a pubkey for them.
+;;          (clearients nil) ;; no pubkey found for them.
+;;          )
+;;     (while recipients
+;;       (let ((recipient (car recipients)))
+;;         (if (member recipient pkr-emails)
+;;             (setq cryppients (cons recipient cryppients))
+;;           ;; else lookup in wwwkeys.eu.pgp.net
+;;           (if (and (string-match "<.*@.*>" recipient) 
+;;                    (pgp-lookup-keys recipient))
+;;               (setq cryppients (cons recipient cryppients))
+;;             (setq clearients (cons recipient clearients)))))
+;;       (setq recipients (cdr recipients)));;while
+;;     (message "\ncryppients=%S\nclearients=%S\n" cryppients  clearients)
+;;     (when (null clearients)
+;;       
+;;       )))
 
-;;;; pjb-pgp.el                       -- 2003-02-06 01:13:51 -- pascal   ;;;;
+;;;; THE END ;;;;
 
