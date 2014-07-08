@@ -2222,6 +2222,18 @@ to the buffer instead of local to the mode."
 ;;; macros
 ;;;----------------------------------------
 
+(defun marker (point)
+  (let ((marker (make-marker)))
+    (set-marker marker point)
+    marker))
+
+(defun free-markers (sexp)
+  (cond
+    ((markerp sexp) (set-marker sexp nil))
+    ((atom sexp))
+    (t (free-markers (car sexp))
+       (free-markers (cdr sexp)))))
+
 (defmacro* with-marker ((var position) &body body)
   (let ((vposition (gensym))) ; so (eq var position) still works.
     `(let* ((,vposition ,position)
