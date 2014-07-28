@@ -1299,7 +1299,7 @@ Wishes:
                                     41 42 51 52 61 62 71 72
                                     1112 -1112
                                     1213 -1213)))
-        (message "Invalid prefix %S; expecting: %s"
+        (error "Invalid prefix %S; expecting: %s"
                  prefix
                  "[   1   ]   [ 2 | 3 ]*   [4|5|6|7]*   [11|12|13]*  [11|1213] [1112|13]
 Multiply by -1 = without decoration.
@@ -1344,8 +1344,8 @@ Multiply by -1 = without decoration.
                               (frame-pixel-width frame)
                               (frame-pixel-height frame)))
                    (move-frame (x w y h)
-                     (mesframe frame)
-                     (message "1: x=%8S y=%8S w=%8S h=%8S" x y w h)
+                     ;; (mesframe frame)
+                     ;; (message "1: x=%8S y=%8S w=%8S h=%8S" x y w h)
                      (set-frame-width
                       frame
                       (pixel-to-char-width
@@ -1353,14 +1353,15 @@ Multiply by -1 = without decoration.
                              (+ (fringe-width) (scroll-bar-width frame))))
                        frame))
                      (set-frame-height frame (pixel-to-char-height h frame))
-                     (mesframe frame)
+                     ;; (mesframe frame)
                      (setf x (position-x x)
                            y (position-y y)
                            w (frame-pixel-width  frame)
                            h (frame-pixel-height frame))
-                     (message "2: x=%8S y=%8S w=%8S h=%8S" x y w h)
+                     ;; (message "2: x=%8S y=%8S w=%8S h=%8S" x y w h)
                      (set-frame-position frame x y)
-                     (mesframe frame)))
+                     ;; (mesframe frame)
+                     ))
             (move-frame left width
                         (+ top top-offset) (+ height height-offset)))))))
 
