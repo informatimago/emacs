@@ -2093,17 +2093,17 @@ by pjb-add-change-log-entry.")
     ("GPL3"
      t
      "This program is free software: you can redistribute it and/or modify"
-    "it under the terms of the GNU General Public License as published by"
-    "the Free Software Foundation, either version 3 of the License, or"
-    "(at your option) any later version."
+     "it under the terms of the GNU General Public License as published by"
+     "the Free Software Foundation, either version 3 of the License, or"
+     "(at your option) any later version."
      ""
-    "This program is distributed in the hope that it will be useful,"
-    "but WITHOUT ANY WARRANTY; without even the implied warranty of"
-    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
-    "GNU General Public License for more details."
+     "This program is distributed in the hope that it will be useful,"
+     "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+     "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
+     "GNU General Public License for more details."
      ""
-    "You should have received a copy of the GNU General Public License"
-    "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
+     "You should have received a copy of the GNU General Public License"
+     "along with this program.  If not, see <http://www.gnu.org/licenses/>.")
 
     ("GPL3-fr"
      t
@@ -2248,16 +2248,39 @@ by pjb-add-change-log-entry.")
      ""
      "All Rights Reserved.")
 
-    ("ubudu"
+    ("ubudu-proprietary"
      t
-     "Copyright 2014 Ubudu SAS."
-     ""
+     "Copyright (c) 2011-2014, UBUDU SAS"
      "All Rights Reserved."
      ""
      "This program and its documentation constitute intellectual property "
      "of Ubudu SAS and is protected by the copyright laws of "
      "the European Union and other countries.")
-    )
+    ("ubudu-public"
+     t
+     "Copyright (c) 2011-2014, UBUDU SAS"
+     "All rights reserved."
+     ""
+     "Redistribution and use in source and binary forms, with or without"
+     "modification, are permitted provided that the following conditions are met:"
+     ""
+     "* Redistributions of source code must retain the above copyright notice, this"
+     "  list of conditions and the following disclaimer."
+     ""
+     "* Redistributions in binary form must reproduce the above copyright notice,"
+     "  this list of conditions and the following disclaimer in the documentation"
+     "  and/or other materials provided with the distribution."
+     ""
+     "THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\""
+     "AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE"
+     "IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE"
+     "DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE"
+     "FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL"
+     "DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR"
+     "SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER"
+     "CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,"
+     "OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE"
+     "OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."))
   "An a-list of (license name,  copyright-flag copyright-line...).
    When the copyright-flag is not nil, a copyright line is displayed.
    URL: http://www.gnu.org/licenses/license-list.html")
@@ -2436,12 +2459,16 @@ DO:         Assuming there's already a header with a LEGAL section,
              "Can't find the end of the header. Please use M-x pjb-add-header"))
         (goto-char start)
         (setf copyrights  (let ((old-copyrights (pjb-extract-copyrights data)))
-                            (if old-copyrights
-                                (mapcar  (lambda (old-copyright)
-                                           (destructuring-bind (author year-0 year-1) old-copyright
-                                             (pjb-format-copyright data author year-0 year-1)))
-                                         old-copyrights)
-                                (list (pjb-format-copyright data author year year)))))
+                            (cond
+                              (old-copyrights
+                               (mapcar  (lambda (old-copyright)
+                                          (destructuring-bind (author year-0 year-1) old-copyright
+                                            (pjb-format-copyright data author year-0 year-1)))
+                                        old-copyrights))
+                              ((prefix-numeric-value t)
+                               '())
+                              (t
+                               (list (pjb-format-copyright data author year year))))))
         (delete-region start end)
         (pjb-insert-license  license lic-data copyrights
                              title-format comment-format))))
