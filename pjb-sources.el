@@ -3401,20 +3401,44 @@ the FUNCTION can take."
       path))
 
 
+(defun* expand-path-alternatives (path)
+  (let ((items '())
+        (start 0)
+        (lbrace (position ?{ path)))
+    (while (and lbrace
+                (or (zerop lbrace)
+                    (char/= ?\\ (aref path (1- lbrace)))))
+      (let ((rbrace (position ?} path :start lbrace)))
+        (while (and rbrace
+                    (char= ?\\ (aref path (1- rbrace))))
+          (setf rbrace (position ?} path :start (1+ rbrace))))
+        (if rbrace
+            (progn
+              (when (plusp lbrace)
+                (push (list (substring path start lbrace)) items))
+              (push (split-string (substring path (1+ lbrace) rbrace) ",") items)
+              (setf start (1+ rbrace))
+              (setf lbrace (position ?{ path :start start)))            
+            (setf lbrace nil))))
+    (push (list (substring path start)) items)
+    (mapcar (lambda (components) (apply (function concat) components))
+        (apply (function combine) (nreverse items)))))
+
 
 (defun set-sources (directory)
-  (interactive "DSource directory: ")
+  (interactive "sSource directory: ")
   (message "Caching paths…")
   (let ((directory (remove-trailling-slashes directory)))
     (handler-case
-        (progn
+        (dolist (directory (mapcar (function remove-trailling-slashes)
+                                   (expand-path-alternatives directory)))
           (let ((*sources* directory))
             (file-cache-add-directory-recursively
              directory
-             ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$"))
-          (setf *sources* directory))
+             ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$")))
       (error (err)
-        (message (format "%s" err))))
+        (message (format "error while caching files: %s" err))))
+    (setf *sources* directory)
     (setf *sources-cache* (sort (mapcar (function car) file-cache-alist)
                                 (function string<)))
     (let ((directory (expand-file-name directory)))
