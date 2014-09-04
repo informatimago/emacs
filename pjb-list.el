@@ -196,8 +196,7 @@ EXAMPLE: (list-insert-separator '(a b (d e f)  c) 'x)
         (rest (cdr list) (cdr rest)) )
        ((null rest) (nreverse result))
     (push separator result)
-    (push (car rest) result))
-  ) ;;list-insert-separator
+    (push (car rest) result)))
 
 
 (defun list-replace-member (list old new)
