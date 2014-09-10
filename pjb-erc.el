@@ -40,7 +40,7 @@
 ;;;;LEGAL
 ;;;;    GPL
 ;;;;    
-;;;;    Copyright Pascal Bourguignon 2006 - 2011
+;;;;    Copyright Pascal Bourguignon 2006 - 2014
 ;;;;    
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
@@ -87,9 +87,9 @@
 (require 'erc)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; erc-yank
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;---------------------------------------------------------------------
+;;; erc-yank / lisppaste
+;;;---------------------------------------------------------------------
   
 (defconst +newline+ 10)
 
@@ -314,14 +314,340 @@ Otherwise, just yank it.
 
  
 
-;;----------------------------------------
+;;;---------------------------------------------------------------------
+;;; erc answers
+;;;---------------------------------------------------------------------
+
+(defparameter *pjb-erc-answers*
+  '((lisp-1-vs-lisp-2-technical-issues  
+     . "Please read: http://www.nhplace.com/kent/Papers/Technical-Issues.html")
+    (equal         
+     . "Please read: http://www.nhplace.com/kent/PS/EQUAL.html")
+    (ambitious-eval
+     . "Please read: http://www.nhplace.com/kent/PS/Ambitious.html")
+    (what-implementation  
+     . "To get help choosing a CL implementation, connect to telnet://voyager.informatimago.com:8101 ; have a look at http://www.cliki.net/Common%20Lisp%20implementation")
+    (clhs          
+     . "http://www.lispworks.com/documentation/HyperSpec/Front/index.htm")
+    (intersection  
+     . "Have a look at (intersection common-lisp emacs-lisp scheme) http://www.informatimago.com/develop/lisp/com/informatimago/small-cl-pgms/intersection-r5rs-common-lisp-emacs-lisp/")
+    (scheme-or-cl  
+     . "CL vs. Scheme http://irreal.org/blog/?p=813")
+    (cliki         
+     . "Have a look at http://cliki.net/ ; start with http://www.cliki.net/Getting%20Started")
+    (newbie
+     . "http://cliki.net/Getting%20Started or http://articulate-lisp.com/ ")
+    (getting-started 
+     . "Start with http://www.cliki.net/Getting%20Started  or  http://articulate-lisp.com/" )
+    (emacs-lisp-intro
+     . "An Introduction to Programming in Emacs Lisp  http://www.gnu.org/software/emacs/emacs-lisp-intro/  or  M-: (info \"(eintr)Top\") RET (for non-programmers)")
+    (emacs-lisp      
+     . "Emacs Lisp Manual http://www.gnu.org/software/emacs/manual/elisp.html  or  M-: (info \"(elisp)Top\") RET")
+    (emacs-manual    
+     . "Emacs Manual http://www.gnu.org/software/emacs/manual/   or  M-: (info \"(emacs)Top\") RET")
+    (the-art-of-unix-programming    
+     . "The Art of Unix Programming http://www.faqs.org/docs/artu/")
+    (hacker-howto    
+     . "http://www.catb.org/~esr/faqs/hacker-howto.html")
+    (the-craft-of-text-editing    
+     . "The Craft of Text Editing   http://www.finseth.com/craft/")
+    (essentials-of-programming-languages     
+     . "Essentials of Programming Languages, 3rd ed.   Daniel P. Friedman and Mitchell Wand   ISBN: 978-0-262-06279-4   http://MITPress.MIT.Edu/0262062798/  http://WWW.EoPL3.Com/")
+    (practical-common-lisp      
+     . "Practical Common Lisp http://www.gigamonkeys.com/book/")
+    (common-lisp-a-gentle-introduction-to-symbolic-computation   
+     . "Common Lisp: A Gentle Introduction to Symbolic Computation  http://www.cs.cmu.edu/~dst/LispBook/  http://www-cgi.cs.cmu.edu/afs/cs.cmu.edu/user/dst/www/LispBook/index.html")
+    (common-lisp-programming-for-artificial-intelligence   
+     . "Common Lisp Programming for Artificial Intelligence  Tony Hasemer & John Domingue - 1989  International Computer Science Series  Addison & Wesley  ISBN 0-201-17579-7")
+    (common-lisp-an-interactive-approach    
+     . "Common Lisp: An Interactive Approach  by Stuart C. Shapiro   http://www.cse.buffalo.edu/~shapiro/Commonlisp/")
+    (paradigms-of-artificial-intellgience     
+     . "Paradigms of Artificial Intelligence Programming: Case Studies in Common Lisp")
+    (artifical-intelligence-a-modern-approach     
+     . "Artificial Intelligence: A Modern Approach  http://aima.cs.berkeley.edu")
+    (sicp     
+     . "Structure and Interpretation of Computer Programs  http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-4.html  http://swiss.csail.mit.edu/classes/6.001/abelson-sussman-lectures/")
+    (sicp-mit 
+     . "http://web.mit.edu/alexmv/6.S184/")
+    (6.S184   
+     . "http://web.mit.edu/alexmv/6.S184/")
+    ;; http://www.codepoetics.com/wiki/index.php?title=Topics:SICP_in_other_languages
+    ;; http://eli.thegreenplace.net/category/programming/lisp/sicp/
+    ;; http://www.neilvandyke.org/sicp-plt/
+    ;; http://www.youtube.com/watch?v=rdj6deraQ6k
+    (r5rs     
+     . "http://www.schemers.org/Documents/Standards/R5RS/HTML/")
+    (how-to-design-programs     
+     . "How to Design Programs -- An Introduction to Computing and Programming  http://www.htdp.org/2003-09-26/Book/  ")
+    (concrete-abstraction       
+     . "Concrete Abstractions -- An Introduction to Computer Science Using Scheme  http://www.gustavus.edu/+max/concrete-abstractions.html")
+    (lisp-in-small-pieces     
+     . "Lisp in Small Pieces   http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html  http://pagesperso-systeme.lip6.fr/Christian.Queinnec/Books/LiSP-2ndEdition-2006Dec11.tgz")
+    (on-lisp   
+     . "On Lisp  Paul Graham   http://www.paulgraham.com/onlisptext.html  http://www.bookshelf.jp/texi/onlisp/onlisp.html  http://www.bookshelf.jp/texi/onlisp/onlisp.tar.gz")
+    (compiler-principle-techniques-and-tools     
+     . "Compiler Principles Techniques and Tools, Aho et al. http://dragonbook.stanford.edu/")
+    (the-art-of-computer-programming    
+     . "The Art of Computer Programming  Donald E. Knuth  Addison & Wesley")
+    (goedel-escher-bach      
+     . "Gödel, Escher, Bach: An Eternal Golden Braid  Douglas Hofstadter")
+    (basic-lisp-technique      
+     . "Basic Lisp Techniques  Cooper - 2003 Franz, Inc. - 100 pages.  http://www.franz.com/resources/educational_resources/cooper.book.pdf")
+    (casting-speels-in-lisp  
+     . "Casting Spels in Lisp  Conrad Barski, M.D.  http://www.lisperati.com/casting.html")
+    (floating-point
+     . "What Every Computer Scientist Should Know About Floating-Point Arithmetic http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html   and   What Every Programmer Should Know About Floating-Point Arithmetic http://floating-point-gui.de/") 
+    ;; --
+    (gitorious-lisp 
+     . "https://gitorious.org/com-informatimago/com-informatimago/trees/master")
+    (gitorious-emacs
+     . "https://gitorious.org/com-informatimago/emacs/trees/master")
+    (rc       
+     . "http://git.informatimago.com/viewgit/index.php?a=summary&p=public/rc")
+    (bin      
+     . "http://git.informatimago.com/viewgit/index.php?a=summary&p=public/bin")
+    (idiots   
+     . "There, there, we know there are idiots on the Internet.  Lisp will make it all better.")
+    (maintained-illustration
+     . "http://tinyurl.com/last-commit-six-month-ago http://tinyurl.com/monthly-commits http://tinyurl.com/last-commit-yesterday http://tinyurl.com/last-commit-before-VCS-existed")
+    (ibcl
+     . "Image Based Development http://www.informatimago.com/develop/lisp/com/informatimago/small-cl-pgms/ibcl/index.html")
+    ;; --
+    (see-defpackage
+     . ";;;;    See defpackage documentation string.\n")
+    (agpl3         
+     . "
+License:
+
+    AGPL3
+    
+    Copyright Pascal J. Bourguignon 1994 - 2012
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.
+    If not, see <a href=\\\"http://www.gnu.org/licenses/\\\">http://www.gnu.org/licenses/</a>.
+
+")))
 
 
-(defun pjb-erc-join-meat ()
-  (unless (char= (character "#")
-                 (aref (erc-buffer-channel (current-buffer)) 0))
-    (erc-log-mode 1)))
+(defun pjb-erc-get-answers ()
+  (mapcar (function car) *pjb-erc-answers*))
 
+(defvar *pjb-erc-last-answer* nil)
+
+(defun pjb-erc-answer (key)
+  (interactive (list 
+                (intern (completing-read 
+                         "What? " (mapcar (lambda (x) (cons x nil)) (pjb-erc-get-answers))
+                         (lambda (answer) (setq *pjb-erc-last-answer* (car answer)))
+                         t))))
+  (insert (format "%s" (cdr (assoc key *pjb-erc-answers*)))))
+
+
+;;;-----------------------------------------------------------
+;;; emacs speach (using external speak program)
+;;;-----------------------------------------------------------
+
+(defvar *pjb-speak-file-counter* 0)
+
+(defun pjb-speak-file ()
+  (format "%s/speak-%d.txt" *tempdir* (incf *pjb-speak-file-counter*)))
+
+
+(defvar *pjb-speak-last-message* nil)
+
+(defun speak (message)
+  (interactive "sMessage: ")
+  (let ((file (pjb-speak-file)))
+    (with-current-buffer (get-buffer-create " *speak text*")
+      (erase-buffer)
+      (insert message)
+      (setf *pjb-speak-last-message* message)
+      (write-region (point-min) (point-max) file))
+    (shell-command (format "speak -f %s" file))))
+
+(defalias 'say 'speak)
+
+(defun speak-repeat ()
+  (interactive)
+  (speak *pjb-speak-last-message*))
+
+
+;;;---------------------------------------------------------------------
+;;; ERC speach
+;;;---------------------------------------------------------------------
+
+(defparameter *pjb-erc-spoken-nicks*
+  '(("\\<e1f\\>"          . "elf")
+    ("\\<tali[0-9]+"      . "tali")
+    ("\\<fsbot\\>"        . "F. S. Bot")
+    ("\\<qu1j0t3\\>"      . "quijote")
+    ("\\<chromaticwt\\>"  . "chromatic W. T.")
+    ("\\<jcowan\\>"       . "J. Cowan")
+    ("\\<cky\\>"          . "C. K. Y.")
+    ("\\<pjb\\>"          . "Pascal")
+    ("\\<H4ns\\>"         . "Hans")
+    ("\\<Corman[0-9]+\\>" . "Corman"))
+  "An a-list mapping regexps of nicks to the corresponding text to be read aloud.")
+
+
+(defun pjb-erc-spoken-nick (nick)
+  "
+RETURN:  The text to be read aloud for the `nick' in `*pjb-erc-spoken-nicks*'.
+"
+  (let ((entry (assoc* nick *pjb-erc-spoken-nicks*
+                       :test (lambda (nick ref) (string-match ref nick)))))
+    (if entry
+        (cdr entry)
+        nick)))
+
+
+(defun erc-response.recipient (response)
+  (first (erc-response.command-args response)))
+
+(defun erc-response.sender-nick (response)
+  (let ((sender (erc-response.sender response)))
+   (subseq sender 0 (position ?! sender))))
+
+
+(defparameter *pjb-erc-massage-substitutions*
+  '(("\\<pjb\\>"                 "Pascal")
+    ("\\<CL\\>"                  "See Ell") 
+    ("\\<C-"                     "Control-")
+    ("\\<M-"                     "Meta-")
+    ("\\<A-"                     "Alt-")
+    ("\\<S-"                     "Shift-")
+    ("\\<s-"                     "super-")
+    ("\\<H-"                     "Hyper-")
+    ("\\(:-?)\\|(-?:\\)"         "AhAhAh!")
+    (":-?("                      "BooBooBoo!")
+    (":-/"                       "muek")
+    (":-?[Pp]"                   "bruu")
+    ("\\<\\(ty\\|thx\\)\\>"      "Thank you!")
+    ("\\<LOL\\>"                 "AhAhAh! Laughting Out Loud!") 
+    ("\\<ROFL\\>"                "AhAhAh! Rolling On the Floor!")
+    ("\\<hrm\\>"                 "errrmmm") 
+    ("\\<btw\\>"                 "by the way")
+    ("\\<wtf\\>"                 "what the fuck")
+    ("\\<imo\\>"                 "in my opinion")
+    ("\\<imho\\>"                "in my humble opinion")
+    ("\\<imnsho\\>"              "in my not so humble opinion")))
+
+
+(defun pjb-erc-massage-message (message)
+  (with-current-buffer (get-buffer-create "*pjb massage text*")
+    (erase-buffer)
+    (insert message)
+    (let ((case-fold-search nil))
+      (loop
+         for (reg sub) in *pjb-erc-massage-substitutions*
+         do (progn
+              (goto-char (point-min))
+              (loop
+                 while (re-search-forward reg nil t)
+                 do (progn
+                      (delete-region (match-beginning 0) (match-end 0))
+                      (insert sub))))))
+    (buffer-string)))
+
+
+
+(defvar *pjb-erc-speak-reject-recipient* '()
+  "can be:
+nil   don't reject any channel.
+:all  reject every channel.
+or a list of nicknames or channel names \"nick\" \"\#chan\"
+to reject (never speak them aloud).
+See: `*pjb-erc-speak-reject-sender*', `*pjb-erc-speak-accept-sender*',
+      and `pjb-erc-privmsg-meat'.
+
+Messages are spoken if the recipient
+")
+
+(defvar *pjb-erc-speak-reject-sender* '()
+  "can be:
+nil   don't reject anybody.
+:all  reject everybody.
+or a list of nicknames or channel names \"nick\" \"\#chan\"
+to reject (never speak them aloud).
+See: `*pjb-erc-speak-reject-recipient*', `*pjb-erc-speak-accept-sender*',
+      and `pjb-erc-privmsg-meat'.
+")
+
+(defvar *pjb-erc-speak-accept-sender* '()
+  "can be:
+nil   don't accept anything.
+:all  accept everything.
+or a list of nicknames or channel names \"nick\" \"\#chan\"
+to accept (speak them aloud).
+See: `*pjb-erc-speak-reject-recipient*', `*pjb-erc-speak-reject-sender*',
+      and `pjb-erc-privmsg-meat'.
+")
+
+(setf *pjb-erc-speak-reject-recipient* '("#emacs")
+      *pjb-erc-speak-reject-recipient* :all
+      *pjb-erc-speak-reject-sender*    :all
+      *pjb-erc-speak-accept-sender*    '("Posterdati" "pjb-"))
+
+
+(defvar *pjb-erc-speak-last-speaker* nil)
+
+
+(defun pjb-erc-privmsg-meat (process response)
+  "The messages are spoken if the sender is in `*pjb-erc-speak-accept-sender*',
+or the sender is not in `*pjb-erc-speak-reject-sender*',
+or the recipient is not in `*pjb-erc-speak-reject-recipient*',
+"
+  (when (or
+         (case *pjb-erc-speak-accept-sender*
+           ((nil)    nil)
+           ((:all t) t)
+           (otherwise (member* (erc-response.sender-nick response)
+                               *pjb-erc-speak-accept-sender* :test 'string=)))
+         (case *pjb-erc-speak-reject-sender*
+           ((nil)    t)
+           ((:all t) nil)
+           (otherwise (not (member* (erc-response.sender-nick response)
+                                    *pjb-erc-speak-reject-sender* :test 'string=))))
+         (case *pjb-erc-speak-reject-recipient*
+           ((nil)    t)
+           ((:all t) nil)
+           (otherwise (not (member* (erc-response.recipient response)
+                                    *pjb-erc-speak-reject-recipient* :test 'string=)))))
+    (speak (let* ((nick (pjb-erc-spoken-nick (erc-response.sender-nick response)))
+                  (chan (pjb-erc-spoken-nick (remove ?# (erc-response.recipient response))))
+                  (mesg (pjb-erc-massage-message (erc-response.contents response))))
+             (if (equal *pjb-erc-speak-last-speaker*
+                        (cons nick chan))
+                 (format "%s" mesg)
+                 (progn
+                   (setf *pjb-erc-speak-last-speaker* (cons nick chan))
+                   (format "%s said to %s: ... %s" nick chan mesg))))))
+  nil)
+
+
+(defun pjb-erc-speak-on ()
+  (interactive)
+  (pushnew 'pjb-erc-privmsg-meat  erc-server-PRIVMSG-functions))
+
+(defun pjb-erc-speak-off  ()
+  (interactive)
+  (setf erc-server-PRIVMSG-functions
+        (remove 'pjb-erc-privmsg-meat  erc-server-PRIVMSG-functions)))
+
+;;;---------------------------------------------------------------------
+;;; Miscellaneous
+;;;---------------------------------------------------------------------
 
 (defun pjb-server-available-p (server)
   (let ((result (shell-command-to-string
@@ -639,7 +965,10 @@ be printed just before the window-width."
             (setf from (point))))))))
 
   
-    
+;;;---------------------------------------------------------------------
+;;; erc/irc emacs commands
+;;;---------------------------------------------------------------------
+
 (defun pjb-erc ()
   (interactive)
   ;; --------------------
@@ -729,6 +1058,10 @@ be printed just before the window-width."
   (balance-windows))
 
 
+;;;---------------------------------------------------------------------
+;;; IRC commands
+;;;---------------------------------------------------------------------
+
 ;; Not needed anymore: bitlbee can convert encoding all right.
 ;;
 ;;   (defun erc-coding-system-for-target (target)
@@ -767,7 +1100,7 @@ be printed just before the window-width."
   (save-excursion
     (let ((inhibit-read-only t))
       (beginning-of-line)
-      (delete-region 1 (point))))) ;;erc-cmd-CLEAR
+      (delete-region 1 (point)))))
 
 ;; (fset 'ClearERC [?\C-p ?\C-e ?\C-  ?\M-< ?\C-w ?\M->])
 ;; (global-set-key (kbd "C-c C-x C-c") 'ClearERC)
@@ -794,13 +1127,43 @@ the message given by REASON."
        (when erc-kill-queries-on-quit
          (erc-kill-query-buffers erc-process)))
      t)
-    (t nil))) ;;erc-cmd-QUIT
+    (t nil)))
 
 
-;; (add-hook 'erc-join-hook 'pjb-erc-join-meat)  
+;;;---------------------------------------------------------------------
+;;; erc hooks
+;;;---------------------------------------------------------------------
+
+(defun pjb/erc-insert-post-meat ()
+  (interactive)
+  (reset-movement-keypad)
+  (setf erc-insert-timestamp-function 'pjb/erc-insert-timestamp-left
+        erc-fill-function 'pjb/erc-fill-static)
+  (remove-hook 'erc-insert-modify-hook 'erc-unmorse))
+(add-hook 'erc-insert-post-hook 'pjb/erc-insert-post-meat)
+
+
+(defun pjb/erc-join-meat ()
+  (unless (char= (character "#")
+                 (aref (erc-buffer-channel (current-buffer)) 0))
+    (erc-log-mode 1)
+    (local-set-key (kbd "C-y") 'erc-yank)
+    (local-set-key (kbd "H-a") 'pjb-erc-answer))
+  (loop with current-channel = (buffer-name)
+        for (channels . eval-function)
+          in '((("#lisp" "#lispcafe" "#lispgame"  "#lisp-lab" "#lisp-fr" "#lisp-es" 
+                 "#ccl" "#sbcl" "#quicklisp") . slime-eval-last-expression)
+               (("#emacs") . eval-last-sexp)
+               (("#scheme") . lisp-eval-last-expression))
+        when (member* current-channel channels :test (function string=))
+          do (local-set-key (kbd "C-x C-e") eval-function)))
+(add-hook 'erc-join-hook 'pjb/erc-join-meat)
+(mapcar (lambda (buffer) (with-current-buffer buffer (pjb/erc-join-meat))) (buffer-list))
+
+;;;---------------------------------------------------------------------
+
 ;; (pjb-set-erc-nickserv-passwords)
 ;; (setf erc-timestamp-format "%Y-%m-%d %H:%M\n")
 ;; (erc-match-mode 1)
-;; (global-set-key (kbd "C-y") (function erc-yank))
 
 (provide 'pjb-erc)
