@@ -14,10 +14,12 @@
 ;;;;MODIFICATIONS
 ;;;;    2003-02-14 <PJB> Created.
 ;;;;BUGS
+;;;;    TODO:  implement a region-of-word-to-array to be  able to transpose
+;;;;           word by word instead of char by char.
 ;;;;LEGAL
 ;;;;    LGPL
 ;;;;    
-;;;;    Copyright Pascal Bourguignon 2003 - 2011
+;;;;    Copyright Pascal J. Bourguignon 2003 - 2014
 ;;;;    mailto:pjb@informatimago.com
 ;;;;    
 ;;;;    This library is free software; you can redistribute it and/or
@@ -55,10 +57,8 @@
           ((>= x maxlen))
         (setf (aref (aref array y) x)
               (if (< x (length line)) (aref line x) (character " ")))))
-    array));;region-to-array
+    array))
 
-;; TODO:  implement a region-of-word-to-array to be  able to transpose
-;;        word by workd instead of char by char.
 
 (defun transpose (matrix)
   (let* ((n (array-dimension matrix 0))
@@ -69,7 +69,7 @@
       (do ((y 0 (1+ y)))
           ((>= y n))
         (setf (aref (aref transposed x) y) (aref (aref matrix y) x))))
-    transposed));;transpose
+    transposed))
 
 
 (defun rotate (matrix)
@@ -81,18 +81,18 @@
       (do ((y 0 (1+ y)))
           ((>= y n))
         (setf (aref (aref rotated (- p x 1)) y) (aref (aref matrix y) x))))
-    rotated));;rotate
+    rotated))
 
 
 (defun array-to-string (array)
-  (unsplit-string (mapcar (function concat)
-                          array) "\n"));;array-to-string
+  (unsplit-string (mapcar (function concat) array) "\n"))
+
 
 (defun rotate-ccw-region (start end)
   (interactive "r")
   (let ((replacement (array-to-string (rotate (region-to-array start end)))))
     (delete-region start end)
-    (insert replacement)));;rotate-ccw-region
+    (insert replacement)))
 
 
-;;;; pjb-transpose.el                 --                     --          ;;;;
+;;;; THE END ;;;;
