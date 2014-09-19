@@ -319,7 +319,17 @@ Otherwise, just yank it.
 ;;;---------------------------------------------------------------------
 
 (defparameter *pjb-erc-answers*
-  '((lisp-1-vs-lisp-2-technical-issues  
+  '((macro . "The big secret of macros in lisp, is that they are functions
+just like the other functions.  
+
+The only difference, is that defmacro hooks those functions into the
+compiler, to be called at compilation time, passed a form, and expected
+to return a new form to be compiled instead of the original form.
+
+\(The original form is actually destructured according to the macro
+lambda list; in emacs &whole isn't implemented, but in Common Lisp it
+allows receiving the original form intact).")
+    (lisp-1-vs-lisp-2-technical-issues  
      . "Please read: http://www.nhplace.com/kent/Papers/Technical-Issues.html")
     (equal         
      . "Please read: http://www.nhplace.com/kent/PS/EQUAL.html")
