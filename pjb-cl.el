@@ -610,6 +610,45 @@ IMPLEMENTATION: Assumes ISO-8859-1!
        (alpha-char-p ch))))
 
 
+(defun* cl:digit-char-p (char &optional (radix 10))
+  (let ((value (position (upcase char) "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")))
+    (and value (< value radix) value)))
+
+(defun* cl:parse-integer (string &key (start 0) end (radix 10) junk-allowed)
+  (let ((end    (or end (length string)))
+        (n      0)
+        (sign   1)
+        (plus   (character "+"))
+        (minus  (character "-"))
+        (space  (character " ")))
+    (labels ((parse-integer-error ()
+               (error "Not an integer string %S (:start %d :end %d :radix %d)"
+                      string start end radix))
+             (check-range ()
+               (unless (< start end)
+                 (parse-integer-error)))
+             (eat-spaces (i)
+               (loop
+                 while (and (< i end) (char= space (aref string i)))
+                 do (incf i)
+                 finally (return i))))
+      (setf start (eat-spaces start))
+      (check-range)
+      (cond
+        ((char= plus  (aref string start)) (setf sign +1) (incf start) (check-range))
+        ((char= minus (aref string start)) (setf sign -1) (incf start) (check-range)))
+      (loop
+        for i from start below end
+        for digit = (cl:digit-char-p (aref string i) radix)
+        while digit
+        do (setf n (+ (* n radix) digit))
+        finally (when (< i end)
+                  (setf i (eat-spaces i)))
+                (when (and (not junk-allowed) (< i end))
+                  (parse-integer-error))
+                (return (values (* sign n) i))))))
+
+
 ;; ---------------
 ;; - 14 - Conses -
 ;; ---------------
@@ -1406,7 +1445,7 @@ RETURN:     (system-name)
 (defun pathname-version* (path)
   "RETURN: The version number."
   (if (string-match ".*\\.[^\\.]*?\\.~\\([0-9]+\\)~$" path)
-      (parse-integer (match-string 1 path))
+      (nth-value 0 (cl:parse-integer (match-string 1 path)))
       :unspecific))
 
 

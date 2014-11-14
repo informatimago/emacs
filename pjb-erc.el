@@ -212,7 +212,7 @@
                      "http-post"
                      (current-buffer)
                      (url-host url)
-                     (parse-integer (url-port url)))))
+                     (nth-value 0 (cl:parse-integer (url-port url))))))
       (unwind-protect
            (progn
              (http-send process "%s %s HTTP/1.0\r\n"
@@ -304,7 +304,7 @@ Otherwise, just yank it.
                     (lisp-paste (funcall (if (fboundp 'erc-network)
                                              'erc-network
                                              'erc-current-network))
-                                (erc-buffer-channel (current-buffer))
+                                (pjb-erc-buffer-channel (current-buffer))
                                 (erc-current-nick)
                                 text)
                   (unless sent-p
@@ -664,7 +664,7 @@ or the recipient is not in `*pjb-erc-speak-reject-recipient*',
                  (format "ping -c 10 -i 0.5 -q -w 5 %s"
                          (shell-quote-argument (string* server))))))
     (when (string-match " \\([0-9]+\\)% packet loss" result)
-      (let ((loss (parse-integer (match-string 1 result))))
+      (let ((loss (nth-value 0 (cl:parse-integer (match-string 1 result)))))
         (if (< loss 80)
             (progn
               (message "pjb-erc: (server-available-p %S) -> %d (true)"
@@ -1154,19 +1154,20 @@ the message given by REASON."
 
 
 (defun pjb/erc-join-meat ()
-  (unless (char= (character "#")
-                 (aref (erc-buffer-channel (current-buffer)) 0))
-    (erc-log-mode 1)
-    (local-set-key (kbd "C-y") 'erc-yank)
-    (local-set-key (kbd "H-a") 'pjb-erc-answer))
+  (let ((buffer (pjb-erc-buffer-channel (current-buffer))))
+    (unless (and buffer (char= (character "#") (aref buffer 0)))
+     (erc-log-mode 1)
+     (local-set-key (kbd "C-y") 'erc-yank)
+     (local-set-key (kbd "H-a") 'pjb-erc-answer)))
   (loop with current-channel = (buffer-name)
         for (channels . eval-function)
-          in '((("#lisp" "#lispcafe" "#lispgame"  "#lisp-lab" "#lisp-fr" "#lisp-es" 
+          in '((("#lisp" "##lisp" "#lispcafe" "#lispgame"  "#lisp-lab" "#lisp-fr" "#lisp-es" 
                  "#ccl" "#sbcl" "#quicklisp") . slime-eval-last-expression)
                (("#emacs") . eval-last-sexp)
                (("#scheme") . lisp-eval-last-expression))
         when (member* current-channel channels :test (function string=))
           do (local-set-key (kbd "C-x C-e") eval-function)))
+
 (add-hook 'erc-join-hook 'pjb/erc-join-meat)
 (mapcar (lambda (buffer) (with-current-buffer buffer (pjb/erc-join-meat))) (buffer-list))
 

@@ -123,8 +123,9 @@
                (let* ((comma (position (character ",") line
                                        :start args :end arge))
                       (size  (handler-case
-                                 (parse-integer line args
-                                                (min arge (or comma arge)))
+                                 (nth-value 0 (cl:parse-integer line
+                                                                :start args
+                                                                :end (min arge (or comma arge))))
                                (error () nil))))
                  ;; (message "SIZE=%S" size)
                  (when (and comma size)

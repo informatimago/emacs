@@ -1825,8 +1825,8 @@ and last year of the copyright.
                         (first  (aref res 0))
                         (second (aref res 0))
                         (list (third (aref res 1))
-                              (parse-integer (third (aref res 2)))
-                              (parse-integer (third (aref res 7)))))
+                              (nth-value 0 (cl:parse-integer (third (aref res 2))))
+                              (nth-value 0 (cl:parse-integer (third (aref res 7))))))
                (goto-char (1- (marker-position next)))))))))
 
 

@@ -82,7 +82,7 @@
       (while (let ((cmd (find-if (lambda (cmd) (eql start (string-match (first cmd) string start))) commands)))
                (when cmd
                  (setf start (match-end 0))
-                 (apply (second cmd) (mapcar (lambda (i) (parse-integer (match-string i string))) (cddr cmd)))
+                 (apply (second cmd) (mapcar (lambda (i) (nth-value 0 (cl:parse-integer (match-string i string)))) (cddr cmd)))
                  t)))
       (if (zerop start)
           string

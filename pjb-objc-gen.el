@@ -74,6 +74,9 @@
        (insert ,(elt parens 1)))))
 
 
+(defclass c-node ()
+  ())
+
 (defun generate (node)
   (if (typep node 'c-node)
       (generate-node node)
@@ -97,8 +100,7 @@
 
 
 
-(defclass c-node ()
-  ())
+
 
 (defmethod generate-node ((node c-node))
   (with-parens ("/*" "*/\n")

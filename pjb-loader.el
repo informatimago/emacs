@@ -37,12 +37,13 @@
 
 (defun load-stuff (files &optional show-messages)
   (dolist (path files)
-    (unless 
+    (if *pjb-load-noerror*
         (condition-case cc
-            (load path  *pjb-load-noerror*  *pjb-load-silent*)
-          ('error
-           (setq show-messages t)
-           (message (format "ERROR: %S" cc ))))))
+                        (load path *pjb-load-noerror* *pjb-load-silent*)
+                        (error
+                         (setq show-messages t)
+                         (message (format "ERROR: %S" cc))))
+        (load path *pjb-load-noerror* *pjb-load-silent*)))
   (when show-messages
     (switch-to-buffer "*Messages*")
     (split-window-vertically))) 

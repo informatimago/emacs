@@ -42,9 +42,9 @@
   (unless (eq window-system 'x)
     (error "font-exists-p works only on X"))
   (zerop
-   (parse-integer
-    (shell-command-to-string
-     (format "xlsfonts -fn %S 2>&1|awk 'BEGIN{r=0;} /xlsfonts: pattern .* unmatched/{r=1;} END{printf \"%%d\",r;}'" pattern)))))
+   (nth-value 0 (cl:parse-integer
+     (shell-command-to-string
+      (format "xlsfonts -fn %S 2>&1|awk 'BEGIN{r=0;} /xlsfonts: pattern .* unmatched/{r=1;} END{printf \"%%d\",r;}'" pattern))))))
 
 
 
@@ -281,7 +281,8 @@ RETURN:  A tree where the child of each node are labelled with
   (when (eq window-system 'x)
     (build-font-tree
      (delete-if (lambda (fp)
-                  (let ((size (parse-integer (plist-get fp :pixel-size))))
+                  (let* ((ssize (plist-get fp :pixel-size))
+                         (size  (and ssize (nth-value 0 (cl:parse-integer ssize)))))
                     (or (null size) (< size 8))))
                 (get-font-parts
                  (apply (function make-font-pattern) *font-default-fields*)

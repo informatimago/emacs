@@ -72,7 +72,7 @@
         (insert (format *zone-line-format* dn (if (or (null ttl)
                                                       (string= "" ttl))
                                                   3600
-                                                  (parse-integer ttl)) type rest))))))
+                                                  (nth-value 0 (cl:parse-integer ttl))) type rest))))))
 
 
 

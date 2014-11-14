@@ -48,13 +48,11 @@
 (defun percent (num denum)
   (if (or (null denum) (= denum 0.0))
     0.0
-    (* 100.0 (/ num (+ 0.0 denum))))
-  );;percent
+    (* 100.0 (/ num (+ 0.0 denum)))))
 
 
 (defun class-attributes (c)
-  (aref (get c 'eieio-class-definition) class-public-a)
-  );;class-attributes
+  (aref (get c 'eieio-class-definition) class-public-a))
 
 ;;------------------------------------------------------------------------------
 ;;
@@ -176,20 +174,17 @@
     "The alist where the (devise . amount) are stored."))
   (:documentation
    "A DeviseAccount is an account where the amount is stored separately
-for each devise [See: pjb-euro].")
-  );;DeviseAccount
+for each devise [See: pjb-euro]."))
 
 
 (defmethod* amount-at-devise ((self DeviseAccount) devise)
   "Retourne le montant de la devise indiquée dans le devise-account.
 Voir account-valuation pour la valeur totale du devise-account."
-  (cdr (assoc devise (amounts self)))
-  );;amount-at-devise
+  (cdr (assoc devise (amounts self))))
 
 (defmethod* devises ((self DeviseAccount))
   "Retourne la liste des devises dans le compte."
-  (mapcar 'car (amounts self))
-  );;devises
+  (mapcar 'car (amounts self)))
 
 (defmethod* account-valuation ((self DeviseAccount) devise)
   "Retourne la valeur du devise-account dans la devise indiquée.
@@ -199,8 +194,7 @@ Utilise pjb-euro, et nécessite pour les devises flottantes, des cours à jour."
             (setq total-euro (+ total-euro
                                 (euro-from-value (cdr a) (car a)))))
           (amounts self))
-    (euro-to-value devise total-euro))
-  );;account-valuation
+    (euro-to-value devise total-euro)))
 
 
 (defmethod* account-add ((self DeviseAccount) devise montant)
@@ -212,7 +206,7 @@ Return: self."
       (setcdr ligne (+ (cdr ligne) montant))
       (setf (slot-value self 'amounts)
             (cons (cons devise montant) (amounts self)))))
-  self);;account-add
+  self)
 
 
 (defmethod* account-sub ((self DeviseAccount) devise montant)
@@ -224,7 +218,7 @@ Return: self."
       (setcdr ligne (- (cdr ligne) montant))
       (setf (slot-value self 'amounts)
             (cons (cons devise (- 0 montant)) (amounts self)))))
-  self);;account-sub
+  self)
 
 
 (defmethod* account-mul ((self DeviseAccount) facteur)
@@ -233,32 +227,28 @@ RETURN: self"
   (mapc (lambda (devise-amount)
           (setcdr devise-amount (* (cdr devise-amount) facteur)))
         (amounts self))
-  self);;account-mul
+  self)
 
 
 
 (defun compare-sequal-sn-c  (a b)
   "Interne DeviseAccount."
   (string-equal (symbol-name (car a))
-                (symbol-name (car b)))
-  );;compare-sequal-sn-c
+                (symbol-name (car b))))
 
 (defun compare-slessp-sn-c  (a b)
   "Interne DeviseAccount."
   (string-lessp (symbol-name (car a))
-                (symbol-name (car b)))
-  );;compare-slessp-sn-c
+                (symbol-name (car b))))
 
 (defun compare-slessp-sn    (a b)
   "Interne DeviseAccount."
   (string-lessp (symbol-name  a)
-                (symbol-name  b))
-  );;compare-slessp-sn
+                (symbol-name  b)))
 
 (defmethod* sorted-accounts ((self DeviseAccount))
   "Returns a list of assoc (devise . amount) sorted on the devise."
-  (sort (copy-sequence (slot-value self 'amounts)) 'compare-slessp-sn-c)
-  );;sorted-accounts
+  (sort (copy-sequence (slot-value self 'amounts)) 'compare-slessp-sn-c))
 
 
 (defmethod* account-operation-account ((self DeviseAccount)
@@ -293,19 +283,16 @@ restants."
                  (cons (car b) (funcall op-lambda 0.0 (cdr b)))))
                result))))
     (setf (slot-value oresult 'amounts) result)
-    oresult)
-  );;account-operation-account
+    oresult))
 
 
 (defmethod* account-add-account ((self DeviseAccount) (other DeviseAccount))
   "Additionne les deux comptes-devises."
-  (account-operation-account self other  '+)
-  );;account-add-account
+  (account-operation-account self other  '+))
 
 (defmethod* account-sub-account ((self DeviseAccount) (other DeviseAccount))
   "Soustrait le devise-account compte-b du devise-account compte-a."
-  (account-operation-account self other  '-)
-  );;account-sub-account
+  (account-operation-account self other  '-))
 
 ;;;END DeviseAccount ---------------------------------------------------
 ;;;---------------------------------------------------------------------
@@ -320,8 +307,7 @@ restants."
 ;;;---------------------------------------------------------------------
 
 (defclass Operation (PjbObject)
-  (
-   (date 
+  ((date 
     :initform nil
     :initarg  :date
     :accessor date
@@ -333,23 +319,14 @@ This is a symbol with the format: YYYY-MM-DD.")
     :initarg  :symbol
     :accessor symbol
     :type     symbol
-    :documentation "The ticker symbol of the shares handled in this operation.")
-   )
+    :documentation "The ticker symbol of the shares handled in this operation."))
   (:documentation "
 Reification of a single operation.
 This is an abstract class. Concrete subclasses may be buy or sell operations
 or split operations.
 Instances of theses subclasses are made by make-operation.
-")
-  );;Operation
+"))
 
-
-(defmethod* apply-to-position ((self Operation) (position Position))
-  "NOTE:   This method must be overriden by subclasses.
-PRE:    (equal (symbol self) (symbol (owner-line position)))
-DO:     Apply self operation onto the position."
-  (error "Method apply-to-line must be overriden by subclasses.")
-  );;apply-to-position
 
 
 ;; ---------- --- ---------- ---- -------- ------ ------ ------------
@@ -360,20 +337,19 @@ DO:     Apply self operation onto the position."
 
 (defconstant operation-format-bad 
   "%-10s --ERROR:  OPERATION CLASS CANNOT DISPLAY-- %s"
-  "Format to print an abstract operation.");;operation-format-bad
+  "Format to print an abstract operation.")
 
 (defconstant operation-format-buy-sell 
   "%-10s %-3s %10.2f %4d %8.2f %6.2f %5.2f%% %s"
-  "Format to print a buy or sell operation.");;operation-format-buy-sell
+  "Format to print a buy or sell operation.")
 
 (defconstant operation-format-split
   "%-10s SPLIT %4d NEW SHARES FOR %4d OLD SHARES  %s"
-  "Format to print a split operation.");;operation-format-split
+  "Format to print a split operation.")
 
 (defmethod* as-string ((self Operation))
   "RETURN: A human readable string representing the operation."
-  (format operation-format-bad (date self) (symbol self))
-  );;as-string
+  (format operation-format-bad (date self) (symbol self)))
 
 ;;;END Operation -------------------------------------------------------
 ;;;---------------------------------------------------------------------
@@ -450,8 +426,14 @@ Reification of a position. This is the summary of a range of
 operations where the number of posseded shares only comes to 0 when
 the position is closed.  A Line posses several successive Position
 instances, of which all but the last must be closed.
-")
-  );;Position
+"))
+
+
+(defmethod* apply-to-position ((self Operation) (position Position))
+  "NOTE:   This method must be overriden by subclasses.
+PRE:    (equal (symbol self) (symbol (owner-line position)))
+DO:     Apply self operation onto the position."
+  (error "Method apply-to-line must be overriden by subclasses."))
 
 
 (defmethod* as-string ((self Position))
@@ -471,8 +453,7 @@ instances, of which all but the last must be closed.
    ;;   (format "    open-date           =%S\n" (open-date self))
    ;;   (format "    last-date           =%S\n" (last-date self))
    ;;   (format "    owner-line          =%S\n" (owner-line self))
-   "}\n")
-  );;as-string
+   "}\n"))
 
 
 
@@ -486,20 +467,17 @@ instances, of which all but the last must be closed.
   (cond
    ((= 0 (nb-operations self)) 'newborn)
    ((= 0 (quantity self))      'closed)
-   (t                          'running))
-  );;state
+   (t                          'running)))
 
 
 (defmethod* is-closed ((self Position))
   "RETURN: Whether (equal (state self) 'closed)."
-  (equal (state self) 'closed)
-  );;is-closed
+  (equal (state self) 'closed))
 
 
 (defmethod* is-running ((self Position))
   "RETURN: Whether (equal (state self) 'running)."
-  (equal (state self) 'running)
-  );;is-running
+  (equal (state self) 'running))
 
 
 (defmethod* update-with-operation ((self Position) (operation Operation))
@@ -516,7 +494,7 @@ RETURN: self."
   (setf (slot-value self 'last-date) (date operation))
   (apply-to-position operation self)
   (setf (slot-value self 'nb-operations) (1+ (nb-operations self)))
-  self);;update-with-operation
+  self)
 
 
 
@@ -525,15 +503,13 @@ RETURN: self."
         amount-invested =  (- (buy-amount self) (sell-amount self)).
         When is-closed, this is the lost (if positive)
                              or the gain (if negative)."
-  (- (buy-amount self) (sell-amount self))
-  );;amount-invested
+  (- (buy-amount self) (sell-amount self)))
 
 
 (defmethod* quantity ((self Position))
   "RETURN: The number of share remaining in the position.
         quantity = (- (buy-quantity self) (sell-quantity self))"
-  (- (buy-quantity self) (sell-quantity self))
-  );;quantity
+  (- (buy-quantity self) (sell-quantity self)))
 
 
 (defmethod* gain ((self Position))
@@ -543,8 +519,7 @@ RETURN: self."
         (not is-closed) => gain = 0.0"
   (if (is-closed self)
     (- (sell-amount self) (buy-amount self))
-    0.0)
-  );;gain
+    0.0))
 
 
 (defmethod* paid-per-share ((self Position))
@@ -558,8 +533,7 @@ RETURN: self."
       ;; We already have a gain.
       0.0
       (/ (amount-invested self) (quantity self)))
-    0.0)
-  );;paid-per-share
+    0.0))
 
 ;;;END Position --------------------------------------------------------
 ;;;---------------------------------------------------------------------
@@ -594,8 +568,7 @@ A split operation.
 This kind of operation replaces oldQuantity shares by newQuantity shares.
 An allocation of new (free) shares can be modelized by a split from the 
 oldQuantity required to the newQuantity = number of new share + oldQuantity.
-")
-  );;SplitOp
+"))
 
 
 (defmethod* apply-to-position ((self SplitOp) (position Position))
@@ -610,17 +583,14 @@ DO:     Apply this split operation onto the position."
         (/ (*  (sell-quantity position) (newQuantity self)) (oldQuantity self)))
   (setf (slot-value position 'buy-quantity) 
         (/ (*  (buy-quantity position) (newQuantity self)) (oldQuantity self)))
-
   ;;DEBUG;;  (message (format "%s\n" (as-string position)))
-
-  );;apply-to-position
+  )
 
 
 (defmethod* as-string ((self SplitOp))
   "RETURN: A human readable string representing the operation."
   (format operation-format-split
-    (date self) (newQuantity self)  (oldQuantity self) (symbol self))
-  );;as-string
+    (date self) (newQuantity self)  (oldQuantity self) (symbol self)))
 
 ;;;END SplitOp ---------------------------------------------------------
 ;;;---------------------------------------------------------------------
@@ -672,35 +642,30 @@ comission>=0.0")
 Reification of a single buy or sell operation.
 This is an abstract class. Concrete subclasses are BuyOp and SellOp.
 Instances of theses subclasses are made by make-operation.
-")
-  );;BuySellOp
+"))
 
 
 
 
 (defmethod* amount-base ((self BuySellOp))
   "RETURN: The total amount of this operation, excluding the comission."
-  (* (quantity self) (price self))
-  );;amount-base
+  (* (quantity self) (price self)))
 
 
 (defmethod* comission-percent ((self BuySellOp))
   "RETURN: The percentage the comission represents relatively to the share value."
-  (percent (comission self) (amount-base self))
-  );;comission-percent
+  (percent (comission self) (amount-base self)))
 
 
 (defmethod* amount-paid ((self BuySellOp))
   "RETURN: The amount paid for the operation. Negative when it's a sell operation."
-  (+ (* (signed-quantity self) (price self)) (comission self))
-  );;amount-paid
+  (+ (* (signed-quantity self) (price self)) (comission self)))
 
 
 (defmethod* signed-quantity ((self BuySellOp))
   "RETURN: The quantity.
 NOTE:   Should be overriden by sell operation to return the opposite."
-  (quantity self)
-  );;signed-quantity
+  (quantity self))
 
          
 (defmethod* as-string ((self BuySellOp))
@@ -708,8 +673,7 @@ NOTE:   Should be overriden by sell operation to return the opposite."
   (format operation-format-buy-sell
     (date self) (devise self) 
     (amount-paid self) (signed-quantity self) (price self) 
-    (comission self) (comission-percent self) (symbol self))
-  );;as-string
+    (comission self) (comission-percent self) (symbol self)))
 
 ;;;END SellBuyOp -------------------------------------------------------
 ;;;---------------------------------------------------------------------
@@ -723,15 +687,13 @@ NOTE:   Should be overriden by sell operation to return the opposite."
 (defclass BuyOp (BuySellOp) ()
   (:documentation "
 Reification of a buy operation.
-")
-  );;BuyOp
+"))
 
 
 (defmethod* amount  ((self BuySellOp))
   "RETURN: The total amount aid of this operation, including the comission.
         For buys, it's quantity*price+comission."
-  (+ (* (quantity self) (price self)) (comission self))
-  );;amount
+  (+ (* (quantity self) (price self)) (comission self)))
 
 
 (defmethod* apply-to-position ((self BuyOp) (position Position))
@@ -754,7 +716,7 @@ DO:     Apply this buy operation onto the position."
 
   ;;DEBUG;;  (message (format "%s\n" (as-string position)))
 
-  );;apply-to-position
+  )
 
 ;;;END BuyOp -----------------------------------------------------------
 ;;;---------------------------------------------------------------------
@@ -768,19 +730,16 @@ DO:     Apply this buy operation onto the position."
 (defclass SellOp (BuySellOp) ()
   (:documentation "
 Reification of a sell operation.
-")
-  );;SellOp
+"))
 
 (defmethod* amount  ((self BuySellOp))
   "RETURN: The total amount paid for this operation, including the comission.
         For sells, it's quantity*price-comission"
-  (- (* (quantity self) (price self)) (comission self))
-  );;amount
+  (- (* (quantity self) (price self)) (comission self)))
 
 (defmethod* signed-quantity ((self SellOp))
   "RETURN: The opposite of the quantity, to denote a sell."
-  (- 0 (quantity self))
-  );;signed-quantity
+  (- 0 (quantity self)))
 
 
 (defmethod* apply-to-position ((self SellOp) (position Position))
@@ -805,7 +764,7 @@ DO:     Apply this sell operation onto the position."
 
   ;;DEBUG;;  (message (format "%s\n" (as-string position)))
 
-  );;apply-to-position
+  )
 
 ;;;END SellOp ----------------------------------------------------------
 ;;;---------------------------------------------------------------------
@@ -839,8 +798,7 @@ DO:     Apply this sell operation onto the position."
         :devise devise
         :price price
         :comission comission
-        :symbol symbol)))
-  );;make-operation
+        :symbol symbol))))
 
 
 
@@ -875,8 +833,7 @@ They're stored the last one first."))
   (:documentation   "
 Reification of a Portfolio Line, where all the operations regarding a share
 are accumulated.
-")
-  );;Line
+"))
 
 
 (defmethod* update-with-operation ((self Line) (operation BuySellOp))
@@ -898,8 +855,7 @@ RETURN: self."
 
   (if (is-closed (last-position self))
     (open-new-position self))
-  (update-with-operation (last-position self) operation)
-  );;update-with-operation
+  (update-with-operation (last-position self) operation))
 
 
 (defmethod* open-new-position ((self Line))
@@ -914,15 +870,15 @@ RETURN: self"
                   (format "%s-%d" (symbol self) (length p))
                   :owner-line self)
                 (slot-value self 'positions))))
-  self);;open-new-position
+  self)
 
 
 (defmethod* last-position ((self Line))
   "RETURN: The last position of the line."
   (if (null (slot-value self 'positions))
     (open-new-position self))
-  (car (slot-value self 'positions))
-  );;last-position
+  (car (slot-value self 'positions)))
+
 
 
 ;; Last position data:
@@ -930,70 +886,62 @@ RETURN: self"
 (defmethod* quantity ((self Line))
   "RETURN: The number of share of the last postion.
         (All the previous positions have a number of 0 share remaining...)."
-  (quantity (last-position self))
-  );;quantity
+  (quantity (last-position self)))
+
 
 (defmethod* amount-invested ((self Line))
   "RETURN: The amount-invested of the last position."
   (if (is-running (last-position self))
     (amount-invested (last-position self))
-    0.0)
-  );;amount-invested
+    0.0))
+
 
 (defmethod* comission ((self Line))
   "RETURN: The comission paid for the last position."
   (if (is-running (last-position self))
     (comission (last-position self))
-    0.0)
-  );;comission
+    0.0))
+
 
 (defmethod* nb-operations ((self Line))
   "RETURN: The number of operation of the last position.
         (used for average-comission)"
-  (nb-operations (last-position self))
-  );;nb-operations
+  (nb-operations (last-position self)))
 
 
 (defmethod* average-comission ((self Line))
   "RETURN: The average comission paid for the last position."
-  (/ (comission self) (nb-operations self))
-  );;average-comission
+  (/ (comission self) (nb-operations self)))
 
 
 (defmethod* paid-per-share ((self Line))
   "RETURN: The price paid per share for the last position."
-  (paid-per-share (last-position self))
-  );;paid-per-share
+  (paid-per-share (last-position self)))
 
 
 (defmethod* gain ((self Line))
   "RETURN: The gain of the last position."
-  (gain (last-position self))
-  );;gain
+  (gain (last-position self)))
 
 
 (defmethod* buy-amount ((self Line))
   "RETURN: The buy amount of the last position of the line."
-  (buy-amount (last-position self))
-  );;buy-amount
+  (buy-amount (last-position self)))
 
 
 (defmethod* sell-amount ((self Line))
   "RETURN: The sell amount of the last position of the line."
-  (sell-amount (last-position self))
-  );;sell-amount
+  (sell-amount (last-position self)))
 
 
 (defmethod* buy-quantity ((self Line))
   "RETURN: The buy quantity of the last position of the line."
-  (buy-quantity (last-position self))
-  );;buy-quantity
+  (buy-quantity (last-position self)))
 
 
 (defmethod* sell-quantity ((self Line))
   "RETURN: The sell quantity of the last position of the line."
-  (sell-quantity (last-position self))
-  );;sell-quantity
+  (sell-quantity (last-position self)))
 
 
 ;; Totals over closed positions:
@@ -1004,16 +952,15 @@ RETURN: self"
   (apply '+ (mapcar (lambda (pos) (buy-amount pos)) 
                     (if (is-closed (last-position self))
                       (positions self)
-                      (cdr (positions self)))))
-  );;closed-buy-amount
+                      (cdr (positions self))))))
+
 
 (defmethod* closed-gain ((self Line))
   "RETURN: The sum over closed positions of (gain position)."
   (apply '+ (mapcar (lambda (pos) (gain pos)) 
                     (if (is-closed (last-position self))
                       (positions self)
-                      (cdr (positions self)))))
-  );;closed-gain
+                      (cdr (positions self))))))
 
 ;;;END Line ------------------------------------------------------------
 ;;;---------------------------------------------------------------------
@@ -1028,55 +975,46 @@ RETURN: self"
 ;;------------------------------------------------------------------------
 
 (defclass Portfolio (PjbObject)
-  (
-   (operations  
+  ((operations  
     :initform nil
     :accessor operations
     :type     list
     :documentation
     "The list of operations applied to this portfolio.")
-
    (lines  
     :initform nil
     :accessor lines
     :type     list
     :documentation "The alist of (symbol . Line).")
-
    ;; BuySellOp totals:
    ;; -----------------
    ;; total-opcom    total-comissions   total-comissions/total-amount-base (%)
    ;; total-credit   total-debit
-
    (total-opcom   
     :initform (lambda () (make-instance DeviseAccount))
     :accessor total-opcom
     :documentation 
     "The sum over operations of (amount operation).")
-
    (total-amount-base 
     :initform (lambda () (make-instance DeviseAccount))
     :accessor total-amount-base
     :documentation
-    "The sum over operations of (amount-base operation).")
-   
+    "The sum over operations of (amount-base operation).")   
    (total-comissions 
     :initform (lambda () (make-instance DeviseAccount))
     :accessor total-comissions
     :documentation 
     "The sum over operations of (comission operation).")
-
    (total-credit 
     :initform (lambda () (make-instance DeviseAccount))
     :accessor total-credit
     :documentation 
     "The sum over sell operations of (amount operation).")
-
    (total-debit 
     :initform (lambda () (make-instance DeviseAccount))
     :accessor total-debit
     :documentation 
     "The sum over buy operations of (amount operation).")
-
    ;; Line row:
    ;; ---------
    ;; SYMBOL       QUTE  DEV PAYE       FRAIS  REVIENT   BENEFICE  BENEFI%
@@ -1088,29 +1026,24 @@ RETURN: self"
    ;;              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^   ^^^^^^^^^^^^^^^^^
    ;;                   Total over running positions     Total over closed pos.
    ;; total-invested  total-closed-gains  total-closed-gains/total-closedbase (%)
-
    (total-invested 
     :initform (lambda () (make-instance DeviseAccount))
     :accessor total-invested
     :documentation 
     "The sum over lines of (amount-invested line).")
-
    (total-closed-gains 
     :initform (lambda () (make-instance DeviseAccount))
     :accessor total-closed-gains
     :documentation 
     "The sum over lines of (closed-gain line).")
-
    (total-closed-base 
     :initform (lambda () (make-instance DeviseAccount))
     :accessor total-closed-base
     :documentation 
-    "The sum over lines of (closed-buy-amount line).")
-   )
+    "The sum over lines of (closed-buy-amount line)."))
   (:documentation "
 Reification of a Portfolio.
-")
-  );;Portfolio
+"))
 
 
 (defmethod* add-operation ((self Portfolio) (op BuySellOp))
@@ -1119,12 +1052,10 @@ PRE:    (date (last (operations self))) <= (date operation)
         to ensure that the positions in the lines are not closed unduly.
 POST:   operation is appended to operations.
 RETURN: self."
-
   ;; Append the operation.
   (if (operations self)
     (nconc (operations self) op)
     (setf (slot-value self 'operations) (cons op nil)))
-
   ;; Update the line.
   (let ((line (line-with-symbol self (symbol op))))
     (if (null line)
@@ -1132,12 +1063,9 @@ RETURN: self."
         (setq line (make-instance Line (symbol-name (symbol op))
                                   :symbol (symbol op)
                                   :devise (devise op)))
-        (add-line self line))
-      ) ;;if
-    (update-with-operation line op)
-    )
-
-  self);;add-operation
+        (add-line self line)))
+    (update-with-operation line op))
+  self)
 
 
 (defmethod* compute-operation-totals ((self Portfolio))
@@ -1145,14 +1073,12 @@ RETURN: self."
         total-opcom, total-amount-base, total-comissions, 
         total-credit, total-debit 
 RETURN: self."
-
   ;; 1- Reset the totals.
   (setf (slot-value self 'total-opcom)       (make-instance DeviseAccount))
   (setf (slot-value self 'total-amount-base) (make-instance DeviseAccount))
   (setf (slot-value self 'total-comissions)  (make-instance DeviseAccount))
   (setf (slot-value self 'total-credit)      (make-instance DeviseAccount))
   (setf (slot-value self 'total-debit)       (make-instance DeviseAccount))
-
   ;; 2- Loop over the operations.
   (let ((ops (operations self))
         (op))
@@ -1168,12 +1094,8 @@ RETURN: self."
           (account-add (total-comissions self)  dev (comission op))
           (if (eq (class-of op) SellOp)
             (account-add (total-credit self) dev (amount op))
-            (account-add (total-debit self)  dev (amount op)))
-          )
-        ) ;;if
-      )
-    ) ;;while ops
-  self);;compute-operation-totals
+            (account-add (total-debit self)  dev (amount op)))))))
+  self)
 
 
 
@@ -1187,7 +1109,7 @@ POST: (eq (line-with-symbol self (symbol line)) line)"
     (error "There is already a line for the symbol %s in the portfolio."
            (symbol line)))
   (setf (slot-value self 'lines) (cons (cons (symbol line) line) (lines self)))
-  self);;add-line
+  self)
 
 
 (defmethod* sort-portfolio-lines ((self Portfolio))
@@ -1210,19 +1132,17 @@ RETURN: self."
                     (if ib
                       t
                       (string-lessp a b)))))))
-  self);;sort-portfolio-lines
+  self)
 
 
 (defmethod* compute-line-totals ((self Portfolio))
   "DO:     compute the following totals from the lines.
            total-invested, total-closed-gains, total-closed-base.
 RETURN: self."
-
   ;; 1- Reset the totals.
   (setf (slot-value self 'total-invested)     (make-instance DeviseAccount))
   (setf (slot-value self 'total-closed-gains) (make-instance DeviseAccount))
   (setf (slot-value self 'total-closed-base)  (make-instance DeviseAccount))
-
   ;; 2- Loop over the lines.
   (let ((lines (lines self))
         (line) (dev))
@@ -1233,17 +1153,14 @@ RETURN: self."
       ;; Update totals.
       (account-add (total-invested self)     dev (amount-invested   line))
       (account-add (total-closed-gains self) dev (closed-gain       line))
-      (account-add (total-closed-base self)  dev (closed-buy-amount line))
-      )
-    ) ;;while lines
-  self);;compute-line-totals
+      (account-add (total-closed-base self)  dev (closed-buy-amount line))))
+  self)
 
 
 (defmethod* line-with-symbol ((self Portfolio) symbol)
   "RETURN: the line whose symbol is SYMBOL,
         or nil if none exist in the portfolio."
-  (cdr (assoc symbol (lines self)))
-  );;line-with-symbol
+  (cdr (assoc symbol (lines self))))
 
 ;;;END Portfolio -------------------------------------------------------
 ;;;---------------------------------------------------------------------
@@ -1274,9 +1191,7 @@ On peut placer 0, 1 ou plusieurs options:
     dans (euro-get-devises)   --> affiche les totaux dans la devise indiquée
                                   (que les cours soient à jour!).
 "
-
   (let ((portfolio (make-instance Portfolio))
-
         (jlin "---------- --- ---------- ---- -------- ------ ------ ------------\n")
         (jtit "DATE       DEV MONTANT    QUTE COURS    FRAIS  FRAIS% SYMBOL      \n")
         (jlco "---------- --- ---------- ---------- --------- ------\n")
@@ -1287,9 +1202,7 @@ On peut placer 0, 1 ou plusieurs options:
         (pfor "%-13s%5d %-3s %10.2f %6.2f %9.2f %9.2f %6.2f%%\n")
         (ptot "%-13s      %-3s %10.2f                  %9.2f %6.2f%%\n")
         (devises-totaux       nil)
-        (toutes-les-devises)
-        )
-
+        (toutes-les-devises))
     ;;; Process options.
     (mapc (lambda (opt)
             (cond ((equal opt 'efface-reste-du-tampon)
@@ -1298,28 +1211,22 @@ On peut placer 0, 1 ou plusieurs options:
                    (setq devises-totaux (cons opt devises-totaux)))
                   (t (error "Option inconnue '%s'." opt))))
           options)
-
     (setq devises-totaux
           (if devises-totaux
             (remove-duplicates (sort devises-totaux 'compare-slessp-sn))
             '(EUR)))
-
-
     ;;; ============================================================ ;;;
     ;;; ===                        OPERATIONS                    === ;;;
     ;;; ============================================================ ;;;
-
     (printf "\n")
     (printf "------------------------------------------------------------------\n")
     (printf "                          OPERATIONS\n")
     (printf "%s" jlin)
     (printf "%s" jtit)
     (printf "%s" jlin)
-
     ;;; Make the BuySellOp objects from the input lists.
     (setq operations
           (mapcar 'make-operation (sort operations 'compare-slessp-sn-c)))
-
     (let ((op))
       (while operations
         (setq op         (car operations)
@@ -1327,14 +1234,10 @@ On peut placer 0, 1 ou plusieurs options:
         ;;; Print the operation.
         (printf "%s\n" (as-string op))
         ;;; Update portfolio & line.
-        (add-operation portfolio op)
-        )
-      ) ;;while operations
+        (add-operation portfolio op)))
     (printf "%s" jlin)
-
     ;; Compute the operation totals.
     (compute-operation-totals portfolio)
-
     ;;; Print the operation totals.
     (let ( ;; all these totals are DeviseAccount instances.
           (t-opcom       (total-opcom       portfolio))
@@ -1366,35 +1269,26 @@ On peut placer 0, 1 ou plusieurs options:
                   (account-valuation t-amount-base devise))
                  ""))
        devises-totaux)
-      (printf "%s" jlco)
-      ) ;;let
-
+      (printf "%s" jlco))
     (let* ((devise EUR)
            (total-credit-v (account-valuation (total-credit portfolio) devise))
            (total-debit-v  (account-valuation (total-debit  portfolio) devise)))
-
       (printf "%-10s %3s %10.2f %10.2f\n"
               "LIQUIDITE" devise total-credit-v total-debit-v)
       (if (< total-credit-v total-debit-v)
         (printf "%10s %3s            %10.2f\n"
                 "" devise (- total-debit-v total-credit-v))
         (printf "%-10s %3s %10.2f\n"
-                "" devise (- total-credit-v total-debit-v)))
-      ) ;;let*
-
+                "" devise (- total-credit-v total-debit-v))))
     (printf "\n")
-
-
     ;;; ============================================================ ;;;
     ;;; ===                      PORTFOLIO                       === ;;;
     ;;; ============================================================ ;;;
-
     (printf "%s\n" (make-string (- (length plin) 1) (string-to-char "-")))
     (printf "                            PORTFOLIO\n")
     (printf "%s" plin)
     (printf "%s" ptit)
     (printf "%s" plin)
-
     ;;; List the portfolio.
     (sort-portfolio-lines portfolio)
     (let ((p-lines (lines portfolio))
@@ -1409,20 +1303,15 @@ On peut placer 0, 1 ou plusieurs options:
                 (comission line) (paid-per-share line)
                 ;; over closed positions:
                 (closed-gain line) 
-                (percent (closed-gain line) (closed-buy-amount line)))
-        )
-      ) ;;while p-lines
+                (percent (closed-gain line) (closed-buy-amount line)))))
     (printf "%s" plin)
-
     ;; Compute the line totals.
     (compute-line-totals portfolio)
-
     ;; Print totals.
     (let ( ;; all these totals are DeviseAccount instances.
           (t-invested     (total-invested     portfolio))
           (t-closed-gains (total-closed-gains portfolio))
-          (t-closed-base  (total-closed-base  portfolio))
-          )
+          (t-closed-base  (total-closed-base  portfolio)))
       (mapc (lambda (devise)
                 (printf ptot "TOTAL/DEV" devise
                         (amount-at-devise t-invested     devise)
@@ -1432,7 +1321,6 @@ On peut placer 0, 1 ou plusieurs options:
                          (amount-at-devise t-closed-base  devise))))
               toutes-les-devises)
       (printf "%s" plin)
-
       (mapc (lambda (devise)
                 (printf ptot "TOTAL" devise
                         (account-valuation t-invested     devise)
@@ -1441,12 +1329,9 @@ On peut placer 0, 1 ou plusieurs options:
                          (account-valuation t-closed-gains devise)
                          (account-valuation t-closed-base  devise))))
               devises-totaux)
-      (printf "%s" plin)
-      ) ;;let
+      (printf "%s" plin))
     (printf "\n")
-
-    portfolio)
-  );;portefeuille
+    portfolio))
 
 
 
@@ -1468,23 +1353,17 @@ On peut placer 0, 1 ou plusieurs options:
              (avg-comission    (/ (comission line) (nb-operations line)))
              (amount           (- (buy-amount line) (sell-amount line)))
              (quantity         (- (buy-quantity line) (sell-quantity line)))
-             (gain         0.0)
-             (sell-price       0.0)
-             )
+             (gain             0.0)
+             (sell-price       0.0))
         (if (< 0 quantity)
           (progn
             (setq sell-price (+ (* (+ 1.0 taux-benef) (paid-per-share line))
                                 (/ avg-comission (quantity line))))
             (setq gain   (* taux-benef (buy-amount line)))
             (printf pfor (symbol line) (quantity line) (devise line)
-                    sell-price avg-comission gain (* 100.0 taux-benef))
-            ))
-        ) ;;let*
-      (setq p-lines (cdr p-lines))
-      ) ;;while portefeuille
-    (printf "%s" plin)
-    ) ;;let
-  );;affiche-vente
+                    sell-price avg-comission gain (* 100.0 taux-benef)))))
+      (setq p-lines (cdr p-lines)))
+    (printf "%s" plin)))
 
 
 
@@ -1526,9 +1405,8 @@ On peut placer 0, 1 ou plusieurs options:
                  (- (buy-quantity p) (sell-quantity p) )
                  (- (sell-amount p) (buy-amount p)) )))
      (positions line))
-    (insert (format "%s\n" (make-string 75 ?-)))
-    )
-  );;show-positions
+    (insert (format "%s\n" (make-string 75 ?-)))))
 
 
-;;;; pjb-bourse.el                    --                     --          ;;;;
+;;;; THE END ;;;;
+
