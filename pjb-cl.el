@@ -1633,7 +1633,8 @@ Bi-directional stream.")
 
 
 (defun get-internal-real-time ()
-  (destructuring-bind (high low microsec) (current-time)
+  (destructuring-bind (high low microsec &rest ignored) (current-time)
+    (declare (ignore ignored))
     (+ (* high 65536.0) low (* 1e-6 microsec))))
 
 
@@ -1651,10 +1652,10 @@ URL: http://www.informatimago.com/local/lisp/HyperSpec/Body/m_time.htm
         (result (gensym))
         (stop (gensym))
         (time (gensym)))
-    `(let* ( (,start  (get-internal-real-time))
+    `(let* ((,start  (get-internal-real-time))
             (,result (progn ,@body))
-             (,stop   (get-internal-real-time)) 
-             (,time   (- ,stop ,start)) )
+            (,stop   (get-internal-real-time)) 
+            (,time   (- ,stop ,start)) )
        (printf *trace-output* "Time: %e ms\n" ,time))))
 
 
