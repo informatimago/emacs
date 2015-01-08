@@ -106,7 +106,7 @@
 
 (defun pjb-erc-buffer-channel (buffer)
   "Returns the channel associated to an erc buffer, or nil if not an erc buffer"
-  ;; (and (erc-buffer-p buffer) (buffer-name buffer))
+  ;; (and (pjb-erc-buffer-p buffer) (buffer-name buffer))
   (save-excursion
     (set-buffer buffer)
     (erc-default-target)))
@@ -271,18 +271,19 @@
   "(time-of-last-check . paste.lisp.org-available-p)")
 
 (defun pjb-paste-lisp-org-available-p ()
-  (if (cl:< (GET-UNIVERSAL-TIME)
-            (cl:+ (car *paste-lisp-org-cache*) *paste-lisp-org-delay*))
-      (cdr *paste-lisp-org-cache*)
-      (progn
-        (message "pinging paste.lisp.org")
-        (let ((result (zerop (car (read-from-string
-                                   (shell-command-to-string
-                                    "ping -q -c 1 -w 2 paste.lisp.org>/dev/null 2>&1;echo $?"))))))
-          (message (format "pinging paste.lisp.org --> %s "
-                           (if result 'success 'failed)))
-          (setf (car *paste-lisp-org-cache*) (GET-UNIVERSAL-TIME)
-                (cdr *paste-lisp-org-cache*) result)))))
+  (and nil
+       (if (cl:< (GET-UNIVERSAL-TIME)
+                 (cl:+ (car *paste-lisp-org-cache*) *paste-lisp-org-delay*))
+           (cdr *paste-lisp-org-cache*)
+           (progn
+             (message "pinging paste.lisp.org")
+             (let ((result (zerop (car (read-from-string
+                                        (shell-command-to-string
+                                         "ping -q -c 1 -w 2 paste.lisp.org>/dev/null 2>&1;echo $?"))))))
+               (message (format "pinging paste.lisp.org --> %s "
+                                (if result 'success 'failed)))
+               (setf (car *paste-lisp-org-cache*) (GET-UNIVERSAL-TIME)
+                     (cdr *paste-lisp-org-cache*) result))))))
   
 
 
@@ -293,12 +294,12 @@ then use http://paste.lisp.org to lisppaste it instead of yanking it.
 Otherwise, just yank it.
 "
   (interactive "*P")
-  (if (erc-buffer-p (current-buffer))
-      (if (paste-lisp-org-available-p)
-          (let* ((text  (text-to-yank arg))
-                 (lines (count +newline+ text)))
-            (if (<= lines *erc-yank-flood-limit*)
-                (funcall *erc-yank-function* arg)
+  (if (pjb-erc-buffer-p (current-buffer))
+      (let* ((text  (pjb-text-to-yank arg))
+             (lines (count +newline+ text)))
+        (if (<= lines *erc-yank-flood-limit*)
+            (funcall *erc-yank-function* arg)
+            (if (pjb-paste-lisp-org-available-p)
                 (multiple-value-bind
                       (url sent-p)
                     (lisp-paste (funcall (if (fboundp 'erc-network)
@@ -308,8 +309,8 @@ Otherwise, just yank it.
                                 (erc-current-nick)
                                 text)
                   (unless sent-p
-                    (insert-for-yank url)))))
-          (funcall *erc-yank-function* arg))
+                    (insert-for-yank url)))
+                (error "To many lines to yank: %d" lines))))
       (funcall *erc-yank-function* arg)))
 
  
@@ -1157,7 +1158,7 @@ the message given by REASON."
   (let ((buffer (pjb-erc-buffer-channel (current-buffer))))
     (unless (and buffer (char= (character "#") (aref buffer 0)))
      (erc-log-mode 1)
-     (local-set-key (kbd "C-y") 'erc-yank)
+     (local-set-key (kbd "C-y") 'pjb-erc-yank)
      (local-set-key (kbd "H-a") 'pjb-erc-answer)))
   (loop with current-channel = (buffer-name)
         for (channels . eval-function)
