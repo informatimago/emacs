@@ -1157,7 +1157,7 @@ the message given by REASON."
   (let ((buffer (pjb-erc-buffer-channel (current-buffer))))
     (unless (and buffer (char= (character "#") (aref buffer 0)))
      (erc-log-mode 1)
-     (local-set-key (kbd "C-y") 'erc-yank)
+     ;; (local-set-key (kbd "C-y") 'erc-yank)
      (local-set-key (kbd "H-a") 'pjb-erc-answer)))
   (loop with current-channel = (buffer-name)
         for (channels . eval-function)
