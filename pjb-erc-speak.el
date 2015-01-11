@@ -31,36 +31,13 @@
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
-
 (require 'cl)
 (require 'erc)
+(require 'pjb-speak)
 
-
-(defvar *pjb-speak-file-counter* 0)
-
-(defun pjb-speak-file ()
-  (format "%s/speak-%d.txt" *tempdir* (incf *pjb-speak-file-counter*)))
-
-
-(defvar *pjb-speak-last-message* nil)
-
-(defun speak (message)
-  (interactive "sMessage: ")
-  (let ((file (pjb-speak-file)))
-    (with-current-buffer (get-buffer-create " *speak text*")
-      (erase-buffer)
-      (insert message)
-      (setf *pjb-speak-last-message* message)
-      (write-region (point-min) (point-max) file))
-    (shell-command (format "speak -f %s" file))))
-
-(defalias 'say 'speak)
-
-(defun speak-repeat ()
-  (interactive)
-  (speak *pjb-speak-last-message*))
-
-
+;;;---------------------------------------------------------------------
+;;; ERC speach
+;;;---------------------------------------------------------------------
 
 (defparameter *pjb-erc-spoken-nicks*
   '(("\\<e1f\\>"          . "elf")
@@ -169,6 +146,11 @@ See: `*pjb-erc-speak-reject-recipient*', `*pjb-erc-speak-reject-sender*',
       and `pjb-erc-privmsg-meat'.
 ")
 
+
+(setf *pjb-erc-speak-accept-sender*    :all
+      *pjb-erc-speak-reject-sender*    '("minion" "clhs" "specbot")
+      *pjb-erc-speak-reject-recipient* '("minion" "clhs" "specbot"))
+
 (setf *pjb-erc-speak-reject-recipient* '("#emacs")
       *pjb-erc-speak-reject-recipient* :all
       *pjb-erc-speak-reject-sender*    :all
@@ -178,7 +160,7 @@ See: `*pjb-erc-speak-reject-recipient*', `*pjb-erc-speak-reject-sender*',
 (defvar *pjb-erc-speak-last-speaker* nil)
 
 
-(defun pjb-erc-privmsg-meat (process response)
+(defun pjb-erc-speak-privmsg-meat (process response)
   "The messages are spoken if the sender is in `*pjb-erc-speak-accept-sender*',
 or the sender is not in `*pjb-erc-speak-reject-sender*',
 or the recipient is not in `*pjb-erc-speak-reject-recipient*',
@@ -213,11 +195,14 @@ or the recipient is not in `*pjb-erc-speak-reject-recipient*',
 
 (defun pjb-erc-speak-on ()
   (interactive)
-  (pushnew 'pjb-erc-privmsg-meat  erc-server-PRIVMSG-functions))
+  (pushnew 'pjb-erc-speak-privmsg-meat  erc-server-PRIVMSG-functions))
 
 (defun pjb-erc-speak-off  ()
   (interactive)
   (setf erc-server-PRIVMSG-functions
-        (remove 'pjb-erc-privmsg-meat  erc-server-PRIVMSG-functions)))
+        (remove 'pjb-erc-speak-privmsg-meat erc-server-PRIVMSG-functions)))
+
 
 (provide 'pjb-erc-speak)
+;;;; THE END ;;;;
+
