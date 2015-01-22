@@ -1212,6 +1212,12 @@ RETURN: The origin and width and height of the screen where the frame lies,
           (- screen-height (eval (second origin))))))
 
 
+;;;
+;;; 
+;;;
+
+(defvar *frame-maximized-states*)
+
 ;; (list (frame-pixel-left) (frame-pixel-top) (frame-width) (frame-height))
 ;; (0 (+ -23) 179 78)
 
@@ -1418,13 +1424,14 @@ Multiply by -1 = without decoration.
 (defvar *frame-maximized-states* (make-hash-table)
   "Maps frames to their maximized state: When not maximized = nil; 
                                          when maximized = ((x y) w h)")
+;; (setf *frame-maximized-states* (make-hash-table))
 
 ;; assuming each frame has its own state.
 ;; The following is to clean up the entry in the hash table when the 
 ;; frame is deleted:
-
-(add-hook 'delete-frame-hook
-          (lambda (frame) (setf (gethash frame *frame-maximized-states*) nil)))
+(defun pjb-delete-frame-meat (frame)
+  (remhash frame *frame-maximized-states*))
+(add-hook 'delete-frame-hook 'pjb-delete-frame-meat)
 
 ;; Now let's toggle:
 
