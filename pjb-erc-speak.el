@@ -157,41 +157,48 @@ See: `*pjb-erc-speak-reject-recipient*', `*pjb-erc-speak-reject-sender*',
       *pjb-erc-speak-accept-sender*    '("Posterdati" "pjb-"))
 
 
+
+(defun pjb-erc-member (item list-designator)
+  "Return whether the `item' is in a virtual list designated by `list-designator'.
+`list-designator' may be nil for an empty list),
+:all or t for a list containing everything, or
+an actual list.
+items are compared with `string='.
+"
+  (case list-designator
+    ((nil)     nil)
+    ((:all t)  t)
+    (otherwise (member* item list-designator :test 'string=))))
+
+
+(defun pjb-erc-prepare-message (reponse last-speaker)
+  "Return a list (formated-message new-last-speaker)"
+  (let* ((nick (pjb-erc-spoken-nick (erc-response.sender-nick response)))
+         (chan (pjb-erc-spoken-nick (remove ?# (erc-response.recipient response))))
+         (mesg (pjb-erc-massage-message (erc-response.contents response))))
+    (if (equal last-speaker (cons nick chan))
+        (list (format "%s" mesg)
+              last-speaker)
+        (list (format "%s said to %s: ... %s" nick chan mesg)
+              (cons nick chan)))))
+
+
 (defvar *pjb-erc-speak-last-speaker* nil)
-
-
 (defun pjb-erc-speak-privmsg-meat (process response)
   "The messages are spoken if the sender is in `*pjb-erc-speak-accept-sender*',
 or the sender is not in `*pjb-erc-speak-reject-sender*',
 or the recipient is not in `*pjb-erc-speak-reject-recipient*',
 "
-  (when (or
-         (case *pjb-erc-speak-accept-sender*
-           ((nil)    nil)
-           ((:all t) t)
-           (otherwise (member* (erc-response.sender-nick response)
-                               *pjb-erc-speak-accept-sender* :test 'string=)))
-         (case *pjb-erc-speak-reject-sender*
-           ((nil)    t)
-           ((:all t) nil)
-           (otherwise (not (member* (erc-response.sender-nick response)
-                                    *pjb-erc-speak-reject-sender* :test 'string=))))
-         (case *pjb-erc-speak-reject-recipient*
-           ((nil)    t)
-           ((:all t) nil)
-           (otherwise (not (member* (erc-response.recipient response)
-                                    *pjb-erc-speak-reject-recipient* :test 'string=)))))
-    (speak (let* ((nick (pjb-erc-spoken-nick (erc-response.sender-nick response)))
-                  (chan (pjb-erc-spoken-nick (remove ?# (erc-response.recipient response))))
-                  (mesg (pjb-erc-massage-message (erc-response.contents response))))
-             (if (equal *pjb-erc-speak-last-speaker*
-                        (cons nick chan))
-                 (format "%s" mesg)
-                 (progn
-                   (setf *pjb-erc-speak-last-speaker* (cons nick chan))
-                   (format "%s said to %s: ... %s" nick chan mesg))))))
+  (when (or (pjb-erc-member (erc-response.sender-nick response)
+                            *pjb-erc-speak-accept-sender*)
+            (pjb-erc-member (erc-response.sender-nick response)
+                            *pjb-erc-speak-reject-sender*)
+            (pjb-erc-member (erc-response.recipient response)
+                            *pjb-erc-speak-reject-recipient*))
+    (let ((message (pjb-erc-prepare-message response *pjb-erc-speak-last-speaker*)))
+      (setf *pjb-erc-speak-last-speaker* (second message))
+      (speak (first message))))
   nil)
-
 
 (defun pjb-erc-speak-on ()
   (interactive)
@@ -203,6 +210,26 @@ or the recipient is not in `*pjb-erc-speak-reject-recipient*',
         (remove 'pjb-erc-speak-privmsg-meat erc-server-PRIVMSG-functions)))
 
 
+
+
+(defvar *pjb-erc-tooltip-last-tooltiper* nil)
+(defun pjb-erc-tooltip-privmsg-meat (process response)
+  "The messages are displayed in tooltips."
+  (let ((message (pjb-erc-prepare-message response *pjb-erc-tooltip-last-tooltiper*)))
+    (setf *pjb-erc-tooltip-last-tooltiper* (second message))
+    (tooltip-show (first message)))
+  nil)
+
+(defun pjb-erc-tooltip-on ()
+  (interactive)
+  (pushnew 'pjb-erc-tooltip-privmsg-meat  erc-server-PRIVMSG-functions))
+
+(defun pjb-erc-tooltip-off  ()
+  (interactive)
+  (setf erc-server-PRIVMSG-functions
+        (remove 'pjb-erc-tooltip-privmsg-meat erc-server-PRIVMSG-functions)))
+
+
+
 (provide 'pjb-erc-speak)
 ;;;; THE END ;;;;
-
