@@ -56,6 +56,8 @@
         "pjb-advices.el"
         "pjb-asm7090.el"
         "pjb-blink.el"
+        "pjb-constants.el"
+        "pjb-color.el"
         "pjb-cl-magic.el"
         "pjb-cl.el"
         "pjb-class.el"
@@ -105,7 +107,6 @@
 
                  
                   "pjb-computer-paper.el"
-                  "pjb-constants.el"
                   "pjb-cvs.el"
                   "pjb-cvspass.el"
                   "pjb-dot.el"
