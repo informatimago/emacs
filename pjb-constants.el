@@ -366,8 +366,9 @@
   "Value of a light-year in meter.") ;;light-year
 
 
+;; (defun sqrt (x) (expt x 0.5))
 (defun square (x) (* x x))
-(defun sqrt (x) (expt x 0.5))
+
 (defun lorentz ( x t_ v )
   "
 RETURN: x' ; t' ; dx' ; dt' such as
