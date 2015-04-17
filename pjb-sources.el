@@ -3428,14 +3428,22 @@ the FUNCTION can take."
 (defun set-sources (directory)
   (interactive "sSource directory: ")
   (message "Caching paths…")
-  (let ((directory (remove-trailling-slashes directory)))
+  (let ((directory     (remove-trailling-slashes directory))
+        (exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
+        (include-types '("xib" "h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
+                         "lisp" "asd" "cl" "el"
+                         "rb"
+                         "java" "xml"
+                         "logs" "txt"
+                         "html" "iml" "json" "md" "prefs" "project" "properties" "sh" 
+                         )))
     (handler-case
         (dolist (directory (mapcar (function remove-trailling-slashes)
                                    (expand-path-alternatives directory)))
           (let ((*sources* directory))
             (file-cache-add-directory-recursively
              directory
-             ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$")))
+             (format ".*\\.\\(%s\\)$" (mapconcat (function identity) include-types "\\|")))))
       (error (err)
         (message (format "error while caching files: %s" err))))
     (setf *sources* directory)
@@ -3446,18 +3454,10 @@ the FUNCTION can take."
                                   (format "%s%s/" (file-name-directory directory) *shadow-directory-name*)))))
     (message "Caching paths… Complete.")
     (setf grep-find-command
-          (let ((exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
-                (include-types '("xib" "h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
-                                 "lisp" "asd" "cl" "el"
-                                 "rb"
-                                 "java" "xml"
-                                 "logs" "txt"
-                                 "html" "iml" "json" "md" "prefs" "project" "properties" "sh" 
-                                 )))
-            (format "find %s \\( \\( %s \\) -prune \\) -o -type f  \\( %s \\) -print0 | xargs -0 grep -niH -e "
-                    *sources*
-                    (mapconcat (lambda (name) (format "-name %s" name)) exclude-names " -o ")
-                    (mapconcat (lambda (type) (format "-name \\*.%s" type)) include-types " -o ")))
+          (format "find %s \\( \\( %s \\) -prune \\) -o -type f  \\( %s \\) -print0 | xargs -0 grep -niH -e "
+                  *sources*
+                  (mapconcat (lambda (name) (format "-name %s" name))     exclude-names " -o ")
+                  (mapconcat (lambda (type) (format "-name \\*.%s" type)) include-types " -o "))
           grep-host-defaults-alist nil)))
 
 
