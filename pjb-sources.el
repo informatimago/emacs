@@ -3425,18 +3425,32 @@ the FUNCTION can take."
         (apply (function combine) (nreverse items)))))
 
 
-(defun set-sources (directory)
-  (interactive "sSource directory: ")
+(defun set-sources (directory &optional project-type)
+  (interactive "sSource directory: 
+SProject Type: ")
   (message "Caching paths…")
   (let ((directory     (remove-trailling-slashes directory))
         (exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
-        (include-types '("xib" "h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
-                         "lisp" "asd" "cl" "el"
-                         "rb"
-                         "java" "xml"
-                         "logs" "txt"
-                         "html" "iml" "json" "md" "prefs" "project" "properties" "sh" 
-                         )))
+        (include-types (ecase project-type
+                         ((nil)
+                          '("xib" "h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
+                            "lisp" "asd" "cl" "el"
+                            "rb"
+                            "java" "xml"
+                            "logs" "txt"
+                            "html" "iml" "json" "md" "prefs" "project" "properties" "sh"))
+                         ((lisp cl)
+                          '("lisp" "asd" "cl" "el"
+                            "xib" "logs" "txt" "html"))
+                         ((android)
+                          '("h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
+                            "java" "xml"
+                            "logs" "txt"
+                            "html" "iml" "json" "md" "prefs" "project" "properties" "sh"))
+                         ((cocoa)
+                          '("h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
+                            "xml" "logs" "txt"
+                            "html" "iml" "json" "md" "prefs" "project" "properties" "sh")))))
     (handler-case
         (dolist (directory (mapcar (function remove-trailling-slashes)
                                    (expand-path-alternatives directory)))
