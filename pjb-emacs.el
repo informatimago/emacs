@@ -1227,6 +1227,9 @@ RETURN: The origin and width and height of the screen where the frame lies,
 The screens as managed on xinerama or mergedfb, with one coordinate system,
 so we just divide the screen size in two 'screens'.
 
+On MacOSX, negative prefix diminishes the size of the window to leave
+space for the dock.
+
 Vertical decorations    Vertical decorations 
 in screen.              out of screen.
  
@@ -1311,9 +1314,10 @@ Wishes:
 Multiply by -1 = without decoration.
 *: Multiply by 10 and add 1 for top half, and 2 for bottom half.
 ")
-        (let* ((top-offset    (if (minusp prefix)
+        (let* ((decorationp   (minusp prefix))
+               (top-offset    (if (and (not (eq window-system 'ns)) decorationp)
                                   (- *window-manager-above*) 0))
-               (height-offset (if (minusp prefix)
+               (height-offset (if (and (not (eq window-system 'ns)) decorationp)
                                   0 (- *window-manager-y-offset*)))
                (prefix (abs prefix))
                (hpref  (if (< prefix 20) prefix (truncate prefix 10))) ; 1..19
@@ -1326,12 +1330,13 @@ Multiply by -1 = without decoration.
                             ((7)            (* 3 (truncate screen-width 4)))
                             ((12 121)       (truncate screen-width 3))
                             ((13)           (* 2 (truncate screen-width 3))))))
-               (width  (truncate screen-width (case hpref
-                                                ((1)         1)
-                                                ((2 3)       2)
-                                                ((11 12 13)  3)
-                                                ((4 5 6 7)   4)
-                                                ((111 121)   1.5))))
+               (width  (- (truncate screen-width (case hpref
+                                                   ((1)         1)
+                                                   ((2 3)       2)
+                                                   ((11 12 13)  3)
+                                                   ((4 5 6 7)   4)
+                                                   ((111 121)   1.5)))
+                          (if (and (eq window-system 'ns) decorationp) 64 0)))
                (top    (+ screen-top
                           (case vpref
                             ((0 1) 0)
@@ -1339,10 +1344,11 @@ Multiply by -1 = without decoration.
                                                 *window-manager-y-offset*)
                                              2))
                             ((3)))))
-               (height (case vpref
-                         ((0)     screen-height)
-                         ((1 2 3) (truncate (- screen-height
-                                               *window-manager-y-offset*) 2)))))
+               (height (- (case vpref
+                            ((0)     screen-height)
+                            ((1 2 3) (truncate (- screen-height
+                                                  *window-manager-y-offset*) 2)))
+                          (if (and (eq window-system 'ns) decorationp) 64 0))))
           (labels ((mesframe (frame)
                      (message "0: x=%8S y=%8S w=%8S h=%8S"
                               (frame-pixel-left frame)
@@ -1351,7 +1357,7 @@ Multiply by -1 = without decoration.
                               (frame-pixel-height frame)))
                    (move-frame (x w y h)
                      ;; (mesframe frame)
-                     ;; (message "1: x=%8S y=%8S w=%8S h=%8S" x y w h)
+                     (message "1: x=%8S y=%8S w=%8S h=%8S" x y w h)
                      (set-frame-width
                       frame
                       (pixel-to-char-width
@@ -1364,14 +1370,13 @@ Multiply by -1 = without decoration.
                            y (position-y y)
                            w (frame-pixel-width  frame)
                            h (frame-pixel-height frame))
-                     ;; (message "2: x=%8S y=%8S w=%8S h=%8S" x y w h)
+                     (message "2: x=%8S y=%8S w=%8S h=%8S" x y w h)
                      (set-frame-position frame x y)
                      ;; (mesframe frame)
                      ))
             (move-frame left width
                         (+ top top-offset) (+ height height-offset)))))))
 
-               
 (defun single-frame ()
   "Reduce the frame, to one 80-columns window."
   (interactive)
