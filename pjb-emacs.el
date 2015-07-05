@@ -185,6 +185,13 @@ RETURN: the buffer which has as name `name'.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Editing functions:
 
+(defun replace-region (start end text)
+  "In the current buffer, delete the region from `start' to `end' and insert in its place the `text', saving the excursion."
+  (save-excursion
+   (goto-char start)
+   (delete-region start end)
+   (insert text)))
+
 (defun delete-region-and-yank (&optional arg)
   "Deletes region if mark is active and yanks the last kill.
 Always replaces the region with the yank, whether the region was
