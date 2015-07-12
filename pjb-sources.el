@@ -1840,20 +1840,15 @@ and last year of the copyright.
 
 ;; (pjb-extract-copyrights  (header-comment-description-for-mode major-mode))
 
-
-
 (defun pjb-format-copyright (hcd author first-year last-year)
+  "A string containing a copyright line in a comment."
   (let ((comment-format (hcd-header-comment-format hcd)))
    (format comment-format
            (format "Copyright %s %04d - %04d"
                    author first-year last-year))))
 
-
 (defun pjb-update-copyright ()
-  "
-Update the copyright lines with the current year.
-NOTE:  only for Copyright Pascal Bourguignon.
-"
+  "Update the copyright lines with the current year in the current buffer."
   (interactive)
   (let ((current-year  (third (calendar-current-date)))
         (hcd (header-comment-description-for-mode major-mode)))
@@ -1862,10 +1857,21 @@ NOTE:  only for Copyright Pascal Bourguignon.
      (lambda (start end copyright)
        (destructuring-bind (owner first-year last-year) copyright
          (declare (ignore last-year))
-         (when (and (search "Pascal" owner)
-                    (search "Bourguignon" owner))
+         (when (every (lambda (name) (search name owner))
+                      (remove-if (lambda (word)
+                                   (and (<= (length word) 2)
+                                        (char= (aref word 1) (character "."))))
+                                 (split-string  user-full-name " "))) 
            (delete-region start end)
            (insert (pjb-format-copyright hcd owner first-year current-year))))))))
+
+(defun pjb-bump-asdf-version ()
+  "Bump the version in the asdf systems in the current buffer."
+  (interactive)
+  (goto-char (point-min))
+  (while (re-search-forward  ":version +\"[0-9]+\\.[0-9]+\\.\\([0-9]+\\)\"" (point-max) t)
+    (replace-region (match-beginning 1) (match-end 1)
+                    (prin1-to-string (1+ (parse-integer (match-string 1)))))))
 
 (defvar *source-extensions*
   '(".lisp" ".cl" ".asd" ".el"
@@ -1879,25 +1885,31 @@ NOTE:  only for Copyright Pascal Bourguignon.
     ".tmp_versions" "{arch}" ".arch-ids"
     "BitKeeper" "ChangeSet" "autom4te.cache"))
 
-
-(defun pjb-update-copyright-directory ()
-  (interactive)
-  (let ((good-files-re      (format "\\(%s\\)$" (regexp-opt *source-extensions*)))
-        (bad-directories-re (format "/%s$" (regexp-opt *ignorable-directories*))))
-    (message "Updating copyright of all source files in %S" default-directory)
-    (message "Source files: %s" (join *source-extensions* " "))
-    (with-files (path default-directory t
-                      (lambda (path)
-                        ;; (message "filter %S --> %s" path  (string-match bad-directories-re path))
-                        ;; (message "recursive %s stat %S" recursive stat)
-                        (string-match bad-directories-re path)))
+(defun process-all-files-in-directory (directory good-files-re what how)
+  "Visits each file in the given `directory' and subdirectories ecluding `*ingorable-directories*' whose path matches `good-file-re' and calls the `how' thunk in the buffer of the visited file, displaying the `what' message."
+  (let ((bad-directories-re (format "/%s$" (regexp-opt *ignorable-directories*))))
+    (message "%s in %S" what directory)
+    (with-files (path directory t (lambda (path) (string-match bad-directories-re path)))
       (when (string-match good-files-re path)
         (with-file (path :save t :kill t :literal nil)
-          (message "Updating copyright in file %S" path)
-          (pjb-update-copyright))))))
+          (message "%s of file %S" what path)
+          (funcall how))))))
 
+(defun pjb-update-copyright-directory (&optional directory)
+  "Updates the copyright in all source files `*source-extensions*' in the `directory'."
+  (interactive "DDirectory: ")
+  (process-all-files-in-directory (or directory default-directory)
+                                  (format "\\(%s\\)$" (regexp-opt *source-extensions*))
+                                  "Updating copyright"
+                                  (function pjb-update-copyright)))
 
-
+(defun pjb-bump-asdf-version-in-directory (&optional directory)
+  "Bumps the ASD system version in all asd files in the `directory'."
+  (interactive "DDirectory: ")
+  (process-all-files-in-directory (or directory default-directory)
+                                  "\\(\\.asd\\)$"
+                                  "Bumping version of asd systems"
+                                  (function pjb-bump-asdf-version)))
 
 ;; ------------------------------------------------------------------------
 ;; pjb-add-change-log-entry
@@ -3425,17 +3437,39 @@ the FUNCTION can take."
         (apply (function combine) (nreverse items)))))
 
 
-(defun set-sources (directory)
-  (interactive "sSource directory: ")
+(defun set-sources (directory &optional project-type)
+  (interactive "sSource directory: 
+SProject Type: ")
   (message "Caching paths…")
-  (let ((directory (remove-trailling-slashes directory)))
+  (let ((directory     (remove-trailling-slashes directory))
+        (exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
+        (include-types (ecase project-type
+                         ((nil)
+                          '("xib" "h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
+                            "lisp" "asd" "cl" "el"
+                            "rb"
+                            "java" "xml"
+                            "logs" "txt"
+                            "html" "iml" "json" "md" "prefs" "project" "properties" "sh"))
+                         ((lisp cl)
+                          '("lisp" "asd" "cl" "el"
+                            "xib" "logs" "txt" "html"))
+                         ((android)
+                          '("h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
+                            "java" "xml"
+                            "logs" "txt"
+                            "html" "iml" "json" "md" "prefs" "project" "properties" "sh"))
+                         ((cocoa)
+                          '("h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
+                            "xml" "logs" "txt"
+                            "html" "iml" "json" "md" "prefs" "project" "properties" "sh")))))
     (handler-case
         (dolist (directory (mapcar (function remove-trailling-slashes)
                                    (expand-path-alternatives directory)))
           (let ((*sources* directory))
             (file-cache-add-directory-recursively
              directory
-             ".*\\.\\(h\\|hh\\|hxx\\|m\\|mm\\|c\\|cc\\|cxx\\|lisp\\|cl\\|el\\|rb\\|logs\\|java\\|xml\\)$")))
+             (format ".*\\.\\(%s\\)$" (mapconcat (function identity) include-types "\\|")))))
       (error (err)
         (message (format "error while caching files: %s" err))))
     (setf *sources* directory)
@@ -3446,18 +3480,10 @@ the FUNCTION can take."
                                   (format "%s%s/" (file-name-directory directory) *shadow-directory-name*)))))
     (message "Caching paths… Complete.")
     (setf grep-find-command
-          (let ((exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
-                (include-types '("xib" "h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
-                                 "lisp" "asd" "cl" "el"
-                                 "rb"
-                                 "java" "xml"
-                                 "logs" "txt"
-                                 "html" "iml" "json" "md" "prefs" "project" "properties" "sh" 
-                                 )))
-            (format "find %s \\( \\( %s \\) -prune \\) -o -type f  \\( %s \\) -print0 | xargs -0 grep -niH -e "
-                    *sources*
-                    (mapconcat (lambda (name) (format "-name %s" name)) exclude-names " -o ")
-                    (mapconcat (lambda (type) (format "-name \\*.%s" type)) include-types " -o ")))
+          (format "find %s \\( \\( %s \\) -prune \\) -o -type f  \\( %s \\) -print0 | xargs -0 grep -niH -e "
+                  *sources*
+                  (mapconcat (lambda (name) (format "-name %s" name))     exclude-names " -o ")
+                  (mapconcat (lambda (type) (format "-name \\*.%s" type)) include-types " -o "))
           grep-host-defaults-alist nil)))
 
 

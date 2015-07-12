@@ -37,6 +37,108 @@
 (setf lexical-binding t)
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Some color utilities
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defun* color-mix     (color-a color-b &optional (factor 0.5) (gamma 2.0))
+  "
+FACTOR   a value in [0.0 1.0], default is 0.5.
+GAMMA    the gamma value (usually, between 1.8 and 2.2; default 2.0).
+RETURN:  A triplet (red green blue)
+         = color-a + ( color-b - color-a ) * factor
+"
+  ;; averaging colors should be performed taking into account the fact
+  ;; that RGB values are gamma-roots.
+  (when (or (<= factor 0.0) (<= 1.0 factor))
+    (error "Factor %f is out of range [0.0,1.0]." factor))
+  (mapcar* (lambda (a b)
+             (let ((a^g (expt a gamma))
+                   (b^g (expt b gamma)))
+               (expt (truncate (+ a^g (* (- b^g a^g) factor)))
+                     (/ gamma))))
+           color-a color-b))
+
+
+(defun color-48-lighter (color-values &optional factor)
+  "
+PRE:     color-value is triplet (Red Green Blue) with each value in [0..65535].
+RETURN:  a color triplet lighter than color-value (by 0.5 or by factor).
+"
+  (setq factor (or factor 0.5))
+  (when (or (<= factor 0.0) (<= 1.0 factor))
+    (error "Factor %f is out of range [0.0,1.0]." factor))
+  (color-mix color-values '( 65535 65535 65535 ) factor))
+
+
+(defun color-48-darker (color-values &optional factor)
+  "
+PRE:     color-value is triplet (Red Green Blue) with each value in [0..65535].
+RETURN:  a color triplet darker than color-value (by 0.5 or by factor).
+"
+  (setq factor (or factor 0.5))
+  (when (or (<= factor 0.0) (<= 1.0 factor))
+    (error "Factor %f is out of range [0.0,1.0]." factor))
+  (color-mix color-values '( 0 0 0 ) factor))
+
+
+(defun color-48-value-to-name (color-value)
+  "
+PRE:     color-value is triplet (Red Green Blue) with each value in [0..65535].
+RETURN:  a color name in the form \"#rrrrggggbbbb\" each letter being 
+         a hexadecimal digit.
+"
+  (format "#%04x%04x%04x" 
+          (nth 0 color-value)
+          (nth 1 color-value)
+          (nth 2 color-value)))
+
+
+(defalias 'lighter 'color-48-lighter)
+(defalias 'darker  'color-48-darker)
+(defalias 'color-value-to-name 'color-48-value-to-name)
+
+
+(defun color-24-value-to-name (color-value)
+  "
+PRE:     color-value is triplet (Red Green Blue) with each value in [0..255].
+RETURN:  a color name in the form \"#rrggbb\" each letter being 
+         a hexadecimal digit.
+"
+  (format "#%02x%02x%02x" 
+          (nth 0 color-value)
+          (nth 1 color-value)
+          (nth 2 color-value)))
+
+
+(defun color-24-to-48 (color-24-values)
+  "
+PRE:     color-value is triplet (Red Green Blue) with each value in [0..255].
+RETURN:  a (Red Green Blue) with each value in [0..65535].
+"
+  (mapcar (lambda (x) (* 256 x)) color-24-values))
+
+
+(defun color-48-to-24 (color-48-values)
+  "
+PRE:     color-value is triplet (Red Green Blue) with each value in [0..65535].
+RETURN:  a (Red Green Blue) with each value in [0..255].
+"
+  (mapcar (lambda (x) (truncate x 256)) color-48-values))
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; color picker
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defvar pjb-color-picker--default-color)
 (defvar pjb-color-picker--current-color)
 (defvar pjb-color-picker--current-channel)
@@ -90,13 +192,13 @@
    (point)))
 
 (defun pjb-color-picker--update-color ()
-  (message "%S" (list pjb-color-picker--default-color
-                      pjb-color-picker--current-color
-                      pjb-color-picker--current-channel
-                      pjb-color-picker--width
-                      pjb-color-picker--update-color
-                      pjb-color-picker--quit
-                      pjb-color-picker--abort))
+  ;; (message "%S" (list pjb-color-picker--default-color
+  ;;                     pjb-color-picker--current-color
+  ;;                     pjb-color-picker--current-channel
+  ;;                     pjb-color-picker--width
+  ;;                     pjb-color-picker--update-color
+  ;;                     pjb-color-picker--quit
+  ;;                     pjb-color-picker--abort))
   (let ((rgb pjb-color-picker--current-color))
     (multiple-value-bind (red green blue) rgb
       (add-text-properties (pjb-color-picker--beginning-of-line 1) (pjb-color-picker--end-of-line 1)
