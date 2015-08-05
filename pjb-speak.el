@@ -36,6 +36,8 @@
 
 (defvar *tempdir*  (format "/tmp/emacs%d" (user-uid)))
 (defvar *pjb-speak-file-counter* 0)
+(defvar *default-voice*    "Samantha")
+(defvar *default-language* "en_US")
 
 (defun pjb-speak-file ()
   (format "%s/speak-%d.txt" *tempdir* (incf *pjb-speak-file-counter*)))
@@ -43,7 +45,7 @@
 
 (defvar *pjb-speak-last-message* nil)
 
-(defun* speak (message &key voice language)
+(defun* speak (message &key (voice *default-voice*) (language *default-language*))
   (interactive "sMessage: ")
   (let ((file (pjb-speak-file)))
     (with-current-buffer (get-buffer-create " *speak text*")
