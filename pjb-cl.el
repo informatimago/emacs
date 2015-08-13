@@ -1,4 +1,4 @@
-;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8;lexical-binding:t -*-
 ;;;;*****************************************************************************
 ;;;;FILE:               pjb-cl.el
 ;;;;LANGUAGE:           emacs lisp
@@ -50,7 +50,7 @@
 (require 'eieio)
 (require 'eieio-opt)
 (require 'parse-time)
-
+(setf lexical-binding t)
 
 ;; Let's teach emacs how to format Common-Lisp:
 
@@ -256,6 +256,9 @@ IMPLEMENTATION: The clause variable symbols are substituted by one single
 ;;            ,expression
 ;;          ,@handlers))))
 
+(defun complement (fun)
+  (lambda (&rest arguments)
+    (not (apply fun arguments))))
 
 
 
@@ -1505,7 +1508,7 @@ URL:     http://www.informatimago.com/local/lisp/HyperSpec/Body/f_probe_.htm
   (if (file-exists-p pathspec) pathspec nil))
 
 
-(defun ensure-directories-exist (pathspec &key verbose)
+(defun* ensure-directories-exist (pathspec &key verbose)
   (declare (ignore verbose))
   (make-directory pathspec t))
 

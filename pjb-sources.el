@@ -1889,7 +1889,7 @@ and last year of the copyright.
   "Visits each file in the given `directory' and subdirectories ecluding `*ingorable-directories*' whose path matches `good-file-re' and calls the `how' thunk in the buffer of the visited file, displaying the `what' message."
   (let ((bad-directories-re (format "/%s$" (regexp-opt *ignorable-directories*))))
     (message "%s in %S" what directory)
-    (with-files (path directory t (lambda (path) (string-match bad-directories-re path)))
+    (with-files (path directory :recursive t :exceptions (lambda (path) (string-match bad-directories-re path)))
       (when (string-match good-files-re path)
         (with-file (path :save t :kill t :literal nil)
           (message "%s of file %S" what path)

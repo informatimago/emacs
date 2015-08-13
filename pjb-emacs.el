@@ -2299,18 +2299,20 @@ FILE-AND-OPTION: either an atom evaluated to a path,
       `(with-file (,file-and-options) ,@body)
       ;; destructuring-bind is broken, we cannot give anything else than nil
       ;; as default values:
+      
       (destructuring-bind (path &key (save nil savep) (kill nil killp)
-                                (literal nil literalp))
+                                  (literal nil literalp))
           file-and-options
         (unless savep (setf save t))
         (unless killp (setf kill t))
-        `(unwind-protect
-                (progn
-                  (,(if literal 'find-file-literally 'find-file) ,path)
-                  (prog1 (save-excursion ,@body)
-                         ,(when save `(save-buffer 1))))
-           ,(when kill
-                  `(kill-buffer (current-buffer)))))))
+        `(save-excursion
+          (unwind-protect
+               (progn
+                 (,(if literal 'find-file-literally 'find-file) ,path)
+                 (prog1 (save-excursion ,@body)
+                   ,(when save `(save-buffer 1))))
+            ,(when kill
+               `(kill-buffer (current-buffer))))))))
 
 
 (defun constantly (value)
@@ -2361,9 +2363,54 @@ EXCEPTIONS: either a list of pathnames that mustn't be processed,
          )))))
 
 
-(defmacro* with-files ((file-var directory-expr &optional recursive exceptions) &body body)
+(defmacro* with-files ((file-var directory-expr &key recursive exceptions) &body body)
   `(mapfiles (lambda (,file-var) ,@body) ,directory-expr ,recursive ,exceptions))
 
+(defun first-existing-file (list-of-files)
+  "Finds the first file in LIST-OF-FILES that exists.
+"
+  (find-if (lambda (file) (and file (file-exists-p file))) list-of-files))
+
+(defun map-existing-files (function list-of-files)
+  "Calls FUNCTION on each file in LIST-OF-FILES that exists, and returns the list of results.
+"
+  (let ((result '()))
+    (dolist (file list-of-files (nreverse result))
+      (when (file-exists-p file)
+        (push (funcall function file) result)))))
+
+
+(defun remove-non-existing-files (list-of-files)
+  "Returns the LIST-OF-FILES with non-existing files removed.
+"
+  (remove-if-not (function file-exists-p) list-of-files))
+
+
+(defmacro* with-file (file-and-options &body body)
+  "Processes BODY with a buffer on the given file.
+DO:              find-file or find-file-literally, process body, and
+                 optionally save the buffer and kill it.
+                 save is not done if body exits exceptionnaly.
+                 kill is always done as specified.
+FILE-AND-OPTION: either an atom evaluated to a path,
+                 or (path &key (save t) (kill t) (literal nil))
+"
+  (if (atom file-and-options)
+      `(with-file (,file-and-options) ,@body)
+      ;; destructuring-bind is broken, we cannot give anything else than nil
+      ;; as default values:
+      (destructuring-bind (path &key (save nil savep) (kill nil killp)
+                                (literal nil literalp))
+          file-and-options
+        (unless savep (setf save t))
+        (unless killp (setf kill t))
+        `(unwind-protect
+              (progn
+                (,(if literal 'find-file-literally 'find-file) ,path)
+                (prog1 (save-excursion ,@body)
+                  ,(when save `(save-buffer 1))))
+           ,(when kill
+                  `(kill-buffer (current-buffer)))))))
 
 
 ;;;----------------------------------------
@@ -2373,8 +2420,22 @@ EXCEPTIONS: either a list of pathnames that mustn't be processed,
 
 (defvar *recursive-replace-ignored-directories* *ignorable-directories*)
 
+(defun exception-function (exceptions)
+  (lambda (path)
+    (let ((name (basename path)))
+      (cond
+        ((string= "~" (subseq name (1- (length name)))))
+        ((member* name *recursive-replace-ignored-directories*
+                  :test (function string=)))
+        ((functionp exceptions)
+         (funcall exceptions path))
+        ((listp exceptions)
+         (member* path exceptions :test (function string=)))
+        (t
+         nil)))))
 
-(defun recursive-replace-string (from-string to-string &optional directory recursive delimited)
+(defun* recursive-replace-string (from-string to-string
+                                              &key directory recursive delimited exceptions)
   "Replace the all occurences of `from-string' by `to-string' in all the files in the directory.
 If `recursive' is true (or a prefix argument is given), then the files are searched recursively
 otherwise only the files directly in the given `directory' are modified.
@@ -2388,19 +2449,14 @@ recursive search.  Backup files (name ending in ~) are ignored too.
                       (format "Replace string in all files in %s" directory)
                       nil)))
      (list (first arguments) (second arguments) directory (third arguments) nil)))
-  (with-files (file directory recursive
-                    (lambda (path)
-                      (let ((name (basename path)))
-                        (or (string= "~" (subseq name (1- (length name))))
-                            (member* name *recursive-replace-ignored-directories*
-                                     :test (function string=))))))
+  (with-files (file directory :recursive recursive :exceptions (exception-function exceptions))
     (with-file (file)
       (message "Processing %S" file)
       (beginning-of-buffer)
       (replace-string from-string to-string delimited))))
 
 
-(defun recursive-replace-regexp (regexp to-string &optional directory recursive delimited)
+(defun* recursive-replace-regexp (regexp to-string &key directory recursive delimited exceptions)
   "Replace the all occurences of `regexp' by `to-string' in all the files in the directory.
 If `recursive' is true (or a prefix argument is given), then the files are searched recursively
 otherwise only the files directly in the given `directory' are modified.
@@ -2414,12 +2470,7 @@ recursive search.  Backup files (name ending in ~) are ignored too.
                       (format "Replace string in all files in %s" directory)
                       nil)))
      (list (first arguments) (second arguments) directory (third arguments) nil)))
-  (with-files (file directory recursive
-                    (lambda (path)
-                      (let ((name (basename path)))
-                        (or (string= "~" (subseq name (1- (length name))))
-                            (member* name *recursive-replace-ignored-directories*
-                                     :test (function string=))))))
+  (with-files (file directory :recursive recursive :exceptions (exception-function exceptions))
     (with-file (file)
       (message "Processing %S" file)
       (beginning-of-buffer)
