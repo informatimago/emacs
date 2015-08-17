@@ -2437,5 +2437,26 @@ recursive search.  Backup files (name ending in ~) are ignored too.
       (replace-regexp regexp to-string delimited))))
 
 
+(defun replace-multiple-strings (replacements-alist)
+  "Replaces all occurences of the keys in `replacements-alist' by their corresponding value.
+The search is performed in sequentially once from (point) to (point-max)."
+  (let ((re (concat "\\("
+                    (mapconcat (lambda (entry) (regexp-quote (car entry)))
+                               replacements-alist
+                               "\\|")
+                    "\\)")))
+    (while (re-search-forward re (point-max) t)
+      (let* ((key (buffer-substring-no-properties (match-beginning 1)
+                                                  (match-end 1)))
+             (val (cdr (assoc* key replacements-alist
+                               :test (function string=)))))
+        (if val
+            (progn
+              (delete-region (match-beginning 1) (match-end 1))
+              (insert val)
+              (goto-char (+ (match-beginning 1) (length val))))
+            (goto-char (match-end 1)))))))
+(replace-multiple-strings '(("multi" . "uniq")
+                            ("def" . "redef")))
 (provide 'pjb-emacs)
 ;;;: THE END ;;;;
