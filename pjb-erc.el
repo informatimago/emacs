@@ -963,6 +963,37 @@ the message given by REASON."
 (add-hook 'erc-insert-post-hook 'pjb/erc-insert-post-meat)
 
 
+(defun cl-eval-last-expression ()
+  (interactive)
+  (let ((current-prefix-arg t)
+        (expression (slime-last-expression)))
+    (push-mark) 
+    (slime-eval-async `(swank:eval-and-grab-output ,expression)
+                      (lambda (result)
+                        (destructuring-bind (output value) result
+                          (insert (if (zerop (length output)) " #|" " #| ")
+                                  output " --> " value " |# "))))))
+
+(defun el-eval-last-expression ()
+  (interactive)
+  (let ((pt (point))
+        (current-prefix-arg t))
+    (set-mark pt)
+    (eval-last-sexp t)
+    (save-excursion
+     (goto-char pt)
+     (insert " --> "))))
+
+(defun scheme-eval-last-expression ()
+  (interactive)
+  (let ((pt (point))
+        (current-prefix-arg t))
+    (set-mark pt)
+    (lisp-eval-last-sexp t)
+    (save-excursion
+     (goto-char pt)
+     (insert " --> "))))
+
 (defun pjb/erc-join-meat ()
   (let ((buffer (pjb-erc-buffer-channel (current-buffer))))
     (unless (and buffer (char= (character "#") (aref buffer 0)))
@@ -972,14 +1003,18 @@ the message given by REASON."
   (loop with current-channel = (buffer-name)
         for (channels . eval-function)
           in '((("#lisp" "##lisp" "#lispcafe" "#lispgame"  "#lisp-lab" "#lisp-fr" "#lisp-es" 
-                 "#ccl" "#sbcl" "#quicklisp") . slime-eval-last-expression)
-               (("#emacs") . eval-last-sexp)
-               (("#scheme") . lisp-eval-last-expression))
+                 "#ccl" "#sbcl" "#quicklisp")
+                . cl-eval-last-expression)
+               (("#emacs")
+                . el-eval-last-expression)
+               (("#scheme")
+                . scheme-eval-last-expression))
         when (member* current-channel channels :test (function string=))
           do (local-set-key (kbd "C-x C-e") eval-function)))
 
 (add-hook 'erc-join-hook 'pjb/erc-join-meat)
 (mapcar (lambda (buffer) (with-current-buffer buffer (pjb/erc-join-meat))) (buffer-list))
+(add-hook 'erc-mode-hook 'abbrev-mode)
 
 ;;;---------------------------------------------------------------------
 
