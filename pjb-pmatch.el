@@ -747,6 +747,12 @@ RETURN:    A list of the symbol used in the various (!. sym) items,
      (t
       (nconc (collect-variables (car pat)) (collect-variables (cdr pat)))))))
 
+(defmacro with-gensyms (syms &rest body)
+  "
+DO:      Replaces given symbols with gensyms. Useful for creating macros.
+NOTE:    This version by Paul Graham in On Lisp."
+  `(let ,(mapcar (lambda (s) `(,s (gensym ,(symbol-name s)))) syms) ,@body))
+
 
 (defmacro match-case (sexp &rest clauses)
   "
@@ -779,9 +785,6 @@ EXAMPLE: (match-case expr
                                         (lambda (name) `(,name (cdr (assoc ',name ,dc)))) 
                                         (collect-variables pat)) )
                         ,@body))))) clauses)))))
-
-
-
 
 
 
