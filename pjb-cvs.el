@@ -475,7 +475,7 @@ RETURN: A string containing the dot file data for this CvsRevision node.
   "
 RETURN: A string containing the dot file data for this CvsTag node.
 "
-  (let ((sn (string* (name self))))
+  (let ((sn (cl:string (name self))))
     (format  "%S [ style=filled color=Black fillcolor=SkyBlue label=\"%s\\n%s\" ];\n"
              sn sn (date self))))
 

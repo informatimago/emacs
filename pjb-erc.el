@@ -472,7 +472,7 @@ License:
 (defun pjb-server-available-p (server)
   (let ((result (shell-command-to-string
                  (format "ping -c 10 -i 0.5 -q -w 5 %s"
-                         (shell-quote-argument (string* server))))))
+                         (shell-quote-argument (cl:string server))))))
     (when (string-match " \\([0-9]+\\)% packet loss" result)
       (let ((loss (nth-value 0 (cl:parse-integer (match-string 1 result)))))
         (if (< loss 80)
@@ -638,8 +638,8 @@ RETURN: a list of sublists of list (the conses from list are reused),
               (car
                (delete-if
                 (lambda (entry)
-                  (or (string/=* (cdr (assoc "machine" entry)) server)
-                      (string/=* (cdr (assoc "login"   entry)) nick)))
+                  (or (cl:string/= (cdr (assoc "machine" entry)) server)
+                      (cl:string/= (cdr (assoc "login"   entry)) nick)))
                 (nsplit-list-on-indicator
                  (reduce 'nconc (netrc-parse "~/.netrc"))
                  (lambda (current next) (string= "machine" (car next)))))))))
@@ -654,8 +654,8 @@ RETURN: a list of sublists of list (the conses from list are reused),
                                  (cdr (assoc "password" entry))))
                          (delete-if
                           (lambda (entry)
-                            (string/=* (cdr (assoc "machine" entry))
-                                       (second nickserv)))
+                            (cl:string/= (cdr (assoc "machine" entry))
+                                         (second nickserv)))
                           (nsplit-list-on-indicator
                            (reduce 'nconc (netrc-parse "~/.netrc"))
                            (lambda (current next) (string= "machine" (car next))))))))
@@ -676,9 +676,9 @@ RETURN: a list of sublists of list (the conses from list are reused),
              (goto-char (match-end 0))
              (narrow-to-region (point) (point-max))
              (when (and (< 6 (- (point-max) (point-min)))
-                        (string-equal* "<HTML>" (buffer-substring-no-properties
-                                                 (point-min) (+ 6 (point-min)))
-                                       :end2 6))
+                        (cl:string-equal "<HTML>" (buffer-substring-no-properties
+                                                   (point-min) (+ 6 (point-min)))
+                                         :end2 6))
                (shell-command-on-region
                 (point-min) (point-max) "lynx -stdin -dump" t t)
                (goto-char (point-min))

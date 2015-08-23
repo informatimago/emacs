@@ -95,7 +95,7 @@
   "
 RETURN: A string containing the name of the mode, without the -mode suffix.
 "
-  (let ((mode (string* (or mode major-mode))))
+  (let ((mode (cl:string (or mode major-mode))))
     (if (and (< 5 (length mode))
              (string= "-mode" (subseq mode (- (length mode) 5))))
         (subseq mode 0 (- (length mode) 5))
@@ -784,7 +784,7 @@ definition at the end of the form when it's longer than
   ;; (message "def-name %S %S" def arg)
   (cond
     ((atom arg) arg)
-    ((STRING-EQUAL (string* (first arg)) "SETF") arg)
+    ((STRING-EQUAL (cl:string (first arg)) "SETF") arg)
     (t (first arg)))) ;;def-name
 
 (defun update-def-names (&optional verbose)
@@ -3039,10 +3039,10 @@ from the point down to the end of the buffer."
          (base (length arg-chars))
          (digit (mod num base)))
     (if (< num base)
-        (string* (char arg-chars num))
+        (cl:string (char arg-chars num))
         (concatenate 'string 
           (arg-name (1- (/ num base)))
-          (string* (char arg-chars digit)))))) 
+          (cl:string (char arg-chars digit)))))) 
 
 ;; (dotimes (n (* 27 27))  (show n (arg-name n)))
 
@@ -3225,19 +3225,19 @@ defun defmacro defgeneric defmethod"
 
 (defun memstr (item list)
   (or (member* item list :test (function STRING-EQUAL))
-      (let ((colon (position (character ":") (string* item))))
+      (let ((colon (position (character ":") (cl:string item))))
         (and colon
-             (member* (subseq (string* item) (1+ colon)) list
+             (member* (subseq (cl:string item) (1+ colon)) list
                       :test (function STRING-EQUAL))))))
 
 (defun symbol-name= (a b)
-  (setf a (let ((colon (position (character ":") (string* a))))
+  (setf a (let ((colon (position (character ":") (cl:string a))))
             (if colon
-                (subseq (string* a) (1+ colon))
+                (subseq (cl:string a) (1+ colon))
                 a))
-        b (let ((colon (position (character ":") (string* a))))
+        b (let ((colon (position (character ":") (cl:string a))))
             (if colon
-                (subseq (string* a) (1+ colon))
+                (subseq (cl:string a) (1+ colon))
                 b)))
   (string-equal a b))
 

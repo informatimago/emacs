@@ -115,8 +115,24 @@
   "Keymap for commands for use in HTML mode.") ;;html-mode-map
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Random emacs specific elisp functions:
+;;;----------------------------------------------------------------------------
+;;; Random emacs specific elisp functions:
+;;;----------------------------------------------------------------------------
+
+(defun symbol-value-in-buffer (symbol buffer)
+  (save-excursion
+    (set-buffer buffer)
+    (when (boundp symbol)
+      (symbol-value symbol))))
+
+(defun set-symbol-value-in-buffer (symbol buffer value)
+  (save-excursion
+    (set-buffer buffer)
+    (make-local-variable symbol)
+    (setf (symbol-value symbol) value)))
+
+(defsetf symbol-value-in-buffer set-symbol-value-in-buffer)
+
 
 
 (defun recover-this-file ()
@@ -182,8 +198,10 @@ RETURN: the buffer which has as name `name'.
   (setf default-directory path))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Editing functions:
+;;;----------------------------------------------------------------------------
+;;; Editing functions:
+;;;----------------------------------------------------------------------------
+
 
 (defun replace-region (start end text)
   "In the current buffer, delete the region from `start' to `end' and insert in its place the `text', saving the excursion."
@@ -202,7 +220,7 @@ yank even with ARGS (thus it can be mapped to \C-y)"
     (mark-active                        ; delete region
      (let ((str (buffer-substring (point) (mark))))
        (delete-region (point) (mark))
-       (if (string=* str (current-kill 0 1))
+       (if (cl:string= str (current-kill 0 1))
            (let ((str2 (current-kill 1 1)))
              (kill-new str2 t))))
      (if arg
@@ -226,9 +244,9 @@ yank even with ARGS (thus it can be mapped to \C-y)"
   (keyboard-translate ?\C-? ?\C-h))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; picture-mode functions:
-
+;;;----------------------------------------------------------------------------
+;;; picture-mode commands:
+;;;----------------------------------------------------------------------------
 
 (defun picture-draw-pixels (pix-list &optional pixel)
   "
@@ -525,9 +543,9 @@ BUG:    Only draws ellipse of even width and height.
     (move-to-column sc t)))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Various Editor functions:
-
+;;;----------------------------------------------------------------------------
+;;; Various Editor commands:
+;;;----------------------------------------------------------------------------
 
 (defun pjb-scratch ()
   "
@@ -800,6 +818,40 @@ DO:     Insert in the current buffer a list of colors and
           min (point))))))))
 
 
+(defun reset-faces ()
+  "Search in ~/.emacs for a custom-set-faces toplevel form, and evaluates it."
+  ;; Unfortunately, custom only updates toplevel forms, so we need to do the same.
+  (interactive)
+  (when (or custom-file init-file-user)
+    (save-window-excursion
+     (find-file (or custom-file user-init-file))
+     (goto-char (point-min))
+     (forward-sexp) 
+     (while (and (< (point) (point-max))
+                 (not
+                  (let ((form (progn (backward-sexp) (sexp-at-point))))
+                    (when (and (listp form)
+                               (eq 'custom-set-faces (first form)))
+                      (eval form)
+                      t))))
+            (forward-sexp 2)))))
+
+
+
+(defun emacs-time-to-universal-time (emacs-time)
+  (+ (* (first emacs-time) 65536.0)
+     (second emacs-time)
+     (/ (third emacs-time) 1000000.0)))
+
+(defun timer-emacs-time (timer)
+  (list (timer--high-seconds timer)
+        (timer--low-seconds timer)
+        (timer--usecs timer)))
+
+
+(defun timer-delete-function (function)
+  (cancel-timer (find function (append timer-list timer-idle-list)
+                      :key (function timer--function))))
 
 
 (defun chronometre (lambda-body &optional outstream)
@@ -926,9 +978,9 @@ Add the selection to the local fortune file.
 (defalias 'add-cookie 'add-fortune)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;----------------------------------------------------------------------------
 ;;; frames
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;----------------------------------------------------------------------------
 
 (defvar *window-manager-above*
   (if (boundp 'aquamacs-version)
@@ -1606,19 +1658,18 @@ See also: `exclude-frame' and `include-frame'
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;----------------------------------------------------------------------------
 ;;; windows
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;----------------------------------------------------------------------------
 
 (defalias 'swap-windows 'rotate-buffers)
 
 
 
+;;;----------------------------------------------------------------------------
+;;; Searching selected text
+;;;----------------------------------------------------------------------------
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Searching selected text
-;;
 
 (defvar *last-search-text* nil)
 
@@ -1654,10 +1705,24 @@ See also: `exclude-frame' and `include-frame'
       (t (error "Can't find %S" text)))))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Masking private text
-;;
+;;;----------------------------------------------------------------------------
+;;; Masking private text
+;;;----------------------------------------------------------------------------
+;;; activate-peril-sensitive-sunglasses  black-on-black
+;;; blind-text-region                    XXXX a region (passwords)
+;;; rotate-buffers                       rotates the buffers in the current window.
+
+
+(defun activate-peril-sensitive-sunglasses ()
+  "Emergency protection from sight of ugly code
+With apologies to Zaphod Beeblebrox.
+SEE-ALSO:  blind-text-region
+"
+  (interactive)
+  (mapc (lambda (face)
+          (set-face-foreground face "black")
+          (set-face-background face "black"))
+        (face-list)))
 
 
 (defun filter-region (fun &optional start end)
@@ -1677,8 +1742,7 @@ DO:    Apply the function fun(character)->string to the region from
           (delete-region start end)
           (insert (apply (function concatenate) 
                          'string (nreverse replacement)))))
-    (push (funcall fun pos ch) replacement))
-  ) ;;filter-region
+    (push (funcall fun pos ch) replacement)))
 
 
 (defun is-space (c)
@@ -1695,34 +1759,20 @@ SEE-ALSO:   activate-peril-sensitive-sunglasses
   (filter-region 
    (lambda (pos ch) 
      (cond ((or (is-space (character ch))
-                (string=*  "\n" ch)
-                (string=* "=" ch)
-                (and (string/=* "\n" ch)
-                     (string=* "=" (buffer-substring-no-properties 
+                (cl:string= "\n" ch)
+                (cl:string= "=" ch)
+                (and (cl:string/= "\n" ch)
+                     (cl:string=  "=" (buffer-substring-no-properties 
                                     (- pos 1) pos)))
-                (and (string/=* "\n" (buffer-substring-no-properties 
+                (and (cL:string/= "\n" (buffer-substring-no-properties 
                                       (- pos 1) pos))
-                     (string=* "=" (buffer-substring-no-properties 
+                     (cl:string=  "=" (buffer-substring-no-properties 
                                     (- pos 2) (- pos 1)))))
             ch)
            ((alphanumericp (character ch)) "x")
            (t ch)))
    start end))
 
-
-(defun activate-peril-sensitive-sunglasses ()
-  "emergency protection from sight of ugly code
-With apologies to Zaphod Beeblebrox.
-SEE-ALSO:  blind-text-region
-"
-  (interactive)
-  (mapc (lambda (face)
-          (set-face-foreground face "black")
-          (set-face-background face "black"))
-        (face-list)))
-
-
-;; (mapcar (function window-buffer) (window-list nil nil))
 
 (defun rotate-buffers ()
   "Rotate the buffers in the current windows."
@@ -1736,9 +1786,10 @@ SEE-ALSO:  blind-text-region
 
 (defalias 'rotate-windows 'rotate-buffers)
 
-;;;----------------------------------------
+
+;;;----------------------------------------------------------------------------
 ;;; Keymaps:
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
                                                               
 (defun make-keymap-local ()
   "Creates a buffer local keymap to have local-set-key define keys local 
@@ -1827,9 +1878,9 @@ to the buffer instead of local to the mode."
                               (first b))))))))
 
 
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 ;;; Properties:
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 
 (defun plist-keys (plist)
   (if (null plist)
@@ -1852,9 +1903,9 @@ to the buffer instead of local to the mode."
    (list-all-properties-in-buffer (current-buffer))))
 
 
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 ;;; Morse
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 
 (require 'morse)
 (defun morse-string (string)
@@ -1874,9 +1925,9 @@ to the buffer instead of local to the mode."
             (setq sep ""))))))
 
 
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 ;;; acronym
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 
 (defun acronym ()
   (interactive)
@@ -1887,9 +1938,9 @@ to the buffer instead of local to the mode."
        (buffer-substring-no-properties (min (point) (mark))
                                        (max (point) (mark))))))
 
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 ;;; eppelle
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 
 (defun eppelle ()
   (interactive)
@@ -2096,9 +2147,9 @@ to the buffer instead of local to the mode."
     
 
 
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 ;;; Radio Londre
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 
 (defvar *radio-londre-messages*
   '("Andromaque se parfume à la lavande."
@@ -2194,9 +2245,9 @@ to the buffer instead of local to the mode."
            (elt *radio-londre-messages* (random (length *radio-londre-messages*)))))
 
 
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 ;;; cedet
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 (defvar *pjb-load-noerror* nil)
 (defvar *pjb-load-silent*  nil)
 
@@ -2238,9 +2289,9 @@ to the buffer instead of local to the mode."
 
 
 
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 ;;; macros
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 
 (defun marker (point)
   (let ((marker (make-marker)))
@@ -2413,10 +2464,10 @@ FILE-AND-OPTION: either an atom evaluated to a path,
                   `(kill-buffer (current-buffer)))))))
 
 
-;;;----------------------------------------
+;;;----------------------------------------------------------------------------
 ;;; multi-file replace
-;;;----------------------------------------
-
+;;;----------------------------------------------------------------------------
+;;; recursive-replace-string   
 
 (defvar *recursive-replace-ignored-directories* *ignorable-directories*)
 
@@ -2507,7 +2558,160 @@ The search is performed in sequentially once from (point) to (point-max)."
               (insert val)
               (goto-char (+ (match-beginning 1) (length val))))
             (goto-char (match-end 1)))))))
-(replace-multiple-strings '(("multi" . "uniq")
-                            ("def" . "redef")))
+
+
+;;;------------------------------------------------------------------------
+;;; scroll-page-mode
+;;;------------------------------------------------------------------------
+
+(defvar scroll-page-delimiter "")
+(make-local-variable 'scroll-page-delimiter)
+(setf scroll-page-delimiter "Software Design Notes")
+
+(defun scroll-page-up ()
+  (interactive)
+  (if (re-search-forward scroll-page-delimiter nil t)
+      (progn
+        (goto-char (match-beginning 0))
+        (recenter 0)
+        (forward-line 1))
+      (message ".EMACS: Last page")))
+
+(defun scroll-page-down ()
+  (interactive)
+  (if (re-search-backward scroll-page-delimiter nil t 2)
+      (progn
+        (goto-char (match-beginning 0))
+        (recenter 0)
+        (forward-line 1))
+      (message ".EMACS: First page")))
+
+(defvar scroll-page-mode nil)
+(make-local-variable 'scroll-page-mode)
+
+(defun scroll-page-mode ()
+  (interactive)
+  (if scroll-page-mode
+      (progn
+        (local-set-key (kbd "<next>")  'scroll-up)
+        (local-set-key (kbd "<prior>") 'scroll-down)
+        (setf scroll-page-mode nil))
+      (progn
+        (local-set-key (kbd "<next>")  'scroll-page-up)
+        (local-set-key (kbd "<prior>") 'scroll-page-down)
+        (setf scroll-page-mode t))))
+
+
+
+;;;------------------------------------------------------------------------
+;;; forward-same-identation
+;;;------------------------------------------------------------------------
+
+(defun indentation ()
+  "returns the indentation of the line at point."
+  (back-to-indentation)
+  (let ((indentation (current-column)))
+    (if (= indentation (save-excursion (end-of-line) (current-column)))
+        0
+        indentation)))
+
+(defun forward-same-indent ()
+  (interactive)
+  (let ((current (point))
+        (indentation (indentation)))
+    (while (and (< (point) (point-max))
+                (progn
+                  (forward-line)
+                  (/= indentation (indentation)))))
+    (unless (= indentation (indentation))
+      (goto-char current))))
+
+(defun backward-same-indent ()
+  (interactive)
+  (let ((current (point))
+        (indentation (indentation)))
+    (while (and (< (point-min) (point))
+                (progn
+                  (forward-line -1)
+                  (/= indentation (indentation)))))
+    (unless (= indentation (indentation))
+      (goto-char current))))
+
+
+;;;------------------------------------------------------------------------
+;;; align-cols
+;;;------------------------------------------------------------------------
+
+(defun align-cols (start end max-cols)
+  "Align text between point and mark as columns.
+Columns are separated by whitespace characters.
+Prefix arg means align that many columns. (default is all)
+Attribution: ?"
+  (interactive "r\nP")
+  (save-excursion
+    (let ((p start)
+          pos
+          end-of-line
+          word
+          count
+          (max-cols (if (numberp max-cols) (max 0 (1- max-cols)) nil))
+          (pos-list nil)
+          (ref-list nil))
+      ;; find the positions
+      (goto-char start)
+      (while (< p end)
+        (beginning-of-line)
+        (setq count 0)
+        (setq end-of-line (save-excursion (end-of-line) (point)))
+        (re-search-forward "^\\s-*" end-of-line t)
+        (setq pos (current-column))     ;start of first word
+        (if (null (car ref-list))
+            (setq pos-list (list pos))
+            (setq pos-list (list (max pos (car ref-list))))
+            (setq ref-list (cdr ref-list)))
+        (while (and (if max-cols (< count max-cols) t)
+                    (re-search-forward "\\s-+" end-of-line t))
+          (setq count (1+ count))
+          (setq word (- (current-column) pos))
+          ;; length of next word including following whitespaces
+          (setq pos (current-column))
+          (if (null (car ref-list))
+              (setq pos-list (cons word pos-list))
+              (setq pos-list (cons (max word (car ref-list)) pos-list))
+              (setq ref-list (cdr ref-list))))
+        (while ref-list
+          (setq pos-list (cons (car ref-list) pos-list))
+          (setq ref-list (cdr ref-list)))
+        (setq ref-list (nreverse pos-list))
+        (forward-line)
+        (setq p (point)))
+      ;; align the cols starting with last row
+      (setq pos-list (copy-sequence ref-list))
+      (setq start
+            (save-excursion (goto-char start) (beginning-of-line) (point)))
+      (goto-char end)
+      (beginning-of-line)
+      (while (>= p start)
+        (beginning-of-line)
+        (setq count 0)
+        (setq end-of-line (save-excursion (end-of-line) (point)))
+        (re-search-forward "^\\s-*" end-of-line t)
+        (goto-char (match-end 0))
+        (setq pos (nth count pos-list))
+        (while (< (current-column) pos)
+          (insert-char ?\040 1))
+        (setq end-of-line (save-excursion (end-of-line) (point)))
+        (while (and (if max-cols (< count max-cols) t)
+                    (re-search-forward "\\s-+" end-of-line t))
+          (setq count (1+ count))
+          (setq pos   (+  pos (nth count pos-list)))
+          (goto-char (match-end 0))
+          (while (< (current-column) pos)
+            (insert-char ?\040 1))
+          (setq end-of-line (save-excursion (end-of-line) (point))))
+        (forward-line -1)
+        (if (= p (point-min)) (setq p (1- p))
+            (setq p (point)))))))
+
 (provide 'pjb-emacs)
 ;;;: THE END ;;;;

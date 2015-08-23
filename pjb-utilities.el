@@ -785,4 +785,37 @@ POST:	(<= start index end)
     (values (= order 0) index order)))
 
 
-;;;; pjb-utilities.el                 --                     --          ;;;;
+;;;----------------------------------------------------------------------------
+;;; utilities
+;;;----------------------------------------------------------------------------
+
+(defun ensure-list (x) (if (listp x) x (list x)))
+
+(define-modify-macro appendf (&rest args) append "Append onto list")
+
+(defun delete-from-sequence (sequence-place item &rest keywords)
+  (apply (function delete*) item sequence-place keywords))
+(define-modify-macro deletef (&rest args) delete-from-sequence "Delete from sequence")
+
+
+(defmacro* string-case (string-expression &body clauses)
+  "Like case, but for strings, compared with string-equal*"
+  (let ((value (gensym)))
+    `(let ((,value ,string-expression))
+       (cond
+         ,@(mapcar (lambda (clause)
+                     (destructuring-bind (constants &rest body) clause
+                       (if (member* constants '(t otherwise) :test (function eql))
+                           `(t ,@body)
+                           `((member* ,value ',(ensure-list constants)
+                                      :test (function string-equal*))
+                             ,@body))))
+                   clauses)))))
+
+
+(defun chmod (file mode)
+  (interactive "fFile path: \nXMode: ")
+  (set-file-modes file mode))
+
+
+;;;; THE END ;;;;

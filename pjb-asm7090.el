@@ -119,7 +119,7 @@
                  (setf args code
                        arge code))
              ;; (message "OPCODE= %S"(subseq line cods code))
-             (when (string-equal* (subseq line cods code) "BCI")
+             (when (cl:string-equal (subseq line cods code) "BCI")
                (let* ((comma (position (character ",") line
                                        :start args :end arge))
                       (size  (handler-case
@@ -488,7 +488,7 @@
 
 
 (defun asm7090-show-codop-description (codop)
-  (let ((desc (find-if (lambda (desc) (string-equal* (first desc) codop))
+  (let ((desc (find-if (lambda (desc) (cl:string-equal (first desc) codop))
                        +codop-7090+)))
     (message (if desc
                  (format "%s: %s" (first desc) (find-if (function stringp) desc))

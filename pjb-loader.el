@@ -34,25 +34,32 @@
 ;;;;    Boston, MA 02111-1307 USA
 ;;;;**************************************************************************
 
-
+(defun check-version-lock (from)
+  (if (file-exists-p "--version.lock")
+    (error "version lock")))
+  
 (defun load-stuff (files &optional show-messages)
-  (dolist (path files)
-    (if *pjb-load-noerror*
-        (condition-case cc
-                        (load path *pjb-load-noerror* *pjb-load-silent*)
-                        (error
-                         (setq show-messages t)
-                         (message (format "ERROR: %S" cc))))
-        (load path *pjb-load-noerror* *pjb-load-silent*)))
-  (when show-messages
-    (switch-to-buffer "*Messages*")
-    (split-window-vertically))) 
+  (unwind-protect
+      (dolist (path files)
+	(if *pjb-load-noerror*
+	  (condition-case cc
+	      (load path *pjb-load-noerror* *pjb-load-silent*)
+	    (error
+	     (setq show-messages t)
+	     (message (format "ERROR: %S" cc))))
+	  (load path *pjb-load-noerror* *pjb-load-silent*)))
+    (when (file-exists-p "--version.lock")
+      (delete-file "--version.lock"))
+    (when show-messages
+      (switch-to-buffer "*Messages*")
+      (split-window-vertically)))) 
 
 
 (defvar *pjb-sources* '())
 
 (setf *pjb-sources*
       '(
+        "emacs-uptime.el"
         "pjb-advices.el"
         "pjb-asm7090.el"
         "pjb-blink.el"
@@ -63,6 +70,11 @@
         "pjb-class.el"
         "pjb-dodo.el"
         "pjb-emacs.el"
+        "pjb-emacs-patches.el"
+        "pjb-emacs-balance-windows.el"
+        "pjb-insert-image.el"
+        "pjb-milliways.el"
+        "pjb-caps-mode.el"
         "pjb-echo-keys.el"
         "pjb-erc.el"
         "pjb-erc-filter.el"
@@ -87,6 +99,7 @@
         "pjb-xresources.el"
         "pjb-thi.el"
         "pjb-c-style.el"
+        "pjb-searches.el"
 
         "pjb-java"
         
@@ -392,16 +405,16 @@ RETURN: A list of NODES sorted topologically according to
 
 
 
- 
-(defparameter *pjb-sources-order*
-  (mapcar (lambda (file)
-            (let ((path (concat (if load-file-name
-                                  (file-name-directory load-file-name)
-                                  (concat (getenv "HOME") "/src/public/emacs/")) 
-                                file)))
-              (cons (intern (pathname-name* file))
-                    (source-file-requires path))))
-          *pjb-sources*))
+(defvar *pjb-sources-order*)
+(setf *pjb-sources-order*
+      (mapcar (lambda (file)
+		(let ((path (concat (if load-file-name
+					(file-name-directory load-file-name)
+				      (concat (getenv "HOME") "/src/public/emacs/")) 
+				    file)))
+		  (cons (intern (pathname-name* file))
+			(source-file-requires path))))
+	      *pjb-sources*))
 
 
 (defun pjb-sources-lessp (a b)

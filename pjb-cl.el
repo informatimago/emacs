@@ -127,16 +127,6 @@ RETURN: Whether `char' is in `bag'.
 ;; Common-Lisp
 
 
-(defun integer-length (x)
-  (if (minusp x)
-    (integer-length (- x))
-    (loop
-     until (zerop x)
-     do (setf x (ash x -1))
-     sum 1 into result
-     finally (return result))))
-
-
 ;; -----------------------------
 ;; - 5 - Data and Control Flow -
 ;; -----------------------------
@@ -157,6 +147,61 @@ RETURN: Whether `char' is in `bag'.
 
 
 (defconstant multiple-value-limit 4098)
+
+
+
+
+;; From: Stefan Monnier <monnier@iro.umontreal.ca>
+;; Subject: Re: condition-case
+;; Newsgroups: gnu.emacs.help
+;; Date: Thu, 09 Dec 2010 10:04:12 -0500
+;; Organization: A noiseless patient Spider
+;; Message-ID: <jwvbp4v9enz.fsf-monnier+gnu.emacs.help@gnu.org>
+;;
+;; Oh wait, I just noticed this one: `subst' is wrong here.  I know CL
+;; already uses it for similar purposes elsewhere, but it's simply wrong
+;; because `subst' doesn't know about Elisp binding rules.
+;; So (subst 'b 'a '(lambda () '(a b c))) will happily return
+;; (lambda () '(b b c)).  Better simply use `let', even if it has
+;; a performance cost.
+
+;; (defmacro handler-case (expression &rest clauses)
+;;   "Evaluate expression with `condition-case' and catch errors with CLAUSES.
+;; 
+;; Longer explanation here..."
+;;   (let* ((var (gensym))
+;;          (neclause (assoc :NO-ERROR clauses))
+;;          (nell     (cadr neclause))
+;;          (nebody   (cddr neclause))
+;;          (handlers (mapcar (lambda (clause)
+;;                              (let ((typespec (car clause))
+;;                                    (clausvar (cadr clause))
+;;                                    (body     (cddr clause)))
+;;                                (cons (if (and (consp typespec)
+;;                                               (eq 'or (car typespec)))
+;;                                          (cdr typespec)
+;;                                        typespec)
+;;                                      (if (null clausvar)
+;;                                          body
+;;                                        (let ((var (car clausvar)))
+;;                                          body)))))
+;;                            (remove neclause clauses))))
+;;     (if neclause
+;;         `(condition-case ,var
+;;              (multiple-value-bind ,nell ,expression ,@nebody)
+;;            ,@handlers)
+;;       `(condition-case ,var
+;;            ,expression
+;;          ,@handlers))))
+
+(defun complement (fun)
+  (lambda (&rest arguments)
+    (not (apply fun arguments))))
+
+;; ------------------
+;; - 9 - Conditions -
+;; ------------------
+
 
 
 
@@ -211,55 +256,15 @@ IMPLEMENTATION: The clause variable symbols are substituted by one single
            ,@handlers)
         `(condition-case ,var
              ,expression
-           ,@handlers))))
+             ,@handlers))))
 
-;; From: Stefan Monnier <monnier@iro.umontreal.ca>
-;; Subject: Re: condition-case
-;; Newsgroups: gnu.emacs.help
-;; Date: Thu, 09 Dec 2010 10:04:12 -0500
-;; Organization: A noiseless patient Spider
-;; Message-ID: <jwvbp4v9enz.fsf-monnier+gnu.emacs.help@gnu.org>
-;;
-;; Oh wait, I just noticed this one: `subst' is wrong here.  I know CL
-;; already uses it for similar purposes elsewhere, but it's simply wrong
-;; because `subst' doesn't know about Elisp binding rules.
-;; So (subst 'b 'a '(lambda () '(a b c))) will happily return
-;; (lambda () '(b b c)).  Better simply use `let', even if it has
-;; a performance cost.
 
-;; (defmacro handler-case (expression &rest clauses)
-;;   "Evaluate expression with `condition-case' and catch errors with CLAUSES.
-;; 
-;; Longer explanation here..."
-;;   (let* ((var (gensym))
-;;          (neclause (assoc :NO-ERROR clauses))
-;;          (nell     (cadr neclause))
-;;          (nebody   (cddr neclause))
-;;          (handlers (mapcar (lambda (clause)
-;;                              (let ((typespec (car clause))
-;;                                    (clausvar (cadr clause))
-;;                                    (body     (cddr clause)))
-;;                                (cons (if (and (consp typespec)
-;;                                               (eq 'or (car typespec)))
-;;                                          (cdr typespec)
-;;                                        typespec)
-;;                                      (if (null clausvar)
-;;                                          body
-;;                                        (let ((var (car clausvar)))
-;;                                          body)))))
-;;                            (remove neclause clauses))))
-;;     (if neclause
-;;         `(condition-case ,var
-;;              (multiple-value-bind ,nell ,expression ,@nebody)
-;;            ,@handlers)
-;;       `(condition-case ,var
-;;            ,expression
-;;          ,@handlers))))
-
-(defun complement (fun)
-  (lambda (&rest arguments)
-    (not (apply fun arguments))))
-
+(defmacro cl:ignore-errors (&rest body)
+  `(handler-case
+       (progn ,@body)
+     (error (err)
+       (message "cl:ignore-errors %S" err)
+       (values nil err))))
 
 
 ;; ----------------
@@ -268,7 +273,7 @@ IMPLEMENTATION: The clause variable symbols are substituted by one single
 
 
 (defun copy-symbol (symbol &optional copy-properties)
-  (let ((new (make-symbol (string* symbol))))
+  (let ((new (make-symbol (cl:string symbol))))
     (when copy-properties
       (setf (symbol-plist new) (COPY-SEQ (symbol-plist symbol))))
     (setf (symbol-value    new)  (symbol-value    symbol) 
@@ -276,11 +281,11 @@ IMPLEMENTATION: The clause variable symbols are substituted by one single
     new))
 
 
-(defun symbol-package (sym)
-  "Return the name of the package of the symbol.  This is
-\"emacs-lisp\" if the symbol doesn't contain any colon, \"keyword\" if
-it starts with a colon, or the substring before the colon if it
-contains one."
+(defun cl:symbol-package (sym)
+  "Return the name of the package of the symbol.
+This is \"emacs-lisp\" if the symbol doesn't contain any colon,
+\"keyword\" if it starts with a colon, or the substring before the
+colon if it contains one."
   (let* ((name (symbol-name sym))
          (colon (position (character ":") name)))
     (case colon
@@ -289,8 +294,8 @@ contains one."
       (otherwise (subseq name 0 colon)))))
 
 
-(defun symbol-name* (sym)
-  "REturn the name of the symbol. This is what's after the colon or
+(defun cl:symbol-name (sym)
+  "Return the name of the symbol.  This is what's after the colon or
 double colon if any, or the symbol name."
   (let* ((name (symbol-name sym))
          (colon (position (character ":") name)))
@@ -339,6 +344,57 @@ URL: http://www.informatimago.com/local/lisp/HyperSpec/Body/v_most_p.htm#most-ne
 
 
 
+(defun integer-length (x)
+  "Returns the number of bits needed to represent integer in binary two's-complement format."
+  (if (minusp x)
+    (integer-length (- x))
+    (loop
+     until (zerop x)
+     do (setf x (ash x -1))
+     sum 1 into result
+     finally (return result))))
+
+
+(defun* cl:digit-char-p (char &optional (radix 10))
+  (let ((value (position (upcase char) "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")))
+    (and value (< value radix) value)))
+
+(defun* cl:parse-integer (string &key (start 0) end (radix 10) junk-allowed)
+  (let ((end    (or end (length string)))
+        (n      0)
+        (sign   1)
+        (plus   (character "+"))
+        (minus  (character "-"))
+        (space  (character " ")))
+    (labels ((parse-integer-error ()
+               (error "Not an integer string %S (:start %d :end %d :radix %d)"
+                      string start end radix))
+             (check-range ()
+               (unless (< start end)
+                 (parse-integer-error)))
+             (eat-spaces (i)
+               (loop
+                 while (and (< i end) (char= space (aref string i)))
+                 do (incf i)
+                 finally (return i))))
+      (setf start (eat-spaces start))
+      (check-range)
+      (cond
+        ((char= plus  (aref string start)) (setf sign +1) (incf start) (check-range))
+        ((char= minus (aref string start)) (setf sign -1) (incf start) (check-range)))
+      (loop
+        for i from start below end
+        for digit = (cl:digit-char-p (aref string i) radix)
+        while digit
+        do (setf n (+ (* n radix) digit))
+        finally (when (< i end)
+                  (setf i (eat-spaces i)))
+                (when (and (not junk-allowed) (< i end))
+                  (parse-integer-error))
+                (return (values (* sign n) i))))))
+
+
+
 ;; -------------------
 ;; - 13 - Characters -
 ;; -------------------
@@ -368,8 +424,8 @@ EXAMPLES: (CHARACTER #\\a) => ?a   INVALID: # is invalid read syntax for emacs!
   (cond
     ((characterp character)   character)
     ((symbolp character)
-     (if (= 1 (length (symbol-name* character)))
-         (string-to-char (symbol-name* character))
+     (if (= 1 (length (cl:symbol-name character)))
+         (string-to-char (cl:symbol-name character))
          (error "character does not accept symbols of more than one character.")))
     ((stringp character)
      (string-to-char character))
@@ -421,16 +477,13 @@ url:      http://www.informatimago.com/local/lisp/hyperspec/body/f_chareq.htm
 "
   (unless characters
     (error "too few arguments given to char=."))
-  (if (= 1 (length characters))
-      t
-      (let ((a (car characters)))
-        (loop for b in (cdr characters)
-           while (eq a b)
-           finally return (eq a b)))))
+  (let ((a (car characters)))
+    (every (lambda (b) (= a b)) (cdr characters))))
 
 
 (defun char/= (&rest characters)
   "common-lisp: compare character arguments.
+Returns true if all characters are different (no two equal).
 
 url:      http://www.informatimago.com/local/lisp/hyperspec/body/f_chareq.htm
 "
@@ -439,13 +492,13 @@ url:      http://www.informatimago.com/local/lisp/hyperspec/body/f_chareq.htm
   (if (= 1 (length characters))
       t
       (loop with already-seen = nil
-         with result = t 
-         for c in characters
-         while result 
-         do (if (memq c already-seen)
-                (setq result nil)
-                (push c already-seen))
-         finally (return result))))
+            with result = t 
+            for c in characters
+            while result 
+            do (if (memq c already-seen)
+                   (setq result nil)
+                   (push c already-seen))
+            finally (return result))))
 
 
 (defmacro pjb-cl%%compare-chars (name order characters)
@@ -573,7 +626,7 @@ URL:      http://www.informatimago.com/local/lisp/HyperSpec/Body/f_chareq.htm
   (cond 
     ((characterp ch) ch)
     ((stringp ch)    (char ch 0))
-    ((symbolp ch)    (char (symbol-name* ch) 0))
+    ((symbolp ch)    (char (cl:symbol-name ch) 0))
     ((numberp ch)    (code-char* ch))
     (t               (error "Expected a character, not: %S" ch))))
 
@@ -800,6 +853,29 @@ NOTE:   Used as (defsetf aref pjb-cl%%aset).
 ;; - 16 - Strings  -  http://.../cltl/clm/node165.html
 ;; -----------------
 
+
+(defun cl:string (x)
+  "Common-Lisp: If X is a string, then X, else if it's a symbol, then (cl:symbol-name X).
+
+X---a string, a symbol, or a character.
+
+Returns a string described by x; specifically:
+
+    * If X is a string, it is returned.
+    * If X is a symbol, its name is returned.
+    * If X is a character, then a string containing that one character is returned.
+    * string might perform additional, implementation-defined conversions.
+
+If there are more than one arguments, then emacs string is called.
+"
+  (cond
+    ((stringp x) x)
+    ((symbolp x) (cl:symbol-name x))
+    ((characterp x) (make-string* 1 :initial-element x))
+    (t (signal 'type-error "Expected a string, a symbol or a character."))))
+
+
+
 (defun char (str index)
   "Common-Lisp: The character at position index of the string is returned \
 as a character object.
@@ -809,7 +885,7 @@ RETURN: [cltl2] The given index must be a non-negative integer less
         character at position index of the string is returned as a
         character object.
 "
-  (setq str (string* str))
+  (setq str (cl:string str))
   (aref (the string str) index))
 
 
@@ -826,15 +902,15 @@ RETURN: [cltl2] The given index must be a non-negative integer less
         character object. (This character will necessarily satisfy the
         predicate string-char-p.)
 "
-  (setq simple-string (string* simple-string))
+  (setq simple-string (cl:string simple-string))
   (aref simple-string index))
 
 
 (defsetf schar aset)
 
-(defun string-equal* (string1 string2 &rest cl-keys)
-  (setq string1 (string* string1)
-        string2 (string* string2))
+(defun cl:string-equal (string1 string2 &rest cl-keys)
+  (setq string1 (cl:string string1)
+        string2 (cl:string string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
         (end1   (or (cadr (memq :end1   cl-keys)) (length string1)))
         (start2 (or (cadr (memq :start2 cl-keys)) 0))
@@ -846,9 +922,9 @@ RETURN: [cltl2] The given index must be a non-negative integer less
          (string-upcase (substring string2 start2 end2))))))
 
 
-(defun string-lessp* (string1 string2 &rest cl-keys)
-  (setq string1 (string* string1)
-        string2 (string* string2))
+(defun cl:string-lessp (string1 string2 &rest cl-keys)
+  (setq string1 (cl:string string1)
+        string2 (cl:string string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
         (end1   (or (cadr (memq :end1   cl-keys)) (length string1)))
         (start2 (or (cadr (memq :start2 cl-keys)) 0))
@@ -884,11 +960,7 @@ RETURN: [cltl2] The given index must be a non-negative integer less
 
 
 
-;; Happily, we can replace the string* comparaisons since they're aliases
-;; to the builtin string-* comparaisons
-
-;;(message "defining string=")
-(defun string=* (string1 string2 &rest cl-keys)
+(defun cl:string= (string1 string2 &rest cl-keys)
   ;; &key :start1 :end1 :start2 :end2)
   "Common-Lisp: compares two strings and is true if they are the \
 same (corresponding characters are identical) but is false if they are not.
@@ -914,19 +986,19 @@ DO:     [cltl2] string= compares two strings and is true if they are
         start1) (- end2 start2)))  is true, then string= is false.
 "
   ;; TODO: should use compare-string
-  (setq string1 (string* string1)
-        string2 (string* string2))
+  (setq string1 (cl:string string1)
+        string2 (cl:string string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
         (end1   (or (cadr (memq :end1   cl-keys)) (length string1)))
-         (start2 (or (cadr (memq :start2 cl-keys)) 0))
-         (end2   (or (cadr (memq :end2   cl-keys)) (length string2))))
+        (start2 (or (cadr (memq :start2 cl-keys)) 0))
+        (end2   (or (cadr (memq :end2   cl-keys)) (length string2))))
     (if (/= (- end1 start1) (- end2 start2))
         nil
         (string-equal (substring string1 start1 end1)
                       (substring string2 start2 end2)))))
 
 
-(defun string<* (string1 string2 &rest cl-keys)
+(defun cl:string< (string1 string2 &rest cl-keys)
   ;; &key :start1 :end1 :start2 :end2)
   "Common-Lisp: compares two strings.
 
@@ -942,17 +1014,17 @@ DO:     [cltl2] string= compares two strings and is true if they are
         efficiently.
 "
   ;; TODO: should use compare-string
-  (setq string1 (string* string1)
-        string2 (string* string2))
+  (setq string1 (cl:string string1)
+        string2 (cl:string string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
         (end1   (or (cadr (memq :end1   cl-keys)) (length string1)))
-         (start2 (or (cadr (memq :start2 cl-keys)) 0))
-         (end2   (or (cadr (memq :end2   cl-keys)) (length string2))))
+        (start2 (or (cadr (memq :start2 cl-keys)) 0))
+        (end2   (or (cadr (memq :end2   cl-keys)) (length string2))))
     (string-lessp (substring string1 start1 end1)
                   (substring string2 start2 end2))))
 
 
-(defun string>* (string1 string2 &rest cl-keys)
+(defun cl:string> (string1 string2 &rest cl-keys)
   ;; &key :start1 :end1 :start2 :end2)
   "Common-Lisp: compares two strings.
 
@@ -968,17 +1040,17 @@ DO:     [cltl2] string= compares two strings and is true if they are
         efficiently.
 "
   ;; TODO: should use compare-string
-  (setq string1 (string* string1)
-        string2 (string* string2))
+  (setq string1 (cl:string string1)
+        string2 (cl:string string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
         (end1   (or (cadr (memq :end1   cl-keys)) (length string1)))
-         (start2 (or (cadr (memq :start2 cl-keys)) 0))
-         (end2   (or (cadr (memq :end2   cl-keys)) (length string2))))
+        (start2 (or (cadr (memq :start2 cl-keys)) 0))
+        (end2   (or (cadr (memq :end2   cl-keys)) (length string2))))
     (string-lessp (substring string2 start2 end2)
                   (substring string1 start1 end1))))
 
 
-(defun string<=* (string1 string2 &rest cl-keys)
+(defun cl:string<= (string1 string2 &rest cl-keys)
   ;; &key :start1 :end1 :start2 :end2)
   "Common-Lisp: compares two strings.
 
@@ -994,18 +1066,17 @@ DO:     [cltl2] string= compares two strings and is true if they are
         efficiently.
 "
   ;; TODO: should use compare-string
-  (setq string1 (string* string1)
-        string2 (string* string2))
+  (setq string1 (cl:string string1)
+        string2 (cl:string string2))
   (let ( (start1 (or (cadr (memq :start1 cl-keys)) 0))
-        (end1   (or (cadr (memq :end1   cl-keys)) (length string1)))
+         (end1   (or (cadr (memq :end1   cl-keys)) (length string1)))
          (start2 (or (cadr (memq :start2 cl-keys)) 0))
-         (end2   (or (cadr (memq :end2   cl-keys)) (length string2)))
-         )
+         (end2   (or (cadr (memq :end2   cl-keys)) (length string2))))
     (not (string-lessp (substring string2 start2 end2)
                        (substring string1 start1 end1)))))
 
 
-(defun string>=* (string1 string2 &rest cl-keys)
+(defun cl:string>= (string1 string2 &rest cl-keys)
   ;; &key :start1 :end1 :start2 :end2)
   "Common-Lisp: compares two strings.
 
@@ -1021,17 +1092,17 @@ DO:     [cltl2] string= compares two strings and is true if they are
         efficiently.
 "
   ;; TODO: should use compare-string
-  (setq string1 (string* string1)
-        string2 (string* string2))
+  (setq string1 (cl:string string1)
+        string2 (cl:string string2))
   (let ((start1 (or (cadr (memq :start1 cl-keys)) 0))
         (end1   (or (cadr (memq :end1   cl-keys)) (length string1)))
-         (start2 (or (cadr (memq :start2 cl-keys)) 0))
-         (end2   (or (cadr (memq :end2   cl-keys)) (length string2))))
+        (start2 (or (cadr (memq :start2 cl-keys)) 0))
+        (end2   (or (cadr (memq :end2   cl-keys)) (length string2))))
     (not (string-lessp (substring string1 start1 end1)
                        (substring string2 start2 end2)))))
 
 
-(defun string/=* (string1 string2 &rest cl-keys)
+(defun cl:string/= (string1 string2 &rest cl-keys)
   ;; &key :start1 :end1 :start2 :end2)
   "Common-Lisp: compares two strings and return whether they're different.
 
@@ -1062,7 +1133,7 @@ character-bag stripped off the beginning and end.
 "
   (unless (sequencep character-bag)
     (signal 'type-error  "Expected a sequence for `character-bag'."))
-  (let* ((string (string* string-designator))
+  (let* ((string (cl:string string-designator))
          (margin (format "[%s]*" (regexp-quote
                                   (if (stringp character-bag)
                                       character-bag
@@ -1078,7 +1149,7 @@ character-bag stripped off the beginning.
 "
   (unless (sequencep character-bag)
     (signal 'type-error  "Expected a sequence for `character-bag'."))
-  (let* ((string (string* string-designator))
+  (let* ((string (cl:string string-designator))
          (margin (format "[%s]*" (regexp-quote
                                   (if (stringp character-bag)
                                       character-bag
@@ -1089,12 +1160,12 @@ character-bag stripped off the beginning.
 
 (defun string-right-trim (character-bag string-designator)
   "Common-Lisp: returns a substring of string, with all characters in \
-character-bag stripped off the end.
+`character-bag' stripped off the end.
 
 "
   (unless (sequencep character-bag)
     (signal 'type-error  "Expected a sequence for `character-bag'."))
-  (let* ((string (string* string-designator))
+  (let* ((string (cl:string string-designator))
          (margin (format "[%s]*" (regexp-quote
                                   (if (stringp character-bag)
                                       character-bag
@@ -1117,7 +1188,7 @@ characters replaced by the corresponding uppercase characters.
         default to the lengths of the strings (end of string), so that
         by default the entirety of each string is upcased.
 "
-  (setq str (string* str))
+  (setq str (cl:string str))
   (let ( (start (or (cadr (memq :start cl-keys)) 0))
         (end   (or (cadr (memq :end   cl-keys)) (length str))) )
     (concat (substring str 0 start)
@@ -1139,7 +1210,7 @@ characters replaced by the corresponding lowercase characters.
         default to the lengths of the strings (end of string), so that
         by default the entirety of each string is downcased.
 "
-  (setq str (string* str))
+  (setq str (cl:string str))
   (let ( (start (or (cadr (memq :start cl-keys)) 0))
         (end   (or (cadr (memq :end   cl-keys)) (length str))) )
     (concat (substring str 0 start)
@@ -1160,7 +1231,7 @@ characters replaced by the corresponding lowercase characters.
         default to the lengths of the strings (end of string), so that
         by default the entirety of each string is capitalized.
 "
-  (setq str (string* str))
+  (setq str (cl:string str))
   (let ( (start (or (cadr (memq :start cl-keys)) 0))
         (end   (or (cadr (memq :end   cl-keys)) (length str))) )
     (concat (substring str 0 start)
@@ -1230,27 +1301,6 @@ by the corresponding lowercase characters.
           (len   (length capit)) )
     (do ((i 0 (1+ i))) ((<= len i) str)
       (setf (aref str (+ start i)) (aref capit i)))))
-
-
-(defun string* (x)
-  "Common-Lisp: If X is a string, then X, else if it's a symbol, then (symbol-name* X).
-
-X---a string, a symbol, or a character.
-
-Returns a string described by x; specifically:
-
-    * If X is a string, it is returned.
-    * If X is a symbol, its name is returned.
-    * If X is a character, then a string containing that one character is returned.
-    * string might perform additional, implementation-defined conversions.
-
-If there are more than one arguments, then emacs string is called.
-"
-  (cond
-    ((stringp x) x)
-    ((symbolp x) (symbol-name* x))
-    ((characterp x) (make-string* 1 :initial-element x))
-    (t (signal 'type-error "Expected a string, a symbol or a character."))))
 
 
 
@@ -1423,11 +1473,11 @@ RETURN:     (system-name)
   (system-name))
 
 
-(defun pathname-host*      (path) nil)
-(defun pathname-directory* (path) (directory-namestring path))
+(defun pathname-host      (path) nil)
+(defun pathname-directory (path) (directory-namestring path))
 
 
-(defun pathname-name* (path)
+(defun pathname-name (path)
   (setq path (file-namestring path))
   (cond ((string-match "^\\(.*\\)\\.\\([^.]*\\)\\(\\.~[0-9]+~\\)$" path)
          (match-string 1 path))
@@ -1436,7 +1486,17 @@ RETURN:     (system-name)
         (t :unspecific)))
 
 
-(defun pathname-type* (path)
+;; (mapcar (lambda (x) (list (dirname x) (basename x) (pathname-name x)))
+;;         '("abc" "abc.def" "abc.def.ghi"
+;;           "/abc" "/abc.def" "/abc.def.ghi"
+;;           "./abc" "./abc.def" "./abc.def.ghi"
+;;           "ddd/abc" "ddd/abc.def" "ddd/abc.def.ghi"
+;;           "eee/ddd/abc" "eee/ddd/abc.def" "eee/ddd/abc.def.ghi"
+;;           "/eee/ddd/abc" "/eee/ddd/abc.def" "/eee/ddd/abc.def.ghi"))
+
+
+
+(defun pathname-type (path)
   "RETURN: The file name extension (excluding the version number .~N~)."
   (cond ((string-match ".*\\.\\([^.]*\\)\\(\\.~[0-9]+~\\)$" path)
          (match-string 1 path))
@@ -1445,7 +1505,7 @@ RETURN:     (system-name)
         (t :unspecific)))
 
 
-(defun pathname-version* (path)
+(defun pathname-version (path)
   "RETURN: The version number."
   (if (string-match ".*\\.[^\\.]*?\\.~\\([0-9]+\\)~$" path)
       (nth-value 0 (cl:parse-integer (match-string 1 path)))
@@ -1771,10 +1831,23 @@ RETURN: (machine-instance).
   (machine-instance))
 
 
-(defvar +user-homedir-pathname+)
-(setq +user-homedir-pathname+ 
-      (concat (or (getenv "HOME") default-directory) "/"))
-(defun user-homedir-pathname (&optional host) +user-homedir-pathname+)
+(defun dirname (path)
+  (if (string-match "^\\(.*/\\)\\([^/]*\\)$" path)
+      (match-string 1 path)
+      "./"))
+
+(defun basename (path &optional extension)
+  (let ((extension (or extension "")))
+    (if (string-match (format "^\\(.*/\\)\\([^/]*\\)%s$" (regexp-quote extension)) path)
+        (match-string 2 path)
+        path)))
+
+(defvar cl::*user-homedir-pathname*)
+(setf cl::*user-homedir-pathname*
+      (cond (user-init-file  (dirname user-init-file))
+            ((getenv "HOME") (concat (getenv "HOME") "/"))
+            (t               (dirname (first (file-expand-wildcards "~/.emacs"))))))
+(defun user-homedir-pathname (&optional host) cl::*user-homedir-pathname*)
 
 
 ;; ------------------------------------------------------------------------
@@ -1787,8 +1860,8 @@ a 'lisp-indent-function property set to NUM-FORMS.
 "
   (dolist (property '(lisp-indent-function common-lisp-indent-function))
     (put symbol property num-forms)
-    (put (intern (string-downcase (symbol-name* symbol))) property num-forms)
-    (put (intern (string-upcase   (symbol-name* symbol))) property num-forms)))
+    (put (intern (string-downcase (cl:symbol-name symbol))) property num-forms)
+    (put (intern (string-upcase   (cl:symbol-name symbol))) property num-forms)))
 
 
 

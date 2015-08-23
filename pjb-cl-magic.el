@@ -216,7 +216,7 @@ SEE: load-lambda-lists.")
 
 
 (defun* get-lambda-list-of (symbol)
-  (gethash (funcall *readtable-case* (string* symbol)) *cl-lambda-lists*))
+  (gethash (funcall *readtable-case* (cl:string symbol)) *cl-lambda-lists*))
 
 
 (defun* lambda-list-compute-actions (lambda-list)
@@ -335,9 +335,9 @@ RETURN: The name of the parameter (the variable that will be bound).
 RETURN: The keyword used to introduce an argument for this parameter.
 "
   (etypecase parameter
-    (symbol (intern* (string* parameter) "KEYWORD"))
+    (symbol (intern* (cl:string parameter) "KEYWORD"))
     (list   (etypecase (first parameter)
-              (symbol  (intern* (string* (first parameter)) "KEYWORD"))
+              (symbol  (intern* (cl:string (first parameter)) "KEYWORD"))
               (list    (first (first parameter)))))))
 
 
@@ -1257,7 +1257,7 @@ SEE: cl-intro.lisp (that uses sb-introspection to generate this list).
 
 (defun raw-lambda-list-of (symbol)
   (car (member* symbol  *raw-lambda-lists*
-               :test (function string-equal*) :key (function second))))
+               :test (function cl:string-equal) :key (function second))))
 
 (defun* compile-lambda-lists ()
   (setf *cl-lambda-lists* (make-hash-table :test (function equal) :size 978))
@@ -1748,7 +1748,7 @@ RETURN:  A stack of nodes.
     (if (and (name-keywordp name)
              (or (lambda-list-allow-other-keys-p lambda-list)
                  (member* (subseq name 1) (lambda-list-keys lambda-list)
-                         :test (function string-equal*))))
+                         :test (function cl:string-equal))))
         (progn
           (case-lisp-region (ossn-start last) (ossn-end last)
                             *pjb-cl-magic-case*)
@@ -1773,7 +1773,7 @@ RETURN:  A stack of nodes.
     (if (and (name-keywordp name)
              (or (lambda-list-allow-other-keys-p lambda-list)
                  (member* (subseq name 1) (lambda-list-keys lambda-list)
-                         :test (function string-equal*))))
+                         :test (function cl:string-equal))))
         (progn
           (case-lisp-region (ossn-start prev) (ossn-end prev) *pjb-cl-magic-case*)
           (insert-spaces n))

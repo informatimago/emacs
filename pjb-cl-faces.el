@@ -1808,7 +1808,7 @@ RETURN: A regexp that match the given REGEXP, but
             (face (kf-face kf))
             (symbols (mapcar (function first)
                              (remove* kind *common-lisp-symbols*
-                                      :test (function string/=*)
+                                      :test (function cl:string/=)
                                       :key  (function second)))))
        (labels ((format-regexp-in (tree)
                   (cond
@@ -1867,7 +1867,7 @@ RETURN: A regexp that match the given REGEXP, but
                 `(
                   (,(format "(%s[ 	']*\\(\\sw+\\)?" 
                             (regexp-opt
-                             (mapcar (function string*)
+                             (mapcar (function cl:string)
                                      '(catch throw block return-from))
                              ;; (mapcan (function up-down-case)
                              ;;        '(catch throw block return-from))
@@ -1876,7 +1876,7 @@ RETURN: A regexp that match the given REGEXP, but
                     (2 font-lock-constant-face nil t))
                   (,(format "(%s[ 	']*\\(\\sw+\\)?" 
                             (regexp-opt
-                             (mapcar (function string*)
+                             (mapcar (function cl:string)
                                      '(provide require))
                              ;; (mapcan (function up-down-case) '(provide require))
                              'words))
@@ -1884,7 +1884,7 @@ RETURN: A regexp that match the given REGEXP, but
                     (2 font-lock-constant-face nil t)) 
                   (,(format "(%s" 
                             (regexp-opt
-                             (mapcar (function string*)
+                             (mapcar (function cl:string)
                                      '(abort assert error signal))
                              ;; (mapcan (function up-down-case)
                              ;;         '(abort assert error signal)) 

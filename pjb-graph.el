@@ -153,7 +153,7 @@ It can be used to store markers while walking sets or graphs containing them.")
 DO:     Initalize the instance id.
 "
   (setf (slot-value self 'ident) 
-        (gensym (format "%s-" (upcase (string* (class-of self))))))
+        (gensym (format "%s-" (upcase (cl:string (class-of self))))))
   self);;initialize-instance
 
 

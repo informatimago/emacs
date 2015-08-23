@@ -99,4 +99,98 @@
                  completions)
          qboundary)))))
 
+(ignore-errors
+  (require 'newcomment)
+  (defun comment-region-internal (beg end cs ce
+                                  &optional ccs cce block lines indent)
+    "Comment region BEG..END.
+CS and CE are the comment start resp end string.
+CCS and CCE are the comment continuation strings for the start resp end
+of lines (default to CS and CE).
+BLOCK indicates that end of lines should be marked with either CCE, CE or CS
+\(if CE is empty) and that those markers should be aligned.
+LINES indicates that an extra lines will be used at the beginning and end
+of the region for CE and CS.
+INDENT indicates to put CS and CCS at the current indentation of the region
+rather than at left margin."
+    ;;(assert (< beg end))
+    (let ((no-empty nil ; PJB: always no-empty.
+            ;;  (not (or (eq comment-empty-lines t)
+            ;;           (and comment-empty-lines (zerop (length ce)))))
+            ))
+      ;; Sanitize CE and CCE.
+      (if (and (stringp ce) (string= "" ce)) (setq ce nil))
+      (if (and (stringp cce) (string= "" cce)) (setq cce nil))
+      ;; If CE is empty, multiline cannot be used.
+      (unless ce (setq ccs nil cce nil))
+      ;; Should we mark empty lines as well ?
+      (if (or ccs block lines) (setq no-empty nil))
+      ;; Make sure we have end-markers for BLOCK mode.
+      (when block (unless ce (setq ce (comment-string-reverse cs))))
+      ;; If BLOCK is not requested, we don't need CCE.
+      (unless block (setq cce nil))
+      ;; Continuation defaults to the same as CS and CE.
+      (unless ccs (setq ccs cs cce ce))
+
+      (save-excursion
+        (goto-char end)
+        ;; If the end is not at the end of a line and the comment-end
+        ;; is implicit (i.e. a newline), explicitly insert a newline.
+        (unless (or ce (eolp)) (insert "\n") (indent-according-to-mode))
+        (comment-with-narrowing
+            beg end
+          (let ((min-indent (point-max))
+                (max-indent 0))
+            (goto-char (point-min))
+            ;; Quote any nested comment marker
+            (comment-quote-nested comment-start comment-end nil)
+            
+            ;; Loop over all lines to find the needed indentations.
+            (goto-char (point-min))
+            (while
+                (progn
+                  (unless (looking-at "[ \t]*$")
+                    (setq min-indent (min min-indent (current-indentation))))
+                  (end-of-line)
+                  (setq max-indent (max max-indent (current-column)))
+                  (not (or (eobp) (progn (forward-line) nil)))))
+
+            (setq max-indent
+                  (+ max-indent (max (length cs) (length ccs))
+                     ;; Inserting ccs can change max-indent by (1- tab-width)
+                     ;; but only if there are TABs in the boxed text, of course.
+                     (if (save-excursion (goto-char beg)
+                                         (search-forward "\t" end t))
+                         (1- tab-width) 0)))
+            ;; ;; Inserting ccs can change max-indent by (1- tab-width).
+            ;; (setq max-indent
+            ;;   (+ max-indent (max (length cs) (length ccs)) tab-width -1))
+            (unless indent (setq min-indent 0))
+            
+            ;; make the leading and trailing lines if requested
+            (when lines
+              (let ((csce
+                     (comment-make-extra-lines
+                      cs ce ccs cce min-indent max-indent block)))
+                (setq cs (car csce))
+                (setq ce (cdr csce))))
+
+            (goto-char (point-min))
+            ;; Loop over all lines from BEG to END.
+            (while
+                (progn
+                  (unless (and no-empty (looking-at "[ \t]*$"))
+                    (move-to-column min-indent t)
+                    (insert cs) (setq cs ccs) ;switch to CCS after the first line
+                    (end-of-line)
+                    (if (eobp) (setq cce ce))
+                    (when cce
+                      (when block (move-to-column max-indent t))
+                      (insert cce)))
+                  (end-of-line)
+                  (not (or (eobp) (progn (forward-line) nil))))))))))
+  );;patch
+
+
+
 ;;;; THE END ;;;;

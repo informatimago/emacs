@@ -848,7 +848,7 @@ DO:     Insert a file attachment at the point, prefixed with Content- headers
           (when (= 0 (length type))
             (setq type "application/octetstream"))
           (if (member* (car (split-string type " *; *"))
-                      *pjb-mail-mime-type-as-8bit* :test (function string-equal*))
+                      *pjb-mail-mime-type-as-8bit* :test (function cl:string-equal))
               (setq transfer-encoding "8bit")
               (setq transfer-encoding "base64"))
           (when (member* (car (split-string type " *; *"))

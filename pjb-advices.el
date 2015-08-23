@@ -38,8 +38,8 @@
 (require 'pjb-strings)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; shell
+;;;----------------------------------------------------------------------------
+;;; shell
 
 (defadvice switch-to-buffer (after pjb-nshell-switch-to-buffer nil activate)
   "When switching to a shell buffer, go down to the max position."
@@ -147,8 +147,8 @@ Email addresses are not case sensitive."
 (ad-activate 'rmail-sort-by-correspondent)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; faces
+;;;----------------------------------------------------------------------------
+;;; faces
 
 (defun pjb-chop-spaces (string)
   "Returns a substring of `string' with spaces removed left and right."
@@ -186,9 +186,8 @@ Email addresses are not case sensitive."
        result)))
 (ad-activate 'set-face-attribute)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; frames
-
+;;;----------------------------------------------------------------------------
+;;; frames
 (when (< emacs-major-version 22)
   (defadvice other-frame
       (around pjb-other-frame-redirect-frame-focus (arg))
@@ -202,9 +201,8 @@ Email addresses are not case sensitive."
             (redirect-frame-focus original-frame (selected-frame))))))
   (ad-activate 'other-frame))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; cus-edit
-
+;;;----------------------------------------------------------------------------
+;;; cus-edit
 (require 'cus-edit)
 
 
@@ -255,8 +253,8 @@ Email addresses are not case sensitive."
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; w3
+;;;----------------------------------------------------------------------------
+;;; w3
 
 ;; (defadvice w3-parse-buffer 
 ;;   (before pjb-w3-parse-buffer-invalid-chars (buffer))
@@ -272,8 +270,8 @@ Email addresses are not case sensitive."
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; gnus
+;;;----------------------------------------------------------------------------
+;;; gnus
 (require 'gnus)
 (require 'gnus-art)
 (require 'message)
@@ -353,8 +351,8 @@ There's too much spam sent to addresses flowing on the newsgroups..."
 (ad-activate 'message-make-sender)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; debug
+;;;----------------------------------------------------------------------------
+;;; debug
 (require 'debug)
 
 (defadvice backtrace
@@ -369,8 +367,8 @@ There's too much spam sent to addresses flowing on the newsgroups..."
 (ad-activate 'backtrace)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; jumping to register
+;;;----------------------------------------------------------------------------
+;;; jumping to register
 (require 'register)
 
 (defvar *jump-to-register-offset* (lambda () 10)
@@ -392,7 +390,6 @@ delete any existing frames that the frame configuration doesn't mention.
   (interactive "cJump to register: \nP")
   (recenter (funcall *jump-to-register-offset*)))
 
-
-(provide 'pjb-advices)
+;; (provide 'pjb-advices)
 ;;;; THE END ;;;;
 

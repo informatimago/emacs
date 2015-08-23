@@ -45,7 +45,7 @@
   "
 RETURN: A string containing the ident with the dash removed.
 "
-  (remove (character "-") (string* ident)))
+  (remove (character "-") (cl:string ident)))
 
 
 

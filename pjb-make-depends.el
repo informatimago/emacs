@@ -107,9 +107,9 @@ RETURN:  nil or the path of fname found in one of dir-paths.
         (fpath ) )
       ( (or (null dpath) 
             (probe-file 
-             (setq fpath (if (string=* dpath ".") 
+             (setq fpath (if (cl:string= dpath ".") 
                              fname
-                           (concatenate 'string dpath "/" fname)))))
+                             (concatenate 'string dpath "/" fname)))))
         (if dpath  fpath nil) ))
   );;find-file-path
 

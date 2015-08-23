@@ -34,17 +34,6 @@
 ;;;;    Boston, MA 02111-1307 USA
 ;;;;**************************************************************************
 
-(defun symbol-name* (sym)
-  (let* ((name (symbol-name sym))
-         (colon (position (character ":") name)))
-    (cond 
-      ((and colon (char= (character ":") (char name (1+ colon))))
-       (subseq name (+ 2 colon)))
-      (colon
-       (subseq name (+ 1 colon)))
-      (t name))))
-
-
 (defun current-frame ()
   "
 RETURN: The current frame.
@@ -235,4 +224,5 @@ RETURN: The current frame.
     (generate-x-resources-for-face face)))
 
 
-
+(provide 'pjb-xresources)
+;;; THE END ;;;

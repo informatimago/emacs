@@ -185,7 +185,7 @@ RETURN: A list of the names of projects initiated for the FIRM.
         (list (match-string 2 path))))
     (file-expand-wildcards 
      (format "%s/firms/%s/interventions/[0-9]*-*.txt" (getenv "HOME") firm) t))
-   :test (function string=*)))
+   :test (function cl:string=)))
 
 
 (defun find-last-intervention (firm project)
@@ -200,7 +200,7 @@ RETURN: A list of the names of projects initiated for the FIRM.
       (file-expand-wildcards 
        (format "%s/firms/%s/interventions/[0-9]*-%s.txt" 
          (getenv "HOME") firm project) t)))
-    (function string>=*))))
+    (function cl:string>=))))
 
 
 (defvar *pjb-intervention-firm* nil)
@@ -223,8 +223,8 @@ RETURN: A list of the names of projects initiated for the FIRM.
       (let* ((last-intervention (find-last-intervention firm project))
              (yearly (format "%04d" year))
              (monthly (format "%04d%02d" year month)))
-        (setq new  (and (string/=* yearly last-intervention)
-                        (string/=* monthly  last-intervention)))
+        (setq new  (and (cl:string/= yearly last-intervention)
+                        (cl:string/= monthly  last-intervention)))
         (setq date (if new monthly last-intervention))))
     (find-file (intervention-file-path firm project date))
     (let* ((footer (let ((footer (make-string 74 (character "="))))
