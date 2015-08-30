@@ -972,7 +972,10 @@ the message given by REASON."
                       (lambda (result)
                         (destructuring-bind (output value) result
                           (insert (if (zerop (length output)) " #|" " #| ")
-                                  output " --> " value " |# "))))))
+                                  output
+                                  " --> "
+                                  (replace-regexp-in-string "\n" " ; " value t t)
+                                  " |# "))))))
 
 (defun el-eval-last-expression ()
   (interactive)
