@@ -968,14 +968,16 @@ the message given by REASON."
   (let ((current-prefix-arg t)
         (expression (slime-last-expression)))
     (push-mark) 
-    (slime-eval-async `(swank:eval-and-grab-output ,expression)
+    (slime-eval-async `(swank:eval-and-grab-output-and-error ,expression)
                       (lambda (result)
-                        (destructuring-bind (output value) result
+                        (destructuring-bind (output values) result
                           (insert (if (zerop (length output)) " #|" " #| ")
-                                  output
-                                  " --> "
-                                  (replace-regexp-in-string "\n" " ; " value t t)
-                                  " |# "))))))
+                                  output)
+                          (when (plusp (length values))
+                            (insert
+                             " --> "
+                             (replace-regexp-in-string "\n" " ; " values t t)))
+                          (insert " |# "))))))
 
 (defun el-eval-last-expression ()
   (interactive)
