@@ -2045,6 +2045,7 @@ by pjb-add-change-log-entry.")
 
 (defparameter pjb-sources-licenses 
   ;; http://spdx.org/licenses/
+  ;; SPDX-License-Identifier: BSD-2-Clause
   '(("GPL2"           
      t
      "This program is free software; you can redistribute it and/or"
