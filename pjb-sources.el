@@ -2042,7 +2042,9 @@ by pjb-add-change-log-entry.")
        ((<= (length line) length) line)))
 
 
+
 (defparameter pjb-sources-licenses 
+  ;; http://spdx.org/licenses/
   '(("GPL2"           
      t
      "This program is free software; you can redistribute it and/or"
