@@ -999,12 +999,18 @@ the message given by REASON."
      (goto-char pt)
      (insert " --> "))))
 
+(defun pjb-erc-keybindings ()
+  (interactive)
+  (local-set-key (kbd "C-y") 'pjb-erc-yank)
+  (local-set-key (kbd "C-a") 'beginning-of-line)
+  (local-set-key (kbd "C-e") 'end-of-line)
+  (local-set-key (kbd "H-a") 'pjb-erc-answer))
+
 (defun pjb/erc-join-meat ()
   (let ((buffer (pjb-erc-buffer-channel (current-buffer))))
     (unless (and buffer (char= (character "#") (aref buffer 0)))
      (erc-log-mode 1)
-     (local-set-key (kbd "C-y") 'pjb-erc-yank)
-     (local-set-key (kbd "H-a") 'pjb-erc-answer)))
+     (pjb-erc-keybindings)))
   (loop with current-channel = (buffer-name)
         for (channels . eval-function)
           in '((("#lisp" "##lisp" "#lispcafe" "#lispgame"  "#lisp-lab" "#lisp-fr" "#lisp-es" 
