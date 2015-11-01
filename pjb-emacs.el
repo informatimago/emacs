@@ -1935,6 +1935,37 @@ to the buffer instead of local to the mode."
 
 
 ;;;----------------------------------------------------------------------------
+;;; randomize
+;;;----------------------------------------------------------------------------
+
+(require 'cookie1)
+
+(defun shuffle-words (words mode)
+  (mapconcat 'identity
+             (ecase mode
+               (1  (coerce (shuffle-vector (coerce words 'vector)) 'list))
+               (4  (mapcar (lambda (word)
+                             (if (< 2 (length word))
+                                 (replace word (shuffle-vector (subseq word 1 (- (length word) 2)))
+                                          :start1 1)
+                                 word))
+                           words)))
+             " "))
+
+(defun randomize-region (&optional start end mode)
+  (interactive "r\np")
+  (let ((words (split-string (buffer-substring start end))))
+    (replace-region start end (shuffle-words words mode))))
+
+(defun randomize-paragraph (mode)
+  (interactive "p")
+  (save-excursion
+   (let ((end (point)))
+     (backward-paragraph)
+     (let ((start (point)))
+       (randomize-region start end mode)))))
+
+;;;----------------------------------------------------------------------------
 ;;; acronym
 ;;;----------------------------------------------------------------------------
 
