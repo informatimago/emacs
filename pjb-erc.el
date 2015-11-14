@@ -954,6 +954,46 @@ the message given by REASON."
 ;;; erc hooks
 ;;;---------------------------------------------------------------------
 
+
+
+(defun pjb/erc-send-pre-meat/filter-unix-commands (input)
+  "Avoids sending unix commands.
+
+This filters the input to be sent to the erc channel.  If the first
+word of the input line is a unix command \(identified by which) then
+it is not sent, and a message is displayed. You can force sending it
+with M-p C-u RET (or M-p and edit it so it doesn't look like a
+command).
+"
+  (if current-prefix-arg
+      t
+      (let ((command (first (split-string input " " t))))
+        (unless (string= "" (shell-command-to-string (format "which %s" command)))
+          (message "%s" input)
+          (message "This looks like a shell command, Use M-p C-u RET to send it.")
+          (setf erc-send-this nil)))))
+(add-hook 'erc-send-pre-hook 'pjb/erc-send-pre-meat/filter-unix-commands)
+
+
+(list
+ (let ((prefix-arg t))
+   (list (pjb/erc-send-pre-meat/filter-unix-commands "ls")
+         erc-send-this))
+ (list (pjb/erc-send-pre-meat/filter-unix-commands "lsx")
+       erc-send-this)
+ (list (pjb/erc-send-pre-meat/filter-unix-commands "ls")
+       erc-send-this))
+((t nil) (nil nil) (nil nil))
+
+((t t) (nil t) (nil nil))
+((nil nil) (nil nil))
+
+(erc-send-pre-hook)
+(erc-send-pre-hook)
+erc-send-pre-hook
+(erc-add-to-input-ring)
+
+
 (defun pjb/erc-insert-post-meat ()
   (interactive)
   (reset-movement-keypad)
