@@ -40,7 +40,6 @@
 ;;;;
 ;;;;****************************************************************************
 (require 'cl)
-(require 'eieio)
 (require 'devices nil t)
 (require 'font nil t)
 (require 'browse-url)
