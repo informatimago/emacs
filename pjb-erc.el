@@ -135,7 +135,9 @@
 
 (defun pjb-parse-html (html)
   "Parse the HTML string."
-  (pjb-parse-xml html))
+  (with-temp-buffer
+      (insert html)
+    (libxml-parse-html-region (point-min) (point-max))))
 
 
 (defun pjb-find-html-tag (tag html)
