@@ -53,7 +53,7 @@
 
 (milliways-schedule
  (lambda ()
-   (speak   "Welcome to the Restaurant at the End of the Universe!")
+   ;; (speak   "Welcome to the Restaurant at the End of the Universe!")
    (message "Welcome to the Restaurant at the End of the Universe!")))
 
 
