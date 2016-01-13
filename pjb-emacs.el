@@ -1335,6 +1335,12 @@ in screen.              out of screen.
 |  112 |  122 |  132 |
 +------+------+------+
 
++--------------------+
+|          81        |
++--------------------+  No decorationless here.
+|          82        |
++--------------------+
+
 Wishes:
 
 +------+------+------+
@@ -1369,6 +1375,7 @@ Wishes:
                         111 112 121 122 131 132 -111 -112 -121 -122 -131 -132
                         21 22 31 32
                         41 42 51 52 61 62 71 72
+                        81 82
                         1112 -1112
                         1213 -1213))))
         (error "Invalid prefix %S; expecting: %s"
@@ -1388,15 +1395,15 @@ Multiply by -1 = without decoration.
                                       0 (- *window-manager-y-offset*)))
                    (prefix (abs prefix))
                    (hpref  (if (< prefix 20) prefix (truncate prefix 10))) ; 1..19
-                   (vpref  (if (< prefix 20) 0 (mod prefix 10))) ; 0,1,2,3
+                   (vpref  (if (< prefix 20) 0      (mod prefix 10))) ; 0,1,2,3
                    (left   (+ screen-left
                               (case hpref
-                                ((1 2 4 11 111) 0)
-                                ((3 6)          (truncate screen-width 2))
-                                ((5)            (truncate screen-width 4))
-                                ((7)            (* 3 (truncate screen-width 4)))
-                                ((12 121)       (truncate screen-width 3))
-                                ((13)           (* 2 (truncate screen-width 3))))))
+                                ((1 2 4 11 111 8) 0)
+                                ((3 6)            (truncate screen-width 2))
+                                ((5)              (truncate screen-width 4))
+                                ((7)              (* 3 (truncate screen-width 4)))
+                                ((12 121)         (truncate screen-width 3))
+                                ((13)             (* 2 (truncate screen-width 3))))))
                    (width  (- (truncate screen-width (case hpref
                                                        ((1)         1)
                                                        ((2 3)       2)
