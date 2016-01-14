@@ -219,7 +219,7 @@ RETURN: A list of the names of projects initiated for the FIRM.
      (function identity) nil)))
   (let ((date)
         (new nil))
-    (MULTIPLE-VALUE-BIND (s m h day month year) (GET-DECODED-TIME)
+    (multiple-value-bind (s m h day month year) (get-decoded-time)
       (let* ((last-intervention (find-last-intervention firm project))
              (yearly (format "%04d" year))
              (monthly (format "%04d%02d" year month)))
@@ -280,7 +280,7 @@ RETURN: A list of the names of projects initiated for the FIRM.
 
 (defstruct activity
   event
-  (time         (GET-UNIVERSAL-TIME))
+  (time         (get-universal-time))
   (hostname     *hostname*)
   (tag          *activity-tag*)
   (buffer-name  (buffer-name (current-buffer)))
