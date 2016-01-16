@@ -1279,6 +1279,7 @@ RETURN: The origin and width and height of the screen where the frame lies,
 ;; (list (frame-pixel-left) (frame-pixel-top) (frame-width) (frame-height))
 ;; (0 (+ -23) 179 78)
 
+
 (defun full-frame (&optional prefix)
   "Spread the frame to cover the full screen, or parts of it.
 
@@ -1341,8 +1342,6 @@ in screen.              out of screen.
 |          82        |
 +--------------------+
 
-Wishes:
-
 +------+------+------+
 |             |      |
 |    1112     |  13  |  -1112 -13
@@ -1394,8 +1393,14 @@ Multiply by -1 = without decoration.
                    (height-offset (if (and (not (eq window-system 'ns)) decorationp)
                                       0 (- *window-manager-y-offset*)))
                    (prefix (abs prefix))
-                   (hpref  (if (< prefix 20) prefix (truncate prefix 10))) ; 1..19
-                   (vpref  (if (< prefix 20) 0      (mod prefix 10))) ; 0,1,2,3
+                   (hpref  (cond ; 1..19
+                             ((< prefix 20)   prefix)
+                             ((< prefix 1000) (truncate prefix 10))
+                             (t               (truncate prefix 10)))) 
+                   (vpref  (cond ; 0,1,2,3
+                             ((< prefix   20) 0)
+                             ((< prefix 1000) (mod prefix 10))
+                             (t               0))) 
                    (left   (+ screen-left
                               (case hpref
                                 ((1 2 4 11 111 8) 0)
@@ -1417,7 +1422,7 @@ Multiply by -1 = without decoration.
                                 ((2)   (truncate (- screen-height
                                                     *window-manager-y-offset*)
                                                  2))
-                                ((3)))))
+                                ((3)   0))))
                    (height (- (case vpref
                                 ((0)     screen-height)
                                 ((1 2 3) (truncate (- screen-height
