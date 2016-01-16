@@ -1865,13 +1865,6 @@ and last year of the copyright.
            (delete-region start end)
            (insert (pjb-format-copyright hcd owner first-year current-year))))))))
 
-(defun pjb-bump-asdf-version ()
-  "Bump the version in the asdf systems in the current buffer."
-  (interactive)
-  (goto-char (point-min))
-  (while (re-search-forward  ":version +\"[0-9]+\\.[0-9]+\\.\\([0-9]+\\)\"" (point-max) t)
-    (replace-region (match-beginning 1) (match-end 1)
-                    (prin1-to-string (1+ (parse-integer (match-string 1)))))))
 
 (defvar *source-extensions*
   '(".lisp" ".cl" ".asd" ".el"
@@ -1903,13 +1896,44 @@ and last year of the copyright.
                                   "Updating copyright"
                                   (function pjb-update-copyright)))
 
-(defun pjb-bump-asdf-version-in-directory (&optional directory)
-  "Bumps the ASD system version in all asd files in the `directory'."
-  (interactive "DDirectory: ")
+(defun pjb-bump-asdf-version (&optional vf)
+  "Bump the version in the asdf systems in the current buffer.
+vf= 1 => increment the minor.
+vf= 4 => increment the major.
+vf=16 => increment the version.
+"
+  (interactive "p")
+  (let* ((vf    (or vf 1))
+         (field (case vf
+                  ((1)  3)
+                  ((4)  2)
+                  ((16) 1)
+                  (otherwse
+                   (error "Invalid version field parameter %d, should be (member 1 4 16)"
+                          vf))))
+         (fmt  (case field
+                 ((1) "%d.0.0")
+                 ((2)   "%d.0")
+                 ((3)     "%d"))))
+    (goto-char (point-min))
+    (while (re-search-forward  ":version +\"\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)\"" (point-max) t)
+      (replace-region (match-beginning field) (match-end 3)
+                      (format fmt (1+ (parse-integer (match-string field))))))))
+
+(defun pjb-bump-asdf-version-in-directory (vf &optional directory)
+  "Bumps the ASD system version in all asd files in the `directory' (recursively).
+vf= 1 => increment the minor.
+vf= 4 => increment the major.
+vf=16 => increment the version.
+"
+  (interactive "p\nDDirectory: ")
   (process-all-files-in-directory (or directory default-directory)
                                   "\\(\\.asd\\)$"
                                   "Bumping version of asd systems"
-                                  (function pjb-bump-asdf-version)))
+                                  (lambda ()
+                                    (pjb-bump-asdf-version vf))))
+
+
 
 ;; ------------------------------------------------------------------------
 ;; pjb-add-change-log-entry
