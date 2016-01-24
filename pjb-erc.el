@@ -968,30 +968,25 @@ command).
   (if current-prefix-arg
       t
       (let ((command (first (split-string input " " t))))
-        (unless (string= "" (shell-command-to-string (format "which %s" command)))
+        (unless (or
+                 (intersection (coerce command 'list)
+                               (coerce "!\"#$%&'()*+,:;<=>?@[\\]`{}" 'list))
+                 (string= "" (shell-command-to-string (format "which %S" command))))
           (message "%s" input)
           (message "This looks like a shell command, Use M-p C-u RET to send it.")
           (setf erc-send-this nil)))))
 (add-hook 'erc-send-pre-hook 'pjb/erc-send-pre-meat/filter-unix-commands)
 
 
-(list
- (let ((prefix-arg t))
-   (list (pjb/erc-send-pre-meat/filter-unix-commands "ls")
-         erc-send-this))
- (list (pjb/erc-send-pre-meat/filter-unix-commands "lsx")
-       erc-send-this)
- (list (pjb/erc-send-pre-meat/filter-unix-commands "ls")
-       erc-send-this))
-((t nil) (nil nil) (nil nil))
+;; (list
+;;  (let ((prefix-arg t))
+;;    (list (pjb/erc-send-pre-meat/filter-unix-commands "ls")
+;;          erc-send-this))
+;;  (list (pjb/erc-send-pre-meat/filter-unix-commands "lsx")
+;;        erc-send-this)
+;;  (list (pjb/erc-send-pre-meat/filter-unix-commands "ls")
+;;        erc-send-this))
 
-((t t) (nil t) (nil nil))
-((nil nil) (nil nil))
-
-(erc-send-pre-hook)
-(erc-send-pre-hook)
-erc-send-pre-hook
-(erc-add-to-input-ring)
 
 
 (defun pjb/erc-insert-post-meat ()
