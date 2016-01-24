@@ -40,7 +40,6 @@
 ;;;;
 ;;;;****************************************************************************
 (require 'cl)
-(require 'eieio)
 (require 'devices nil t)
 (require 'font nil t)
 (require 'browse-url)
@@ -1280,6 +1279,7 @@ RETURN: The origin and width and height of the screen where the frame lies,
 ;; (list (frame-pixel-left) (frame-pixel-top) (frame-width) (frame-height))
 ;; (0 (+ -23) 179 78)
 
+
 (defun full-frame (&optional prefix)
   "Spread the frame to cover the full screen, or parts of it.
 
@@ -1336,7 +1336,11 @@ in screen.              out of screen.
 |  112 |  122 |  132 |
 +------+------+------+
 
-Wishes:
++--------------------+
+|          81        |
++--------------------+  No decorationless here.
+|          82        |
++--------------------+
 
 +------+------+------+
 |             |      |
@@ -1370,6 +1374,7 @@ Wishes:
                         111 112 121 122 131 132 -111 -112 -121 -122 -131 -132
                         21 22 31 32
                         41 42 51 52 61 62 71 72
+                        81 82
                         1112 -1112
                         1213 -1213))))
         (error "Invalid prefix %S; expecting: %s"
@@ -1388,16 +1393,22 @@ Multiply by -1 = without decoration.
                    (height-offset (if (and (not (eq window-system 'ns)) decorationp)
                                       0 (- *window-manager-y-offset*)))
                    (prefix (abs prefix))
-                   (hpref  (if (< prefix 20) prefix (truncate prefix 10))) ; 1..19
-                   (vpref  (if (< prefix 20) 0 (mod prefix 10))) ; 0,1,2,3
+                   (hpref  (cond ; 1..19
+                             ((< prefix 20)   prefix)
+                             ((< prefix 1000) (truncate prefix 10))
+                             (t               (truncate prefix 10)))) 
+                   (vpref  (cond ; 0,1,2,3
+                             ((< prefix   20) 0)
+                             ((< prefix 1000) (mod prefix 10))
+                             (t               0))) 
                    (left   (+ screen-left
                               (case hpref
-                                ((1 2 4 11 111) 0)
-                                ((3 6)          (truncate screen-width 2))
-                                ((5)            (truncate screen-width 4))
-                                ((7)            (* 3 (truncate screen-width 4)))
-                                ((12 121)       (truncate screen-width 3))
-                                ((13)           (* 2 (truncate screen-width 3))))))
+                                ((1 2 4 11 111 8) 0)
+                                ((3 6)            (truncate screen-width 2))
+                                ((5)              (truncate screen-width 4))
+                                ((7)              (* 3 (truncate screen-width 4)))
+                                ((12 121)         (truncate screen-width 3))
+                                ((13)             (* 2 (truncate screen-width 3))))))
                    (width  (- (truncate screen-width (case hpref
                                                        ((1)         1)
                                                        ((2 3)       2)
@@ -1411,7 +1422,7 @@ Multiply by -1 = without decoration.
                                 ((2)   (truncate (- screen-height
                                                     *window-manager-y-offset*)
                                                  2))
-                                ((3)))))
+                                ((3)   0))))
                    (height (- (case vpref
                                 ((0)     screen-height)
                                 ((1 2 3) (truncate (- screen-height

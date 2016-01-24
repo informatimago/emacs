@@ -161,8 +161,9 @@ and shadow directory is given by `*shadow-map'."
 
 
 
-(global-set-key (kbd "C-c SPC") 'toggle-header/implementation)
-(global-set-key (kbd "C-c s")   'toggle-shadow-file)
+(global-set-key (kbd "C-c SPC")   'toggle-header/implementation)
+(global-set-key (kbd "C-c C-SPC") 'toggle-header/implementation)
+(global-set-key (kbd "C-c s")     'toggle-shadow-file)
 
 
 (provide 'pjb-thi)
