@@ -450,7 +450,8 @@ License:
     along with this program.
     If not, see <a href=\\\"http://www.gnu.org/licenses/\\\">http://www.gnu.org/licenses/</a>.
 
-")))
+")
+    (onoff . "Have You Tried Turning It Off And On Again? https://www.youtube.com/watch?v=nn2FB1P_Mn8")))
 
 
 (defun pjb-erc-get-answers ()
