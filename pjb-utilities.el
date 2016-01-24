@@ -808,7 +808,7 @@ POST:	(<= start index end)
                        (if (member* constants '(t otherwise) :test (function eql))
                            `(t ,@body)
                            `((member* ,value ',(ensure-list constants)
-                                      :test (function string-equal*))
+                                      :test (function cl:string-equal))
                              ,@body))))
                    clauses)))))
 
