@@ -87,6 +87,65 @@
 (require 'erc)
 
 
+;; Patch:
+
+(defun erc-user-spec (user)
+  "Create a nick!user@host spec from a user struct."
+  (let ((nick  (erc-server-user-nickname user))
+        (host  (erc-server-user-host user))
+        (login (erc-server-user-login user)))
+    (concat (or (format "%s" nick) "")
+            "!"
+            (or (format "%s" login) "")
+            "@"
+            (or (format "%s" host) ""))))
+
+(defun erc-send-current-line ()
+  "Parse current line and send it to IRC."
+  (interactive)
+  (let ((now (float-time)))
+    (if (or (not erc-accidental-paste-threshold-seconds)
+            (< erc-accidental-paste-threshold-seconds
+               (- now erc-last-input-time)))
+        (save-restriction
+         (widen)
+         (if (< (point) (erc-beg-of-input-line))
+             (erc-error "Point is not in the input area")
+             (let ((inhibit-read-only t)
+                   (str (erc-user-input))
+                   (old-buf (current-buffer)))
+               (if (and (not (erc-server-buffer-live-p))
+                        (not (erc-command-no-process-p str)))
+                   (erc-error "ERC: No process running")
+                   (erc-set-active-buffer (current-buffer))
+                   ;; Kill the input and the prompt
+                   (message "input= %S" str)
+                   (if (string-match erc-command-regexp str)
+                       (insert "\n")
+                       (delete-region (erc-beg-of-input-line)
+                                      (erc-end-of-input-line)))
+                   (unwind-protect
+                        (erc-send-input str)
+                     ;; Fix the buffer if the command didn't kill it
+                     (when (buffer-live-p old-buf)
+                       (with-current-buffer old-buf
+                         (save-restriction
+                          (widen)
+                          (goto-char (point-max))
+                          (when (processp erc-server-process)
+                            (set-marker (process-mark erc-server-process) (point)))
+                          (set-marker erc-insert-marker (point))
+                          (let ((buffer-modified (buffer-modified-p)))
+                            (erc-display-prompt)
+                            (set-buffer-modified-p buffer-modified))))))
+                   ;; Only when last hook has been run...
+                   (run-hook-with-args 'erc-send-completed-hook str))))
+         (setq erc-last-input-time now))
+        (switch-to-buffer "*ERC Accidental Paste Overflow*")
+        (lwarn 'erc :warning
+               "You seem to have accidentally pasted some text!"))))
+
+
 ;;;---------------------------------------------------------------------
 ;;; erc-yank / lisppaste
 ;;;---------------------------------------------------------------------
