@@ -469,7 +469,7 @@
 
 (setf (gethash "ENSURE-DIRECTORIES-EXIST" *cl-lambda-lists*) (quote [cl-struct-lambda-list ENSURE-DIRECTORIES-EXIST :FUNCTION (PATHSPEC &KEY VERBOSE (MODE 511)) 2 0 nil nil (MODE VERBOSE) ((:mandatory . "PATHSPEC") (:key . ":VERBOSE") (:key . ":MODE")) [lambda-list-accept lambda-list-accept lambda-list-check-current-keyword lambda-list-check-previous-keyword lambda-list-check-current-keyword lambda-list-check-previous-keyword lambda-list-close]]))
 
-(setf (gethash "ENSURE-GENERIC-FUNCTION" *cl-lambda-lists*) (quote [cl-struct-lambda-list ENSURE-GENERIC-FUNCTION :FUNCTION (FUN-NAME &REST ALL-KEYS &KEY ENVIRONMENT &ALLOW-OTHER-KEYS) 2 0 ((&REST ALL-KEYS) (&KEY ENVIRONMENT) (&ALLOW-OTHER-KEYS)) ((&ALLOW-OTHER-KEYS)) (ENVIRONMENT) ((:mandatory . "FUN-NAME") (:key . ":ENVIRONMENT") (:rest . "ALL-KEYS...")) [lambda-list-accept lambda-list-accept lambda-list-check-current-keyword lambda-list-check-previous-keyword lambda-list-accept]]))
+(setf (gethash "ENSURE-GENERIC-FUNCTION" *cl-lambda-lists*) (quote [cl-struct-lambda-list ENSURE-GENERIC-FUNCTION :FUNCTION (FUN-NAME &REST ALL-KEYS &KEY ENVIRONMENT &ALLOW-OTHER-KEYS) 2 0 ((&REST ALL-KEYS) (&KEY ENVIRONMENT) . #1=((&ALLOW-OTHER-KEYS))) #1# (ENVIRONMENT) ((:mandatory . "FUN-NAME") (:key . ":ENVIRONMENT") (:rest . "ALL-KEYS...")) [lambda-list-accept lambda-list-accept lambda-list-check-current-keyword lambda-list-check-previous-keyword lambda-list-accept]]))
 
 (setf (gethash "EQ" *cl-lambda-lists*) (quote [cl-struct-lambda-list EQ :FUNCTION (OBJ1 OBJ2) 3 0 nil nil nil ((:mandatory . "OBJ1") (:mandatory . "OBJ2")) [lambda-list-accept lambda-list-accept lambda-list-accept lambda-list-close]]))
 
@@ -1213,7 +1213,7 @@
 
 (setf (gethash "SHADOWING-IMPORT" *cl-lambda-lists*) (quote [cl-struct-lambda-list SHADOWING-IMPORT :FUNCTION (SYMBOLS &OPTIONAL (PACKAGE (SANE-PACKAGE))) 2 1 nil nil nil ((:mandatory . "SYMBOLS") (:optional . "[PACKAGE]")) [lambda-list-accept lambda-list-accept lambda-list-accept lambda-list-close]]))
 
-(setf (gethash "SHARED-INITIALIZE" *cl-lambda-lists*) (quote [cl-struct-lambda-list SHARED-INITIALIZE :GENERIC (INSTANCE SLOT-NAMES &REST INITARGS &ALLOW-OTHER-KEYS) 3 0 ((&REST INITARGS) (&ALLOW-OTHER-KEYS)) ((&ALLOW-OTHER-KEYS)) nil ((:mandatory . "INSTANCE") (:mandatory . "SLOT-NAMES") (:rest . "INITARGS...")) [lambda-list-accept lambda-list-accept lambda-list-accept lambda-list-accept]]))
+(setf (gethash "SHARED-INITIALIZE" *cl-lambda-lists*) (quote [cl-struct-lambda-list SHARED-INITIALIZE :GENERIC (INSTANCE SLOT-NAMES &REST INITARGS &ALLOW-OTHER-KEYS) 3 0 ((&REST INITARGS) . #1=((&ALLOW-OTHER-KEYS))) #1# nil ((:mandatory . "INSTANCE") (:mandatory . "SLOT-NAMES") (:rest . "INITARGS...")) [lambda-list-accept lambda-list-accept lambda-list-accept lambda-list-accept]]))
 
 (setf (gethash "SHIFTF" *cl-lambda-lists*) (quote [cl-struct-lambda-list SHIFTF :MACRO (&WHOLE FORM &REST ARGS &ENVIRONMENT ENV) 0 0 ((&REST ARGS) (&ENVIRONMENT ENV) (&WHOLE FORM)) nil nil ((:rest . "ARGS...")) [lambda-list-accept]]))
 
