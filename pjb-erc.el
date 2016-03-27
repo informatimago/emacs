@@ -1050,12 +1050,10 @@ command).
 ;;        erc-send-this))
 
 
-
 (defun pjb/erc-insert-post-meat ()
   (interactive)
   (reset-movement-keypad)
-  (setf erc-insert-timestamp-function 'pjb/erc-insert-timestamp-left
-        erc-fill-function 'pjb/erc-fill-static)
+  (setf erc-insert-timestamp-function 'pjb/erc-insert-timestamp-left)
   (remove-hook 'erc-insert-modify-hook 'erc-unmorse))
 (add-hook 'erc-insert-post-hook 'pjb/erc-insert-post-meat)
 
