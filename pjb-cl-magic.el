@@ -1302,7 +1302,7 @@ SEE: cl-intro.lisp (that uses sb-introspection to generate this list).
            (name (symbol-name (second item))))
       (lambda-list-compute-actions arglrec)
       (setf (gethash name *cl-lambda-lists*) arglrec)
-      (VALUES))))
+      (values))))
 
 
 (defun save-lambda-lists (path)
