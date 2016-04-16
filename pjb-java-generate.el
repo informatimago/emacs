@@ -140,6 +140,6 @@
                       'Object
                       (second (assoc :superclass (rest class))))))
     `(generate-java-class ,(format "%s%s.java" *dirpath* class-name)
-                          'com.ubudu.sdk.dto ',class-name
+                          *java-current-package* ',class-name
                           :superclass ',superclass
                           :fields ',fields)))
