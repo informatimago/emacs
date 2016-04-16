@@ -118,20 +118,20 @@
 ;;; Random emacs specific elisp functions:
 ;;;----------------------------------------------------------------------------
 
-(defun symbol-value-in-buffer (symbol buffer)
-  (save-excursion
-    (set-buffer buffer)
-    (when (boundp symbol)
-      (symbol-value symbol))))
 
-(defun set-symbol-value-in-buffer (symbol buffer value)
-  (save-excursion
-    (set-buffer buffer)
-    (make-local-variable symbol)
-    (setf (symbol-value symbol) value)))
-
-(defsetf symbol-value-in-buffer set-symbol-value-in-buffer)
-
+;; (defun symbol-value-in-buffer (symbol buffer)
+;;   (save-excursion
+;;     (set-buffer buffer)
+;;     (when (boundp symbol)
+;;       (symbol-value symbol))))
+;; 
+;; (defun set-symbol-value-in-buffer (symbol buffer value)
+;;   (save-excursion
+;;     (set-buffer buffer)
+;;     (make-local-variable symbol)
+;;     (setf (symbol-value symbol) value)))
+;; 
+;; (defsetf symbol-value-in-buffer set-symbol-value-in-buffer)
 
 
 (defun recover-this-file ()
