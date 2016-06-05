@@ -2539,8 +2539,7 @@ FILE-AND-OPTION: either an atom evaluated to a path,
         (t
          nil)))))
 
-(defun* recursive-replace-string (from-string to-string
-                                              &key directory recursive delimited exceptions)
+(defun* recursive-replace-string (from-string to-string &key directory recursive delimited exceptions)
   "Replace the all occurences of `from-string' by `to-string' in all the files in the directory.
 If `recursive' is true (or a prefix argument is given), then the files are searched recursively
 otherwise only the files directly in the given `directory' are modified.
@@ -2553,7 +2552,10 @@ recursive search.  Backup files (name ending in ~) are ignored too.
           (arguments (query-replace-read-args
                       (format "Replace string in all files in %s" directory)
                       nil)))
-     (list (first arguments) (second arguments) directory (third arguments) nil)))
+     (list (first arguments) (second arguments)
+           :directory directory
+           :recursive (third arguments)
+           :delimited nil)))
   (with-files (file directory :recursive recursive :exceptions (exception-function exceptions))
     (with-file (file)
       (message "Processing %S" file)
@@ -2574,7 +2576,10 @@ recursive search.  Backup files (name ending in ~) are ignored too.
           (arguments (query-replace-read-args
                       (format "Replace string in all files in %s" directory)
                       nil)))
-     (list (first arguments) (second arguments) directory (third arguments) nil)))
+     (list (first arguments) (second arguments)
+           :directory directory
+           :recursive (third arguments)
+           :delimited nil)))
   (with-files (file directory :recursive recursive :exceptions (exception-function exceptions))
     (with-file (file)
       (message "Processing %S" file)
