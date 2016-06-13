@@ -3541,6 +3541,34 @@ SProject Type: ")
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun comment-line (start end)
+  "Comments a region using the infamous 'line' boxing style:
+
+/*
+ * Like
+ * this.
+ */
+
+"
+  (interactive "r")
+  (save-excursion
+   ;; Insert end of comment:
+   (goto-char end)
+   (unless (bolp)
+     (insert "\n"))
+   (insert " */\n")
+   
+   (with-marker (end end)
+     ;; Insert begin of comment:
+     (goto-char start)
+     (unless (bolp)
+       (insert "\n"))
+     (insert "/*\n")
+     ;; Add line header:
+     (replace-regexp "^" " * " nil (point) (- end 1)))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'pjb-sources)
