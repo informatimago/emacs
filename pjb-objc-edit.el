@@ -5,10 +5,10 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    A few utilities to help editing Objective-C++ code with
 ;;;;    strange style rules.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon <pbourguignon@dxo.com>
 ;;;;MODIFICATIONS
@@ -16,19 +16,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2012 - 2012
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU Affero General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -36,6 +36,7 @@
 (require 'cc-mode)
 (require 'semantic)
 (require 'pjb-objc-ide)
+(require 'paredit)
 
 (defparameter pjb-objc-edit--*c++-operators*
   '((1 :left-to-right                     ;  highest
@@ -134,7 +135,7 @@ position is (member :prefix :infix :suffix)
 
 
 ;; (pjb-objc-edit--special-character-operators)
-;; 
+;;
 ;; ((">>=" :infix) ("<<=" :infix) ("->*" :infix) ("|=" :infix) ("^=" :infix)
 ;;  ("&=" :infix) ("%=" :infix) ("/=" :infix) ("*=" :infix) ("-=" :infix)
 ;;  ("+=" :infix) ("?:" :infix) ("||" :infix) ("&&" :infix) ("!=" :infix)
@@ -214,7 +215,7 @@ position is (member :prefix :infix :suffix)
 	 )
        )
 
-     
+
      )))
 
 
@@ -349,9 +350,9 @@ position is (member :prefix :infix :suffix)
            (setf (symbol-function 'paredit-in-string-p)   (first saved)
                  (symbol-function 'paredit-in-comment-p)  (second saved)))))))
 
-(pjb-objc-edit-define-wrapper pjb-objc-edit-open-round           paredit-open-round)  
-(pjb-objc-edit-define-wrapper pjb-objc-edit-close-round          paredit-close-round) 
-(pjb-objc-edit-define-wrapper pjb-objc-edit-open-square          paredit-open-square) 
+(pjb-objc-edit-define-wrapper pjb-objc-edit-open-round           paredit-open-round)
+(pjb-objc-edit-define-wrapper pjb-objc-edit-close-round          paredit-close-round)
+(pjb-objc-edit-define-wrapper pjb-objc-edit-open-square          paredit-open-square)
 (pjb-objc-edit-define-wrapper pjb-objc-edit-close-square         paredit-close-square)
 (pjb-objc-edit-define-wrapper pjb-objc-edit-open-curly           paredit-open-curly
   (backward-char 1)
@@ -367,9 +368,9 @@ position is (member :prefix :infix :suffix)
   (forward-char 1)
   (insert "\n") (c-indent-line-or-region))
 (pjb-objc-edit-define-wrapper pjb-objc-edit-close-curly          paredit-close-curly)
-(pjb-objc-edit-define-wrapper pjb-objc-edit-wrap-sexp            paredit-wrap-sexp)  
+(pjb-objc-edit-define-wrapper pjb-objc-edit-wrap-sexp            paredit-wrap-sexp)
 (pjb-objc-edit-define-wrapper pjb-objc-edit-wrap-square          paredit-wrap-square)
-(pjb-objc-edit-define-wrapper pjb-objc-edit-wrap-curly           paredit-wrap-curly) 
+(pjb-objc-edit-define-wrapper pjb-objc-edit-wrap-curly           paredit-wrap-curly)
 (pjb-objc-edit-define-wrapper pjb-objc-edit-backward-delete      paredit-backward-delete)
 (pjb-objc-edit-define-wrapper pjb-objc-edit-backward-kill-word   paredit-backward-kill-word)
 
@@ -378,7 +379,7 @@ position is (member :prefix :infix :suffix)
   (interactive)
   (loop
      for (command . keys)
-     in '((pjb-ide-insert-tag-comment           "C-c p")          
+     in '((pjb-ide-insert-tag-comment           "C-c p")
           (paredit-forward-slurp-sexp           "C-<right>"   "A-<right>"   "A-f" "C-)")
           (paredit-forward-barf-sexp            "C-<left>"    "A-<left>"    "A-g" "C-}")
           (paredit-backward-slurp-sexp          "C-M-<right>" "A-s-<right>" "A-d" "C-(")
@@ -409,7 +410,7 @@ position is (member :prefix :infix :suffix)
           (sources-find-file-named              "C-c C-x C-f")
           (pjb-ide-insert-documentation-comment "C-c C-;"))
      do (loop for key in keys do (local-set-key (read-kbd-macro key) command)))
-  (auto-complete-mode 1)
+  ;; (auto-complete-mode 1)
   (global-set-key (kbd "C-c C-x C-f") 'sources-find-file-named)
   (pjb-objc-edit-add-font-lock-keywords))
 
