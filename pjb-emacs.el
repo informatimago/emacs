@@ -10,7 +10,7 @@
 ;;;;    emacs sessions.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2010-10-30 <PJB> Renamed multifile-replace-string to recursive-replace-string,
 ;;;;                     Added recursive-replace-regexp and multifile-replace-regexp.
@@ -119,7 +119,7 @@
 ;;;----------------------------------------------------------------------------
 
 (unless (fboundp 'symbol-value-in-buffer)
-  
+
   (defun symbol-value-in-buffer (symbol buffer &optional default)
     (save-excursion
      (set-buffer buffer)
@@ -166,7 +166,7 @@ RETURN: the buffer which has as name `name'.
   (or (gethash name buffer-name-map)
       (gethash (truename name) buffer-name-map)))
 
-            
+
 (defun old-buffer-named (name)
   "
 RETURN: the buffer which has as name `name'.
@@ -178,10 +178,10 @@ RETURN: the buffer which has as name `name'.
                 (when (buffer-file-name (car buffers))
                   (string-equal name (buffer-file-name (car buffers))))
                 (when (and (truename name) (buffer-name      (car buffers)))
-                  (string-equal (truename name) 
+                  (string-equal (truename name)
                                 (buffer-name      (car buffers))))
                 (when (and (truename name) (buffer-file-name (car buffers)))
-                  (string-equal (truename name) 
+                  (string-equal (truename name)
                                 (buffer-file-name (car buffers)))))
         (setq result (car buffers))
         (setq buffers nil))
@@ -324,7 +324,7 @@ RETURN: A list of integer coordinates approximating the whole ellipse
 DO:     Draw a function in the given rectangle region.
 "
   (interactive "*r
-xFunction f:[0,1]->[0,1]/x|-->f(x): 
+xFunction f:[0,1]->[0,1]/x|-->f(x):
 cPlot character: ") ;; start <= end
   (let* ((sl     (picture-current-line))
          (sc     (current-column))
@@ -344,7 +344,7 @@ cPlot character: ") ;; start <= end
     (move-to-column left t)
     (picture-update-desired-column t)
     (flet ((fun (x) (funcall fun x)))
-      (picture-draw-pixels 
+      (picture-draw-pixels
        (do* ((xi 0 (1+ xi))
              (x) (y) (yi)
              (pixels nil))
@@ -353,7 +353,7 @@ cPlot character: ") ;; start <= end
          (setq y  (let ((y (unwind-protect (fun x))))
                     (if (< y 0.0) 0.0 (if (< 1.0 y) 1.0 y))))
          (setq yi (round (* height (- 1.0 y))))
-         (push (cons xi yi) pixels)) 
+         (push (cons xi yi) pixels))
        plot-char))
     (goto-line sl)
     (move-to-column sc t)))
@@ -424,7 +424,7 @@ BUG:    Only draws ellipse of even width and height.
 
 
 
-(defvar picture-fill-pixel ?* 
+(defvar picture-fill-pixel ?*
   "The default pixel used to fill forms.")
 
 
@@ -569,9 +569,9 @@ DO:      Apply wc on the file visited in the current buffer.
 
 (defun pjb-search-in-all-buffers (string)
   (interactive "sString: ")
-  (let ( (list (buffer-list)) 
+  (let ( (list (buffer-list))
         buffer )
-    (save-excursion 
+    (save-excursion
       (while list
         (setq buffer (car list)
               list   (cdr list))
@@ -581,14 +581,14 @@ DO:      Apply wc on the file visited in the current buffer.
             (setq list nil)
             (setq buffer nil))))
     (when buffer (switch-to-buffer buffer))))
-    
+
 
 
 
 (defun* tempfile (&key directory prefix suffix name mode)
   (flet ((option (flag value)
                  (if value
-                     (format "%s %s" 
+                     (format "%s %s"
                              (shell-quote-argument flag)
                              (shell-quote-argument value)))))
     (let ((lines (split-string (shell-command-to-string
@@ -650,9 +650,9 @@ Default to the URL around or before point.  A new Lynx process is run
 in an Xterm window using the Xterm program named by `browse-url-xterm-program'
 with possible additional arguments `browse-url-xterm-args'."
   (interactive (browse-url-interactive-arg "Lynx URL: "))
-  (apply #'start-process `(,(concat "lynx" url) nil 
+  (apply #'start-process `(,(concat "lynx" url) nil
                             "pjb-xterm" ; ,browse-url-xterm-program
-                            ,@browse-url-xterm-args 
+                            ,@browse-url-xterm-args
                             "-geometry" "80x40+10+0" "-bg" "#eeff99"
                             "-e" "lynx" ,url)))
 
@@ -675,10 +675,10 @@ with possible additional arguments `browse-url-xterm-args'."
   (interactive "r")
   (let* ( (s (string-to-vector (buffer-substring start end)))
          (l (length s))
-          (r nil) 
-          (i 0) 
+          (r nil)
+          (i 0)
           c C )
-    (while (< i l) 
+    (while (< i l)
       (setq c (aref s i))
       (setq C (upcase   c))
       (setq c (downcase c))
@@ -712,10 +712,10 @@ with possible additional arguments `browse-url-xterm-args'."
 
 
 
-(defvar pjb-listing-light "LightBlue" 
+(defvar pjb-listing-light "LightBlue"
   "Background color of light listing area.") ;;pjb-listing-light
 
-(defvar pjb-listing-dark "LightSteelBlue" 
+(defvar pjb-listing-dark "LightSteelBlue"
   "Background color of dark listing area.") ;;pjb-listing-dark
 
 (defun pjb-colorize-listing-region (arg)
@@ -728,7 +728,7 @@ DO:      Colorize the region with group of lines (normaly 1 by 1)
   (setq arg (prefix-numeric-value arg))
   (setq current-prefix-arg nil)
   (let ( (lines-forward (1+ (or arg 1)))
-        (color (cons pjb-listing-light pjb-listing-dark)) 
+        (color (cons pjb-listing-light pjb-listing-dark))
          (start (region-beginning))
          (end   (region-end)) )
     ;; round the end to the beginning of next line.
@@ -764,7 +764,7 @@ DO:      Search an address in my address book (~/private/info/personnes.form)
 "
   (interactive "MSearch address: ")
   (let ((personnes-forms (buffer-named "personnes.forms")))
-    (if personnes-forms 
+    (if personnes-forms
         (switch-to-buffer personnes-forms)
         (forms-find-file (format "%sprivate/info/personnes.forms"
                            (namestring (user-homedir-pathname))))))
@@ -773,7 +773,7 @@ DO:      Search an address in my address book (~/private/info/personnes.form)
 
 (defvar pjb-cross-references-rejected-regexp
   "\\(^\\.?#\\|~$\\|\\.\\(elc\\|o\\|a\\)$\\)"
-  "A regexp matching file names that should not be searched 
+  "A regexp matching file names that should not be searched
 for cross references.")
 
 (defun pjb-cross-references ()
@@ -783,14 +783,14 @@ DO:      Grep current directory for sources containing the current word.
   (interactive)
   (let ( (word  (current-word))
         (files (nremove-nil
-                (mapcar (lambda (name) 
+                (mapcar (lambda (name)
                           (cond
                             ((file-directory-p name) nil)
                             ((string-match pjb-cross-references-rejected-regexp
                                            name) nil)
                             (t (shell-quote-argument name))) )
                         (directory-files "." nil nil t)))) )
-    (grep (format "grep -n -e %s %s" 
+    (grep (format "grep -n -e %s %s"
             (shell-quote-argument word) (unsplit-string files " ")))))
 
 
@@ -799,7 +799,7 @@ DO:      Grep current directory for sources containing the current word.
 
 (defun pjb-backcolors ()
   "
-DO:     Insert in the current buffer a list of colors and 
+DO:     Insert in the current buffer a list of colors and
         facemenu-set-background them.
 "
   (interactive)
@@ -812,11 +812,11 @@ DO:     Insert in the current buffer a list of colors and
        b 10 12
        (let ((min (point)))
          (set-mark min)
-         (printf " *   Color :  #%x%x%x   * \n" 
+         (printf " *   Color :  #%x%x%x   * \n"
                  (funcall f r) (funcall f g) (funcall f b))
-         (facemenu-set-background 
+         (facemenu-set-background
           (format "#%x%x%x"
-            (funcall f r) (funcall f g) (funcall f b)) 
+            (funcall f r) (funcall f g) (funcall f b))
           min (point))))))))
 
 
@@ -828,7 +828,7 @@ DO:     Insert in the current buffer a list of colors and
     (save-window-excursion
      (find-file (or custom-file user-init-file))
      (goto-char (point-min))
-     (forward-sexp) 
+     (forward-sexp)
      (while (and (< (point) (point-max))
                  (not
                   (let ((form (progn (backward-sexp) (sexp-at-point))))
@@ -858,14 +858,14 @@ DO:     Insert in the current buffer a list of colors and
 
 (defun chronometre (lambda-body &optional outstream)
   "
-DO:     Chronometre the execution of `lambda-body'. 
+DO:     Chronometre the execution of `lambda-body'.
         Writes a message indicating the time it took.
 RETURN: (cons seconds the result of `lambda-body').
 "
   (let* ((start  (current-time))
          (result (funcall lambda-body))
-         (stop   (current-time)) 
-         (time   (- (emacs-time-to-seconds stop) 
+         (stop   (current-time))
+         (time   (- (emacs-time-to-seconds stop)
                     (emacs-time-to-seconds start))) )
     (printf outstream "Took %f seconds." time)
     (cons time result)))
@@ -908,9 +908,9 @@ space does not end a sentence, so don't break a line there."
         (let ((initial (point))
               end)
           ;; If using hard newlines, break at every one for filling
-          ;; purposes rather than using paragraph breaks. 
+          ;; purposes rather than using paragraph breaks.
           (if use-hard-newlines
-              (progn 
+              (progn
                 (while (and (setq end (text-property-any (point) (point-max)
                                                          'hard t))
                             (not (= (character "\n") (char-after end)))
@@ -951,7 +951,7 @@ space does not end a sentence, so don't break a line there."
     (dolist (line (permutations words))
       (dolist (word line)
         (insert (format "%s "
-                  (if (and (listp word) (eq 'quote (car word))) 
+                  (if (and (listp word) (eq 'quote (car word)))
                       (cadr word) word))))
       (insert "\n"))))
 
@@ -1016,7 +1016,7 @@ Add the selection to the local fortune file.
   "The number of horizontal pixels eaten by the window manager.")
 
 
-(defvar *current-frame* nil) 
+(defvar *current-frame* nil)
 
 (defun current-frame ()
   "
@@ -1120,7 +1120,7 @@ RETURN: The maximum number of columns that can be displayed on this frame
   "Enlarge the window to span the whole screen."
   (interactive)
   (let ((*current-frame* (current-frame)))
-    (set-frame-width  *current-frame* 
+    (set-frame-width  *current-frame*
                       (max-frame-column-number
                        *current-frame* (+ (if current-prefix-arg 64 0) 34)))
     (set-frame-height *current-frame* (max-frame-line-number *current-frame*))
@@ -1204,7 +1204,7 @@ POS:    Either an integer denoting a X window position,
         or a list (+ int) denoting a X window position starting out of screen.
         (+ -2) means two pixels out of the left side of the screen.
 RETURN: The X window position for the frame corresponding to pos on the x axis.
-        A positive number is relative to the left screen border, and toward 
+        A positive number is relative to the left screen border, and toward
         the right,
         a negative number is relative to the right screen border, and
         toward the right too  (its absolute value, toward the left).
@@ -1227,7 +1227,7 @@ POS:    Either an integer denoting a X window position,
         (+ -2) means two pixels out of the top side of the screen.
 RETURN: The X window position for the frame corresponding to pos on the y axis.
         A positive number is relative to the top screen border, and down,
-        a negative number is relative to the bottom screen border, and down too 
+        a negative number is relative to the bottom screen border, and down too
         (its absolute value, up).
 SEE:   position-x
 "
@@ -1248,7 +1248,7 @@ RETURN: The origin of the screen where the frame lies.
 
 NOTE:   For multi-screen displays, the coordinate system could be such that
         the origin of a screen may be expressed in negative coordinates.
-        In this case, the returned values may be lists of the form: 
+        In this case, the returned values may be lists of the form:
         (+ -|x|) (+ -|y|).
 "
   (let ((frame (or frame (current-frame))))
@@ -1274,7 +1274,7 @@ RETURN: The origin and width and height of the screen where the frame lies,
 
 
 ;;;
-;;; 
+;;;
 ;;;
 
 (defvar *frame-maximized-states*)
@@ -1293,9 +1293,9 @@ On MacOSX, negative prefix diminishes the size of the window to leave
 space for the dock.  A zerop prefix will use toggle-frame-fullscreen when
 available.
 
-Vertical decorations    Vertical decorations 
+Vertical decorations    Vertical decorations
 in screen.              out of screen.
- 
+
 +---------++---------+
 |         ..         |
 |         .. 1       |  -1
@@ -1328,9 +1328,9 @@ in screen.              out of screen.
 +---------++---------+
 
 +----+----++----+----+
-| 41 | 51 || 61 | 71 |  
+| 41 | 51 || 61 | 71 |
 +----+----++----+----+  No decorationless here.
-| 42 | 52 || 62 | 72 |  
+| 42 | 52 || 62 | 72 |
 +----+----++----+----+
 
 +------+------+------+
@@ -1399,11 +1399,11 @@ Multiply by -1 = without decoration.
                    (hpref  (cond ; 1..19
                              ((< prefix 20)   prefix)
                              ((< prefix 1000) (truncate prefix 10))
-                             (t               (truncate prefix 10)))) 
+                             (t               (truncate prefix 10))))
                    (vpref  (cond ; 0,1,2,3
                              ((< prefix   20) 0)
                              ((< prefix 1000) (mod prefix 10))
-                             (t               0))) 
+                             (t               0)))
                    (left   (+ screen-left
                               (case hpref
                                 ((1 2 4 11 111 8) 0)
@@ -1509,12 +1509,12 @@ Multiply by -1 = without decoration.
 
 
 (defvar *frame-maximized-states* (make-hash-table)
-  "Maps frames to their maximized state: When not maximized = nil; 
+  "Maps frames to their maximized state: When not maximized = nil;
                                          when maximized = ((x y) w h)")
 ;; (setf *frame-maximized-states* (make-hash-table))
 
 ;; assuming each frame has its own state.
-;; The following is to clean up the entry in the hash table when the 
+;; The following is to clean up the entry in the hash table when the
 ;; frame is deleted:
 (defun pjb-delete-frame-meat (frame)
   (remhash frame *frame-maximized-states*))
@@ -1750,7 +1750,7 @@ SEE-ALSO:  blind-text-region
 
 (defun filter-region (fun &optional start end)
   "
-DO:    Apply the function fun(character)->string to the region from 
+DO:    Apply the function fun(character)->string to the region from
        start or (min (point) (mark)) to end or (max (point) (mark)).
        The region is replaced at the end of the processing.
 "
@@ -1763,7 +1763,7 @@ DO:    Apply the function fun(character)->string to the region from
        ((<= end pos)
         (progn
           (delete-region start end)
-          (insert (apply (function concatenate) 
+          (insert (apply (function concatenate)
                          'string (nreverse replacement)))))
     (push (funcall fun pos ch) replacement)))
 
@@ -1779,17 +1779,17 @@ DO:         Substitutes every alphanumeric text by a 'x'.
 SEE-ALSO:   activate-peril-sensitive-sunglasses
 "
   (interactive "*r")
-  (filter-region 
-   (lambda (pos ch) 
+  (filter-region
+   (lambda (pos ch)
      (cond ((or (is-space (character ch))
                 (cl:string= "\n" ch)
                 (cl:string= "=" ch)
                 (and (cl:string/= "\n" ch)
-                     (cl:string=  "=" (buffer-substring-no-properties 
+                     (cl:string=  "=" (buffer-substring-no-properties
                                     (- pos 1) pos)))
-                (and (cL:string/= "\n" (buffer-substring-no-properties 
+                (and (cL:string/= "\n" (buffer-substring-no-properties
                                       (- pos 1) pos))
-                     (cl:string=  "=" (buffer-substring-no-properties 
+                     (cl:string=  "=" (buffer-substring-no-properties
                                     (- pos 2) (- pos 1)))))
             ch)
            ((alphanumericp (character ch)) "x")
@@ -1813,9 +1813,9 @@ SEE-ALSO:   activate-peril-sensitive-sunglasses
 ;;;----------------------------------------------------------------------------
 ;;; Keymaps:
 ;;;----------------------------------------------------------------------------
-                                                              
+
 (defun make-keymap-local ()
-  "Creates a buffer local keymap to have local-set-key define keys local 
+  "Creates a buffer local keymap to have local-set-key define keys local
 to the buffer instead of local to the mode."
   (interactive)
   (let ((km (make-keymap)))
@@ -1863,7 +1863,7 @@ to the buffer instead of local to the mode."
                                              (length (first b)))
                                           (string< (first a)
                                                    (first b)))))))
-                 (princ (second item)))))))  
+                 (princ (second item)))))))
     (switch-to-buffer (format "Keybindings in %s" (buffer-name)))
     (erase-buffer)
     (insert data)
@@ -1998,7 +1998,7 @@ to the buffer instead of local to the mode."
 
 (defun eppelle ()
   (interactive)
-  (let ((text 
+  (let ((text
          (if (or (not mark-active) (eql (point) (mark)))
              (read-from-minibuffer "Word: ")
              (buffer-substring-no-properties (min (point) (mark))
@@ -2073,7 +2073,7 @@ to the buffer instead of local to the mode."
                     (?Я . "Яков")
 
                     ;; Aleph Boaz Gimel David Hagar Vav Ze'ev Hava Tiach Yona
-                    ;; Carmel Lea Moshe Nesher Samekh A'in Pesel Tsipor Korakh 
+                    ;; Carmel Lea Moshe Nesher Samekh A'in Pesel Tsipor Korakh
                     ;; Ruth Shamir Telem
                     ;; #+clisp
                     ;; (let ((codes '(("Aleph" "_ALEF")
@@ -2112,81 +2112,81 @@ to the buffer instead of local to the mode."
                     ;;       (when (string/= "" code)
                     ;;         (print (cons (intern (format nil "?~C" ch)) code))))))
 
-                    (?ׁ . "Shamir") 
-                    (?א . "Aleph") 
-                    (?ב . "Boaz") 
-                    (?ג . "Gimel") 
-                    (?ד . "David") 
-                    (?ה . "Hagar") 
-                    (?ו . "Vav") 
-                    (?ז . "Ze'ev") 
-                    (?ח . "Hagar Hava") 
-                    (?ט . "Tiach") 
-                    (?י . "Yona") 
-                    (?ך . "Carmel") 
-                    (?כ . "Carmel") 
-                    (?ל . "Lea") 
-                    (?ם . "Moshe") 
-                    (?מ . "Moshe") 
-                    (?ן . "Nesher") 
-                    (?נ . "Nesher") 
-                    (?ס . "Samekh") 
-                    (?ע . "A'in") 
-                    (?ף . "Pesel") 
-                    (?פ . "Pesel") 
-                    (?ץ . "Tsipor") 
-                    (?צ . "Tsipor") 
-                    (?ק . "Korakh") 
-                    (?ר . "Ruth") 
-                    (?ש . "Shamir") 
-                    (?ת . "Telem") 
-                    (?װ . "Vav Vav") 
-                    (?ױ . "Vav Yona") 
-                    (?ײ . "Yona Yona") 
-                    (?יִ . "Yona") 
-                    (?ײַ . "Yona") 
-                    (?ﬠ . "A'in") 
-                    (?ﬡ . "Aleph") 
-                    (?ﬢ . "David") 
-                    (?ﬣ . "Hagar") 
-                    (?ﬤ . "Carmel") 
-                    (?ﬥ . "Lea") 
-                    (?ﬦ . "Moshe") 
-                    (?ﬧ . "Ruth") 
-                    (?ﬨ . "Telem") 
-                    (?שׁ . "Shamir") 
-                    (?שׂ . "Shamir") 
-                    (?שּׁ . "Shamir") 
-                    (?שּׂ . "Shamir") 
-                    (?אַ . "Aleph") 
-                    (?אָ . "Aleph") 
-                    (?אּ . "Aleph") 
-                    (?בּ . "Boaz") 
-                    (?גּ . "Gimel") 
-                    (?דּ . "David") 
-                    (?הּ . "Hagar") 
-                    (?וּ . "Vav") 
-                    (?זּ . "Ze'ev") 
-                    (?טּ . "Tiach") 
-                    (?יּ . "Yona") 
-                    (?ךּ . "Carmel") 
-                    (?כּ . "Carmel") 
-                    (?לּ . "Lea") 
-                    (?מּ . "Moshe") 
-                    (?נּ . "Nesher") 
-                    (?סּ . "Samekh") 
-                    (?ףּ . "Pesel") 
-                    (?פּ . "Pesel") 
-                    (?צּ . "Tsipor") 
-                    (?קּ . "Korakh") 
-                    (?רּ . "Ruth") 
-                    (?שּ . "Shamir") 
-                    (?תּ . "Telem") 
-                    (?וֹ . "Vav") 
-                    (?בֿ . "Boaz") 
-                    (?כֿ . "Carmel") 
-                    (?פֿ . "Pesel") 
-                    (?ﭏ . "Aleph Lea") 
+                    (?ׁ . "Shamir")
+                    (?א . "Aleph")
+                    (?ב . "Boaz")
+                    (?ג . "Gimel")
+                    (?ד . "David")
+                    (?ה . "Hagar")
+                    (?ו . "Vav")
+                    (?ז . "Ze'ev")
+                    (?ח . "Hagar Hava")
+                    (?ט . "Tiach")
+                    (?י . "Yona")
+                    (?ך . "Carmel")
+                    (?כ . "Carmel")
+                    (?ל . "Lea")
+                    (?ם . "Moshe")
+                    (?מ . "Moshe")
+                    (?ן . "Nesher")
+                    (?נ . "Nesher")
+                    (?ס . "Samekh")
+                    (?ע . "A'in")
+                    (?ף . "Pesel")
+                    (?פ . "Pesel")
+                    (?ץ . "Tsipor")
+                    (?צ . "Tsipor")
+                    (?ק . "Korakh")
+                    (?ר . "Ruth")
+                    (?ש . "Shamir")
+                    (?ת . "Telem")
+                    (?װ . "Vav Vav")
+                    (?ױ . "Vav Yona")
+                    (?ײ . "Yona Yona")
+                    (?יִ . "Yona")
+                    (?ײַ . "Yona")
+                    (?ﬠ . "A'in")
+                    (?ﬡ . "Aleph")
+                    (?ﬢ . "David")
+                    (?ﬣ . "Hagar")
+                    (?ﬤ . "Carmel")
+                    (?ﬥ . "Lea")
+                    (?ﬦ . "Moshe")
+                    (?ﬧ . "Ruth")
+                    (?ﬨ . "Telem")
+                    (?שׁ . "Shamir")
+                    (?שׂ . "Shamir")
+                    (?שּׁ . "Shamir")
+                    (?שּׂ . "Shamir")
+                    (?אַ . "Aleph")
+                    (?אָ . "Aleph")
+                    (?אּ . "Aleph")
+                    (?בּ . "Boaz")
+                    (?גּ . "Gimel")
+                    (?דּ . "David")
+                    (?הּ . "Hagar")
+                    (?וּ . "Vav")
+                    (?זּ . "Ze'ev")
+                    (?טּ . "Tiach")
+                    (?יּ . "Yona")
+                    (?ךּ . "Carmel")
+                    (?כּ . "Carmel")
+                    (?לּ . "Lea")
+                    (?מּ . "Moshe")
+                    (?נּ . "Nesher")
+                    (?סּ . "Samekh")
+                    (?ףּ . "Pesel")
+                    (?פּ . "Pesel")
+                    (?צּ . "Tsipor")
+                    (?קּ . "Korakh")
+                    (?רּ . "Ruth")
+                    (?שּ . "Shamir")
+                    (?תּ . "Telem")
+                    (?וֹ . "Vav")
+                    (?בֿ . "Boaz")
+                    (?כֿ . "Carmel")
+                    (?פֿ . "Pesel")
+                    (?ﭏ . "Aleph Lea")
                     )))
     (switch-to-buffer "*Eppelle*")
     (goto-char (point-max))
@@ -2198,7 +2198,7 @@ to the buffer instead of local to the mode."
        for tr = (assoc* (upcase ch) alphabet :test (function =))
        do  (insert (if tr (format "%s " (cdr tr)) (format "%c" ch))))
     (insert "\n")))
-    
+
 
 
 ;;;----------------------------------------------------------------------------
@@ -2404,7 +2404,7 @@ FILE-AND-OPTION: either an atom evaluated to a path,
       `(with-file (,file-and-options) ,@body)
       ;; destructuring-bind is broken, we cannot give anything else than nil
       ;; as default values:
-      
+
       (destructuring-bind (path &key (save nil savep) (kill nil killp)
                                   (literal nil literalp))
           file-and-options
@@ -2521,7 +2521,7 @@ FILE-AND-OPTION: either an atom evaluated to a path,
 ;;;----------------------------------------------------------------------------
 ;;; multi-file replace
 ;;;----------------------------------------------------------------------------
-;;; recursive-replace-string   
+;;; recursive-replace-string
 
 (defvar *recursive-replace-ignored-directories* *ignorable-directories*)
 
@@ -2539,8 +2539,7 @@ FILE-AND-OPTION: either an atom evaluated to a path,
         (t
          nil)))))
 
-(defun* recursive-replace-string (from-string to-string
-                                              &key directory recursive delimited exceptions)
+(defun* recursive-replace-string (from-string to-string &key directory recursive delimited exceptions)
   "Replace the all occurences of `from-string' by `to-string' in all the files in the directory.
 If `recursive' is true (or a prefix argument is given), then the files are searched recursively
 otherwise only the files directly in the given `directory' are modified.
@@ -2553,7 +2552,10 @@ recursive search.  Backup files (name ending in ~) are ignored too.
           (arguments (query-replace-read-args
                       (format "Replace string in all files in %s" directory)
                       nil)))
-     (list (first arguments) (second arguments) directory (third arguments) nil)))
+     (list (first arguments) (second arguments)
+           :directory directory
+           :recursive (third arguments)
+           :delimited nil)))
   (with-files (file directory :recursive recursive :exceptions (exception-function exceptions))
     (with-file (file)
       (message "Processing %S" file)
@@ -2574,7 +2576,10 @@ recursive search.  Backup files (name ending in ~) are ignored too.
           (arguments (query-replace-read-args
                       (format "Replace string in all files in %s" directory)
                       nil)))
-     (list (first arguments) (second arguments) directory (third arguments) nil)))
+     (list (first arguments) (second arguments)
+           :directory directory
+           :recursive (third arguments)
+           :delimited nil)))
   (with-files (file directory :recursive recursive :exceptions (exception-function exceptions))
     (with-file (file)
       (message "Processing %S" file)
@@ -2766,6 +2771,94 @@ Attribution: ?"
         (forward-line -1)
         (if (= p (point-min)) (setq p (1- p))
             (setq p (point)))))))
+
+
+
+(defvar *find-file-at-point-file-regexp*
+  "^\\([ \t]*\\|[-=#+/ \t]* \\)\\(\\([^: \n\t]*\\)\\(:\\([0-9]+\\)\\)\\):?")
+(defvar *find-file-at-point-file-regexp--link-match* 2)
+(defvar *find-file-at-point-file-regexp--path-match* 3)
+(defvar *find-file-at-point-file-regexp--lino-match* 5)
+(defvar *find-file-at-point-file--last* 'find-next-file)
+
+(defun ffap-clean-path (dir path)
+  (let ((path (if (and (< 0 (length path))
+                       (= ?/ (char path 0)))
+                  path
+                  (concat dir "/" path))))
+    (when (file-exists-p path)
+      path)))
+
+(defun find-file-at-point ()
+  (interactive)
+  (save-match-data
+   (when (looking-at *find-file-at-point-file-regexp*)
+     (let ((path (ffap-clean-path
+                  default-directory
+                  (match-string *find-file-at-point-file-regexp--path-match*)))
+           (lino (and (match-string *find-file-at-point-file-regexp--lino-match*)
+                      (string-to-number
+                       (match-string *find-file-at-point-file-regexp--lino-match*)))))
+       (if path
+           (progn
+             (find-file path)
+             (when lino
+               (goto-char (point-min))
+               (forward-line (1- lino))))
+           (error "No such file %s"  (match-string 1)))))))
+
+(defun find-next/previous-file (search next)
+  (when (and (boundp 'find-file-at-point-paths-buffer)
+             (or (bufferp find-file-at-point-paths-buffer)
+                 (stringp find-file-at-point-paths-buffer)))
+    (switch-to-buffer find-file-at-point-paths-buffer))
+  (save-match-data
+   (let ((buffer (current-buffer)))
+     (when (funcall search *find-file-at-point-file-regexp* nil t)
+       (goto-char (match-beginning 0))
+       (find-file-at-point)
+       (make-variable-buffer-local 'find-file-at-point-paths-buffer)
+       (setf find-file-at-point-paths-buffer buffer)
+       (with-current-buffer buffer
+         (goto-char (funcall next 0)))))))
+
+(defun find-next-file ()
+  (interactive)
+  (unless (eq 'find-next-file *find-file-at-point-file--last*)
+    (find-next/previous-file (function re-search-forward) (function match-end)))
+  (setf *find-file-at-point-file--last* 'find-next-file)
+  (find-next/previous-file (function re-search-forward) (function match-end)))
+
+(defun find-previous-file ()
+  (interactive)
+  (when (eq 'find-next-file *find-file-at-point-file--last*)
+    (find-next/previous-file (function re-search-backward) (function match-beginning)))
+  (setf *find-file-at-point-file--last* 'find-previous-file)
+  (find-next/previous-file (function re-search-backward) (function match-beginning)))
+
+(global-set-key (kbd "A-n") 'find-next-file)
+(global-set-key (kbd "A-p") 'find-previous-file)
+
+(defun find-file-at-point--button-action (button)
+  (goto-char (button-start button))
+  (beginning-of-line)
+  (find-file-at-point))
+
+(defun add-find-file-buttons ()
+  (interactive)
+  (save-excursion
+   (goto-char (point-min))
+   (while (re-search-forward *find-file-at-point-file-regexp* (point-max) t)
+     (message "Found %s" (match-string *find-file-at-point-file-regexp--link-match*))
+     (make-text-button
+      (progn (beginning-of-line) (point))
+      (progn (end-of-line) (+ 1 (point)))
+      'action 'find-file-at-point--button-action)))
+  ;; button navigation:
+  (local-set-key (kbd "TAB") (lambda () (interactive) (forward-button 1 t t)))
+  (local-set-key (kbd "<backtab>") (lambda () (interactive) (backward-button 1 t t))))
+
+
 
 (provide 'pjb-emacs)
 ;;;: THE END ;;;;
