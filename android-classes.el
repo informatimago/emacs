@@ -1,6 +1,6 @@
 (require 'pjb-html)
-(require 'jde)
-(require 'jde-import)
+(require 'jde nil t)
+(require 'jde-import nil t)
 
 (defun make-android-package-info (name documentation-url) (list name documentation-url))
 (defun android-class-info-name (info) (first info))
