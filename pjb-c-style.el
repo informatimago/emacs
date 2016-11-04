@@ -189,7 +189,7 @@
        (brace-list-entry      . 0)
        ;; Subsequent lines in an enum or static array list.
        
-       (brace-entry-open      . +)
+       (brace-entry-open      . 0)
        ;; Subsequent lines in an enum or static array
        ;; list that start with an open brace.
        
