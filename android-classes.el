@@ -1,6 +1,6 @@
 (require 'pjb-html)
-;; (require 'jde)
-;; (require 'jde-import)
+(require 'jde nil t)
+(require 'jde-import nil t)
 
 (defun make-android-package-info (name documentation-url) (list name documentation-url))
 (defun android-class-info-name (info) (first info))
@@ -70,7 +70,7 @@
                                                                   ".")
                                                        nil)))
                           (let ((result (quote())))
-                            (mapfiles (lambda (path) 
+                            (mapfiles (lambda (path)
                                         (when (suffixp ".java" path)
                                           (push path result)))
                                       root-directory :recursive)
