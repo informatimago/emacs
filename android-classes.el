@@ -70,7 +70,7 @@
                                                                   ".")
                                                        nil)))
                           (let ((result (quote())))
-                            (mapfiles (lambda (path) 
+                            (mapfiles (lambda (path)
                                         (when (suffixp ".java" path)
                                           (push path result)))
                                       root-directory :recursive)
