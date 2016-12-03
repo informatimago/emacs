@@ -9,7 +9,7 @@
 ;;;;    This module exports string utility functions.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2003-01-20 <PJB> Removed string-replace for regexp-replace-in-string.
 ;;;;    2002-03-23 <PJB> Corrected string-replace: replace go on from the end
@@ -99,8 +99,8 @@ RETURN: A list of substrings of length LENGTH (but the last that may be shorter)
   (directory-namestring path))
 
 
-;;; (dolist 
-;;;     (p '( 
+;;; (dolist
+;;;     (p '(
 ;;;          "/" "/to" "/to/" "/to/ti" "/to/ti/" "/to/ti/ta"
 ;;;          "." "./" "./to" "./to/" "./to/ti" "./to/ti/" "./to/ti/ta"
 ;;;          "aa" "aa/" "aa/to" "aa/to/" "aa/to/ti" "aa/to/ti/" "aa/to/ti/ta"
@@ -109,22 +109,22 @@ RETURN: A list of substrings of length LENGTH (but the last that may be shorter)
 
 
 (defun string-index (string char &optional frompos)
-  "RETURN: the position in STRING of the first occurence of CHAR searching  
-        FROMPOS, or from the start if FROMPOS is absent or nil. 
+  "RETURN: the position in STRING of the first occurence of CHAR searching
+        FROMPOS, or from the start if FROMPOS is absent or nil.
         If CHAR is not found, then return nil.
 SEE-ALSO: string-position."
-  (string-match 
-   (regexp-quote 
+  (string-match
+   (regexp-quote
     (cond
       ((or (characterp char) (numberp char)) (format "%c" char))
       ((stringp char) char)
-      (t 
+      (t
        (error "string-index expects a char, number of string as 2nd argument."))
       )) string frompos))
 
 
 ;;  (let ((index (cond ((null frompos) 0)
-;;                      (t (error (format 
+;;                      (t (error (format
 ;;                         "Wrong type of argument: integerp, 3 (got: %S)"
 ;;                         frompos)))))
 ;;        (target (cond ((characterp char) char)
@@ -136,16 +136,16 @@ SEE-ALSO: string-position."
 
 (defun string-position (string substr &optional frompos)
   "Return the position in STRING of the first occurence of the SUBSTR
-searching FROMPOS, or from the start if FROMPOS is absent or nil. 
+searching FROMPOS, or from the start if FROMPOS is absent or nil.
 If the SUBSTR is not found, then return nil.
 
 SEE-ALSO: string-index"
   (string-match (regexp-quote substr) string frompos))
 
 ;;  (let* (
-;;         (index 
+;;         (index
 ;;          (cond ((null frompos) 0)
-;;                (t (error (format 
+;;                (t (error (format
 ;;                           "Wrong type of argument: integerp, 3 (got: %S)"
 ;;                           frompos)))))
 ;;         (maxindex  (- (length string) sublen))
@@ -156,7 +156,7 @@ SEE-ALSO: string-index"
 ;;      nil)))
 
 (defun unsplit-string (string-list &rest separator)
-  "Does the inverse than split-string. If no separator is provided 
+  "Does the inverse than split-string. If no separator is provided
 then a simple space is used."
   (if (null separator)
       (setf separator " ")
@@ -172,9 +172,9 @@ then a simple space is used."
 (defun string-repeat (num string)
   "Return a string built from the concatenation of num times string."
   (cond ((<= num 0) "")
-        ((= 0 (% num 2)) (let ((sub (string-repeat (/ num 2) string))) 
+        ((= 0 (% num 2)) (let ((sub (string-repeat (/ num 2) string)))
                            (concat sub sub)))
-        (t (let ((sub (string-repeat (/ (- num 1) 2) string))) 
+        (t (let ((sub (string-repeat (/ (- num 1) 2) string)))
              (concat sub sub string)))))
 
 
@@ -195,14 +195,14 @@ then a simple space is used."
 
 
 (defun string-justify-left (string &optional width left-margin)
-  "RETURN: a left-justified string built from string. 
-NOTE:   The default width is 72 characters, the default left-margin is 0. 
+  "RETURN: a left-justified string built from string.
+NOTE:   The default width is 72 characters, the default left-margin is 0.
         The width is counted from column 0.
         The word separators are those of split-string: [ \\f\\t\\n\\r\\v]+, which
         means that the string is justified as one paragraph."
   (if (null width) (setf width 72))
   (if (null left-margin) (setf left-margin 0))
-  (if (not (stringp string)) 
+  (if (not (stringp string))
       (error "string-justify-left: The first argument must be a string."))
   (if (not (and (integerp width) (integerp left-margin)))
       (error "string-justify-left: The optional arguments must be integers."))
@@ -268,7 +268,7 @@ NOTE:   The default width is 72 characters, the default left-margin is 0.
 (defun copy-to-substring (src from-src to-src dst from-dst)
   "
 PRE:     (< (+ from-dst (- to-src from-src)) (length dst))
-DO:      Copy characters of string src between `from-src' and `to-src' to 
+DO:      Copy characters of string src between `from-src' and `to-src' to
          the string dst between `from-dst' and `from-dst'+`to-src'-`from-src'.
 RETURN:  dst
 "
@@ -286,7 +286,7 @@ RETURN: A padded string.
   (let ((slen (length string)))
     (if (<= length slen)
         string
-        (when (stringp padchar) 
+        (when (stringp padchar)
           (setf padchar (string-to-char padchar)))
         (ecase justification
           ((:right)  (concat string
@@ -314,12 +314,12 @@ RETURN: A padded string.
 
 
 
-(defun* chop (string &key (characters (list (character " ")))) 
+(defun* chop (string &key (characters (list (character " "))))
   "
 RETURN: A substring of string from which the characters in the set  of
         :characters (only space by default) are removed from left and
         right (or only from left when :only-left is specified, or only
-        from right when :only-right is specified.  
+        from right when :only-right is specified.
 NOTE:   The argument passed with :characters can be a list of characters
         or a string.
 "
@@ -347,8 +347,8 @@ NOTE:   The argument passed with :characters can be a list of characters
   "RETURNS: a substring of STRING with the prefix and postfix spaces removed."
   (save-match-data
     (let ((chopped " \t\n"))
-      (if (string-match 
-           (format "^[%s]*\\([^%s].*[^%s]\\|[^%s]\\)[%s]*$" 
+      (if (string-match
+           (format "^[%s]*\\([^%s].*[^%s]\\|[^%s]\\)[%s]*$"
              chopped chopped chopped chopped chopped) string)
           (match-string 1 string)
           string))))
@@ -384,16 +384,16 @@ NOTE:   The argument passed with :characters can be a list of characters
   "
 RETURN: If prefix is a prefix of string then the substring following it
         else nil.
-OPTIONS can contain :ignore-case in which case the case string and prefix 
+OPTIONS can contain :ignore-case in which case the case string and prefix
         are matched case insensitively.
 "
   (if (or (null string) (null prefix))
       nil
       (let ((mstring string))
-        (if (member :ignore-case options) 
+        (if (member :ignore-case options)
             (setf mstring (upcase string)
                   prefix  (upcase prefix)))
-      
+
         (if (and (<= (length prefix) (length mstring))
                  (string-equal prefix (substring mstring 0 (length prefix))))
             (substring string (length prefix))
@@ -403,22 +403,22 @@ OPTIONS can contain :ignore-case in which case the case string and prefix
 
 
 
-(defvar iso-latin-1-approximation nil 
+(defvar iso-latin-1-approximation nil
   "An array mapping ISO-8859-1 characters to ASCII-characters")
 
 
 (defun make-iso-latin-1-approximation ()
   (setf iso-latin-1-approximation (make-vector 256 0))
-  (loop for i from 0 to 127 
+  (loop for i from 0 to 127
      do (aset iso-latin-1-approximation i i))
-  (loop for i from 128 below 160 
-     for c from 0 below 32 
+  (loop for i from 128 below 160
+     for c from 0 below 32
      do (aset iso-latin-1-approximation i c))
   (loop for i from 160 to 255
      for c across (concat " !cL$Y|S\"Ca<--R\"o~23'uP.,1o>***?"
                           "AAAAAAECEEEEIIIITNOOOOOxOUUUUYPs"
                           "aaaaaaeceeeeiiiitnooooo/ouuuuypy")
-     do (aset iso-latin-1-approximation i c))       
+     do (aset iso-latin-1-approximation i c))
   iso-latin-1-approximation)
 
 
@@ -429,12 +429,12 @@ RETURN: modified string
 DO:     replace in string all accented characters with an unaccented version.
         This is done only for ISO-5581-1 characters.
 "
-  (unless iso-latin-1-approximation 
+  (unless iso-latin-1-approximation
     (make-iso-latin-1-approximation))
   (let ((result (make-string (length string) 0)))
     (loop for p from 0 below (length string)
-       do 
-       (aset result p (aref iso-latin-1-approximation 
+       do
+       (aset result p (aref iso-latin-1-approximation
                             (% (aref string p) 256))))
     result))
 
@@ -444,7 +444,7 @@ DO:     replace in string all accented characters with an unaccented version.
      (unless (and (boundp (quote ,table)) ,table)
        (setf ,table (make-vector 7 0)))
      (put (intern ,string ,table)
-          ,language 
+          ,language
           (if (eq ,translated-string :idem) ,string ,translated-string))))
 
 
@@ -453,9 +453,9 @@ DO:     replace in string all accented characters with an unaccented version.
 RETURN: A version of the string in the given language.
 "
   (let ((sym (intern-soft string table)))
-    (if sym 
-        (let ((result (get sym language))) 
-          (if result 
+    (if sym
+        (let ((result (get sym language)))
+          (if result
               result
               (localize table :en string)))
         string)))
