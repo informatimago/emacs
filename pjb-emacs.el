@@ -2472,13 +2472,11 @@ EXCEPTIONS: either a list of pathnames that mustn't be processed,
   `(mapfiles (lambda (,file-var) ,@body) ,directory-expr ,recursive ,exceptions))
 
 (defun first-existing-file (list-of-files)
-  "Finds the first file in LIST-OF-FILES that exists.
-"
+  "Find the first file in LIST-OF-FILES that exists."
   (find-if (lambda (file) (and file (file-exists-p file))) list-of-files))
 
 (defun map-existing-files (function list-of-files)
-  "Calls FUNCTION on each file in LIST-OF-FILES that exists, and returns the list of results.
-"
+  "Call FUNCTION on each file in LIST-OF-FILES that exists, and return the list of results."
   (let ((result '()))
     (dolist (file list-of-files (nreverse result))
       (when (file-exists-p file)
@@ -2486,13 +2484,12 @@ EXCEPTIONS: either a list of pathnames that mustn't be processed,
 
 
 (defun remove-non-existing-files (list-of-files)
-  "Returns the LIST-OF-FILES with non-existing files removed.
-"
+  "Return the LIST-OF-FILES with non-existing files removed."
   (remove-if-not (function file-exists-p) list-of-files))
 
 
 (defmacro* with-file (file-and-options &body body)
-  "Processes BODY with a buffer on the given file.
+  "Process BODY with a buffer on the given file.
 DO:              find-file or find-file-literally, process body, and
                  optionally save the buffer and kill it.
                  save is not done if body exits exceptionnaly.
