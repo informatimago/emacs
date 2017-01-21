@@ -165,7 +165,7 @@ RETURN: a list containing :
      (mapcar (lambda (att) (butlast att))
              (attributes class))
 
-     (nremove-nil
+     (delete nil
       (apply 'append
              (mapcar (lambda (met)
                        (let ( (bpa-labels '(before primary after))

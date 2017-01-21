@@ -128,7 +128,6 @@
          default)))
 
   (defun set-symbol-value-in-buffer (symbol buffer value &optional default)
-    (declare (ignore defaultp))
     (save-excursion
      (set-buffer buffer)
      (make-local-variable symbol)
@@ -782,10 +781,10 @@ DO:      Grep current directory for sources containing the current word.
 "
   (interactive)
   (let ( (word  (current-word))
-        (files (nremove-nil
-                (mapcar (lambda (name)
-                          (cond
-                            ((file-directory-p name) nil)
+	 (files (delete nil
+			(mapcar (lambda (name)
+				  (cond
+				   ((file-directory-p name) nil)
                             ((string-match pjb-cross-references-rejected-regexp
                                            name) nil)
                             (t (shell-quote-argument name))) )
@@ -2422,7 +2421,6 @@ FILE-AND-OPTION: either an atom evaluated to a path,
 
 (defun constantly (value)
   (lambda (&rest arguments)
-    (declare (ignore arguments))
     value))
 
 

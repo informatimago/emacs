@@ -1565,11 +1565,11 @@ URL:       http://www.informatimago.com/local/lisp/HyperSpec/Body/f_dir.htm
 RETURN:  nil, or pathspec (we don't distinguish truename for now).
 URL:     http://www.informatimago.com/local/lisp/HyperSpec/Body/f_probe_.htm
 "
-  (if (file-exists-p pathspec) pathspec nil))
+  (when (file-exists-p pathspec)
+    pathspec))
 
 
 (defun* ensure-directories-exist (pathspec &key verbose)
-  (declare (ignore verbose))
   (make-directory pathspec t))
 
 

@@ -215,18 +215,17 @@ POST:    The `countries' alist is filled.
                   (* 100 (/ (budget-expenditures country)
                             (GDP country)))
                   (name country)))
-        (sort
-         (nremove-nil
-          (flatten
-           (mapcountries (lambda (country) 
-                           (if (and
-                                (unemployment-rate country)
-                                (budget-expenditures country)
-                                (GDP country)
-                                (/= 0 (GDP country)))
-                               country nil)))))
-         (lambda (a b) (<= (/ (budget-expenditures a) (GDP a))
-                           (/ (budget-expenditures b) (GDP b))))))
+        (sort (delete nil
+		      (flatten
+		       (mapcountries (lambda (country) 
+				       (if (and
+					    (unemployment-rate country)
+					    (budget-expenditures country)
+					    (GDP country)
+					    (/= 0 (GDP country)))
+					 country nil)))))
+	      (lambda (a b) (<= (/ (budget-expenditures a) (GDP a))
+				(/ (budget-expenditures b) (GDP b))))))
   (printf "%7s %13s %s\n" "-------" "-------------" "--------------------"))
 
 
@@ -239,13 +238,12 @@ POST:    The `countries' alist is filled.
           (printf "%6.1f years    %s\n" 
                   (life-expectancy-male country) 
                   (name country)))
-        (sort
-         (nremove-nil
-          (flatten
-           (mapcountries (lambda (country) 
-                           (if (life-expectancy-both country) country nil)))))
-         (lambda (a b) (>= (life-expectancy-both a) 
-                           (life-expectancy-both b) ))))
+        (sort (delete nil
+		      (flatten
+		       (mapcountries (lambda (country) 
+				       (if (life-expectancy-both country) country nil)))))
+	      (lambda (a b) (>= (life-expectancy-both a) 
+				(life-expectancy-both b) ))))
   (printf "%12s    %s\n" "------------" "--------------------"))
 
 
@@ -260,17 +258,16 @@ POST:    The `countries' alist is filled.
                   (GDP-per-capita country) 
                   (/ (GDP-per-capita country) 12.0)
                   (name country)) )
-        (sort
-         (nremove-nil
-          (flatten
-           (mapcountries (lambda (country) 
-                           (if (and
-                                (GDP-per-capita country)
-                                ;;(<= (GDP-per-capita country) 2400.0)
-                                )
-                               country nil)))))
-         (lambda (a b) (>= (GDP-per-capita a)
-                           (GDP-per-capita b)))) )
+        (sort (delete nil
+		      (flatten
+		       (mapcountries (lambda (country) 
+				       (if (and
+					    (GDP-per-capita country)
+					    ;;(<= (GDP-per-capita country) 2400.0)
+					    )
+					 country nil)))))
+	      (lambda (a b) (>= (GDP-per-capita a)
+				(GDP-per-capita b)))) )
   (printf "%12s %12s %s\n" "------------" "------------" "--------------------"))
 
 
