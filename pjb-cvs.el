@@ -9,7 +9,7 @@
 ;;;;    This module exports an application that analyses CVS revision graphs.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2002-04-06 <PJB> Creation.
 ;;;;BUGS
@@ -43,13 +43,13 @@
 ;; revision = (file,version)
 ;; file = { revision=(file,*) }
 ;; tag  = { {file_i,version_j), k!=l ==> file_k!=file_l }
-;; 
+;;
 ;; arc_file ( (file,v1),(file,v2) ) si v2 succède v1 (+branches)
-;; arc_tag  ( (tag1,tag) si existe arc_file(n1,n2) avec n1 dans tag1 
+;; arc_tag  ( (tag1,tag) si existe arc_file(n1,n2) avec n1 dans tag1
 ;;                                                   et n2 dans tag2 )
-;; poind(arc_tag(tag1,tag2)) = cardinal { arc_file(n1,n2) avec n1 dans tag1 
+;; poind(arc_tag(tag1,tag2)) = cardinal { arc_file(n1,n2) avec n1 dans tag1
 ;;                                                          et n2 dans tag2 }
-;; 
+;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defclass CvsAttributedMixin ()
@@ -58,24 +58,24 @@
     :initarg  :attributes-plist
     :accessor  attributes-plist
     :type      list
-    :documentation 
+    :documentation
     "A plist of attributes."))
   (:documentation
    "A mixin to store attributes as a plist."))
 
 
-(defmethod* setAttribute ((self CvsAttributedMixin) 
+(defmethod* setAttribute ((self CvsAttributedMixin)
                           (attrName (or symbol string)) (attrValue string))
   "
 POST:   (string-equal attrValue (getAttribute self attrName))
 "
   (when (stringp attrName)
     (setq attrName (intern attrName)))
-  (setf (slot-value self 'attributes-plist) 
+  (setf (slot-value self 'attributes-plist)
         (plist-put (attributes-plist self) attrName attrValue)))
 
 
-(defmethod* getAttribute ((self CvsAttributedMixin) 
+(defmethod* getAttribute ((self CvsAttributedMixin)
                           (attrName (or symbol string)))
   "
 RETURN: The value of the attribute attrName.
@@ -150,8 +150,8 @@ RETURN: Whether the revision rev is a CVS magic revision, ie. its length is odd
     :initarg  :revision-graph
     :accessor  revision-graph
     :type      PjbGraph
-    :documentation 
-    "The graph of the revisions of this file. 
+    :documentation
+    "The graph of the revisions of this file.
 The edges denotes the derivation order of the revisions.
 Note however that merges can't be known from the file revision numbers alone."))
   (:documentation
@@ -165,7 +165,7 @@ Note however that merges can't be known from the file revision numbers alone."))
     :initarg  :file
     :accessor  file
     :type      (or null CvsFile)
-    :documentation 
+    :documentation
     "The CVS file of which this is a revision.")
    (file-version
     :initform "1.0"
@@ -178,7 +178,7 @@ Note however that merges can't be known from the file revision numbers alone."))
     :initarg  :tags
     :accessor tags
     :type     PjbSet
-    :documentation 
+    :documentation
     "The tags that include this revision.")
    (name
     :initform nil
@@ -196,8 +196,8 @@ Note however that merges can't be known from the file revision numbers alone."))
   "
 RETURN: A string describing this element.
 "
-  (format "<A %s named %S with %d revisions>" 
-          (class-name (class-of self)) 
+  (format "<A %s named %S with %d revisions>"
+          (class-name (class-of self))
           (name self)
           (cardinal (revisions self))))
 
@@ -223,8 +223,8 @@ DO:     Add the newRevision to the list of revisions of this file.
   "
 RETURN: The revision with the version.
 "
-  (let ( (rev (selectElements 
-               (revisions self) 
+  (let ( (rev (selectElements
+               (revisions self)
                (lambda (element)
                  (string-equal aVersion (file-version element))))) )
     (if rev (car rev) nil)))
@@ -260,7 +260,7 @@ PRIVATE. Used by `computeRevisionGraph'.
            (when (and revision-list
                       (< (length (car revision-root)) (length (car current))))
              (funcall eat-revision-add-edge revision-root current)
-             (setq revision-list (pjb-cvs$$eat-revision current (cdr revision-list) 
+             (setq revision-list (pjb-cvs$$eat-revision current (cdr revision-list)
                                                         eat-revision-add-edge))
              (setq current (car revision-list)))))
   revision-list)
@@ -272,17 +272,17 @@ DO:     Compute the revision graph from the revision numbers of this file.
 POST:   (revision-graph self) is a directed tree (directed cycleless graph).
 RETURN: (revision-graph self)
 "
-  (let* ((sorted-revisions 
+  (let* ((sorted-revisions
            (sort
             (mapElements (revisions self)
                          (lambda (element)
                            (cons (string-to-revision (file-version element))
                                  element)))
             (lambda (vra vrb) (revision-less-p (car vra) (car vrb)))))
-         (graph (make-instance 'PjbGraph 
+         (graph (make-instance 'PjbGraph
                                :nodes      (revisions self)
                                :edge-class PjbDirectedEdge))
-         (eat-revision-add-edge 
+         (eat-revision-add-edge
            (lambda  (from to)
              (addEdgeBetweenNodes graph (cdr from) (cdr to)))) )
     (pjb-cvs$$eat-revision (car sorted-revisions) (cdr sorted-revisions)
@@ -300,9 +300,9 @@ RETURN: (revision-graph self)
   "
 RETURN: A string describing this element.
 "
-  (format "<A %s of file %S, version %s>" 
-          (class-name (class-of self)) 
-          (name (file self)) 
+  (format "<A %s of file %S, version %s>"
+          (class-name (class-of self))
+          (name (file self))
           (file-version self)))
 
 
@@ -311,7 +311,7 @@ RETURN: A string describing this element.
 RETURN: A name for this revision instance.
 "
   (unless (cached-name self)
-    (setf (slot-value self 'name) 
+    (setf (slot-value self 'name)
           (format "%s-%s" (name (file self)) (file-version self))) )
   (cached-name self))
 
@@ -319,7 +319,7 @@ RETURN: A name for this revision instance.
 
 ;; (defmethod* identicalTo ((self CvsRevision) (other PjbElement))
 ;;   "
-;; RETURN:  Whether self and other are identical, that is, if they have the 
+;; RETURN:  Whether self and other are identical, that is, if they have the
 ;;          same file and their versions are equal.
 ;; "
 ;;   (or (eq self other)
@@ -369,7 +369,7 @@ POST:    (containsElement (tags self) tag)
   "
 RETURN: A string describing this element.
 "
-  (format "<A %s named %S>" 
+  (format "<A %s named %S>"
           (class-name (class-of self))
           (name self)))
 
@@ -409,7 +409,7 @@ RETURN: The date of the youngest revision in this tag.
 "
   (unless (cached-date self)
     (setf (slot-value self 'date)
-          (car  (sort 
+          (car  (sort
                  (mapcar (lambda (revision) (getAttribute revision "date"))
                          (elements self))
                  'string> ))))
@@ -436,10 +436,10 @@ RETURN: Whether this tag is a branch tag for the given `file', that is,
 
 (defmethod* getRevisionList ((self CvsTag))
   "
-RETURN: A list containing the file revisions in the form of conses 
+RETURN: A list containing the file revisions in the form of conses
         (file-name . version) of this tag.
 "
-  (mapcar (lambda (revision) (cons (name (file revision)) 
+  (mapcar (lambda (revision) (cons (name (file revision))
                                    (file-version revision)))
           (elements self)))
 
@@ -454,7 +454,7 @@ RETURN: The tag named `tag-name' in the set of CvsTag `tags'.
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Generating dot files 
+;; Generating dot files
 
 (defmethod* generate-dot ((self CvsRevision))
   "
@@ -462,7 +462,7 @@ RETURN: A string containing the dot file data for this CvsRevision node.
 "
   (format
    "%S [ style=filled color=black fillcolor=LightYellow label=\"%s\\n%s\" ];\n"
-   (name self)  
+   (name self)
    (let* ((got nil)
           (tag (selectElements
                 (tags self) (lambda (elem) (if got nil (setq got t)))))
@@ -484,7 +484,7 @@ RETURN: A string containing the dot file data for this CvsTag node.
 
 
 
-(defvar pjb-cvs%*ignore-descriptions* t 
+(defvar pjb-cvs%*ignore-descriptions* t
   "set to nil to keep the descriptions from cvs log. They tend to be big.")
 
 (defun pjb-cvs%parse-log (cvs-log-output)
@@ -505,7 +505,7 @@ RETURN: A string containing the dot file data for this CvsTag node.
         (while file-lines
                (setq line (car file-lines))
                (setq file-lines (cdr file-lines))
-               
+
                (cond
                  ((string-equal line "description:")
                   (unless pjb-cvs%*ignore-descriptions*
@@ -521,7 +521,7 @@ RETURN: A string containing the dot file data for this CvsTag node.
                  ((setq value (chop-prefix line "cvs server:"))
                   ;; ignore
                   )
-                 
+
                  ((setq value (chop-prefix line "? "))
                   ;; ignore
                   )
@@ -543,7 +543,7 @@ RETURN: A string containing the dot file data for this CvsTag node.
                   (setq line (split-string line ": *"))
                   (when (not (string-equal (cadr line) ""))
                     (setAttribute file (car line) (cadr line))))))
-        
+
         ;; ---------------------
         ;; 2- revisions
         (dolist (rev revs-l)
@@ -567,7 +567,7 @@ RETURN: A string containing the dot file data for this CvsTag node.
           (let* ((tag-revision (split-string sn ": "))
                  (tag-name     (intern (car tag-revision)))
                  (version      (cadr tag-revision))
-                 (tag          (selectElements 
+                 (tag          (selectElements
                                 tags (lambda (elem) (eq (name elem) tag-name))))
                  (revision))
             (if tag
@@ -575,7 +575,7 @@ RETURN: A string containing the dot file data for this CvsTag node.
                 (setq tag (make-instance 'CvsTag :name tag-name)))
             (setq revision (revisionWithVersion file version))
             (unless revision
-              (setq revision (make-instance 'CvsRevision 
+              (setq revision (make-instance 'CvsRevision
                                             :file file :file-version version))
               (addRevision file revision))
             (addElement tag revision)
@@ -603,17 +603,17 @@ RETURN: The computed graph.
      files
      (lambda (file)
 
-       ;; We need to do a walk of the revision tree, 
+       ;; We need to do a walk of the revision tree,
        ;; starting from the root "1.1",
        ;; collecting a "pre-tag" node and a "cur-tag" such as:
        ;;    (not (isMagicBranchRevision pre-rev))
        ;;    (not (isMagicBranchRevision cur-rev))
        ;;    there is a pre-tag in (tags pre-rev)
        ;;    there is a cur-tag in (tags cur-rev)
-       ;;    cur-rev is the first successor of pre-rev 
+       ;;    cur-rev is the first successor of pre-rev
        ;;            matching the previous conditions.
-       
-       (let ((rev-graph (revision-graph file)) 
+
+       (let ((rev-graph (revision-graph file))
              (rev-stack '()) ; stack of walked revisions: ((rev suc...)...)
              (tev-stack '()) ; stack of tagged revisions.
              cur-item cur-rev cur-suc cur-sucs newEdge edge)
@@ -624,7 +624,7 @@ RETURN: The computed graph.
                     (< 0 (cardinal (tags cur-rev))))
            (push cur-rev tev-stack))
          (while rev-stack
-                ;;(printf "\nrev-stack=%S\ntev-stack=%S\n" 
+                ;;(printf "\nrev-stack=%S\ntev-stack=%S\n"
                 ;;  (mapcar (lambda (item) (mapcar 'name item)) rev-stack)
                 ;;  (mapcar 'name tev-stack))
                 (setq cur-item (pop rev-stack))
@@ -639,7 +639,7 @@ RETURN: The computed graph.
                       ;; We need to push even when there's no other successor
                       ;; to be able to pop when needed.
                       (push (cons cur-rev (cdr cur-sucs)) rev-stack)
-                      
+
                       (if (and (not (isMagicBranchRevision cur-suc))
                                (< 0 (cardinal (tags cur-suc))))
                           (progn
@@ -651,7 +651,7 @@ RETURN: The computed graph.
                             (if (car tev-stack)
                                 (dolist (ftag (elements (tags (car tev-stack))))
                                   (dolist (ttag (elements (tags cur-suc)))
-                                    (setq edge 
+                                    (setq edge
                                           (car (edgesBetweenNodes graph ftag ttag)))
                                     ;; There should be only one edge from ftag to ttag.
                                     (if edge
@@ -687,12 +687,12 @@ RETURN: The computed graph.
         tag;; is a set of revision.
         (lambda (revision)
 
-          (message "%-20s %-47s %s" 
+          (message "%-20s %-47s %s"
                    (name tag) (name (file revision)) (file-version revision))
           ;;(message "cardinal(edges)=%d" (cardinal (edges graph)))
           ;; successors are in the file's revision graph.
           (let* ( (rev-graph  (revision-graph (file revision)))
-                  (successors (successorNodes rev-graph revision)) 
+                  (successors (successorNodes rev-graph revision))
                   (checked    '())
                  successor succ-tags edge newEdge)
             (printf  "file=%S\nrevision=%S successors=%S\n\n" (name (file revision)) (file-version revision) (mapcar (lambda (s) (file-version s)) successors))
@@ -715,14 +715,14 @@ RETURN: The computed graph.
                                        (memq new-succ successors))
                              (push new-succ successors)))
                          ;; let's add edges or increment the existing edges' weight.
-                         (performWithElements 
+                         (performWithElements
                           (tags successor)
                           (lambda (to-tag)
-                            (setq newEdge (make-instance PjbWeightedDirectedEdge 
+                            (setq newEdge (make-instance PjbWeightedDirectedEdge
                                                          :from tag :to to-tag))
                             (setq edge (containsElement (edges graph) newEdge))
                             ;; There should be only one edge from tag to to-tag.
-                            (if edge 
+                            (if edge
                                 (setWeight edge (1+ (weight edge)))
                                 (addEdge graph newEdge))))))))))))
     graph))
@@ -731,15 +731,15 @@ RETURN: The computed graph.
 
 (defun pjb-cvs%get-tag-graph-from-cvs-in-dir (dir-path &optional file-list)
   "
-NOTE:   When file-list is given, then only cvs log those files 
+NOTE:   When file-list is given, then only cvs log those files
         (relative from dir-path).
-RETURN: A (list tag-graph files tags) containing the tag-graph (PjbGraph), 
+RETURN: A (list tag-graph files tags) containing the tag-graph (PjbGraph),
         the files (PjbSet of CvsFile) and the tags (PjbSet of CvsTag).
 "
   (let* ((cvs-log-out-fname (format "/tmp/%s" (gensym "cvs-log-output-")))
          (cmd (format "cd %s ; cvs log %s > %s 2> /dev/null"
                       (shell-quote-argument dir-path)
-                      (if file-list 
+                      (if file-list
                           (unsplit-string file-list " ")
                           "")
                       (shell-quote-argument cvs-log-out-fname)))
@@ -752,7 +752,7 @@ RETURN: A (list tag-graph files tags) containing the tag-graph (PjbGraph),
          tag-graph)
     (delete-file cvs-log-out-fname)
     (message "Got %d files, and %d tags." (cardinal files) (cardinal tags))
-    (performWithElements files 
+    (performWithElements files
                          (lambda (file)
                            (addRootRevisionIfMissing file)
                            (computeRevisionGraph file)))
@@ -766,7 +766,7 @@ PRE:    graph is a graph of CvsTag.
 DO:     All edges such as (STRING> (date (from edge)) (date (to edge)))
         are reversed (ie. their from and to nodes are exchanged).
 "
-  (performWithElements 
+  (performWithElements
    (edges graph)
    (lambda (edge)
      (when (STRING> (date (from edge)) (date (to edge)))

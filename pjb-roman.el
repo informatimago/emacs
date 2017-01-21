@@ -9,7 +9,7 @@
 ;;;;    This module exports
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    199?/??/?? <PJB> Creation.
 ;;;;BUGS
@@ -95,7 +95,7 @@ SEE ALSO: fahrenheit (F), celcius (C) and kelvin (K)."
 ;; Règles d'écriture des nombres romains :
 ;; Les chiffres M, C, X, I ne peuvent pas être répétés plus de quatre fois.
 ;; Les chiffres D, L, V ne peuvent pas être répétés.
-;; Les chiffres doivent être écris dans l'ordre : M, D, C, L, X, V, I ; 
+;; Les chiffres doivent être écris dans l'ordre : M, D, C, L, X, V, I ;
 ;; sauf que un I peut précéder V, X, L, ou C, et un X peut précéder L ou C.
 
 
@@ -107,7 +107,7 @@ SEE ALSO: fahrenheit (F), celcius (C) and kelvin (K)."
 ;;  centaine4 : | C | C C | C C C | C C C C .
 ;;
 ;;  dizaines : dizaine8 | X C unite8 | I C .
-;;  dizaine8 : dizaine4 unites | I L | L dizaine3 unites 
+;;  dizaine8 : dizaine4 unites | I L | L dizaine3 unites
 ;;  dizaine4 : dizaine3 | X L .
 ;;  dizaine3 : | X | X X | X X X .
 ;;
@@ -201,7 +201,7 @@ SEE ALSO: fahrenheit (F), celcius (C) and kelvin (K)."
 (defun from-roman-tens (p)
   ;;  dizaines : dizaine8 | X C unite8 | I C .
   (if (equal ?C (roman-parser-next-char p))
-      (cond 
+      (cond
        ((equal ?I (roman-parser-curr-char p))
         (roman-parser-fetch-char p)
         (roman-parser-fetch-char p)
@@ -215,7 +215,7 @@ SEE ALSO: fahrenheit (F), celcius (C) and kelvin (K)."
     (from-roman-ten8 p)));;from-roman-tens
 
 
-(defun from-roman-ten8 (p)        
+(defun from-roman-ten8 (p)
   ;;  dizaine8 : dizaine4 unites | I L | L dizaine3 unites
   (cond
    ((equal ?I (roman-parser-curr-char p))
@@ -235,8 +235,8 @@ SEE ALSO: fahrenheit (F), celcius (C) and kelvin (K)."
     (from-roman-ten4  p)
     (from-roman-units p))));;from-roman-ten8
 
-          
-(defun from-roman-ten4 (p)        
+
+(defun from-roman-ten4 (p)
   ;;  dizaine4 : dizaine3 | X L .
   (if (and
        (equal ?X (roman-parser-curr-char p))
@@ -274,19 +274,19 @@ SEE ALSO: fahrenheit (F), celcius (C) and kelvin (K)."
 (defun from-roman-unit8 (p)
   ;;  unite8 : unite4 | V unite3 .
   (if (equal ?V (roman-parser-curr-char p))
-      (progn 
+      (progn
         (roman-parser-fetch-char p)
         (roman-parser-value-add p 5)
         (from-roman-unit3 p))
     (from-roman-unit4 p)));;from-roman-unit8
 
 
-(defun from-roman-unit4 (p)        
+(defun from-roman-unit4 (p)
   ;;  unite4 : unite3 | I V .
   (if (and
        (equal ?I (roman-parser-curr-char p))
        (equal ?V (roman-parser-next-char p)))
-      (progn 
+      (progn
         (roman-parser-fetch-char p)
         (roman-parser-fetch-char p)
         (roman-parser-value-add p 4))
@@ -309,12 +309,12 @@ SEE ALSO: fahrenheit (F), celcius (C) and kelvin (K)."
 
 (defun to-roman-100 (m c r)
   (concat (nth m '("" "M" "MM" "MMM" "MMMM"))
-          (nth c '("" "C" "CC" "CCC" "CCCC" "D" 
-                   "DC" "DCC" "DCCC" "DCCCC")) 
+          (nth c '("" "C" "CC" "CCC" "CCCC" "D"
+                   "DC" "DCC" "DCCC" "DCCCC"))
           r));;to-roman-100
 
 (defun to-roman-10 (m c d r)
-  (to-roman-100 m c (concat (nth d '("" "X" "XX" "XXX" "XL" 
+  (to-roman-100 m c (concat (nth d '("" "X" "XX" "XXX" "XL"
                                      "L" "LX" "LXX" "LXXX" "XC")) r)));;to-roman-10
 
 (defun to-roman (n)
@@ -327,7 +327,7 @@ PRE:    1<=N<=4999
     (error "The parameter N must be an integer."))
    ((or (< n 1) (< 4999 n))
     (error "The parameter N must be between 1 and 4999 included.")))
-  
+
   (let* ((u (% n 10))
          (d (% (/ n 10) 10))
          (c (% (/ n 100) 10))
@@ -337,7 +337,7 @@ PRE:    1<=N<=4999
      ((= (+ (* d 10) u) 40) (to-roman-100 m c "XL"))
      ((= (+ (* d 10) u) 49) (to-roman-100 m c "IL"))
      ((= (+ (* d 10) u) 99) (to-roman-100 m c "IC"))
-     (t   (to-roman-10 m c d (nth u '("" "I" "II" "III" "IV" "V" 
+     (t   (to-roman-10 m c d (nth u '("" "I" "II" "III" "IV" "V"
                                       "VI" "VII" "VIII" "IX")))))));;to-roman
 
 ;;----------------------------------------------------------------------
@@ -345,7 +345,7 @@ PRE:    1<=N<=4999
 (defun region-to-roman ()
   "Replace the region containing a decimal integer by the equivalent roman number."
   (interactive)
-  (let ((r (to-roman (string-to-number 
+  (let ((r (to-roman (string-to-number
                      (buffer-substring (region-beginning) (region-end))))))
     (delete-region (region-beginning) (region-end))
     (insert r)));;region-to-roman
@@ -362,7 +362,7 @@ PRE:    1<=N<=4999
 
 
 ;     (for
-;      n 1 4999 
+;      n 1 4999
 ;      (condition-case cc
 ;          (let* ((r (to-roman n))
 ;                 (m (from-roman r)))
@@ -370,10 +370,10 @@ PRE:    1<=N<=4999
 ;                (insert (format  "%4d -> %-20s -> %4d %s\n"
 ;                                 n r m (if (= n m) "" "***")))))
 ;        ('error
-;         (insert (format "ERROR for %4d [%-20s] : %s\n" n (to-roman n) 
+;         (insert (format "ERROR for %4d [%-20s] : %s\n" n (to-roman n)
 ;                         (car (cdr cc)))))))
 ;     (for
-;      n 1 4999 
+;      n 1 4999
 ;      (insert (format "%4d -> %s\n" n (to-roman n))))
 
 

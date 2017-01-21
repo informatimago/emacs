@@ -7,7 +7,7 @@
 ;;;;DESCRIPTION
 ;;;;    This module exports some list functions.
 ;;;;USAGE
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
@@ -42,9 +42,9 @@
 
 (defun iota (count &optional start step)
   "
-RETURN:   A list containing the elements 
+RETURN:   A list containing the elements
           (start start+step ... start+(count-1)*step)
-          The start and step parameters default to 0 and 1, respectively. 
+          The start and step parameters default to 0 and 1, respectively.
           This procedure takes its name from the APL primitive.
 EXAMPLES: (iota 5) => (0 1 2 3 4)
           (iota 5 0 -0.1) => (0 -0.1 -0.2 -0.3 -0.4)
@@ -90,7 +90,7 @@ RETURN:     The depth of the tree.
 "
   (if (atom tree)
       0
-      (1+ (apply (function max) 
+      (1+ (apply (function max)
                  0
                  (do ((tree tree (cdr tree))
                       (results '()))
@@ -163,7 +163,7 @@ EXAMPLE: (list-insert-separator '(a b (d e f)  c) 'x)
        ((null rest) (nreverse result))
     (push separator result)
     (push (car rest) result)))
-         
+
 (defun make-list-of-random-numbers (length)
   "
 RETURN:  A list of length `length' filled with random numbers.

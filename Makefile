@@ -12,19 +12,19 @@
 #BUGS
 #LEGAL
 #    GPL
-#    
+#
 #    Copyright Pascal J. Bourguignon 2003 - 2011
-#    
+#
 #    This program is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU General Public License
 #    as published by the Free Software Foundation; either version
 #    2 of the License, or (at your option) any later version.
-#    
+#
 #    This program is distributed in the hope that it will be
 #    useful, but WITHOUT ANY WARRANTY; without even the implied
 #    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 #    PURPOSE.  See the GNU General Public License for more details.
-#    
+#
 #    You should have received a copy of the GNU General Public
 #    License along with this program; if not, write to the Free
 #    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -91,10 +91,10 @@ EMACS_SOURCES=\
 	pjb-utilities.el \
 	pjb-vm-kill-file.el \
 	pjb-work.el \
-	pjb-worldfact.el 
+	pjb-worldfact.el
 
 EMACS_OBJECTS=$(EMACS_SOURCES:.el=.elc)
-LISP_OBJECTS=$(EMACS_OBJECTS) 
+LISP_OBJECTS=$(EMACS_OBJECTS)
 
 all::$(EMACS_OBJECTS) summary.html
 	-@chmod a+r *
@@ -106,7 +106,7 @@ install::install-packages
 
 TRACE=@
 LISP_SOURCE_SUFFIXES= .el   .lisp
-LISP_OBJECT_SUFFIXES= .elc  .fas .lib   .x86f   .fasl 
+LISP_OBJECT_SUFFIXES= .elc  .fas .lib   .x86f   .fasl
 
 .SUFFIXES:: $(LISP_SOURCE_SUFFIXES) $(LISP_OBJECT_SUFFIXES)
 
@@ -117,7 +117,7 @@ LISP_OBJECT_SUFFIXES= .elc  .fas .lib   .x86f   .fasl
 EMACS=emacs
 EMACS_FLAGS_DEFAULT=
 %.elc : %.el
-	@ echo "Generating $@" 
+	@ echo "Generating $@"
 	$(TRACE) $(EMACS) -batch -q $(EMACS_FLAGS) -f batch-byte-compile $< 2>&1 \
 	| $(AWK) 'BEGIN{s=0;} /Loading .*fns-/{next;} /Warning: Function .* from cl package/{s=1;next;} {if(s==0){print $0}else{s=0;next;}}'
 # See also .emacs in this directory with the load-path used to compile.
@@ -127,7 +127,7 @@ EMACS_FLAGS_DEFAULT=
 # Compiling & installing lisp packages:
 #
 # Targets: install-packages
-# Input:   LISP_SOURCES CLISP_SOURCES CMUCL_SOURCES SBCL_SOURCES EMACS_SOURCES 
+# Input:   LISP_SOURCES CLISP_SOURCES CMUCL_SOURCES SBCL_SOURCES EMACS_SOURCES
 # Output:  $(PACKAGES)/$(PACKAGE_PATH)/*
 install-packages :: do-install
 do-install ::	$(EMACS_SOURCES) \
@@ -155,7 +155,7 @@ summary summary.html:$(EMACS_SOURCES)
 clean::
 	-rm -f $(LISP_OBJECT_SUFFIXES:%=*%)
 
-cleanall:: 
+cleanall::
 	$(TRACE) for p in $(LISP_PROGRAMS) $(CLISP_PROGRAMS) $(SBCL_PROGRAMS) \
 			  $(CMUCL_PROGRAMS) $(EMACS_PROGRAMS) NONE ; do \
 		[ "$$p" = NONE ] || $(MAKE) $(MFLAGS) $${p}-clean PGMNAME=$$p ;\

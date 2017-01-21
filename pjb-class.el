@@ -9,7 +9,7 @@
 ;;;;    Some stuff for classes.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2002-02-19 <PJB> Creation.
 ;;;;BUGS
@@ -42,7 +42,7 @@
 
 (defun responds-to (class method)
   "
-RETURN: Whether the CLASS responds to the METHOD, 
+RETURN: Whether the CLASS responds to the METHOD,
         either directly or by inheritance.
 "
   (if (method-implem class method)
@@ -62,7 +62,7 @@ RETURN: Whether the CLASS responds to the METHOD,
 RETURN: a list with all symbols that are class names.
 "
   (let ( (classes nil) )
-    (mapatoms (lambda (sym) 
+    (mapatoms (lambda (sym)
                 (when (class-p sym)
                   (push sym classes))))
     classes)
@@ -88,11 +88,11 @@ RETURN: a list with all the slots of the given CLASS.
          (result nil)
          )
     (while names
-      (push (list 
-             (car names) 
+      (push (list
+             (car names)
              (if types (if (eq t (aref types i)) nil (aref types i)) nil)
-             (car deflt) 
-             (if (car prot) 'private 'public) 
+             (car deflt)
+             (if (car prot) 'private 'public)
              (car docs) )
             result)
       (setq names (cdr names)
@@ -155,7 +155,7 @@ RETURN: a list with tree entries defining the method implementation.
 
 (defun class-data (class)
   "
-RETURN: a list containing : 
+RETURN: a list containing :
              - the class name,
              - a list of attributes as returned by (attributes class),
              - a list of methods as (method-name signature bpa).
@@ -183,14 +183,14 @@ RETURN: a list containing :
 
 (defun format-quote (arg)
   "
-RETURN:  if arg is (quote atom) or 'atom 
+RETURN:  if arg is (quote atom) or 'atom
          then return \"'atom\" otherwise return (format \"%S\" arg).
 "
 
   (cond
    ((and arg (atom arg) (not (stringp arg)) (not (numberp arg)))
     (format "'%s" arg))
-   ((and (consp arg) 
+   ((and (consp arg)
          (= 2 (length arg))
          (eq 'quote (car arg)) )
     (format "'%s" (cadr arg)))
@@ -203,26 +203,26 @@ RETURN:  if arg is (quote atom) or 'atom
   "
 RETURN: An ASCII-art diagram of the CLASS.
 "
-  (let* ( (cd        (class-data class)) 
+  (let* ( (cd        (class-data class))
           (name      (symbol-name (car cd)))
-          (maxlen    (length name)) 
+          (maxlen    (length name))
           (att-lines (sort
-                      (mapcar 
+                      (mapcar
                        (lambda (att)
-                         (format 
-                          "%s%s%s%s" 
+                         (format
+                          "%s%s%s%s"
                           (if (eq 'public (nth 3 att)) "+ " "- ")
                           (car att)
                           (if (nth 1 att) (format " : %s" (nth 1 att)) "")
-                          (if (nth 2 att) 
+                          (if (nth 2 att)
                               (format " = %s" (format-quote (nth 2 att))) "")
                           ))
                        (nth 1 cd))
                       'string-lessp))
           (met-lines (sort
-                      (mapcar 
+                      (mapcar
                       (lambda (met)
-                        (format 
+                        (format
                          "%s%s%s%s"
                          "+ "
                          (car met)
@@ -231,12 +231,12 @@ RETURN: An ASCII-art diagram of the CLASS.
                                           (cdr (nth 1 met))
                                         (nth 1 met)))
                                 (fargs) )
-                           (if args 
+                           (if args
                                (let ((fargs (format "%S" args)))
                                  (if (< 44 (length fargs))
                                      "(...)" fargs))
                              "()"))
-                         (if (eq 'primary (nth 2 met)) 
+                         (if (eq 'primary (nth 2 met))
                              "" (format "{%s}" (nth 2 met)))
                         ))
                       (nth 2 cd))
@@ -246,22 +246,22 @@ RETURN: An ASCII-art diagram of the CLASS.
                                      (append (list name) att-lines met-lines))))
     (setq line (format "+-%s-+\n" (make-string maxlen ?-)))
     (apply (if return-list 'list 'concat)
-           (append 
+           (append
             (list
              line
              (let* ( (left  (/ (- maxlen (length name)) 2))
                      (right (- maxlen left (length name))) )
-               (format "| %s%s%s |\n" 
+               (format "| %s%s%s |\n"
                        (make-string left 32) name (make-string right 32)))
              line
              )
-            (mapcar (lambda (l) 
-                      (format "| %s%s |\n" 
+            (mapcar (lambda (l)
+                      (format "| %s%s |\n"
                               l (make-string (- maxlen (length l)) 32)))
                     att-lines)
             (list line)
-            (mapcar (lambda (l) 
-                      (format "| %s%s |\n" 
+            (mapcar (lambda (l)
+                      (format "| %s%s |\n"
                               l (make-string (- maxlen (length l)) 32)))
                     met-lines)
             (list line)
@@ -283,8 +283,8 @@ RETURN: a formated string with classes.
     (setq indentf (format "%s%%s" left))
 
 
-    (apply 
-     'concat 
+    (apply
+     'concat
      (append
       (mapcar (lambda (l) (format indentf l)) (class-display class t))
       (when children
@@ -292,26 +292,26 @@ RETURN: a formated string with classes.
          (list (format indentf "       |\n")
                (format indentf "      / \\\n")
                (format indentf "     /___\\\n")
-               (format indentf "       |\n") 
+               (format indentf "       |\n")
                )
          (if (= 1 (length children))
              (list (class-hierarchy-display (car children) left) )
            (let ( (first (list
                           (format indentf "+------+\n")
                           (format indentf "|      |\n")
-                          (class-hierarchy-display (car children) 
+                          (class-hierarchy-display (car children)
                                                    (format indentf "|   "))) )
-                  (mid   (apply 
+                  (mid   (apply
                           'append
                           (mapcar (lambda (child)
                                     (list
                                      (format indentf "|\n")
                                      (format indentf "+------+\n")
                                      (format indentf "|      |\n")
-                                     (class-hierarchy-display 
+                                     (class-hierarchy-display
                                       child (format indentf "|   "))) )
                                   (butlast (cdr children)))) )
-                 
+
                   (laste (list
                           (format indentf "|\n")
                           (format indentf "+------+\n")
@@ -322,7 +322,7 @@ RETURN: a formated string with classes.
            ))))))
   );;class-hierarchy-display
 
-  
+
 (defun is-subclass-of (subclass class)
   "
 RETURN: Whether `subclass' is a subclass (or sub*class) of `class'.
@@ -331,7 +331,7 @@ RETURN: Whether `subclass' is a subclass (or sub*class) of `class'.
          (parents (class-parents subclass))
          (current)
          (result nil) )
-    (while parents 
+    (while parents
       (setq current (car parents)
             parents (cdr parents))
       (unless (memq current checked)
@@ -353,11 +353,11 @@ RETURN: Whether `subclass' is a subclass (or sub*class) of `class'.
 
 (defun is-kind-of (object class)
   "
-RETURN: Whether the class of the `object'  is `class', 
+RETURN: Whether the class of the `object'  is `class',
         or the class of the `object' is a subclass of `class'.
 "
   (let ((class-of-object (class-of object)))
-    (or (eq class-of-object class) 
+    (or (eq class-of-object class)
         (is-subclass-of class-of-object class)))
   );;is-kind-of
 
@@ -377,21 +377,21 @@ RETURN: Whether the class of the `object'  is `class',
 ;;;     (mapcar (lambda (predicat)
 ;;;               (unless (functionp predicat)
 ;;;                 (error "Expecting a function."))
-;;;               (let ( (cl '(M A B1 C1 D1 B2 C2 D2 C12 E12 E1M)) 
+;;;               (let ( (cl '(M A B1 C1 D1 B2 C2 D2 C12 E12 E1M))
 ;;;                      line )
 ;;;                 ;; line 0 -------------------
 ;;;                 (setq line  "+----+")
 ;;;                 (dotimes (i (length cl)) (setq line (concat line "----+")))
 ;;;                 (printf "%s\n" line)
 ;;;                 ;; line 1
-;;;                 (printf "|    |") 
-;;;                 (dolist (b cl) (printf "%3s |" (symbol-name b)))  
+;;;                 (printf "|    |")
+;;;                 (dolist (b cl) (printf "%3s |" (symbol-name b)))
 ;;;                 (printf "\n%s\n" line)
 ;;;                 ;; array
 ;;;                 (dolist (a cl)
 ;;;                   (printf "|%3s |" (symbol-name a))
-;;;                   (dolist (b cl) 
-;;;                     (printf "%3s |" 
+;;;                   (dolist (b cl)
+;;;                     (printf "%3s |"
 ;;;                             (if (funcall predicat  a b)
 ;;;                                 "IS" "no")))
 ;;;                   (printf "\n%s\n" line))

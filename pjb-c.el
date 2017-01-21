@@ -9,7 +9,7 @@
 ;;;;    This module exports C indenting functions.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2003-02-25 <PJB> Updated, from pjb-objc-mode.el, for emacs 21.2.
 ;;;;    199?-??-?? <PJB> Creation.
@@ -137,7 +137,7 @@ DO:     Move the point at the beginning of the comment.
 
 (defun pjb-c-first-line-of-comment (syntcont)
   "
-RETURN: whether the current line is on the first line of a comment, 
+RETURN: whether the current line is on the first line of a comment,
         discounting the comment-intro on the previous line.
 EXAMPLES:
      // YES comment-intro  /* NO  comment-intro  /*    NO  comment-intro
@@ -150,7 +150,7 @@ EXAMPLES:
     (save-excursion
       (if boc
         ;; within a /* comment.
-        (progn 
+        (progn
           (pjb-c-beginning-of-comment)
           (and (= (point) (cdr boc))
                (= 1 (count-lines (point) curr-point))))
@@ -166,7 +166,7 @@ EXAMPLES:
 RETURN: whether the given syntcont is really a comment intro, and not a mere
         // comment following a // comment or a comment inside a /* comment.
 "
-  (and (eq (caar syntcont) 'comment-intro) 
+  (and (eq (caar syntcont) 'comment-intro)
        (not (assoc 'c syntcont)))
   );;pjb-c-really-comment-intro
 
@@ -221,27 +221,27 @@ SEE ALSO:       c-indent-line
             (goto-char (match-end 0))
             (forward-comment -1)
             0) ;;(- (current-column) (c-langelem-col langelem)))
-           ((pjb-c-first-line-of-comment c-syntactic-context)  
+           ((pjb-c-first-line-of-comment c-syntactic-context)
             (message "first line of comment")
             c-basic-offset)
            (t
             ;; The indentation of the other lines of the comment
             ;; is the same as that of the previous line.
-            ;; TODO: We should check if the previous lines begins 
+            ;; TODO: We should check if the previous lines begins
             ;;       with a keyword.
             ;;         EXEMPLE:        comment tralala
             ;;                         comment tralala
             (message "In middle of comment")
             (cond
-             ((pjb-c-keyword-comment-line c-syntactic-context) 
+             ((pjb-c-keyword-comment-line c-syntactic-context)
               (message "keyword line")
               c-basic-offset)
              ((save-excursion
                 (forward-line -1)
-                (pjb-c-keyword-comment-line c-syntactic-context)) 
+                (pjb-c-keyword-comment-line c-syntactic-context))
               (message "just after keyword line")
               (+ c-basic-offset pjb-c-keyword-comment-indent))
-             (t 
+             (t
               (message "other comment line")
               ;; same indentation as previous line.
               (save-excursion
@@ -252,7 +252,7 @@ SEE ALSO:       c-indent-line
 
 
 
-(defconst pjb-c-todo-regexp 
+(defconst pjb-c-todo-regexp
   "\\(\\(//\\)? *\\(TODO\\|SEE\\):.*\\|/\\* *\\(TODO\\|SEE\\):\\(\\*[^/]\\|[^\\*]\\)* \\*/\\)"
   "regexp to match a TODO: (obsolete SEE:) comment.");;pjb-c-todo-regexp
 
@@ -264,13 +264,13 @@ SEE ALSO:       c-indent-line
 
 
 ;; (defconst pjb-c-C++-method-key
-;;   (concat 
+;;   (concat
 ;;    "^\\s *"
 ;;    "\\(ABSTRACTMETHOD\\|CLASSMETHOD\\|METHOD"
 ;;    "\\|PROCEDURE\\|CONSTRUCTOR2?\\|DESTRUCTOR\\)"
 ;;    "([^)]*\\(([^)]*)\\)?[^)]*)\\s *"))
-;; 
-;;  
+;;
+;;
 ;; (defun pjb-c++-mode-hook ()
 ;;   "A hook for C++ mode where we install our own pjb-c-C++-method-key."
 ;;   (setq c-method-key pjb-c-C++-method-key))
@@ -293,7 +293,7 @@ SEE ALSO:       c-indent-line
 ;;;                                         ; C function arguments.
 
 ;;; (setq c-label-offset               -4) ;  Offset of C label lines and case
-;;;                                         ; statements relative to usual 
+;;;                                         ; statements relative to usual
 ;;;                                         ; indentation.
 
 ;;; (setq c-continued-statement-offset  4) ;  Extra indent for lines not starting

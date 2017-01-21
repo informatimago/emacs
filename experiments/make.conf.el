@@ -75,7 +75,7 @@
      (comment "package.keywords could look like this: ")
      (comment "      http://rafb.net/paste/results/SWPxKb71.txt")
      (USE (objc -apache apache2 cli cgi dri nptl nptlonly
-            -oracle 
+            -oracle
             ;; doc gd-external oracle
             ;; NOT AT ALL: fdftk
             3dnow X Xaw3d a52 aac aalib accessibility acpi aim

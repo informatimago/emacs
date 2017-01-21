@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Load pjb emacs sources.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2010 - 2011
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;;;    PURPOSE.  See the GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public
 ;;;;    License along with this program; if not, write to the Free
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -37,22 +37,22 @@
 (defun check-version-lock (from)
   (if (file-exists-p "--version.lock")
     (error "version lock")))
-  
+
 (defun load-stuff (files &optional show-messages)
   (unwind-protect
       (dolist (path files)
-	(if *pjb-load-noerror*
-	  (condition-case cc
-	      (load path *pjb-load-noerror* *pjb-load-silent*)
-	    (error
-	     (setq show-messages t)
-	     (message (format "ERROR: %S" cc))))
-	  (load path *pjb-load-noerror* *pjb-load-silent*)))
+        (if *pjb-load-noerror*
+          (condition-case cc
+              (load path *pjb-load-noerror* *pjb-load-silent*)
+            (error
+             (setq show-messages t)
+             (message (format "ERROR: %S" cc))))
+          (load path *pjb-load-noerror* *pjb-load-silent*)))
     (when (file-exists-p "--version.lock")
       (delete-file "--version.lock"))
     (when show-messages
       (switch-to-buffer "*Messages*")
-      (split-window-vertically)))) 
+      (split-window-vertically))))
 
 
 (defvar *pjb-sources* '())
@@ -102,8 +102,8 @@
         "pjb-searches.el"
 
         "pjb-java"
-        
-        "pjb-objc-edit.el" 
+
+        "pjb-objc-edit.el"
         "pjb-objc-gen.el"
         "pjb-objc-ide.el"
         ;; not yet ;; "pjb-objc-mode.el"
@@ -118,7 +118,7 @@
         (append *pjb-sources*
                 '(
 
-                 
+
                   "pjb-computer-paper.el"
                   "pjb-cvs.el"
                   "pjb-cvspass.el"
@@ -236,7 +236,7 @@ RETURN: (not eof)
 "
   (interactive)
   (let* ((comment-regexp   "\\(#|\\([^|]\\||[^#]\\)*|#\\)\\|\\(;.*$\\)")
-         (space-or-comment (format "\\(%s\\)\\|\\(%s\\)" 
+         (space-or-comment (format "\\(%s\\)\\|\\(%s\\)"
                              "[ \t\n\v\f\r]+"
                              comment-regexp)) )
     (while (looking-at space-or-comment)
@@ -246,18 +246,18 @@ RETURN: (not eof)
 
 (defun el-walk-sexps (fun)
   "
-DO:     Recursively scan sexps from (point) in current buffer up to 
-        the end-of-file or until scan-sexps raises a scan-error. 
+DO:     Recursively scan sexps from (point) in current buffer up to
+        the end-of-file or until scan-sexps raises a scan-error.
         Call fun on each sexps and each of their children etc.
-fun:    A function (sexp start end) 
+fun:    A function (sexp start end)
         sexp:    The sexp parsed from a source file.
         start:   The point starting the sexp.
         end:     The point ending the sexp.
-NOTE:   All positions are kept in markers, so modifying the buffer between 
+NOTE:   All positions are kept in markers, so modifying the buffer between
         start and end should be OK.
-        However  ' or ` are passed as (quote ...) or (backquote ...) 
-        to the function fun without reparsing the sexp inside them. 
-        Ie. if you modify such a source, (which can be detected looking at 
+        However  ' or ` are passed as (quote ...) or (backquote ...)
+        to the function fun without reparsing the sexp inside them.
+        Ie. if you modify such a source, (which can be detected looking at
         the character at start position),  you still get the original sexp.
 "
   (let ((quote-stack '())
@@ -285,13 +285,13 @@ NOTE:   All positions are kept in markers, so modifying the buffer between
       (setq sexp (sexp-at-point))
       ;; push the quotes on the sexp:
       (setq quote-depth (length quote-stack))
-      (while quote-stack 
+      (while quote-stack
         (setq sexp (cons (pop quote-stack) (list sexp))))
       ;; process the quotes:
       (setq start-stack (nreverse start-stack))
       (dotimes (i quote-depth)
         ;; (message "sexp = %S\nstart = %S\nend = %S\n" sexp (marker-position (car start-stack)) *el-walk-sexps-end-marker*)
-        (funcall fun sexp 
+        (funcall fun sexp
                  (marker-position (car start-stack)) *el-walk-sexps-end-marker*)
         (set-marker (pop start-stack) nil)
         (setq sexp (cadr sexp)))
@@ -317,9 +317,9 @@ NOTE:   All positions are kept in markers, so modifying the buffer between
 
 (defun el-map-sexps (source-file fun &rest cl-keys)
   "
-DO:     Scan all toplevel sexps in the source file. 
+DO:     Scan all toplevel sexps in the source file.
         (skipping spaces and comment between top-level sexps).
-fun:    A function (sexp start end) 
+fun:    A function (sexp start end)
         sexp:    The sexp parsed from a source file.
         start:   The point starting the sexp.
         end:     The point ending the sexp.
@@ -364,15 +364,15 @@ RETURN: The list of results from fun.
          (match-string 2 path))
         ((string-match "^\\(.*/\\)?\\(.*\\)\\.\\([^.]*\\)$" path)
          (match-string 2 path))
-	((string-match "^\\(.*/\\)?\\(.*\\)$" path)
+        ((string-match "^\\(.*/\\)?\\(.*\\)$" path)
          (match-string 2 path))
         (t :unspecific)))
 
 (defun topological-sort (nodes lessp)
   "
-RETURN: A list of NODES sorted topologically according to 
+RETURN: A list of NODES sorted topologically according to
         the partial order function LESSP.
-        If there are cycles (discounting reflexivity), 
+        If there are cycles (discounting reflexivity),
         then the list returned won't contain all the NODES.
 "
   (loop
@@ -408,13 +408,13 @@ RETURN: A list of NODES sorted topologically according to
 (defvar *pjb-sources-order*)
 (setf *pjb-sources-order*
       (mapcar (lambda (file)
-		(let ((path (concat (if load-file-name
-					(file-name-directory load-file-name)
-				      (concat (getenv "HOME") "/src/public/emacs/")) 
-				    file)))
-		  (cons (intern (pathname-name* file))
-			(source-file-requires path))))
-	      *pjb-sources*))
+                (let ((path (concat (if load-file-name
+                                        (file-name-directory load-file-name)
+                                      (concat (getenv "HOME") "/src/public/emacs/"))
+                                    file)))
+                  (cons (intern (pathname-name* file))
+                        (source-file-requires path))))
+              *pjb-sources*))
 
 
 (defun pjb-sources-lessp (a b)

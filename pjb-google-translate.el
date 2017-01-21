@@ -7,7 +7,7 @@
 ;; (does-not-work/google-translate-word "ru" "fr" "совсем")
 
 
-(defparameter *grammar-categories* '("phrase" 
+(defparameter *grammar-categories* '("phrase"
                                      "adverb"
                                      "noun"
                                      "adjective"))

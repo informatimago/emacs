@@ -5,326 +5,326 @@
 ;;;;SYSTEM:             Common-Lisp
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Sexp Pattern Matcher.
 ;;;;
 ;;;;
-;;;;    
+;;;;
 ;;;;    Pattern Matcher
 ;;;;    ===============
-;;;;    
+;;;;
 ;;;;    This is a simple-minded `s-expression` pattern matcher.
-;;;;    
+;;;;
 ;;;;    The main function is `match`, which takes a pattern and a target
 ;;;;    s-expression.  It returns a list of bindings, or a list starting with
 ;;;;    the keyword :failed if matching could not complete.
-;;;;    
+;;;;
 ;;;;    It does a job similar to regular expressions and `string-match`, but
 ;;;;    works on lists (and sublists) of atoms instead of strings (vectors of
 ;;;;    characters).
-;;;;    
-;;;;    
-;;;;    
+;;;;
+;;;;
+;;;;
 ;;;;    Simple patterns
 ;;;;    ---------------
-;;;;    
+;;;;
 ;;;;    Simple patterns are normal sexp, without any of the special symbols
 ;;;;    defined below. ::
-;;;;    
+;;;;
 ;;;;        (match 'an-atom
 ;;;;               'an-atom)
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match 'an-atom-pattern
 ;;;;               'a-different-atom-expression)
 ;;;;        --> (:failed (:different an-atom-pattern a-different-atom-expression))
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;        (match '(a simple literal pattern)
 ;;;;               '(a simple literal pattern))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(a simple literal pattern)
 ;;;;               '(a simple literal expression))
 ;;;;        --> (:failed (:different pattern expression))
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;    The pattern and expression may of course contain sub-expressions: ::
-;;;;    
+;;;;
 ;;;;        (match '(I should buy (10 apples) (2 kg of oranges) (a pleasant book))
 ;;;;               '(I should buy (10 apples) (2 kg of oranges) (a pleasant book)))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(I should buy (10 apples) (2 kg of oranges) (a pleasant book))
 ;;;;               '(I should buy (10 apples) (3 kg of oranges) (a pleasant book)))
 ;;;;        --> (:failed (:different 2 3))
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;    So far, it is not much different from equalp.  But the pattern may
 ;;;;    contain in place of any element, one of the following special symbols: ::
-;;;;    
+;;;;
 ;;;;        !av        expects a symbol (variable).
 ;;;;        !ac        expects a constant (any non-symbol atom).
 ;;;;        !ax        expects anything (one sexp).
-;;;;    
+;;;;
 ;;;;    or a list starting with one of the following special symbols: ::
-;;;;    
+;;;;
 ;;;;        (!v n)     expects a symbol (variable)       and bind it.
 ;;;;        (!c n)     expects a constant (atom)         and bind it.
 ;;;;        (!x n)     expects anything (one sexp)       and bind it.
 ;;;;        (!n n ...) expects anything (several items)  and bind them.
-;;;;        (!+ ...)   expects anything (one or more times).  
-;;;;        (!* ...)   expects anything (zero or more times). 
+;;;;        (!+ ...)   expects anything (one or more times).
+;;;;        (!* ...)   expects anything (zero or more times).
 ;;;;        (!! ...)   expects anything (zero or one time).
-;;;;    
+;;;;
 ;;;;    Anonymous tokens
 ;;;;    ----------------
-;;;;    
+;;;;
 ;;;;    `!av` matches any symbol, and rejects lists or other non-symbol atoms: ::
-;;;;    
+;;;;
 ;;;;        (match '(!av eats an !av)
 ;;;;               '(John eats an apple))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(!av eats an !av)
 ;;;;               '(John eats a banana))
 ;;;;        --> (:failed (:different an a))
-;;;;    
+;;;;
 ;;;;        (match '(!av eats an !av)
 ;;;;               '((a big elephant) eats an apple))
 ;;;;        --> (:failed (:not-variable ((a big elephant) eats an apple)))
-;;;;    
+;;;;
 ;;;;        (match '(!av eats an !av)
 ;;;;               '(42 eats an apple))
 ;;;;        --> (:failed (:not-variable (42 eats an apple)))
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;    `!ac` matches any non-symbol atoms, and rejects lists or symbols: ::
-;;;;    
+;;;;
 ;;;;        (match '(I ate !ac kg of apples)
 ;;;;               '(I ate 42 kg of apples))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(I ate !ac kg of apples)
 ;;;;               '(I ate (* 21 2) kg of apples))
 ;;;;        --> (:failed (:not-constant ((* 21 2) kg of apples)))
-;;;;    
+;;;;
 ;;;;        (match '(I ate !ac kg of apples)
 ;;;;               '(I ate two kg of apples))
 ;;;;        --> (:failed (:not-constant (two kg of apples)))
-;;;;    
+;;;;
 ;;;;    `!ax` matches one s-sexp, whatever it is: ::
-;;;;    
+;;;;
 ;;;;        (match '(I ate !ax kg of apples)
 ;;;;               '(I ate 42 kg of apples))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(I ate !ax kg of apples)
 ;;;;               '(I ate (* 21 2) kg of apples))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(I ate !ax kg of apples)
 ;;;;               '(I ate two kg of apples))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;    Repeatition and option tokens
 ;;;;    -----------------------------
-;;;;    
+;;;;
 ;;;;    - `!+` allows the matching of a subsequence of patterns one or more times.
 ;;;;    - `!*` allows the matching of a subsequence of patterns zero or more times.
 ;;;;    - `!!` allows the matching of a subsequence of patterns zero or one time.
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;        (match '(I ate (!+ and ate))
 ;;;;               '(I ate))
 ;;;;        --> (:failed (:missing-repeat ((!+ and ate))))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!+ and ate))
 ;;;;               '(I ate and ate))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!+ and ate))
 ;;;;               '(I ate and ate and ate))
 ;;;;        --> nil
-;;;;    
-;;;;    
-;;;;    
+;;;;
+;;;;
+;;;;
 ;;;;        (match '(I ate (!* and ate))
 ;;;;               '(I ate))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!* and ate))
 ;;;;               '(I ate and ate))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!* and ate))
 ;;;;               '(I ate and ate and ate))
 ;;;;        --> nil
-;;;;    
-;;;;    
-;;;;    
+;;;;
+;;;;
+;;;;
 ;;;;        (match '(I ate (!! and ate))
 ;;;;               '(I ate))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!! and ate))
 ;;;;               '(I ate and ate))
 ;;;;        --> nil
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!! and ate))
 ;;;;               '(I ate and ate and ate))
 ;;;;        --> (:failed (:different nil (and ate and ate)))
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;    Of course, the sub-patterns can be anything: ::
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!* and !av))
 ;;;;               '(I ate and ran and sat))
 ;;;;         --> nil
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!* and !av))
 ;;;;               '(I ate and ran or sat))
 ;;;;        --> (:failed (:different nil (and ran or sat)))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!* and !av))
 ;;;;               '(I ate and (also ran) and sat))
 ;;;;        --> (:failed (:different nil (and (also ran) and sat)))
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;    Binding tokens
 ;;;;    --------------
-;;;;    
+;;;;
 ;;;;    Now is the interesting section.  The sub-expressions matched by the
 ;;;;    pattern may be remembered and given a name.  That association of a
 ;;;;    name and a sub-expression is called a binding.  They're stored in a
 ;;;;    cons cell with the name in the car, and the sub-expression in the cdr.
-;;;;    
+;;;;
 ;;;;    `(!v name) binds a symbol to the `name`: ::
-;;;;    
+;;;;
 ;;;;        (match '((!v name) eats an (!v fruit))
 ;;;;               '(John eats an apple))
 ;;;;        --> ((fruit . apple) (name . John))
-;;;;    
+;;;;
 ;;;;        (match '((!v name) eats an (!v fruit))
 ;;;;               '(John eats a banana))
 ;;;;        --> (:failed (:different an a) (name . John))
-;;;;    
+;;;;
 ;;;;        (match '((!v name) eats an (!v fruit))
 ;;;;               '(John eats an 8))
 ;;;;        --> (:failed (:not-variable (8)) (name . John))
-;;;;    
+;;;;
 ;;;;    Notice that in case of mismatch, the bindings found so far are found
 ;;;;    after the :failed and reason list in the result.
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;    `(!c name) is used to bind non-symbol atoms: ::
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!c amount) kg of apples)
 ;;;;               '(I ate 42 kg of apples))
 ;;;;        --> ((amount . 42))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!c amount) kg of apples)
 ;;;;               '(I ate (* 21 2) kg of apples))
 ;;;;        --> (:failed (:not-constant ((* 21 2) kg of apples)))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!c amount))
 ;;;;               '(I ate two kg of apples))
 ;;;;        --> (:failed (:not-constant (two kg of apples)))
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;    and `(!x name) is used to bind any sexp: ::
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!x amount) kg of apples)
 ;;;;               '(I ate 42 kg of apples))
 ;;;;        --> ((amount . 42))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!x amount) kg of apples)
 ;;;;               '(I ate (* 21 2) kg of apples))
 ;;;;        --> ((amount * 21 2))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!x amount) kg of apples)
 ;;;;               '(I ate two kg of apples))
 ;;;;        --> ((amount . two))
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;    Finally, `(!n name ...)` can be used to bind a sequence of
 ;;;;    sub-patterns: ::
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!n amount-with-unit !ac !av) of apples)
 ;;;;               '(I ate 42 kg of apples))
 ;;;;        --> ((amount-with-unit 42 kg))
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;    Now, one important feature, is that if a name is used twice in the
 ;;;;    pattern, each time it matches a sub-expression, these sub-expressions
 ;;;;    must be equal. ::
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!n amount-with-unit !ac !av) of apples
 ;;;;                   and (!n amount-with-unit !ac !av) of bananas)
 ;;;;               '(I ate 42 kg of apples and 42 kg of bananas))
 ;;;;        --> ((amount-with-unit 42 kg))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!n amount-with-unit !ac !av) of apples
 ;;;;                   and (!n amount-with-unit !ac !av) of bananas)
 ;;;;               '(I ate 42 kg of apples and 3 kg of bananas))
 ;;;;        --> (:failed (:different of 42))
 ;;;;                     ;; granted, the reason sublist could need some work
-;;;;    
+;;;;
 ;;;;    This is particularly important when used with repeatitions:
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!c amount) (!v fruit) (!* and (!c amount) (!v fruit)))
 ;;;;               '(I ate 3 apples and 3 apples))
 ;;;;        --> ((fruit . apples) (amount . 3))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!c amount) (!v fruit) (!* and (!c amount) (!v fruit)))
 ;;;;               '(I ate 3 apples and 5 apples))
 ;;;;        --> (:failed (:different nil (and 5 apples)) (fruit . apples) (amount . 3))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!c amount) (!v fruit) (!* and (!c amount) (!v fruit)))
 ;;;;               '(I ate 3 apples and 3 bananas))
 ;;;;        --> (:failed (:different nil (and 3 bananas)) (fruit . apples) (amount . 3))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!* (!c amount) (!v fruit) and) nothing.)
 ;;;;               '(I ate 3 apples and 3 apples and nothing.))
 ;;;;        --> ((fruit . apples) (amount . 3))
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!* (!c amount) (!v fruit) and) nothing.)
 ;;;;               '(I ate 3 apples and 3 bananas and nothing.))
 ;;;;        --> (:failed (:different nothing\. 3))
-;;;;    
+;;;;
 ;;;;    To be able to match such repeatitions, you will have to use anonymous
 ;;;;    tokens, and give a name to the whole list: ::
-;;;;    
+;;;;
 ;;;;        (match '(I ate (!n list (!* !ac !av and)) nothing.)
 ;;;;               '(I ate 3 apples and 3 bananas and nothing.))
 ;;;;        --> ((list 3 apples and 3 bananas and))
-;;;;    
-;;;;    
 ;;;;
-;;;;    
+;;;;
+;;;;
+;;;;
 ;;;;    Using bindings to build new s-expressions
 ;;;;    -----------------------------------------
-;;;;    
+;;;;
 ;;;;    The function `instanciate` takes a list of bindings as returned by a
 ;;;;    successful `match`, and insert them in a template.  A template is a
 ;;;;    s-expressions, which may contain sub-expressions of the following
 ;;;;    forms:
-;;;;    
+;;;;
 ;;;;    - (:! variable)
 ;;;;    - (:@ variable)
 ;;;;    - (:! expression)
-;;;;    
+;;;;
 ;;;;    `(:! variable)` is substituted by the value of the variable in the bindings.
-;;;;    
+;;;;
 ;;;;    `(:@ variable)` is substituted by the value of the variable in the
 ;;;;    bindings, it must be a list, and it is slit in-line like ,@ in backquote.
-;;;;    
+;;;;
 ;;;;    `(:! expression)`, when expression is not a variable in the given
 ;;;;    bindings, is evaluated with eval, after having been processed for :!
 ;;;;    and :@ in it.
-;;;;    
+;;;;
 ;;;;    ::
-;;;;    
+;;;;
 ;;;;        (let ((things (if (zerop (random 2))
 ;;;;                          'fruits
 ;;;;                          'calories)))
@@ -334,22 +334,22 @@
 ;;;;                         are (:! (+ (:! apples) (:! oranges))) (:! things))))
 ;;;;        --> (42 apples and 3 oranges are 45 fruits) ; or
 ;;;;        --> (42 apples and 3 oranges are 45 calories)
-;;;;    
+;;;;
 ;;;;    See also the following section.
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;    `match-case`
 ;;;;    -----------
-;;;;    
+;;;;
 ;;;;    Another way to use the bindings, is using the `match-case` macro.  It
 ;;;;    takes a s-expression, and a list of clauses which have a pattern and a
 ;;;;    body.  If the pattern matches the s-expression, then it binds the
 ;;;;    variables as lisp variables, and evaluates the body in a lexical
 ;;;;    context where these lisp variables have the values of the matched
 ;;;;    sub-expressions.
-;;;;    
+;;;;
 ;;;;    ::
-;;;;    
+;;;;
 ;;;;        (let ((expr '(add 42 to 21)))
 ;;;;          (match-case expr
 ;;;;                      ((add       (!x a) to   (!x b)) `(+ ,a ,b))
@@ -357,7 +357,7 @@
 ;;;;                      ((substract (!x a) from (!x a)) 0)
 ;;;;                      (otherwise                      :error)))
 ;;;;        --> (+ 42 21)
-;;;;    
+;;;;
 ;;;;        (let ((expr '(multiply 42 with (* 3 7))))
 ;;;;          (match-case expr
 ;;;;                      ((add       (!x a) to   (!x b)) `(+ ,a ,b))
@@ -365,11 +365,11 @@
 ;;;;                      ((substract (!x a) from (!x a)) 0)
 ;;;;                      (otherwise                      :error)))
 ;;;;        --> (* 42 (* 3 7))
-;;;;    
+;;;;
 ;;;;    This can be used to build new s-expressions with backquote and splice,
 ;;;;    or to do any other processing required.
-;;;;    
-;;;;    
+;;;;
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -387,19 +387,19 @@
 ;;;;
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2003 - 2011
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;;;    PURPOSE.  See the GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public
 ;;;;    License along with this program; if not, write to the Free
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -430,7 +430,7 @@ of the ms p-list, and with an entry at :failed for reason."
 
 (defun* match-state-retry    (ms)
   "PRIVATE
-Return a match-state like ms without the :failed entry." 
+Return a match-state like ms without the :failed entry."
   (if (match-state-failed-p ms)
       (make-match-state :dict (cddr (match-state-dict ms)))
       ms))
@@ -605,7 +605,7 @@ SEE ALSO:  match-state-failed-p to check if the matching failed.
      (if (null exp)
          (match-state-fail ms `(:missing-expression))
          (match (cdr pat) (cdr exp) ms)))
-    
+
     ((pat-expression-p pat)
      (if (null exp)
          (match-state-fail ms `(:missing-expression))
@@ -624,10 +624,10 @@ SEE ALSO:  match-state-failed-p to check if the matching failed.
                             (match-dict-add-binding nms pat (list list)))))
         while (match-state-failed-p nms)
         finally (return nms)))
-    
+
     ((and (pat-repeat-p pat) (null exp))
      (match-state-fail ms `(:missing-repeat ,pat)))
-    
+
     ((or (pat-repeat-p pat) (pat-optional-repeat-p pat) (pat-optional-p pat))
      (loop
         for (list rest) in (generate-all-follows exp)
@@ -662,15 +662,15 @@ SEE ALSO:  match-state-failed-p to check if the matching failed.
                                nms)))))
         while (match-state-failed-p nms)
         finally (return nms)))
-    
+
     ((atom pat)
      (if (equal pat exp)
          ms
          (match-state-fail ms `(:different ,pat ,exp ))))
-    
+
     ((atom exp)
      (match-state-fail ms `(:unexpected-atom ,exp)))
-    
+
     (t ;; both cars are sublists.
      (match (cdr pat) (cdr exp) (match (car pat) (car exp) ms)))))
 
@@ -734,7 +734,7 @@ PAT:       A symbolic expression with the following syntax:
              (!+ l)  expects anything (one or more items).
              (!* l)  expects anything (zero or more items).
              other   expects exactly other (can be a sublist).
-RETURN:    A list of the symbol used in the various (!. sym) items, 
+RETURN:    A list of the symbol used in the various (!. sym) items,
            in no particular order, but with duplicates deleted.
 "
   (delete-duplicates
@@ -758,7 +758,7 @@ NOTE:    This version by Paul Graham in On Lisp."
   "
 SEXP:    A symbolic expression, evaluated.
 CLAUSES: A list of (pattern &body body)
-         The pattern must be litteral. 
+         The pattern must be litteral.
          Lexical variable names are extracted from it, and body is executed
          in a lexical environment where these names are bound to the matched
          sub-expression of SEXP.
@@ -782,7 +782,7 @@ EXAMPLE: (match-case expr
                              (not (match-state-failed-p ,ms)))
                       (setf ,dc (match-state-dict ,ms))
                       (lexical-let ( ,@(mapcar
-                                        (lambda (name) `(,name (cdr (assoc ',name ,dc)))) 
+                                        (lambda (name) `(,name (cdr (assoc ',name ,dc))))
                                         (collect-variables pat)) )
                         ,@body))))) clauses)))))
 
@@ -793,7 +793,7 @@ EXAMPLE: (match-case expr
   (loop
      for (expression expected-result &optional error) in tests
      do (let* ((got-error nil)
-               (result (handler-case (eval expression) 
+               (result (handler-case (eval expression)
                          (error (err) (setf got-error err)))))
           (when verbose
             (message (format "test:   %S" expression))

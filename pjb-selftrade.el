@@ -9,7 +9,7 @@
 ;;;;    This module exports
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    199?/??/?? <PJB> Creation.
 ;;;;BUGS
@@ -38,7 +38,7 @@
 
 
 (defun find-matching-pattern (string pattern-list)
-  "RETURN: The index of the first pattern that matches STRING, 
+  "RETURN: The index of the first pattern that matches STRING,
         or nil if none matches."
   (let ((n -1)
         pattern
@@ -85,10 +85,10 @@
       (if (= (line-beginning-position) (line-end-position))
           (progn
             (insert (format "%s|%s|%s|%s|%s|%s|%s|%s\n"
-                            code-valeur emetteur parite style 
+                            code-valeur emetteur parite style
                             strike echeance delta nombre))
             (setq code-valeur nil
-                  emetteur nil 
+                  emetteur nil
                   parite nil
                   style nil
                   strike nil
@@ -118,7 +118,7 @@
          ((= p 0)
           (setq nombre       (fsce-append nombre       (chop-spaces line))))
          )
-        
+
         )
       (beginning-of-line)
       (kill-line 1))

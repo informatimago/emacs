@@ -6,11 +6,11 @@
 ;;;;USER-INTERFACE:     emacs
 ;;;;DESCRIPTION
 ;;;;
-;;;;    This is a root class for my classes. 
+;;;;    This is a root class for my classes.
 ;;;;    The main purpose is to implement here compatibility stuff.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2002-09-08 <PJB> Creation.
 ;;;;BUGS
@@ -54,11 +54,11 @@
     :initarg  :object-id
     :accessor object-id
     :type (or null string)
-    :documentation 
+    :documentation
     "The id of this object (eieio has it in its internals, but not CLOS).")
    );;end attributes
   (:documentation
-   "This is a root class for my classes. 
+   "This is a root class for my classes.
     The main purpose is to implement here compatibility stuff.")
   );;PjbObject
 
@@ -67,29 +67,29 @@
 (defmacro defmethod* (name &rest things)
   "In emacs-24 eieio rejects defmethod with more than one specialization."
   (let* ((qualifiers (loop while (and (atom (car things)) (not (null (car things))))
-			collect (pop things)))
-	 (lambda-list (pop things))
-	 (body things)
-	 (mandatories (loop
-			 while (and lambda-list
-				    (not (member (car lambda-list) '(&optional &rest &body &key &allow-other-keys &aux))))
-			 collect (pop lambda-list)))
-	 (other-parameters lambda-list)
-	 (first-parameter (pop mandatories))
-	 (checks '()))
+                        collect (pop things)))
+         (lambda-list (pop things))
+         (body things)
+         (mandatories (loop
+                         while (and lambda-list
+                                    (not (member (car lambda-list) '(&optional &rest &body &key &allow-other-keys &aux))))
+                         collect (pop lambda-list)))
+         (other-parameters lambda-list)
+         (first-parameter (pop mandatories))
+         (checks '()))
     `(defmethod ,name ,@qualifiers
        (,first-parameter
-	,@(mapcar (lambda (parameter)
-		    (if (listp parameter)
-			(progn
-			  (push parameter checks)
-			  (first parameter))
-			parameter))
-		  mandatories)
-	,@other-parameters)
+        ,@(mapcar (lambda (parameter)
+                    (if (listp parameter)
+                        (progn
+                          (push parameter checks)
+                          (first parameter))
+                        parameter))
+                  mandatories)
+        ,@other-parameters)
        ,@(mapcar (lambda (check)
-		   (cons 'check-type check))
-		 checks)
+                   (cons 'check-type check))
+                 checks)
        ,@body)))
 
 

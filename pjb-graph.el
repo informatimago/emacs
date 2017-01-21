@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             emacs
 ;;;;USER-INTERFACE:     emacs
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Graph class.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon
 ;;;;MODIFICATIONS
@@ -15,20 +15,20 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2003 - 2011
 ;;;;    mailto:pjb@informatimago.com
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;;;    PURPOSE.  See the GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public
 ;;;;    License along with this program; if not, write to the Free
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -46,7 +46,7 @@
 
 (provide 'pjb-graph)
 
-;;; cat pjb-graph.el | sed -n  -e '/^(def/s/^/;; /p' 
+;;; cat pjb-graph.el | sed -n  -e '/^(def/s/^/;; /p'
 
 ;; (defclass PjbElement ()
 ;; (defmethod* description ((self PjbElement))
@@ -73,7 +73,7 @@
 ;; (defmethod* description ((self PjbEdge))
 ;; (defgeneric copy ((self PjbEdge))
 ;; (defgeneric nodes ((self PjbEdge))
-;; (defgeneric isBetweenNodes ((self PjbEdge) 
+;; (defgeneric isBetweenNodes ((self PjbEdge)
 ;; (defgeneric successor-of ((self PjbEdge) (node PjbElement))
 
 ;; (defclass PjbWeightMixin ()
@@ -83,9 +83,9 @@
 ;; (defclass PjbUndirectedEdge (PjbEdge)
 ;; (defmethod* copy ((self PjbUndirectedEdge))
 ;; (defun identical-nodes (nodes-cons-a nodes-cons-b)
-;; (defmethod* isBetweenNodes ((self PjbEdge) 
+;; (defmethod* isBetweenNodes ((self PjbEdge)
 ;; (defmethod* successor-of ((self PjbUndirectedEdge) (node PjbElement))
-;; (defmethod* setNodes ((self PjbUndirectedEdge) 
+;; (defmethod* setNodes ((self PjbUndirectedEdge)
 
 ;; (defclass PjbWeightedUndirectedEdge (PjbUndirectedEdge PjbWeightMixin)
 ;; (defmethod* description ((self PjbWeightedUndirectedEdge))
@@ -93,7 +93,7 @@
 ;; (defclass PjbDirectedEdge (PjbEdge)
 ;; (defmethod* copy ((self PjbDirectedEdge))
 ;; (defmethod* nodes ((self PjbDirectedEdge))
-;; (defmethod* isBetweenNodes ((self PjbEdge) 
+;; (defmethod* isBetweenNodes ((self PjbEdge)
 ;; (defmethod* successor-of ((self PjbDirectedEdge) (node PjbElement))
 ;; (defmethod* setNodes ((self PjbDirectedEdge)
 
@@ -109,16 +109,16 @@
 ;; (defmethod* removeNode ((self PjbGraph) (oldNode PjbElement))
 ;; (defmethod* removeNodes ((self PjbGraph) oldNodeList)
 ;; (defmethod* addEdge ((self PjbGraph) (newEdge PjbEdge))
-;; (defmethod* addEdgeBetweenNodes ((self PjbGraph) 
+;; (defmethod* addEdgeBetweenNodes ((self PjbGraph)
 ;; (defmethod* removeEdge ((self PjbGraph) (oldEdge PjbEdge))
 ;; (defmethod* removeEdges ((self PjbGraph) edge-list)
 ;; (defmethod* removeEdgesBetweenNodes ((self PjbGraph)
 ;; (defmethod* edgesBetweenNodes ((self PjbGraph)
-;; (defmethod* directedEdgesBetweenNodes ((self PjbGraph) 
+;; (defmethod* directedEdgesBetweenNodes ((self PjbGraph)
 ;; (defmethod* directedEdgesFromNode ((self PjbGraph) (fromNode PjbElement))
 ;; (defmethod* successorNodes ((self PjbGraph) (node PjbElement))
 ;; (defmethod* adjacentNodes ((self PjbGraph) (node PjbElement))
-;; (defmethod* flowDistanceFromNode ((self PjbGraph) 
+;; (defmethod* flowDistanceFromNode ((self PjbGraph)
 ;; (defmethod* walkFromNode ((self PjbGraph) (startNode PjbElement) lambda-body)
 ;; (defmethod* walkEdgesFromNode ((self PjbGraph)
 ;; (defmethod* copy ((self PjbGraph) &rest keys)
@@ -133,7 +133,7 @@
     :reader   ident
     :type     symbol
     :documentation "A unique symbol identifying this element.")
-   (properties 
+   (properties
     :initform nil
     :initarg  :properties
     :accessor properties
@@ -152,7 +152,7 @@ It can be used to store markers while walking sets or graphs containing them.")
   "
 DO:     Initalize the instance id.
 "
-  (setf (slot-value self 'ident) 
+  (setf (slot-value self 'ident)
         (gensym (format "%s-" (upcase (cl:string (class-of self))))))
   self);;initialize-instance
 
@@ -231,7 +231,7 @@ DO:     Remove the property named `prop-name' from the property list of
   "
 RETURN: A string describing this element.
 "
-  (format "<An instance of %s with %d elements>" 
+  (format "<An instance of %s with %d elements>"
           (class-name (class-of self)) (cardinal self))
   );;description
 
@@ -360,7 +360,7 @@ RETURN: A list of elements that have as property PROPERTY the value VALUE.
   (:documentation "This is a specialized kind of set that maintains a hashtable
 index of its elements to be able to retrieve them rapidly.")
   );;PjbHashedSet
-               
+
 
 (defmethod* containsElement ((self PjbHashedSet) (anElement PjbElement))
   "
@@ -398,9 +398,9 @@ POST:   already_in       ==> (cardinal self) == old_cardinal
 RETURN: A string describing this element.
 "
   (let ((nodes (nodes self)))
-    (format "<A %s between { %s and %s }>" 
-            (class-name (class-of self)) 
-            (description (car  nodes)) 
+    (format "<A %s between { %s and %s }>"
+            (class-name (class-of self))
+            (description (car  nodes))
             (description (cdr nodes))))
   );;description
 
@@ -423,7 +423,7 @@ RETURN: A cons containing the two nodes of the edge, in no specific order.
   );;nodes
 
 
-(defgeneric isBetweenNodes ((self PjbEdge) 
+(defgeneric isBetweenNodes ((self PjbEdge)
                             (nodeA PjbElement)  (nodeB PjbElement))
   "
 RETURN: Whether this edge is between `nodeA' and `nodeB'.
@@ -437,7 +437,7 @@ RETURN: Whether this edge is between `nodeA' and `nodeB'.
 (defgeneric successor-of ((self PjbEdge) (node PjbElement))
   "
 RETURN: If node is a node of the edge, then return its successor or nil.
-        That is, for an undirected edge e, 
+        That is, for an undirected edge e,
              (and (eq (successor-of e (car (nodes e))) (cdr (nodes e)))
                   (eq (successor-of e (cdr (nodes e))) (car (nodes e))) )
         while for a directed edge d:
@@ -532,7 +532,7 @@ RETURN: Whether nodes-cons-a and nodes-cons-b contain the same nodes.
 ;;        (identical-nodes (nodes self) (nodes other)))
 ;;   );;identicalTo
 
-(defmethod* isBetweenNodes ((self PjbEdge) 
+(defmethod* isBetweenNodes ((self PjbEdge)
                             (nodeA PjbElement)  (nodeB PjbElement))
   "
 RETURN: Whether this edge is between `nodeA' and `nodeB'.
@@ -554,7 +554,7 @@ RETURN: If node is a node of this edge, then the other node, else nil.
   );;successor-of
 
 
-(defmethod* setNodes ((self PjbUndirectedEdge) 
+(defmethod* setNodes ((self PjbUndirectedEdge)
                      (nodeA PjbElement) (nodeB PjbElement))
   "
 DO:     set the nodes of this edge.
@@ -577,8 +577,8 @@ DO:     set the nodes of this edge.
 RETURN: A string describing this element.
 "
   (let ((nodes (nodes self)))
-    (format "<A %s between { %s and %s } weighting %S>" 
-            (class-name (class-of self)) 
+    (format "<A %s between { %s and %s } weighting %S>"
+            (class-name (class-of self))
             (description (car  nodes))
             (description (cdr nodes))
             (weight self)))
@@ -637,7 +637,7 @@ NOTE:   Use the accessor methods `from' and `to' to get the wanted node.
 ;;   );;identicalTo
 
 
-(defmethod* isBetweenNodes ((self PjbEdge) 
+(defmethod* isBetweenNodes ((self PjbEdge)
                            (nodeA PjbElement)  (nodeB PjbElement))
   "
 RETURN: Whether this edge is between `nodeA' and `nodeB'.
@@ -681,7 +681,7 @@ DO:     set the nodes of this edge.
 RETURN: A string describing this element.
 "
   (let ((nodes (nodes self)))
-    (format "<A %s between { %s and %s } weighting %S>" 
+    (format "<A %s between { %s and %s } weighting %S>"
             (class-name (class-of self))
             (description (car  nodes))
             (description (cdr nodes))
@@ -731,10 +731,10 @@ RETURN: Whether `item' is a subclass of PjbEdge (not PjbEdge itself).
     :accessor edge-class
     ;;:type     (satisfies 'subclass-of-edge-p)
     :documentation
-    "The class used to make new edges in this graph. 
+    "The class used to make new edges in this graph.
 Default is PjbUndirectedEdge.")
    )
-  (:documentation 
+  (:documentation
    "A graph of elements. By default, it's a undirected graph."
    )
   );;PjbGraph
@@ -744,8 +744,8 @@ Default is PjbUndirectedEdge.")
   "
 RETURN: A string describing this element.
 "
-  (format "<A %s with %d nodes and %d edges>" 
-          (class-name (class-of self)) 
+  (format "<A %s with %d nodes and %d edges>"
+          (class-name (class-of self))
           (cardinal (nodes self))
           (cardinal (edges self)))
   );;description
@@ -770,7 +770,7 @@ DO:     Add a list of new nodes to the set of nodes of this graph.
 
 (defmethod* removeNode ((self PjbGraph) (oldNode PjbElement))
   "
-DO:      Remove the oldNode from the graph. 
+DO:      Remove the oldNode from the graph.
          This implies removing all the edges adjacent to the node too.
 "
   (when (containsElement (nodes self) oldNode)
@@ -802,12 +802,12 @@ DO:     Add a new edge to this graph.
   );;addNode
 
 
-(defmethod* addEdgeBetweenNodes ((self PjbGraph) 
+(defmethod* addEdgeBetweenNodes ((self PjbGraph)
                                 (nodeA PjbElement) (nodeB PjbElement))
   "
 DO:     Create a new edge (of class edge-class) between `nodeA' and `nodeB'.
         and add it to this graph.
-        If the edge is directed, 
+        If the edge is directed,
         then `nodeA' is the `from' node and `nodeB' the `to' node.
 "
   (let ((edge (make-instance (edge-class self))))
@@ -856,7 +856,7 @@ RETURN: A list of edges existing between the `nodeA' and `nodeB'.
   );;edgesBetweenNodes
 
 
-(defmethod* directedEdgesBetweenNodes ((self PjbGraph) 
+(defmethod* directedEdgesBetweenNodes ((self PjbGraph)
                                       (fromNode PjbElement) (toNode PjbElement))
   "
 RETURN: A list of edges existing from the `fromNode' and to the `toNode'.
@@ -910,25 +910,25 @@ NOTE:   For directed graphs, an adjacent node is either a predecessor
      (edges self)
      (lambda (edge)
        (let ((ns (nodes edge)))
-         (cond 
-          ((eq node (car ns)) 
+         (cond
+          ((eq node (car ns))
            (unless (memq (cdr ns) result) (push (cdr ns) result)))
-          ((eq node (cdr ns)) 
+          ((eq node (cdr ns))
            (unless (memq (car ns) result) (push (car ns) result)))
           ))))
     result)
   );;adjacentNodes
 
 
-(defmethod* flowDistanceFromNode ((self PjbGraph) 
+(defmethod* flowDistanceFromNode ((self PjbGraph)
                                  (startNode PjbElement) (prop-name symbol))
   "
 DO:     Compute for each node in this graph the distance from the startNode,
         and store it as a property named prop-name.
-NOTE:   If the graph is not connex, then some distances will be nil, 
+NOTE:   If the graph is not connex, then some distances will be nil,
         meaning infinity.
 "
-  (performWithElements (nodes self) (lambda (node) 
+  (performWithElements (nodes self) (lambda (node)
                                       (setProperty node prop-name nil)))
   (when (containsElement (nodes self) startNode)
     (setProperty startNode prop-name 0)
@@ -955,13 +955,13 @@ NOTE:   If the graph is not connex, then some distances will be nil,
 
 (defmethod* walkFromNode ((self PjbGraph) (startNode PjbElement) lambda-body)
   "
-DO:     Walk the graph starting form startNode, calling lambda-body 
-        with each node as argument. 
+DO:     Walk the graph starting form startNode, calling lambda-body
+        with each node as argument.
 "
   (let ((stamp (gensym "walked-")))
 
     (when (containsElement (nodes self) startNode)
-      (performWithElements (nodes self) 
+      (performWithElements (nodes self)
                            (lambda (node) (setProperty node stamp nil)))
 
 
@@ -981,7 +981,7 @@ DO:     Walk the graph starting form startNode, calling lambda-body
           );;while
         );;let
 
-      (performWithElements (nodes self) 
+      (performWithElements (nodes self)
                            (lambda (node) (deleteProperty node stamp)))
 
       );;when
@@ -992,7 +992,7 @@ DO:     Walk the graph starting form startNode, calling lambda-body
 (defmethod* walkEdgesFromNode ((self PjbGraph)
                               (startNode PjbElement) lambda-body)
   "
-DO:     Walk the graph starting form startNode, calling lambda-body 
+DO:     Walk the graph starting form startNode, calling lambda-body
         with each edges as argument. Since it's the edges that are passed
         to lambda-body, one node can be \"walked\" several times either as
         `from' or `to' node or different edges.
@@ -1001,9 +1001,9 @@ DO:     Walk the graph starting form startNode, calling lambda-body
 
     (when (containsElement (nodes self) startNode)
 
-      (performWithElements (edges self) 
+      (performWithElements (edges self)
                            (lambda (item) (setProperty item stamp nil)))
-      (performWithElements (nodes self) 
+      (performWithElements (nodes self)
                            (lambda (item) (setProperty item stamp nil)))
 
 
@@ -1025,9 +1025,9 @@ DO:     Walk the graph starting form startNode, calling lambda-body
           );;while
         );;let
 
-      (performWithElements (edges self) 
+      (performWithElements (edges self)
                            (lambda (item) (deleteProperty item stamp)))
-      (performWithElements (nodes self) 
+      (performWithElements (nodes self)
                            (lambda (item) (deleteProperty item stamp)))
 
       );;when
@@ -1047,18 +1047,18 @@ NOTE:   By default, the nodes are the same, but the edges are duplicated.
             :no-copy-nodes    (default)
             :copy-edges       (default)
             :no-copy-edges    (==> :no-copy-node)
- 
+
        The following combination are valid:
 
             :copy-nodes    :copy-edge    You get a deep copy of the graph,
-                                         where you can change anything 
+                                         where you can change anything
                                          independtly from the orginal.
 
             :no-copy-nodes :copy-edge    You get a new graph with new edges,
                                          but the same nodes.
 
             :no-copy-nodes :no-copy-edge You get a new graph with the same
-                                         edges and the same nodes. But you 
+                                         edges and the same nodes. But you
                                          still can add or remove nodes or
                                          edges to make it different from the
                                          original graph.
@@ -1088,9 +1088,9 @@ NOTE:   By default, the nodes are the same, but the edges are duplicated.
     (assert (or (and (not copy-edges) no-copy-edges)
                 (and  copy-edges (not no-copy-edges))))
 
-    (if copy-nodes 
+    (if copy-nodes
         (progn
-          (setq node-hash (make-hash-table :test 'eq 
+          (setq node-hash (make-hash-table :test 'eq
                                            :size (cardinal (nodes self))))
           (setq new-elements
                 (mapElements (nodes self)
@@ -1105,14 +1105,14 @@ NOTE:   By default, the nodes are the same, but the edges are duplicated.
 
     (if copy-edges
         (progn
-          (setq new-elements 
+          (setq new-elements
                 (mapElements (edges self)
                              (lambda (edge)
                                (let ((new-edge (copy edge))
                                      nodes)
                                  (when copy-nodes
                                    (setq nodes (nodes new-edge))
-                                   (setNodes new-edge 
+                                   (setNodes new-edge
                                              (gethash (car nodes) node-hash)
                                              (gethash (cdr nodes) node-hash))
                                    );;when copy-node
@@ -1140,7 +1140,7 @@ RETURN: A list of nodes that have as property PROPERTY the value VALUE.
 (defmethod* show-graph ((self PjbGraph))
   (printf "%s {\n" (description self))
 
-  (performWithElements 
+  (performWithElements
    (nodes self)
    (lambda (node) (printf "   node %s\n"  (description node))) )
 

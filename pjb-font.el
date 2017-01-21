@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Font stuff.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2006 - 2011
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;;;    PURPOSE.  See the GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public
 ;;;;    License along with this program; if not, write to the Free
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -45,7 +45,7 @@
    (nth-value 0 (cl:parse-integer
      (shell-command-to-string
       (format "xlsfonts -fn %S 2>&1|awk 'BEGIN{r=0;} /xlsfonts: pattern .* unmatched/{r=1;} END{printf \"%%d\",r;}'"
-	      pattern))))))
+              pattern))))))
 
 (defun font-canonical-to-pixel (canon &optional device)
   (let ((pix-width (float (or (cond ((fboundp 'device-pixel-width)
@@ -53,13 +53,13 @@
                                     ((fboundp 'display-pixel-width)
                                      (display-pixel-width) device)
                                     (t nil))
-			      1024)))
+                              1024)))
         (mm-width (float (or (cond ((fboundp 'device-mm-width)
                                     (device-mm-width device))
                                    ((fboundp 'display-mm-width)
                                     (display-mm-width) device)
                                    (t nil))
-			     293))))
+                             293))))
     (/ canon (/ pix-width mm-width) (/ 25.4 72.0))))
 
 
@@ -71,10 +71,10 @@ RETURN: The font height in pixel.
               (fboundp 'font-create-object)
               (fboundp 'font-spatial-to-canonical))
          (let ((fs (font-size (font-create-object font))))
-           (if (numberp fs) 
-	     fs
-	     (font-canonical-to-pixel
-	      (font-spatial-to-canonical fs device) device))))
+           (if (numberp fs)
+             fs
+             (font-canonical-to-pixel
+              (font-spatial-to-canonical fs device) device))))
         (t  (error "How do I compute the font size in pixel for font %S?" font))))
 
 
@@ -154,7 +154,7 @@ RETURN:  An a-list with entries for the selected keywords,
          each being the list of unique values for the corresponding
          field in all fonts selected by the pattern.
 EXAMPLE: All families in the Adobe foundry:
-         (get-independant-font-parts (make-font-pattern :foundry \"adobe\") 
+         (get-independant-font-parts (make-font-pattern :foundry \"adobe\")
                                      :family t)
 "
   (let ((p-foundry nil)      (p-family nil)
@@ -240,7 +240,7 @@ latin-iso8859-1:-apple-monaco-%s--%d-%d0-75-75-m-%d0-mac-roman"
 ;; ---------------------------
 ;;       select-font
 ;; ---------------------------
-   
+
 (defstruct ftree label children)
 
 (defun build-font-tree (fps &optional label)
@@ -265,7 +265,7 @@ RETURN:  A tree where the child of each node are labelled with
 (defun ftree-children-named (font-tree name)
   (car (delete-if (lambda (child) (not (string-equal name (ftree-label child))))
                   (ftree-children font-tree))))
-  
+
 (defparameter *font-default-fields*
   '(:spacing "m" :registry "iso8859"))
 
@@ -275,7 +275,7 @@ RETURN:  A tree where the child of each node are labelled with
      (delete-if (lambda (fp)
                   (let* ((ssize (plist-get fp :pixel-size))
                          (size  (when (and ssize (not (string-equal "*" ssize)))
-				  (nth-value 0 (cl:parse-integer ssize)))))
+                                  (nth-value 0 (cl:parse-integer ssize)))))
                     (or (null size) (< size 8))))
                 (get-font-parts
                  (apply (function make-font-pattern) *font-default-fields*)
@@ -319,7 +319,7 @@ RETURN:  A tree where the child of each node are labelled with
                                                     :slant slant :pixel-size pixel-size
                                                     :spacing "m"))
   (when (fboundp 'single-frame) (single-frame)))
-   
+
 
 
 (defvar *default-font* "fixed")

@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             Common-Lisp
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    A proof-of-concept-so-far tracing CL package.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,23 +15,23 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2012 - 2012
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU Affero General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
-;;;;    
+;;;;
 
 (defpackage "COM.INFORMATIMAGO.COMMON-LISP.TRACING-COMMON-LISP"
   (:nicknames "TRACING-COMMON-LISP" "TRACING-CL" "TOO-EARLY")
@@ -76,7 +76,7 @@
                (cl:setq ,var ,val)
                (trace-places cl:setq ,var)
                (setq ,@others))
-            `(prog1 
+            `(prog1
                  (cl:setq ,var ,val)
                (trace-places cl:setq ,var))))))
 
@@ -111,7 +111,7 @@
                 (mapcan (lambda (parameter)
                           (list (ENSURE-PARAMETER-KEYWORD parameter) (parameter-name parameter)))
                         (lambda-list-keyword-parameters lambda-list)))
-               
+
                (t '())))
             (when (lambda-list-rest-parameter-p lambda-list)
               (parameter-name (lambda-list-rest-parameter lambda-list)))
@@ -164,14 +164,14 @@
 ;; (f)
 ;; (x)
 ;; nil
-;; 
+;;
 ;; (eval-and-trace "(defun f (x) (if (zerop x) x (* x (f (1- x)))))"
 ;;                 '((x 42)))
 ;; nil
 ;; (f)
 ;; (x)
 ;; (0)
-;; 
+;;
 ;; (eval-and-trace "(defun f (x) (if (zerop x) 1 (* x (f (1- x)))))"
 ;;                 '((x 42)))
 ;; nil
@@ -188,15 +188,15 @@
 ;; (g)
 ;; (a b)
 ;; nil
-;; 
+;;
 ;; (eval-and-trace "(defun g (a b) (let ((c (+ a b))) (* c c)))"
 ;;                 '((a 2) (b 3)))
-;; 
+;;
 ;; After common-lisp:let,  c            = 5
 ;; nil
 ;; (g)
 ;; (a b)
-;; (5) 
+;; (5)
 
 
 ;; tracing-common-lisp>  (eval-and-trace "(defun f (x) (if (zerop x) 1 (let ((r (* x (f (1- x))))) r)))"
@@ -215,4 +215,4 @@
 ;; (f)
 ;; (x)
 ;; (3628800)
-;; tracing-common-lisp> 
+;; tracing-common-lisp>

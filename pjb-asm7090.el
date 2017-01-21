@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    asm7090 stuff.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2005 - 2011
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;;;    PURPOSE.  See the GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public
 ;;;;    License along with this program; if not, write to the Free
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -73,26 +73,26 @@
       ;; (message "search-asm7090-fields %d %S\n%S" (point) limit line)
       ;; (message "search-asm7090-fields start=%d  end=%d\n" start end)
       (setf limit (1+ end))
-      (beginning-of-line) 
+      (beginning-of-line)
       (cond
         ((= 0 (length line))
          ;; (message "  exit 0")
-         (re-search-forward 
+         (re-search-forward
           "^\\(\\)\\(\\)\\(\\)\\(\\)\\(\\)\\(\\)\n" limit t))
         ((= (aref line 0) +asm7090-ibsys-char+)
          ;; (message "  exit 1")
-         (re-search-forward 
+         (re-search-forward
           "^\\(\\)\\(\\)\\(\\)\\(\\)\\(.\\{1,72\\}\\)\\(.\\{0,8\\}\\)\n" limit t))
         ((= (aref line 0) +asm7090-comment-char+)
          ;; (message "  exit 2")
-         (re-search-forward 
+         (re-search-forward
           "^\\(\\)\\(\\)\\(\\)\\(.\\{1,72\\}\\)\\(\\)\\(.\\{0,8\\}\\)\n" limit t))
         ((re-search-forward             ; only spaces
           "^ +\\(\\)\\(\\)\\(\\)\\(\\)\\(\\)\\(\\)\n" limit t))
         ;; (message "  exit 3") t
         ((< (length line) 7)
          ;; (message "  exit 4")
-         (re-search-forward 
+         (re-search-forward
           "^\\(.\\{0,6\\}\\)\\(\\)\\(\\)\\(\\)\\(\\)\\(\\)\n" limit t))
         (t (let ((labs 0) (labe 6)
                  cods code
@@ -196,13 +196,13 @@
            (match-string-no-properties 5)
            (length (match-string-no-properties 6))
            (match-string-no-properties 6)))
-  
+
 
 (defun asm7090-font-lock ()
   (interactive)
   (setq font-lock-defaults nil
         font-lock-keywords nil)
-  (font-lock-add-keywords 
+  (font-lock-add-keywords
    nil
    (list
     (list
@@ -482,7 +482,7 @@
     (EFTM -0760 T 00002 "Enter Floating Trap Mode")
     (LFTM -0760 T 00004 "Leave Floating Trap Mode")
     ;; page 67.  Add Instructions for the IBM 7909 Data Channel
-    
+
     ))
 
 
@@ -510,9 +510,10 @@
   (setf tab-stop-list     '(0 7 15 34 72)
         asm-comment-char   ?*)
   (local-set-key [tab] (function tab-to-tab-stop))
-  (local-set-key "" (lambda ()
-                        (interactive) 
-                        (asm7090-describe-codop) 
+  (local-set-key "
+" (lambda ()
+                        (interactive)
+                        (asm7090-describe-codop)
                         (newline-and-indent)))
   (font-lock-mode 1)
   (message "asm7090 activated"))
@@ -522,7 +523,7 @@
 
 (defun add-card-id (start end prefix from)
   (interactive "r
-sPrefix: 
+sPrefix:
 nFrom:")
   (setf prefix (subseq prefix 0 (min (length prefix) 7)))
   (let ((nf (format "%%-%ds%s%%0%dd"

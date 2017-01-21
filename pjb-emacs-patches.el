@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Random patches.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2015 - 2015
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU Affero General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -39,7 +39,7 @@
 
 (when (string= emacs-version "24.3.1")
   (require 'minibuffer)
-  
+
   (defun completion--twq-all (string ustring completions boundary
                               unquote requote)
     (when completions
@@ -144,7 +144,7 @@ rather than at left margin."
             (goto-char (point-min))
             ;; Quote any nested comment marker
             (comment-quote-nested comment-start comment-end nil)
-            
+
             ;; Loop over all lines to find the needed indentations.
             (goto-char (point-min))
             (while
@@ -166,7 +166,7 @@ rather than at left margin."
             ;; (setq max-indent
             ;;   (+ max-indent (max (length cs) (length ccs)) tab-width -1))
             (unless indent (setq min-indent 0))
-            
+
             ;; make the leading and trailing lines if requested
             (when lines
               (let ((csce

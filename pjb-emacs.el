@@ -781,10 +781,10 @@ DO:      Grep current directory for sources containing the current word.
 "
   (interactive)
   (let ( (word  (current-word))
-	 (files (delete nil
-			(mapcar (lambda (name)
-				  (cond
-				   ((file-directory-p name) nil)
+         (files (delete nil
+                        (mapcar (lambda (name)
+                                  (cond
+                                   ((file-directory-p name) nil)
                             ((string-match pjb-cross-references-rejected-regexp
                                            name) nil)
                             (t (shell-quote-argument name))) )

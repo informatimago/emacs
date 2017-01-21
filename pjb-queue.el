@@ -10,10 +10,10 @@
 ;;;;    FIFO operations, keeping a pointer to the head and the tail of a list.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2001-11-12 <PJB> Creation.
-;;;;    2001-12-31 <PJB> Added pjb-queue-requeue. 
+;;;;    2001-12-31 <PJB> Added pjb-queue-requeue.
 ;;;;                     Corrected the return value of some methods.
 ;;;;BUGS
 ;;;;LEGAL
@@ -42,7 +42,7 @@
 
 (defun pjb-queue-new ()
   "DO:      Creates a new pjb-queue.
-POST:    (and (pjb-queue-p (pjb-queue-new)) 
+POST:    (and (pjb-queue-p (pjb-queue-new))
               (= 0 (pjb-queue-length queue)))
 RETURN:  The new queue.
 NOTE:    The structure of a pjb-queue is as follow:
@@ -81,7 +81,7 @@ DO:      Checks that head points to a list whose last element is tail"
    (eq 'pjb-queue (car queue))
    (let ( (head (cadr queue))
           (tail (cddr queue)) )
-     (and 
+     (and
       (listp head)
       (listp tail)
       (or (and (null head)             (null tail))
@@ -149,7 +149,7 @@ RETURN:  queue"
 POST:    l>0 ==> l-1=(pjb-queue-length queue)
          l=0 ==> 0=(pjb-queue-length queue)
 RETURN:  f"
-  (let* ( (result   (pjb-queue-first-element queue)) 
+  (let* ( (result   (pjb-queue-first-element queue))
           (q        (cdr queue))
           (second   (cdar q)) )
     (if second
@@ -191,10 +191,10 @@ RETURN:  queue"
                  (insert
                   (if (not (pjb-queue-p q))
                       (format "   NOT A QUEUE !\n%S\n" q)
-                    (concat 
+                    (concat
                      (format "   Length=%2d\n" (pjb-queue-length q))
                      (if (< 0 (pjb-queue-length q))
-                         (format "      Head=%S\n      Tail=%S\n" 
+                         (format "      Head=%S\n      Tail=%S\n"
                                  (pjb-queue-first-element q)
                                  (pjb-queue-last-element q))
                        "")

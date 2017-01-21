@@ -9,7 +9,7 @@
 ;;;;    This module exports
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    199?/??/?? <PJB> Creation.
 ;;;;BUGS
@@ -40,7 +40,7 @@
 
 (defun clean-number-string (number-string)
   "
-RETURN: A cleaned string where the comas are replaced by dots, 
+RETURN: A cleaned string where the comas are replaced by dots,
         and spaces and dashes are removed.
 "
   (dolist (p-r '( ("[ -][ -]*"               .  "")
@@ -74,13 +74,13 @@ RETURN: A cleaned string where the comas are replaced by dots,
 
 (defun pjb-bank-format-line (year month day credit debit description)
   (format "%04d-%02d-%02d %10s %10s %s\n\n"
-          year month day credit debit 
+          year month day credit debit
           (if (< (length description) 48)
               description
             (substring (string-justify-left description 79 33) 33)))
   );;pjb-bank-format-line
 
-   
+
 ;; ---------------------------------------------------------------------
 
 
@@ -89,8 +89,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
   "Convert the lines following the point as from Caja Rural"
   (interactive)
   (let (credits debits)
-    (while (re-search-forward 
-            (concat 
+    (while (re-search-forward
+            (concat
              "\\([0-9][0-9]\\)-\\([0-9][0-9]\\)-\\([0-9][0-9]\\)|"
              "\\([0-9][0-9]\\)-\\([0-9][0-9]\\)|"
              "\\([^|]*\\)|"
@@ -152,7 +152,7 @@ RETURN: A cleaned string where the comas are replaced by dots,
         (while data
           ;; (printf "%S\n" (car data))
           (when  (string-match
-                  (concat 
+                  (concat
                    "^"
                    "\\([0-9][0-9]\\)-\\([0-9][0-9]\\)-\\([0-9][0-9]\\)  "
                    "[-0-9]*  "
@@ -162,11 +162,11 @@ RETURN: A cleaned string where the comas are replaced by dots,
                    "$"
                    ) (car data))
 
-            (let* ((d   (string-to-number 
+            (let* ((d   (string-to-number
                          (match-string-no-properties 1 (car data))))
-                   (m   (string-to-number 
+                   (m   (string-to-number
                          (match-string-no-properties 2 (car data))))
-                   (y   (string-to-number 
+                   (y   (string-to-number
                          (match-string-no-properties 3 (car data))))
                    (mv m);; should get them from input data...
                    (dv d);; should get them from input data...
@@ -208,8 +208,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
   "Convert the lines following the point as from Caja Rural"
   (interactive)
   (let (credits debits)
-    (while  (re-search-forward 
-             (concat 
+    (while  (re-search-forward
+             (concat
               "  \\([0-9][0-9]\\)-\\([0-9][0-9]\\)-\\([0-9][0-9]\\) *\n"
               "       *[-0-9]* *\n"
               "\\(\\(        .*\n\\)+\\)"
@@ -248,7 +248,7 @@ RETURN: A cleaned string where the comas are replaced by dots,
 ;;;          (setq oridev (substring ori -3))
 ;;;          (setq ori    (substring ori 0 -4))
 ;;;          (if (string-equal "PTA" oridev)
-;;;              (setq ori (concat (string-replace 
+;;;              (setq ori (concat (string-replace
 ;;;                                 (clean-number-string ori)
 ;;;                                 "\\.00$" "" t t) " ESP"))
 ;;;            (setq ori (concat (clean-number-string ori) " EUR"))))
@@ -269,13 +269,13 @@ RETURN: A cleaned string where the comas are replaced by dots,
   "Convert the lines following the point as from Evolve Bank (text)."
   (interactive)
   (let (credits debits)
-    (while (re-search-forward 
-            (concat 
-             "\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)	"
-             "\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)	"
-             "\\([^	]*\\)	"
-             "\\([-0-9]?[0-9,.]*\\)	"
-             "\\([-0-9]?[0-9,.]*\\)	"
+    (while (re-search-forward
+            (concat
+             "\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)    "
+             "\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)    "
+             "\\([^     ]*\\)   "
+             "\\([-0-9]?[0-9,.]*\\)     "
+             "\\([-0-9]?[0-9,.]*\\)     "
              "\\([-0-9]?[0-9,.]*\\)\n"
              ) nil t)
       (let ((d   (match-string-no-properties 1))
@@ -322,8 +322,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
   (interactive)
   (let (credits debits)
 
-  (while 
-      (re-search-forward 
+  (while
+      (re-search-forward
        (concat
         "||"
         "\\([0-9][0-9]\\)-\\([0-9][0-9]\\)-\\([0-9][0-9][0-9][0-9]\\)|"
@@ -344,9 +344,9 @@ RETURN: A cleaned string where the comas are replaced by dots,
             (cre) (deb))
 
 ; (insert  (format "D: %s %s %s  V: %s %s  [%s]  I: %s  S:%s\n" d m y dv mv lab imp sol )))))
-        
+
         (if (= ?- (string-to-char imp))
-            (progn 
+            (progn
               (setq deb (clean-number-string imp))
               (setq cre ""))
             (progn
@@ -378,8 +378,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
   "Convert the lines following the point as from Evolve Bank"
   (interactive)
   (let (credits debits)
-    (while (re-search-forward 
-            (concat 
+    (while (re-search-forward
+            (concat
              "\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)|"
              "[/0-9]*|"
              "[^|]*|"
@@ -404,10 +404,10 @@ RETURN: A cleaned string where the comas are replaced by dots,
         (setq lab (replace-regexp-in-string "^ " "" (replace-regexp-in-string "  *" " " (replace-regexp-in-string "\\.\\.\\.*" "." (replace-regexp-in-string "\n" " " lab t t) t t) t t) t t))
         (setq ori (concat (if (string-equal "" cre) deb cre) " ESP"))
         (if (not (string-equal "" cre))
-            (setq cre (format "%.2f" 
+            (setq cre (format "%.2f"
                               (euro-from-value (string-to-number cre) 'ESP))))
         (if (not (string-equal "" deb))
-            (setq deb (format "%.2f" 
+            (setq deb (format "%.2f"
                               (euro-from-value (string-to-number deb) 'ESP))))
         (if (> (length lab) 24)
             (progn
@@ -430,13 +430,13 @@ RETURN: A cleaned string where the comas are replaced by dots,
   "Convert the lines following the point as from Evolve Bank (text)."
   (interactive)
   (let (credits debits)
-    (while (re-search-forward 
-            (concat 
-             "\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)	"
-             "\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)	"
-             "\\([^	]*\\)	"
-             "\\([-0-9]?[0-9,.]*\\)	"
-             "\\([-0-9]?[0-9,.]*\\)	"
+    (while (re-search-forward
+            (concat
+             "\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)    "
+             "\\([0-9]+\\)/\\([0-9]+\\)/\\([0-9]+\\)    "
+             "\\([^     ]*\\)   "
+             "\\([-0-9]?[0-9,.]*\\)     "
+             "\\([-0-9]?[0-9,.]*\\)     "
              "\\([-0-9]?[0-9,.]*\\)\n"
              ) nil t)
       (let ((d   (match-string-no-properties 1))
@@ -454,10 +454,10 @@ RETURN: A cleaned string where the comas are replaced by dots,
         (setq lab (replace-regexp-in-string "^ " "" (replace-regexp-in-string "  *" " " (replace-regexp-in-string "\\.\\.\\.*" "." (replace-regexp-in-string "\n" " " lab t t) t t) t t) t t))
         (setq ori (concat (if (string-equal "" cre) deb cre) " ESP"))
         (if (not (string-equal "" cre))
-            (setq cre (format "%.2f" 
+            (setq cre (format "%.2f"
                               (euro-from-value (string-to-number cre) 'ESP))))
         (if (not (string-equal "" deb))
-            (setq deb (format "%.2f" 
+            (setq deb (format "%.2f"
                               (euro-from-value (string-to-number deb) 'ESP))))
         (if (> (length lab) 24)
             (progn
@@ -481,8 +481,8 @@ RETURN: A cleaned string where the comas are replaced by dots,
   "Convert the lines following the point as from OpenBank"
   (interactive)
 
-  (while 
-      (re-search-forward 
+  (while
+      (re-search-forward
        (concat
         " *\\([0-9][0-9]\\)-\\([0-9][0-9]\\)-\\([0-9][0-9][0-9][0-9]\\) *\n"
         " *\\([0-9][0-9]\\)-\\([0-9][0-9]\\) *\n"
@@ -502,9 +502,9 @@ RETURN: A cleaned string where the comas are replaced by dots,
             (cre) (deb))
 
 ; (insert  (format "D: %s %s %s  V: %s %s  [%s]  I: %s  S:%s\n" d m y dv mv lab imp sol )))))
-        
+
         (if (= ?- (string-to-char imp))
-            (progn 
+            (progn
               (setq deb (clean-number-string imp))
               (setq cre ""))
             (progn
@@ -522,9 +522,9 @@ RETURN: A cleaned string where the comas are replaced by dots,
 (defun from-paritate ()
   "Convert the lines following the point as from Paritate Bank"
   (interactive)
-  
-  (while 
-      (re-search-forward 
+
+  (while
+      (re-search-forward
 "^\\([0-9][0-9]\\)/\\([0-9][0-9]\\)/\\([0-9][0-9]\\)   \\(................................\\)\\* *\\([0-9][0-9.,]*[CD]\\) *\n\\(\\( [A-Z].*\n\\)*\\) *\\([0-9][0-9]*\\) *\\(#[0-9][0-9]* [0-9][0-9]* [0-9][0-9]*\\) *\\([0-9]*\\) *\\* *\\([0-9][0-9.,]*\\) *\n" nil t)
       (let ((m   (match-string-no-properties 1))
             (d   (match-string-no-properties 2))

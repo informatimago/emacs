@@ -5,7 +5,7 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Setting RGB colors with sliders.
 ;;;;    see: (pjb-color-picker--example)
 ;;;;
@@ -16,19 +16,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2014 - 2014
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU Affero General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -88,10 +88,10 @@ RETURN:  a color triplet darker than color-value (by 0.5 or by factor).
 (defun color-48-value-to-name (color-value)
   "
 PRE:     color-value is triplet (Red Green Blue) with each value in [0..65535].
-RETURN:  a color name in the form \"#rrrrggggbbbb\" each letter being 
+RETURN:  a color name in the form \"#rrrrggggbbbb\" each letter being
          a hexadecimal digit.
 "
-  (format "#%04x%04x%04x" 
+  (format "#%04x%04x%04x"
           (nth 0 color-value)
           (nth 1 color-value)
           (nth 2 color-value)))
@@ -105,10 +105,10 @@ RETURN:  a color name in the form \"#rrrrggggbbbb\" each letter being
 (defun color-24-value-to-name (color-value)
   "
 PRE:     color-value is triplet (Red Green Blue) with each value in [0..255].
-RETURN:  a color name in the form \"#rrggbb\" each letter being 
+RETURN:  a color name in the form \"#rrggbb\" each letter being
          a hexadecimal digit.
 "
-  (format "#%02x%02x%02x" 
+  (format "#%02x%02x%02x"
           (nth 0 color-value)
           (nth 1 color-value)
           (nth 2 color-value)))
@@ -154,8 +154,8 @@ RETURN:  a (Red Green Blue) with each value in [0..255].
   (let ((rgb (color-name-to-rgb color)))
     (values-list (append rgb (list rgb)))))
 
-(defun pjb-color-picker--rgb-red (rgb) (first rgb))   
-(defun pjb-color-picker--rgb-green (rgb) (second rgb)) 
+(defun pjb-color-picker--rgb-red (rgb) (first rgb))
+(defun pjb-color-picker--rgb-green (rgb) (second rgb))
 (defun pjb-color-picker--rgb-blue (rgb) (third rgb))
 
 (defun pjb-color-picker--clip (min max value)
@@ -290,7 +290,7 @@ RETURN:  a (Red Green Blue) with each value in [0..255].
          (width 50)
          (line (make-string width space)))
     (erase-buffer)
-    (insert line "\n" line "\n" line "\n" line)   
+    (insert line "\n" line "\n" line "\n" line)
     (setf pjb-color-picker--default-color    default-rgb
           pjb-color-picker--current-color    default-rgb
           pjb-color-picker--update-color     update-color
@@ -327,7 +327,7 @@ RET   q       hide the buffer, calling `quit' with the current color
     (pjb-color-picker--initialize-buffer (or (if (listp default-rgb)
                                                  default-rgb
                                                  (color-name-to-rgb default-rgb))
-                                             '(0.5 0.5 0.5)) 
+                                             '(0.5 0.5 0.5))
                                          update quit abort)))
 
 (defun pjb-color-picker--example ()

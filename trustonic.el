@@ -6,7 +6,7 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Emacs configuration used at Trustonics Ltd.
 ;;;;
 ;;;;    Add to your ~/.emacs:
@@ -18,7 +18,7 @@
 ;;;;    To change the c-style manually:
 ;;;;
 ;;;;        M-x c-set-style RET trustonic RET
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -27,19 +27,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    GPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2012 - 2016
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -66,18 +66,18 @@
 (c-add-style
  "trustonic"
  '((c-backslash-column             .  78)
-   
+
    (c-backslash-max-column         . 128)
-   
+
    (c-basic-offset                 .   4)
-   
+
    (c-block-comment-prefix         . "* ")
-   
+
    (c-cleanup-list                 . (list-close-comma
                                       scope-operator))
-   
+
    (c-comment-only-line-offset     . (0 . 0))
-   
+
    ;; (c-comment-prefix-regexp)
 
    (c-doc-comment-style            . javadoc)
@@ -87,7 +87,7 @@
                                       ;; (brace-list-intro)
                                       (inexpr-class-open    . (before after))
                                       (inexpr-class-close   . (before after))
-                                      
+
                                       (defun-open           . (before after)) ; Brace that opens a function definition.
                                       (defun-close          . (before after)) ; Brace that closes a function definition.
                                       (class-open           . (before after)) ; Brace that opens a class definition.
@@ -122,20 +122,20 @@
                                       (access-label         . (after))
                                       (member-init-intro    . ())
                                       (inher-intro          . ())))
-   
+
    (c-hanging-semi&comma-criteria  . ())
-   
+
    ;; (c-indent-comment-alist)
 
    (c-indent-comments-syntactically-p . nil)
-   
+
    (c-label-minimum-indentation       . 2)
 
    (c-offsets-alist                   . (
-                                         
+
                                          (string             . 0)
                                          ;; Inside multi-line string.
-                                         
+
                                          (c                  . 1)
                                          ;; Inside a multi-line C style block comment.
 
@@ -376,21 +376,21 @@
                                         ; new statements.
 
    (c-continued-brace-offset      . 0)  ; Extra indent for substatements that
-					; start with open-braces.
+                                        ; start with open-braces.
 
 
    (c-auto-newline                . t)  ; Non-nil means automatically newline
-					; before and after braces, and after
-					; colons and semicolons, inserted in C
-					; code. If you do not want a leading
-					; newline before braces then use:
-					; (define-key c-mode-map \"{\"
-					;          'electric-c-semi)"
+                                        ; before and after braces, and after
+                                        ; colons and semicolons, inserted in C
+                                        ; code. If you do not want a leading
+                                        ; newline before braces then use:
+                                        ; (define-key c-mode-map \"{\"
+                                        ;          'electric-c-semi)"
 
    (c-tab-always-indent           . t)  ; Non-nil means TAB in C mode should
-					; always reindent the current line,
-					; regardless of where in the line point
-					; is when the TAB command is used.
+                                        ; always reindent the current line,
+                                        ; regardless of where in the line point
+                                        ; is when the TAB command is used.
    ))
 
 
