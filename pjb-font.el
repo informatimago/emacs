@@ -44,23 +44,22 @@
   (zerop
    (nth-value 0 (cl:parse-integer
      (shell-command-to-string
-      (format "xlsfonts -fn %S 2>&1|awk 'BEGIN{r=0;} /xlsfonts: pattern .* unmatched/{r=1;} END{printf \"%%d\",r;}'" pattern))))))
-
-
-
-
+      (format "xlsfonts -fn %S 2>&1|awk 'BEGIN{r=0;} /xlsfonts: pattern .* unmatched/{r=1;} END{printf \"%%d\",r;}'"
+	      pattern))))))
 
 (defun font-canonical-to-pixel (canon &optional device)
   (let ((pix-width (float (or (cond ((fboundp 'device-pixel-width)
                                      (device-pixel-width device))
                                     ((fboundp 'display-pixel-width)
                                      (display-pixel-width) device)
-                                    (t nil)) 1024)))
+                                    (t nil))
+			      1024)))
         (mm-width (float (or (cond ((fboundp 'device-mm-width)
                                     (device-mm-width device))
                                    ((fboundp 'display-mm-width)
                                     (display-mm-width) device)
-                                   (t nil)) 293))))
+                                   (t nil))
+			     293))))
     (/ canon (/ pix-width mm-width) (/ 25.4 72.0))))
 
 
@@ -73,10 +72,10 @@ RETURN: The font height in pixel.
               (fboundp 'font-spatial-to-canonical))
          (let ((fs (font-size (font-create-object font))))
            (if (numberp fs) 
-               fs
-               (font-canonical-to-pixel
-                (font-spatial-to-canonical fs device) device))))
-        (error "How do I compute the font size in pixel for font %S?" font)))
+	     fs
+	     (font-canonical-to-pixel
+	      (font-spatial-to-canonical fs device) device))))
+        (t  (error "How do I compute the font size in pixel for font %S?" font))))
 
 
 (defun create-new-fontset (fontset-spec &optional style-variant noerror)
@@ -222,9 +221,6 @@ EXAMPLE: All families in the Adobe foundry:
     (when foundry       (push (cons :foundry       p-foundry      ) res))
     res))
 
-
-
-
 (defmacro make-my-mac-font-sets (size)
   `(progn
      (create-new-fontset
@@ -266,23 +262,20 @@ RETURN:  A tree where the child of each node are labelled with
                                       classes)))
       (make-ftree :label label))))
 
-
 (defun ftree-children-named (font-tree name)
   (car (delete-if (lambda (child) (not (string-equal name (ftree-label child))))
                   (ftree-children font-tree))))
-
   
 (defparameter *font-default-fields*
-  ;;'(:spacing "m" :registry "iso8859" :encoding "1"))
   '(:spacing "m" :registry "iso8859"))
-
 
 (defparameter *font-tree*
   (when (eq window-system 'x)
     (build-font-tree
      (delete-if (lambda (fp)
                   (let* ((ssize (plist-get fp :pixel-size))
-                         (size  (and ssize (nth-value 0 (cl:parse-integer ssize)))))
+                         (size  (when (and ssize (not (string-equal "*" ssize)))
+				  (nth-value 0 (cl:parse-integer ssize)))))
                     (or (null size) (< size 8))))
                 (get-font-parts
                  (apply (function make-font-pattern) *font-default-fields*)
