@@ -153,7 +153,7 @@
                               (if (symbolp (second element))
                                   (format "#%s" (string-upcase (second element)))
                                   (second element)))))
-            (insert "]"))))  
+            (insert "]"))))
     (insert ">\n")))
 
 

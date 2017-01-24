@@ -10,7 +10,7 @@
 ;;;;    The layers are pages (separated by ^L) which can be merged.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2002-01-01 <PJB> Creation.
 ;;;;
@@ -41,7 +41,7 @@
 ;;;;******************************************************************************
 (provide 'pjb-layers)
 
-(defvar pjb-layers-mode-map nil 
+(defvar pjb-layers-mode-map nil
   "Keymap used in pjb-layers mode.")
 
 (if pjb-layers-mode-map
@@ -68,27 +68,27 @@
 
 
 
-(defmacro ilayer-index      (ilayer) 
+(defmacro ilayer-index      (ilayer)
   "PRIVATE"
   `(aref ,ilayer 0)
   );;ilayer-index
 
-(defmacro ilayer-length     (ilayer) 
+(defmacro ilayer-length     (ilayer)
   "PRIVATE"
   `(aref ,ilayer 1)
   );;ilayer-length
 
-(defmacro ilayer-chars      (ilayer) 
+(defmacro ilayer-chars      (ilayer)
   "PRIVATE"
   `(aref ,ilayer 2)
   );;ilayer-chars
 
-(defmacro ilayer-set-index  (ilayer index) 
+(defmacro ilayer-set-index  (ilayer index)
   "PRIVATE"
   `(aset ,ilayer 0 ,index)
   );;ilayer-set-index
 
-(defmacro ilayer-set-length (ilayer index) 
+(defmacro ilayer-set-length (ilayer index)
   "PRIVATE"
   `(aset ,ilayer 1 ,index)
   );;ilayer-set-length
@@ -157,7 +157,7 @@
     (let* ( (old-string (ilayer-chars ilayer))
             (old-length (ilayer-length ilayer))
             (new-length (* 2 old-length))
-            (new-string (make-string new-length 0)) 
+            (new-string (make-string new-length 0))
             (i 0) )
       (while (< i old-length)
         (aset new-string i (aref old-string i))
@@ -180,13 +180,13 @@ NOTE:    each layer is a string of lines.
          the layers are ordered the front-most first.
 "
   (let* ( (pjb-layers-not-at-eof
-           (apply 'append (mapcar (lambda (layer) 
+           (apply 'append (mapcar (lambda (layer)
                                       (if (< 0 (length layer))
                                           (list (ilayer-new layer))
                                         nil)) layers)))
-          (merge (ilayer-new 
-                  (make-string (apply 'max 
-                                      (mapcar (lambda (ilayer) 
+          (merge (ilayer-new
+                  (make-string (apply 'max
+                                      (mapcar (lambda (ilayer)
                                                 (ilayer-length ilayer))
                                               pjb-layers-not-at-eof))
                                0)))
@@ -196,7 +196,7 @@ NOTE:    each layer is a string of lines.
           current-char
           )
     (while pjb-layers-not-at-eof
-      (setq pjb-layers-not-at-eoln 
+      (setq pjb-layers-not-at-eoln
             (apply 'append (mapcar (lambda (ilayer)
                                        (if (ilayer-at-eoln ilayer)
                                            nil
@@ -204,16 +204,16 @@ NOTE:    each layer is a string of lines.
                                      pjb-layers-not-at-eof)))
       (while pjb-layers-not-at-eoln
         (setq pjb-layers-with-visible-char pjb-layers-not-at-eoln)
-        (setq current-char 
+        (setq current-char
               (ilayer-current-char (car pjb-layers-with-visible-char)))
         (setq pjb-layers-with-visible-char (cdr pjb-layers-with-visible-char))
         (while (and (= current-char 32) pjb-layers-with-visible-char)
-          (setq current-char 
+          (setq current-char
                 (ilayer-current-char (car pjb-layers-with-visible-char)))
           (setq pjb-layers-with-visible-char (cdr pjb-layers-with-visible-char))
           );;while
         (ilayer-append-char merge current-char)
-        (setq pjb-layers-not-at-eoln 
+        (setq pjb-layers-not-at-eoln
               (ilayer-advance-to-eoln pjb-layers-not-at-eoln))
         );;while not all eoln
       (ilayer-append-char merge  10)
@@ -272,13 +272,13 @@ NOTE:    each layer is a string of lines.
   "DO:      Merges the layers found in the current buffer into a new buffer."
   (interactive)
   (let ( (pmin (point-min))
-         (pmax (point-max)) 
-         merged 
+         (pmax (point-max))
+         merged
          )
     (widen)
     (setq merged (pjb-layers-merge-strings (split-string (buffer-string) "\f")))
     (narrow-to-region pmin pmax)
-    (switch-to-buffer (get-buffer-create 
+    (switch-to-buffer (get-buffer-create
                        (format "*Merged %s*" (buffer-name (current-buffer)))))
     (erase-buffer)
     (insert merged)

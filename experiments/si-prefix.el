@@ -44,10 +44,10 @@
 
 (defun dichotomy (vector value compare &optional start end key)
   "
-PRE:	entry is the element to be searched in the table.
+PRE:    entry is the element to be searched in the table.
         (<= start end)
 RETURN: (list found index order)
-POST:	(<= start index end)
+POST:   (<= start index end)
         +-------------------+----------+-------+----------+----------------+
         | Case              |  found   | index |  order   |     Error      |
         +-------------------+----------+-------+----------+----------------+
@@ -116,7 +116,7 @@ TYPE        either float or integer
 "
   (let ((table (make-hash-table :test (function equal))))
     (loop
-       for value in '(0 0.0) 
+       for value in '(0 0.0)
        for type in '(integer float)
        do (loop
              for prefix-code in '(:si :binary)

@@ -208,11 +208,11 @@ position is (member :prefix :infix :suffix)
 
      (let ((before (char-before)))
        (cond
-	 ((member before '(32 9 10 13 nil))
-	  (insert (format "%c" last-command-char)))
-	 ((alphanumericp before)
-	  (insert (format " %c " last-command-char)))
-	 )
+         ((member before '(32 9 10 13 nil))
+          (insert (format "%c" last-command-char)))
+         ((alphanumericp before)
+          (insert (format " %c " last-command-char)))
+         )
        )
 
 

@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Defines constants of physics.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2003 - 2011
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;;;    PURPOSE.  See the GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public
 ;;;;    License along with this program; if not, write to the Free
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -404,8 +404,8 @@ RETURN: x' ; t' ; dx' ; dt' such as
 ;; Aplicando las transformadas de Lorentz:
 ;;
 ;;     gamma = 1 / sqrt( 1 - ( v / c ) ^ 2 )
-;; 	x' = ( x + v t ) * gamma
-;; 	t' = ( t + x v / c ^ 2 ) * gamma
+;;      x' = ( x + v t ) * gamma
+;;      t' = ( t + x v / c ^ 2 ) * gamma
 ;;
 ;; que dan las coordenadas (x',t')  dentro de un referencial que se mueve
 ;; a  la  velocidad  v con  respecto  a  un  referencial fijo,  dadas  la
@@ -634,11 +634,11 @@ RETURN: x' ; t' ; dx' ; dt' such as
 
 
 ;;; (mapcar
-;;;  (lambda (n) (list n (substitute 
+;;;  (lambda (n) (list n (substitute
 ;;;                       (character "-") (character " ") (downcase n)
 ;;;                       :test (function char=)) t t))
 ;;;  (remove-duplicates
-;;;    (sort 
+;;;    (sort
 ;;;     '(
 ;;;       )
 ;;;     (lambda (a b) (> (length (car a)) (length (car b)))))

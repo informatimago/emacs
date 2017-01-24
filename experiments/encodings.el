@@ -8,7 +8,7 @@
 ;; (standard-display-8bit 128 255)
 
 (set-input-mode nil nil t nil) ;; INTERRUPT FLOW META [QUIT]
-;; (setq meta-prefix-char nil) ; to split ESC from M- 
+;; (setq meta-prefix-char nil) ; to split ESC from M-
 
 (when (fboundp 'unify-8859-on-encoding-mode)
   (unify-8859-on-encoding-mode 1))
@@ -31,7 +31,7 @@
 
 (progn
   (case system-type
-    (darwin 
+    (darwin
      (set-language-environment                "utf-8")
      (prefer-coding-system                    'utf-8-unix)
      (set-default-coding-systems              'utf-8-unix)
@@ -78,19 +78,19 @@
 ;; revert-buffer-with-coding-system.
 
 
-;; 	(set-language-environment		'German)
-;; 	(setq default-file-name-coding-system	'utf-8)
-;; 	(setq file-name-coding-system		'utf-8)
-;; 	(setq default-buffer-file-coding-system 'iso-latin-9-unix))
-;; 	(set-default-coding-systems		'mac-roman-unix)
-;; 	;(setq mac-keyboard-text-encoding	 kTextEncodingISOLatin1)
-;; 	(set-keyboard-coding-system		'sjis-mac)
-;; 	(set-clipboard-coding-system		'sjis-mac)
-;; 	(prefer-coding-system			'mac-roman-unix)
-;; 	(modify-coding-system-alist	 'file "\\.tex\\'" 'iso-latin-9-unix)
-;; 	(modify-coding-system-alist	 'process
+;;      (set-language-environment               'German)
+;;      (setq default-file-name-coding-system   'utf-8)
+;;      (setq file-name-coding-system           'utf-8)
+;;      (setq default-buffer-file-coding-system 'iso-latin-9-unix))
+;;      (set-default-coding-systems             'mac-roman-unix)
+;;      ;(setq mac-keyboard-text-encoding        kTextEncodingISOLatin1)
+;;      (set-keyboard-coding-system             'sjis-mac)
+;;      (set-clipboard-coding-system            'sjis-mac)
+;;      (prefer-coding-system                   'mac-roman-unix)
+;;      (modify-coding-system-alist      'file "\\.tex\\'" 'iso-latin-9-unix)
+;;      (modify-coding-system-alist      'process
 ;; "\\*[Ss][Hh][Ee][Ll][Ll].*\\'"  'utf-8-unix)
-;; 	;(set-buffer-process-coding-system	'utf-8 'utf8)
+;;      ;(set-buffer-process-coding-system      'utf-8 'utf8)
 
 (when (boundp 'aquamacs-version)
   (setf mac-command-modifier 'meta
@@ -252,7 +252,7 @@ SIDE must be the symbol `left' or `right'."
 
 ;; (delete-selection-mode t)
 (if (fboundp 'delete-region-and-yank)
-    (global-set-key (kbd "C-y")  'delete-region-and-yank) 
+    (global-set-key (kbd "C-y")  'delete-region-and-yank)
     (global-set-key (kbd "C-y")  'yank))
 
 ;; A strange configuration with a narrow frame...

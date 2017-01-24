@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Generate some Objective-C code.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon <pbourguignon@dxo.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2012 - 2012
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU Affero General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -46,18 +46,18 @@
   "Return a setSelector: selector."
   (let ((name (ensure-string selector)))
     (intern (if (and (< 2 (length name))
-		     (string= "is" (substring name 0 2))
-		     (upper-case-p (aref name 2)))
-		(format "set%s:" (subseq name 2))
-		(format "set%c%s:" (char-upcase (aref name 0)) (subseq name 1))))))
+                     (string= "is" (substring name 0 2))
+                     (upper-case-p (aref name 2)))
+                (format "set%s:" (subseq name 2))
+                (format "set%c%s:" (char-upcase (aref name 0)) (subseq name 1))))))
 
 (defun split-selector (selector)
   (let* ((parts           (reverse (split-string (ensure-string selector) ":")))
-	 (parts-with-args (mapcar (lambda (part) (format "%s:" part)) (rest parts))))
+         (parts-with-args (mapcar (lambda (part) (format "%s:" part)) (rest parts))))
     (mapcar (function intern)
-	    (nreverse (if (string= "" (first parts))
-			  parts-with-args
-			  (cons (first parts)parts-with-args))))))
+            (nreverse (if (string= "" (first parts))
+                          parts-with-args
+                          (cons (first parts)parts-with-args))))))
 
 (defun test/split-selector ()
   (assert (equal (split-selector 'isObscure) '(isObscure)))
@@ -140,7 +140,7 @@
 
 (defclass/c c-cond   (c-statement)
   ((clauses :initarg :clauses :accessor c-cond-clauses
-            :documentation "A list, the first element is the condition expression, the rest is a list of statement body."))) 
+            :documentation "A list, the first element is the condition expression, the rest is a list of statement body.")))
 
 (defmethod generate-node ((node c-cond))
   (loop
@@ -189,9 +189,9 @@
 (defmacro generate-constructor (&rest class-names)
   `(progn
      ,@(mapcar (lambda (class-name)
-		 `(defun* ,(intern (format "make-%s" class-name)) (&rest arguments &key &allow-other-keys)
-		    (apply 'make-instance ',class-name arguments)))
-	       class-names)
+                 `(defun* ,(intern (format "make-%s" class-name)) (&rest arguments &key &allow-other-keys)
+                    (apply 'make-instance ',class-name arguments)))
+               class-names)
      ',class-names))
 
 
@@ -207,11 +207,11 @@
      while selector-parts
      do (progn
           (insert sep)
-	  (generate (pop selector-parts))
-	  (when arguments
-	    (generate (pop arguments))))
+          (generate (pop selector-parts))
+          (when arguments
+            (generate (pop arguments))))
      finally (loop while arguments
-		do (insert "," (pop arguments)))))
+                do (insert "," (pop arguments)))))
 
 
 
@@ -285,22 +285,22 @@ containing a type, and a property name or a list (getter setter).
   (loop
      for (type prop-name) in properties
      do (let ((getter (if (atom prop-name)
-			  prop-name
-			  (first prop-name)))
-	      (setter (if (atom prop-name)
-			  (make-set-selector prop-name)
-			  (second prop-name))))
-	  (generate (make-objc-method :result-type type
-				      :selector getter
-				      :parameters '()
-				      :body (list (make-c-return :result (make-objc-send :recipient target
-											 :selector getter)))))
-	  (generate (make-objc-method :result-type 'void
-				      :selector setter
-				      :parameters (list (make-objc-parameter :type type :name 'value))
-				      :body (list (make-objc-send :recipient target
-								  :selector setter
-								  :arguments '(value))))))))
+                          prop-name
+                          (first prop-name)))
+              (setter (if (atom prop-name)
+                          (make-set-selector prop-name)
+                          (second prop-name))))
+          (generate (make-objc-method :result-type type
+                                      :selector getter
+                                      :parameters '()
+                                      :body (list (make-c-return :result (make-objc-send :recipient target
+                                                                                         :selector getter)))))
+          (generate (make-objc-method :result-type 'void
+                                      :selector setter
+                                      :parameters (list (make-objc-parameter :type type :name 'value))
+                                      :body (list (make-objc-send :recipient target
+                                                                  :selector setter
+                                                                  :arguments '(value))))))))
 
 
 

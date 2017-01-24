@@ -10,7 +10,7 @@
 ;;;;    (using netcat to listen).
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2002-04-10 <PJB> Created.
 ;;;;BUGS
@@ -49,9 +49,9 @@
   "
 RETURN:  An open pjb-server or nil.
 "
-  (let ( (stream-process (open-network-stream "pjb-server$$network-stream" 
+  (let ( (stream-process (open-network-stream "pjb-server$$network-stream"
                                               nil remote-ip remote-port)) )
-    
+
     (set-process-filter stream-process read-call-back)
     stream-process)
   );;pjb-server$open
@@ -59,28 +59,28 @@ RETURN:  An open pjb-server or nil.
 
 (defun pjb-server$listen (local-ip local-port read-call-back)
   "
-NOTE:    READ-CALL-BACK must be a function (lambda (SERVER STRING)) that 
-         will be called when STRING data is available from SERVER. 
+NOTE:    READ-CALL-BACK must be a function (lambda (SERVER STRING)) that
+         will be called when STRING data is available from SERVER.
 RETURN:  A listening pjb-server or nil.
 "
   (let ( netcat-proc
          (netcat-args '())
          )
 
-    (when local-ip 
-      (cond 
+    (when local-ip
+      (cond
        ((stringp  local-ip) (push local-ip netcat-args))
        (t (error "Invalid LOCAL-IP, must be a string.")))
       (push "-s" netcat-args)
       );;when
 
-    (cond 
+    (cond
      ((stringp  local-port) (push                   local-port netcat-args))
      ((integerp local-port) (push (number-to-string local-port) netcat-args))
      (t (error "Invalid LOCAL-PORT, must be a string or an integer.")))
     (push "-p"                           netcat-args)
 
-    (setq netcat-process (apply 'start-process "pjb-server$$netcat" nil 
+    (setq netcat-process (apply 'start-process "pjb-server$$netcat" nil
                                 "netcat" "-l" netcat-args))
     (set-process-filter netcat-process read-call-back)
     netcat-process)
@@ -92,7 +92,7 @@ RETURN:  A listening pjb-server or nil.
 DO:     Send DATA to the remote point of the SERVER.
 "
   (let (string)
-    (cond 
+    (cond
      ((stringp data) (setq string data))
      ((numberp data) (setq string (number-to-string data)))
      (t              (setq string (format "%S" data))))
@@ -159,7 +159,7 @@ Prefix arg means just kill any existing server communications subprocess."
   ;; kill it dead!
   (if pjb-server-process
     (progn
-      (set-process-sentinel pjb-server-process nil) 
+      (set-process-sentinel pjb-server-process nil)
       (condition-case () (delete-process pjb-server-process) (error nil))))
   ;; Delete the socket files made by previous server invocations.
   (let* ((sysname (system-name))

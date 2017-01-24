@@ -15,7 +15,7 @@ Tilde immediately followed by a newline ignores the newline and any
 following non-newline whitespace  characters. With a :, the newline is
 ignored, but any following whitespace is left in place.  With an @,
 the newline is left in place, but any following whitespace is
-ignored. 
+ignored.
 
 This commands prompts for the kind of justification to use.
 If the mark is not active, this command operates on the current paragraph.
@@ -43,7 +43,7 @@ taken to be paragraph breaks.
   (with-marker (end end)
     (goto-char begin)
     (flet ((justify-section (begin end)
-             ;; remove ~ and ~: 
+             ;; remove ~ and ~:
              (goto-char begin)
              (while (re-search-forward "\\(~\n *\\|~:\n\\)" end t)
                (delete-region (match-beginning 0) (match-end 0)))

@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             emacs-lisp
 ;;;;USER-INTERFACE:     emacs-lisp
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Generate dot files from graphs (pjb-graph).
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon
 ;;;;MODIFICATIONS
@@ -15,20 +15,20 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2003 - 2011
 ;;;;    mailto:pjb@informatimago.com
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;;;    PURPOSE.  See the GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public
 ;;;;    License along with this program; if not, write to the Free
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -39,7 +39,7 @@
 (provide 'pjb-dot)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Generating dot files 
+;; Generating dot files
 
 (defun dot-ident (ident)
   "
@@ -60,10 +60,10 @@ RETURN: A string containing the dot file data for this PjbElement node.
                        (unsplit-string
                         (mapcar
                          (lambda (prop-name)
-                           (if (or 
-                                (string-equal ;; for emacs: 
+                           (if (or
+                                (string-equal ;; for emacs:
                                  "dot-" (subseq (symbol-name prop-name) 0 4))
-                                (string-equal ;; for emacs: 
+                                (string-equal ;; for emacs:
                                  ":dot-" (subseq (symbol-name prop-name) 0 5)))
                              ""
                              (format "%s = %s" prop-name
@@ -111,7 +111,7 @@ RETURN: A string containing the dot file data for this edge.
 RETURN: A string containing the dot file data for this graph.
 NOTE:   dot graphs are directed.
 "
-  (apply 
+  (apply
    'concat
    (flatten
     (list
@@ -129,7 +129,7 @@ NOTE:   dot graphs are directed.
      "  node [height=0.2 width=0.5 shape=box fontsize=8 fontname=Times];\n"
      (mapElements (nodes self) (lambda (node) (generate-dot node)))
      ;; common attributes of edges:
-     "  edge [style=solid];\n" 
+     "  edge [style=solid];\n"
      (mapElements (edges self) (lambda (edge) (generate-dot edge)))
      "}\n"))))
 

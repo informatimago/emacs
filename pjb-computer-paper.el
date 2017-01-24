@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    XXX
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon <spam@thalassa.informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2004 - 2011
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;;;    PURPOSE.  See the GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public
 ;;;;    License along with this program; if not, write to the Free
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -44,7 +44,7 @@
 (defun delete-all-overlays ()
   (interactive)
   (mapc (lambda (item)
-          (if (listp item) 
+          (if (listp item)
               (mapc (function delete-overlay) item)
               (delete-overlay item)))
         (overlay-lists)))
@@ -55,10 +55,10 @@
   (goto-char (point-min))
   (let ((backf (make-array
                 (list (length +computer-paper-colors+))
-                :initial-contents 
+                :initial-contents
                 (mapcar
                  (lambda (color)
-                   (let* ((facesym (intern 
+                   (let* ((facesym (intern
                                     (concatenate 'string color "-face")))
                           (face (make-face facesym)))
                      (copy-face 'default face)
@@ -94,6 +94,6 @@
     (assert (<= 1 block))
     (assert (and (<= 2 modulo) (<= modulo (length +computer-paper-colors+))))
     (put-computer-paper-overlay modulo block)))
-  
+
 
 ;;;; THE END ;;;;

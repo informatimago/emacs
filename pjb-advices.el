@@ -9,7 +9,7 @@
 ;;;;    This module patches various emacs functions.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2012-11-27 <PJB> Updated mail-setup advice for emacs-24.
 ;;;;    2002-08-13 <PJB> Creation.
@@ -54,7 +54,7 @@
 ;;   (let ((i 0))
 ;;     (while (get-buffer (format "%d<shell>" i))
 ;;       (setq i (1+ i)))
-;;     (if (= 0 i) 
+;;     (if (= 0 i)
 ;;       (progn ;; no shell, let's make the first one
 ;;         ad-do-it
 ;;         (rename-buffer "0<shell>"))
@@ -62,8 +62,8 @@
 ;;         (switch-to-buffer (format "%d<shell>" (- i 1))))
 ;;       )));;shell
 ;; (ad-activate 'shell)
-;; 
-;; 
+;;
+;;
 ;; (defun nshell ()
 ;;   "Create a new shell."
 ;;   (interactive)
@@ -74,13 +74,13 @@
 ;;     (rename-buffer (format "%d<shell>" i)))
 ;;   );;nshell
 
-          
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; mouse
 
 (require 'mouse)
 
-(defadvice mouse-drag-vertical-line 
+(defadvice mouse-drag-vertical-line
   (around pjb-catch-errors (start-EVENT))
   "This advice prevents errors reporting from mouse-drag-vertical-line.
 It's not nice to report errors (or drop in the debugger), while mouse-dragging.
@@ -97,17 +97,17 @@ It's not nice to report errors (or drop in the debugger), while mouse-dragging.
 (require 'sendmail)
 (require 'mail-utils)
 
-(defvar bcc-user-mail-address user-mail-address 
+(defvar bcc-user-mail-address user-mail-address
   "The address used for BCC: when creating a new mail with mail-self-blind set.")
 
-(defadvice mail-setup 
+(defadvice mail-setup
   (after pjb-mail-setup-bcc (&rest args))
   "This advice replace the BCC: user-mail-address by BCC:bcc-user-mail-address."
   ;; not interactive
   (when mail-self-blind
     (save-excursion
       (goto-char (point-min))
-      (if (search-forward (format "BCC: %s" user-mail-address) 
+      (if (search-forward (format "BCC: %s" user-mail-address)
                           (mail-text-start) t)
           (replace-match (format "BCC: %s" bcc-user-mail-address) t t)))))
 (ad-activate 'mail-setup)
@@ -119,14 +119,14 @@ It's not nice to report errors (or drop in the debugger), while mouse-dragging.
 (require 'rmailsort)
 (load "rmailsum"  nil t)  ;; no provide in rmailsum.
 
-(defadvice rmail-sort-by-correspondent 
+(defadvice rmail-sort-by-correspondent
   (around pjb-rmail-sort-by-correspondant (reverse))
   "Sort messages of current Rmail file by other correspondent.
 If prefix argument REVERSE is non-nil, sort them in reverse order.
 The correspondant domain name is heavier than the correspondant name.
 Email addresses are not case sensitive."
   (interactive "P")
-  (rmail-sort-messages 
+  (rmail-sort-messages
    reverse
    (function
     (lambda (msg)
@@ -137,9 +137,9 @@ Email addresses are not case sensitive."
              (atpos (string-index address ?@)))
         (downcase
          (if atpos
-             (concat 
-              (unsplit-string 
-               (reverse (split-string 
+             (concat
+              (unsplit-string
+               (reverse (split-string
                          (substring address (+ 1 atpos)) "[.]")) ".")
               "@"
               (substring address 0 atpos))
@@ -163,7 +163,7 @@ Email addresses are not case sensitive."
     (substring string i l)))
 
 
-(defadvice x-parse-geometry 
+(defadvice x-parse-geometry
   (before pjb-parse-geometry-chop-spaces (string))
   "This advice remove unwanted spaces from the argument."
   ;; not interactive
@@ -171,15 +171,15 @@ Email addresses are not case sensitive."
 (ad-activate 'x-parse-geometry)
 
 
-(defadvice set-face-attribute 
+(defadvice set-face-attribute
   (before pjb-set-face-attribute (face frame &rest args))
-  (ad-set-args 
+  (ad-set-args
    2 (let ((result nil) (couples args) key value)
        (while couples
          (setq key     (car couples)
                value   (cadr couples)
                couples (cddr couples))
-         (when (if (eq key :height) 
+         (when (if (eq key :height)
                    (if (numberp value) (/= value 0) value)
                  value)
            (setq result (cons  key (cons value result)))))
@@ -206,9 +206,9 @@ Email addresses are not case sensitive."
 (require 'cus-edit)
 
 
-(defadvice custom-save-variables 
+(defadvice custom-save-variables
   (around pjb-custom-save-variables-sorted ())
-  ;; we won't call ad-do-it because we mustn't let the original write any 
+  ;; we won't call ad-do-it because we mustn't let the original write any
   ;; unsorted output.
   "Save all customized variables in `custom-file', sorted."
   ;; not interactive
@@ -219,8 +219,8 @@ Email addresses are not case sensitive."
         (princ "\n"))
       (princ "(custom-set-variables")
       (let ((customized-atoms nil))
-        (mapatoms (lambda (symbol) 
-                    (when (get symbol 'saved-value) 
+        (mapatoms (lambda (symbol)
+                    (when (get symbol 'saved-value)
                       (setq customized-atoms (cons symbol customized-atoms)))))
         (mapc
          (lambda (symbol)
@@ -256,7 +256,7 @@ Email addresses are not case sensitive."
 ;;;----------------------------------------------------------------------------
 ;;; w3
 
-;; (defadvice w3-parse-buffer 
+;; (defadvice w3-parse-buffer
 ;;   (before pjb-w3-parse-buffer-invalid-chars (buffer))
 ;;   (save-excursion
 ;;     (set-buffer buffer)
@@ -292,7 +292,7 @@ Email addresses are not case sensitive."
 
 
 
-(defadvice gnus-summary-reply 
+(defadvice gnus-summary-reply
   (around pjb-gnus-summary-reply-is-followup! (&optional YANK WIDE))
   "This advice replace reply by followup!"
   ;; no ad-do-it!
@@ -331,15 +331,15 @@ Email addresses are not case sensitive."
    (setq pjb-mail-default-reply-to     mail-default-reply-to)
    (setq pjb-user-mail-address         user-mail-address))
   (when address
-    (setq mail-default-reply-to   (if comment 
+    (setq mail-default-reply-to   (if comment
                                     (format "%s <%s>" comment address)
                                     (format "<%s>"  address)))
     (setq user-mail-address       address)))
 
 
-(defadvice message-make-sender 
+(defadvice message-make-sender
   (around pjb-message-make-sender ())
-  "This advice doesn't return the \"real\" user address. 
+  "This advice doesn't return the \"real\" user address.
 Instead, it returns the user address the user wants to return.
 There's too much spam sent to addresses flowing on the newsgroups..."
   (if pjb-user-mail-address
@@ -372,7 +372,7 @@ There's too much spam sent to addresses flowing on the newsgroups..."
 (require 'register)
 
 (defvar *jump-to-register-offset* (lambda () 10)
-  "A function that returns the number of lines that should show above the 
+  "A function that returns the number of lines that should show above the
 register point. (You could implement here a proportional rule like 30%.")
 
 

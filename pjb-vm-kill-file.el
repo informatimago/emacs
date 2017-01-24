@@ -9,7 +9,7 @@
 ;;;;    A kill file feature for vm.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2002-11-10 <PJB> Converted from pjb-rmail-kill-file.
 ;;;;
@@ -48,7 +48,7 @@
     "deduced form pjb-vm-killed-ip-list.
 String regexp matching IPs to be killed from Received:.")
 
-  (defvar pjb-vm-kill-file "~/.emacs-kill-file" 
+  (defvar pjb-vm-kill-file "~/.emacs-kill-file"
     "The path to the kill file.")
 
 
@@ -109,12 +109,12 @@ RETURN: A regexp string.
 
   (defmacro message-cond (condition)
     `(let ((result  ,condition))
-       (if result 
+       (if result
            (message "%S is TRUE." (quote ,condition)))
        result))
 
 
-  
+
   (defun pjb-vm-kill-file ()
     "
 PRE:    The current buffer is narrowed to one new message.
@@ -148,10 +148,10 @@ POST:   If the message match our \"kill-file\", then it is marked deleted.
              (let ((value (mail-fetch-field "Subject")))
                (message "*** subject=%S" value)
                (when value
-                 (or 
+                 (or
                   (message-cond (string-match "Credit Repair\\|$$$" value))
-                  (message-cond (string-match "=?big5?" value)) 
-                  (message-cond (string-match "=?euc-kr?" value)) 
+                  (message-cond (string-match "=?big5?" value))
+                  (message-cond (string-match "=?euc-kr?" value))
                   (message-cond (string-match "(±¤°í)" value))
                   )))
 

@@ -4,7 +4,7 @@
 ;;SYSTEM:             Common-Lisp
 ;;USER-INTERFACE:     NONE
 ;;DESCRIPTION
-;;    
+;;
 ;;    Initialization for common-lisp packages.
 ;;
 ;;    This files remove some specificities from the lisp environment
@@ -23,19 +23,19 @@
 ;;BUGS
 ;;LEGAL
 ;;    GPL
-;;    
+;;
 ;;    Copyright Pascal J. Bourguignon 2004 - 2004
-;;    
+;;
 ;;    This program is free software; you can redistribute it and/or
 ;;    modify it under the terms of the GNU General Public License
 ;;    as published by the Free Software Foundation; either version
 ;;    2 of the License, or (at your option) any later version.
-;;    
+;;
 ;;    This program is distributed in the hope that it will be
 ;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;    PURPOSE.  See the GNU General Public License for more details.
-;;    
+;;
 ;;    You should have received a copy of the GNU General Public
 ;;    License along with this program; if not, write to the Free
 ;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -46,7 +46,7 @@
 
 ;; clean the imported packages:
 (MAPC (LAMBDA (USED) (UNUSE-PACKAGE USED "COMMON-LISP-USER"))
-      (REMOVE (FIND-PACKAGE "COMMON-LISP") 
+      (REMOVE (FIND-PACKAGE "COMMON-LISP")
               (COPY-SEQ (PACKAGE-USE-LIST "COMMON-LISP-USER"))))
 
 #+clisp
@@ -69,7 +69,7 @@
                      :print print :if-does-not-exist if-does-not-exist
                      :external-format external-format)))))))
 
-;; (DEFUN SCONC (&REST ARGS) 
+;; (DEFUN SCONC (&REST ARGS)
 ;;   (apply (function CONCATENATE)
 ;;          'string
 ;;          (mapcar (lambda (item) (typecase item
@@ -77,10 +77,10 @@
 ;;                              (otherwise  (string item)))) ARGS)));;SCONC
 
 
-;; COM.INFORMATIMAGO.COMMON-LISP packages depends only on themselves, 
+;; COM.INFORMATIMAGO.COMMON-LISP packages depends only on themselves,
 ;; from the current directory.
 
-(progn 
+(progn
   (defvar *directories*  '())
   (defun get-directory (key &optional (subpath ""))
     (unless *directories*
@@ -131,17 +131,17 @@
                                  :name :wild :type :wild :version :wild)
                                 (make-pathname
                                  :case :common
-                                 :directory '(:absolute "USR" "LOCAL" "SHARE" "LISP" "PACKAGES" 
+                                 :directory '(:absolute "USR" "LOCAL" "SHARE" "LISP" "PACKAGES"
                                               :wild-inferiors)
                                  :name :wild :type :wild :version :wild)))))
-   
+
     :until (ignore-errors (load file))
     :finally (return translations)))
 
 ;; Import DEFINE-PACKAGE, and add translations:
 (IMPORT 'PACKAGE:DEFINE-PACKAGE)
 (SETF (LOGICAL-PATHNAME-TRANSLATIONS "PACKAGES")
-      (HANDLER-CASE (LOGICAL-PATHNAME-TRANSLATIONS "PACKAGES") 
+      (HANDLER-CASE (LOGICAL-PATHNAME-TRANSLATIONS "PACKAGES")
         (ERROR NIL)))
 (apply (function PACKAGE:ADD-TRANSLATIONS) *translations*)
 

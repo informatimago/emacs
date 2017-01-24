@@ -45,10 +45,10 @@
 ;;       pl1-auto-lineup        '(all)
 ;;       pl1-toggle-completions nil
 ;;       pl1-type-keywords      '("array" "file" "packed" "char"
-;; 				     "integer" "real" "string" "record")
+;;                                   "integer" "real" "string" "record")
 ;;       pl1-start-keywords     '("begin" "end" "function" "procedure"
-;; 				     "repeat" "until" "while" "read" "readln"
-;; 				     "reset" "rewrite" "write" "writeln")
+;;                                   "repeat" "until" "while" "read" "readln"
+;;                                   "reset" "rewrite" "write" "writeln")
 ;;       pl1-separator-keywords '("downto" "else" "mod" "div" "then"))
 
 ;; KNOWN BUGS / BUGREPORTS
@@ -262,10 +262,10 @@ respectively. The word 'all' will do all lineups. '(case paramlist) for
 instance will do lineup in case-statements and parameterlist, while '(all)
 will do all lineups."
   :type '(set :extra-offset 8
-	      (const :tag "Everything" all)
-	      (const :tag "Parameter lists" paramlist)
-	      (const :tag "Decalrations" declaration)
-	      (const :tag "Case statements" case))
+              (const :tag "Everything" all)
+              (const :tag "Parameter lists" paramlist)
+              (const :tag "Decalrations" declaration)
+              (const :tag "Case statements" case))
   :group 'pl1)
 
 (defcustom pl1-toggle-completions nil
@@ -322,21 +322,21 @@ are handled in another way, and should not be added to this list."
 (defun pl1-declaration-end ()
   (let ((nest 1))
     (while (and (> nest 0)
-		(re-search-forward
-		 "[:=]\\|\\(\\<record\\>\\)\\|\\(\\<end\\>\\)"
-		 (save-excursion (end-of-line 2) (point)) t))
+                (re-search-forward
+                 "[:=]\\|\\(\\<record\\>\\)\\|\\(\\<end\\>\\)"
+                 (save-excursion (end-of-line 2) (point)) t))
       (cond ((match-beginning 1) (setq nest (1+ nest)))
-	    ((match-beginning 2) (setq nest (1- nest)))
-	    ((looking-at "[^(\n]+)") (setq nest 0))))))
+            ((match-beginning 2) (setq nest (1- nest)))
+            ((looking-at "[^(\n]+)") (setq nest 0))))))
 
 
 (defun pl1-declaration-beg ()
   (let ((nest 1))
     (while (and (> nest 0)
-		(re-search-backward "[:=]\\|\\<\\(type\\|var\\|label\\|const\\)\\>\\|\\(\\<record\\>\\)\\|\\(\\<end\\>\\)" (pl1-get-beg-of-line 0) t))
+                (re-search-backward "[:=]\\|\\<\\(type\\|var\\|label\\|const\\)\\>\\|\\(\\<record\\>\\)\\|\\(\\<end\\>\\)" (pl1-get-beg-of-line 0) t))
       (cond ((match-beginning 1) (setq nest 0))
-	    ((match-beginning 2) (setq nest (1- nest)))
-	    ((match-beginning 3) (setq nest (1+ nest)))))
+            ((match-beginning 2) (setq nest (1- nest)))
+            ((match-beginning 3) (setq nest (1+ nest)))))
     (= nest 0)))
 
 
@@ -437,7 +437,7 @@ no args, if that value is non-nil."
     (beginning-of-line)
     (skip-chars-forward " \t")
     (if (looking-at pl1-autoindent-lines-re)
-	(pl1-indent-line)))
+        (pl1-indent-line)))
   (delete-horizontal-space) ; Removes trailing whitespaces
   (newline)
   ;; Indent next line
@@ -451,16 +451,16 @@ no args, if that value is non-nil."
       (forward-line -1)
       (skip-chars-forward " \t")
       (cond ((looking-at "\\*[ \t]+)")
-	     ;; Delete region between `*' and `)' if there is only whitespaces.
-	     (forward-char 1)
-	     (delete-horizontal-space))
-	    ((and (looking-at "(\\*\\|\\*[^)]")
-		  (not (save-excursion
-			 (search-forward "*)" (pl1-get-end-of-line) t))))
-	     (setq setstar t))))
+             ;; Delete region between `*' and `)' if there is only whitespaces.
+             (forward-char 1)
+             (delete-horizontal-space))
+            ((and (looking-at "(\\*\\|\\*[^)]")
+                  (not (save-excursion
+                         (search-forward "*)" (pl1-get-end-of-line) t))))
+             (setq setstar t))))
     ;; If last line was a star comment line then this one shall be too.
     (if (null setstar)
-	(pl1-indent-line)
+        (pl1-indent-line)
       (insert "*  "))))
 
 
@@ -493,7 +493,7 @@ no args, if that value is non-nil."
   (insert last-command-event)
   (if (eq (car (pl1-calculate-indent)) 'declaration)
       (let ((pl1-tab-always-indent nil))
-	(pl1-indent-command))))
+        (pl1-indent-command))))
 
 (defun electric-pl1-hash ()
   "Insert `#', and indent to column 0 if this is a CPP directive."
@@ -501,26 +501,26 @@ no args, if that value is non-nil."
   (insert last-command-event)
   (if (save-excursion (beginning-of-line) (looking-at "^[ \t]*#"))
       (save-excursion (beginning-of-line)
-		      (delete-horizontal-space))))
+                      (delete-horizontal-space))))
 
 (defun electric-pl1-tab ()
   "Function called when TAB is pressed in Pl1 mode."
   (interactive)
   ;; Do nothing if within a string or in a CPP directive.
   (if (or (pl1-within-string)
-	  (and (not (bolp))
-	       (save-excursion (beginning-of-line) (eq (following-char) ?#))))
+          (and (not (bolp))
+               (save-excursion (beginning-of-line) (eq (following-char) ?#))))
       (insert "\t")
     ;; If pl1-tab-always-indent, indent the beginning of the line.
     (if pl1-tab-always-indent
-	(save-excursion
-	  (beginning-of-line)
-	  (pl1-indent-line))
+        (save-excursion
+          (beginning-of-line)
+          (pl1-indent-line))
       (if (save-excursion
-	    (skip-chars-backward " \t")
-	    (bolp))
-	  (pl1-indent-line)
-	(insert "\t")))
+            (skip-chars-backward " \t")
+            (bolp))
+          (pl1-indent-line)
+        (insert "\t")))
     (pl1-indent-command)))
 
 
@@ -577,8 +577,8 @@ The commented area starts with `pl1-exclude-str-start', and ends with
     ;; Insert start and endcomments
     (goto-char end)
     (if (and (save-excursion (skip-chars-forward " \t") (eolp))
-	     (not (save-excursion (skip-chars-backward " \t") (bolp))))
-	(forward-line 1)
+             (not (save-excursion (skip-chars-backward " \t") (bolp))))
+        (forward-line 1)
       (beginning-of-line))
     (insert pl1-exclude-str-end)
     (setq end (point))
@@ -591,10 +591,10 @@ The commented area starts with `pl1-exclude-str-start', and ends with
     (goto-char end)
     (save-excursion
       (while (re-search-backward "\\*)" start t)
-	(replace-match "!(*" t t)))
+        (replace-match "!(*" t t)))
     (save-excursion
       (while (re-search-backward "}" start t)
-	(replace-match "!{" t t)))))
+        (replace-match "!{" t t)))))
 
 (defun pl1-uncomment-area ()
   "Uncomment a commented area; change deformed comments back to normal.
@@ -603,65 +603,65 @@ area.  See also `pl1-comment-area'."
   (interactive)
   (save-excursion
     (let ((start (point))
-	  (end (point)))
+          (end (point)))
       ;; Find the boundaries of the comment
       (save-excursion
-	(setq start (progn (search-backward pl1-exclude-str-start nil t)
-			   (point)))
-	(setq end (progn (search-forward pl1-exclude-str-end nil t)
-			 (point))))
+        (setq start (progn (search-backward pl1-exclude-str-start nil t)
+                           (point)))
+        (setq end (progn (search-forward pl1-exclude-str-end nil t)
+                         (point))))
       ;; Check if we're really inside a comment
       (if (or (equal start (point)) (<= end (point)))
-	  (message "Not standing within commented area.")
-	(progn
-	  ;; Remove endcomment
-	  (goto-char end)
-	  (beginning-of-line)
-	  (let ((pos (point)))
-	    (end-of-line)
-	    (delete-region pos (1+ (point))))
-	  ;; Change comments back to normal
-	  (save-excursion
-	    (while (re-search-backward "!{" start t)
-	      (replace-match "}" t t)))
-	  (save-excursion
-	    (while (re-search-backward "!(\\*" start t)
-	      (replace-match "*)" t t)))
-	  ;; Remove startcomment
-	  (goto-char start)
-	  (beginning-of-line)
-	  (let ((pos (point)))
-	    (end-of-line)
-	    (delete-region pos (1+ (point)))))))))
+          (message "Not standing within commented area.")
+        (progn
+          ;; Remove endcomment
+          (goto-char end)
+          (beginning-of-line)
+          (let ((pos (point)))
+            (end-of-line)
+            (delete-region pos (1+ (point))))
+          ;; Change comments back to normal
+          (save-excursion
+            (while (re-search-backward "!{" start t)
+              (replace-match "}" t t)))
+          (save-excursion
+            (while (re-search-backward "!(\\*" start t)
+              (replace-match "*)" t t)))
+          ;; Remove startcomment
+          (goto-char start)
+          (beginning-of-line)
+          (let ((pos (point)))
+            (end-of-line)
+            (delete-region pos (1+ (point)))))))))
 
 (defun pl1-beg-of-defun ()
   "Move backward to the beginning of the current function or procedure."
   (interactive)
   (catch 'found
     (if (not (looking-at (concat "\\s \\|\\s)\\|" pl1-defun-re)))
-	(forward-sexp 1))
+        (forward-sexp 1))
     (let ((nest 0) (max -1) (func 0)
-	  (reg (concat pl1-beg-block-re "\\|"
-		       pl1-end-block-re "\\|"
-		       pl1-defun-re)))
+          (reg (concat pl1-beg-block-re "\\|"
+                       pl1-end-block-re "\\|"
+                       pl1-defun-re)))
       (while (re-search-backward reg nil 'move)
-	(cond ((let ((state (save-excursion
-			      (parse-partial-sexp (point-min) (point)))))
-		 (or (nth 3 state) (nth 4 state))) ; Inside string or comment
-	       ())
-	      ((match-end 1)                       ; begin|case|record|repeat
-	       (if (and (looking-at "\\<record\\>") (>= max 0))
-		   (setq func (1- func)))
-	       (setq nest (1+ nest)
-		     max (max nest max)))
-	      ((match-end 2)                       ; end|until
-	       (if (and (= nest max) (>= max 0))
-		   (setq func (1+ func)))
-	       (setq nest (1- nest)))
-	      ((match-end 3)                       ; function|procedure
-	       (if (= 0 func)
-		   (throw 'found t)
-		 (setq func (1- func)))))))
+        (cond ((let ((state (save-excursion
+                              (parse-partial-sexp (point-min) (point)))))
+                 (or (nth 3 state) (nth 4 state))) ; Inside string or comment
+               ())
+              ((match-end 1)                       ; begin|case|record|repeat
+               (if (and (looking-at "\\<record\\>") (>= max 0))
+                   (setq func (1- func)))
+               (setq nest (1+ nest)
+                     max (max nest max)))
+              ((match-end 2)                       ; end|until
+               (if (and (= nest max) (>= max 0))
+                   (setq func (1+ func)))
+               (setq nest (1- nest)))
+              ((match-end 3)                       ; function|procedure
+               (if (= 0 func)
+                   (throw 'found t)
+                 (setq func (1- func)))))))
     nil))
 
 (defun pl1-end-of-defun ()
@@ -673,65 +673,65 @@ area.  See also `pl1-comment-area'."
       (pl1-beg-of-defun))
   (forward-char 1)
   (let ((nest 0) (func 1)
-	(reg (concat pl1-beg-block-re "\\|"
-		     pl1-end-block-re "\\|"
-		     pl1-defun-re)))
+        (reg (concat pl1-beg-block-re "\\|"
+                     pl1-end-block-re "\\|"
+                     pl1-defun-re)))
     (while (and (/= func 0)
-		(re-search-forward reg nil 'move))
+                (re-search-forward reg nil 'move))
       (cond ((let ((state (save-excursion
-			      (parse-partial-sexp (point-min) (point)))))
-		 (or (nth 3 state) (nth 4 state))) ; Inside string or comment
-	       ())
-	    ((match-end 1)
-	     (setq nest (1+ nest))
-	     (if (save-excursion
-		   (goto-char (match-beginning 0))
-		   (looking-at "\\<record\\>"))
-		 (setq func (1+ func))))
-	    ((match-end 2)
-	     (setq nest (1- nest))
-	     (if (= nest 0)
-		 (setq func (1- func))))
-	    ((match-end 3)
-	     (setq func (1+ func))))))
+                              (parse-partial-sexp (point-min) (point)))))
+                 (or (nth 3 state) (nth 4 state))) ; Inside string or comment
+               ())
+            ((match-end 1)
+             (setq nest (1+ nest))
+             (if (save-excursion
+                   (goto-char (match-beginning 0))
+                   (looking-at "\\<record\\>"))
+                 (setq func (1+ func))))
+            ((match-end 2)
+             (setq nest (1- nest))
+             (if (= nest 0)
+                 (setq func (1- func))))
+            ((match-end 3)
+             (setq func (1+ func))))))
   (forward-line 1))
 
 (defun pl1-end-of-statement ()
   "Move forward to end of current statement."
   (interactive)
   (let ((parse-sexp-ignore-comments t)
-	(nest 0) pos
-	(regexp (concat "\\(" pl1-beg-block-re "\\)\\|\\("
-			pl1-end-block-re "\\)")))
+        (nest 0) pos
+        (regexp (concat "\\(" pl1-beg-block-re "\\)\\|\\("
+                        pl1-end-block-re "\\)")))
     (if (not (looking-at "[ \t\n\r\f\v]")) (forward-sexp -1))
     (or (looking-at pl1-beg-block-re)
-	;; Skip to end of statement
-	(setq pos (catch 'found
-		    (while t
-		      (forward-sexp 1)
-		      (cond ((looking-at "[ \t]*;")
-			     (skip-chars-forward "^;")
-			     (forward-char 1)
-			     (throw 'found (point)))
-			    ((save-excursion
-			       (forward-sexp -1)
-			       (looking-at pl1-beg-block-re))
-			     (goto-char (match-beginning 0))
-			     (throw 'found nil))
-			    ((eobp)
-			     (throw 'found (point))))))))
+        ;; Skip to end of statement
+        (setq pos (catch 'found
+                    (while t
+                      (forward-sexp 1)
+                      (cond ((looking-at "[ \t]*;")
+                             (skip-chars-forward "^;")
+                             (forward-char 1)
+                             (throw 'found (point)))
+                            ((save-excursion
+                               (forward-sexp -1)
+                               (looking-at pl1-beg-block-re))
+                             (goto-char (match-beginning 0))
+                             (throw 'found nil))
+                            ((eobp)
+                             (throw 'found (point))))))))
     (if (not pos)
-	;; Skip a whole block
-	(catch 'found
-	  (while t
-	    (re-search-forward regexp nil 'move)
-	    (setq nest (if (match-end 1)
-			   (1+ nest)
-			 (1- nest)))
-	    (cond ((eobp)
-		   (throw 'found (point)))
-		  ((= 0 nest)
-		   (throw 'found (pl1-end-of-statement))))))
+        ;; Skip a whole block
+        (catch 'found
+          (while t
+            (re-search-forward regexp nil 'move)
+            (setq nest (if (match-end 1)
+                           (1+ nest)
+                         (1- nest)))
+            (cond ((eobp)
+                   (throw 'found (point)))
+                  ((= 0 nest)
+                   (throw 'found (pl1-end-of-statement))))))
       pos)))
 
 (defun pl1-downcase-keywords ()
@@ -753,11 +753,11 @@ area.  See also `pl1-comment-area'."
 (defun pl1-change-keywords (change-word)
   (save-excursion
     (let ((keyword-re (concat "\\<\\("
-			      (mapconcat 'identity pl1-keywords "\\|")
-			      "\\)\\>")))
+                              (mapconcat 'identity pl1-keywords "\\|")
+                              "\\)\\>")))
       (goto-char (point-min))
       (while (re-search-forward keyword-re nil t)
-	(funcall change-word -1)))))
+        (funcall change-word -1)))))
 
 
 
@@ -773,44 +773,44 @@ on the line which ends a function or procedure named NAME."
     (forward-line -1)
     (skip-chars-forward " \t")
     (if (and (looking-at "\\<end;")
-	     (not (save-excursion
-		    (end-of-line)
-		    (search-backward "{" (pl1-get-beg-of-line) t))))
-	(let ((type (car (pl1-calculate-indent))))
-	  (if (eq type 'declaration)
-	      ()
-	    (if (eq type 'case)
-		;; This is a case block
-		(progn
-		  (end-of-line)
-		  (delete-horizontal-space)
-		  (insert " { case }"))
-	      (let ((nest 1))
-		;; Check if this is the end of a function
-		(save-excursion
-		  (while (not (or (looking-at pl1-defun-re) (bobp)))
-		    (backward-sexp 1)
-		    (cond ((looking-at pl1-beg-block-re)
-			   (setq nest (1- nest)))
-			  ((looking-at pl1-end-block-re)
-			   (setq nest (1+ nest)))))
-		  (if (bobp)
-		      (setq nest 1)))
-		(if (zerop nest)
-		    (progn
-		      (end-of-line)
-		      (delete-horizontal-space)
-		      (insert " { ")
-		      (let (b e)
-			(save-excursion
-			  (setq b (progn (pl1-beg-of-defun)
-					 (skip-chars-forward "^ \t")
-					 (skip-chars-forward " \t")
-					 (point))
-				e (progn (skip-chars-forward "a-zA-Z0-9_")
-					 (point))))
-			(insert-buffer-substring (current-buffer) b e))
-		      (insert " }"))))))))))
+             (not (save-excursion
+                    (end-of-line)
+                    (search-backward "{" (pl1-get-beg-of-line) t))))
+        (let ((type (car (pl1-calculate-indent))))
+          (if (eq type 'declaration)
+              ()
+            (if (eq type 'case)
+                ;; This is a case block
+                (progn
+                  (end-of-line)
+                  (delete-horizontal-space)
+                  (insert " { case }"))
+              (let ((nest 1))
+                ;; Check if this is the end of a function
+                (save-excursion
+                  (while (not (or (looking-at pl1-defun-re) (bobp)))
+                    (backward-sexp 1)
+                    (cond ((looking-at pl1-beg-block-re)
+                           (setq nest (1- nest)))
+                          ((looking-at pl1-end-block-re)
+                           (setq nest (1+ nest)))))
+                  (if (bobp)
+                      (setq nest 1)))
+                (if (zerop nest)
+                    (progn
+                      (end-of-line)
+                      (delete-horizontal-space)
+                      (insert " { ")
+                      (let (b e)
+                        (save-excursion
+                          (setq b (progn (pl1-beg-of-defun)
+                                         (skip-chars-forward "^ \t")
+                                         (skip-chars-forward " \t")
+                                         (point))
+                                e (progn (skip-chars-forward "a-zA-Z0-9_")
+                                         (point))))
+                        (insert-buffer-substring (current-buffer) b e))
+                      (insert " }"))))))))))
 
 
 
@@ -830,156 +830,156 @@ on the line which ends a function or procedure named NAME."
 (defun pl1-indent-command ()
   "Indent for special part of code."
   (let* ((indent-str (pl1-calculate-indent))
-	 (type (car indent-str)))
+         (type (car indent-str)))
     (cond ((and (eq type 'paramlist)
-		(or (memq 'all pl1-auto-lineup)
-		    (memq 'paramlist pl1-auto-lineup)))
-	   (pl1-indent-paramlist)
-	   (pl1-indent-paramlist))
-	  ((and (eq type 'declaration)
-		(or (memq 'all pl1-auto-lineup)
-		    (memq 'declaration  pl1-auto-lineup)))
-	   (pl1-indent-declaration))
-	  ((and (eq type 'case) (not (looking-at "^[ \t]*$"))
-		(or (memq 'all pl1-auto-lineup)
-		    (memq 'case pl1-auto-lineup)))
-	   (pl1-indent-case)))
+                (or (memq 'all pl1-auto-lineup)
+                    (memq 'paramlist pl1-auto-lineup)))
+           (pl1-indent-paramlist)
+           (pl1-indent-paramlist))
+          ((and (eq type 'declaration)
+                (or (memq 'all pl1-auto-lineup)
+                    (memq 'declaration  pl1-auto-lineup)))
+           (pl1-indent-declaration))
+          ((and (eq type 'case) (not (looking-at "^[ \t]*$"))
+                (or (memq 'all pl1-auto-lineup)
+                    (memq 'case pl1-auto-lineup)))
+           (pl1-indent-case)))
     (if (looking-at "[ \t]+$")
-	(skip-chars-forward " \t"))))
+        (skip-chars-forward " \t"))))
 
 (defun pl1-indent-line ()
   "Indent current line as a Pl1 statement."
   (let* ((indent-str (pl1-calculate-indent))
-	 (type (car indent-str))
-	 (ind (car (cdr indent-str))))
+         (type (car indent-str))
+         (ind (car (cdr indent-str))))
     ;; Labels should not be indented.
     (if (and (looking-at "^[0-9a-zA-Z]+[ \t]*:[^=]")
-	     (not (eq type 'declaration)))
-	(search-forward ":" nil t))
+             (not (eq type 'declaration)))
+        (search-forward ":" nil t))
     (delete-horizontal-space)
     (cond (; Some things should not be indented
-	   (or (and (eq type 'declaration) (looking-at pl1-declaration-re))
-	       (eq type 'cpp))
-	   ())
-	  (; Other things should have no extra indent
-	   (looking-at pl1-noindent-re)
-	   (indent-to ind))
-	  (; Nested functions should be indented
-	   (looking-at pl1-defun-re)
-	   (if (and pl1-indent-nested-functions
-		    (eq type 'defun))
-	       (indent-to (+ ind pl1-indent-level))
-	     (indent-to ind)))
-	  (; But most lines are treated this way
-	   (indent-to (eval (cdr (assoc type pl1-indent-alist))))
-	   ))))
+           (or (and (eq type 'declaration) (looking-at pl1-declaration-re))
+               (eq type 'cpp))
+           ())
+          (; Other things should have no extra indent
+           (looking-at pl1-noindent-re)
+           (indent-to ind))
+          (; Nested functions should be indented
+           (looking-at pl1-defun-re)
+           (if (and pl1-indent-nested-functions
+                    (eq type 'defun))
+               (indent-to (+ ind pl1-indent-level))
+             (indent-to ind)))
+          (; But most lines are treated this way
+           (indent-to (eval (cdr (assoc type pl1-indent-alist))))
+           ))))
 
 (defun pl1-calculate-indent ()
   "Calculate the indent of the current Pl1 line.
 Return a list of two elements: (INDENT-TYPE INDENT-LEVEL)."
   (save-excursion
     (let* ((parse-sexp-ignore-comments t)
-	   (oldpos (point))
-	   (state (save-excursion (parse-partial-sexp (point-min) (point))))
-	   (nest 0) (par 0) (complete (looking-at "[ \t]*end\\>"))
-	   (elsed (looking-at "[ \t]*else\\>")) (funccnt 0)
-	   (did-func (looking-at "[ \t]*\\(procedure\\|function\\)\\>"))
-	   (type (catch 'nesting
-		   ;; Check if inside a string, comment or parenthesis
-		   (cond ((nth 3 state) (throw 'nesting 'string))
-			 ((nth 4 state) (throw 'nesting 'comment))
-			 ((> (car state) 0)
-			  (goto-char (scan-lists (point) -1 (car state)))
-			  (setq par (1+ (current-column))))
-			 ((save-excursion (beginning-of-line)
-					  (eq (following-char) ?#))
-			  (throw 'nesting 'cpp)))
-		   ;; Loop until correct indent is found
-		   (while t
-		     (backward-sexp 1)
-		     (cond (;--Escape from case statements
-			    (and (looking-at "[A-Za-z0-9]+[ \t]*:[^=]")
-				 (not complete)
-				 (save-excursion (skip-chars-backward " \t")
-						 (bolp))
-				 (= (save-excursion
-				      (end-of-line) (backward-sexp) (point))
-				    (point))
-				 (> (save-excursion (goto-char oldpos)
-						    (beginning-of-line)
-						    (point))
-				    (point)))
-			    (throw 'nesting 'caseblock))
-			   (;--Beginning of program
-			    (looking-at pl1-progbeg-re)
-			    (throw 'nesting 'progbeg))
-			   (;--No known statements
-			    (bobp)
-			    (throw 'nesting 'progbeg))
-			   (;--Nest block outwards
-			    (looking-at pl1-beg-block-re)
-			    (if (= nest 0)
-				(cond ((looking-at "case\\>")
-				       (throw 'nesting 'case))
-				      ((looking-at "record\\>")
-				       (throw 'nesting 'declaration))
-				      (t (throw 'nesting 'block)))
-			      (if (and (looking-at "record\\>") (= nest 1))
-				  (setq funccnt (1- funccnt)))
-			      (setq nest (1- nest))))
-			   (;--Nest block inwards
-			    (looking-at pl1-end-block-re)
-			    (if (and (looking-at "end\\s ")
-				     elsed (not complete))
-				(throw 'nesting 'block))
-			    (if (= nest 0)
-				(setq funccnt (1+ funccnt)))
-			    (setq complete t
-				  nest (1+ nest)))
-			   (;--Defun (or parameter list)
-			    (and (looking-at pl1-defun-re)
-				 (progn (setq funccnt (1- funccnt)
-					      did-func t)
-					(or (bolp) (< funccnt 0))))
-			    ;; Prevent searching whole buffer
-			    (if (and (bolp) (>= funccnt 0))
-				(throw 'nesting 'progbeg))
-			    (if (= 0 par)
-				(throw 'nesting 'defun)
-			      (setq par 0)
-			      (let ((n 0))
-				(while (re-search-forward
-					"\\(\\<record\\>\\)\\|\\<end\\>"
-					oldpos t)
-				  (if (match-end 1)
-				      (setq n (1+ n)) (setq n (1- n))))
-				(if (> n 0)
-				    (throw 'nesting 'declaration)
-				  (throw 'nesting 'paramlist)))))
-			   (;--Declaration part
-			    (and (looking-at pl1-declaration-re)
-				 (not did-func)
-				 (= funccnt 0))
-			    (if (save-excursion
-				  (goto-char oldpos)
-				  (forward-line -1)
-				  (looking-at "^[ \t]*$"))
-				(throw 'nesting 'unknown)
-			      (throw 'nesting 'declaration)))
-			   (;--If, else or while statement
-			    (and (not complete)
-				 (looking-at pl1-sub-block-re))
-			    (throw 'nesting 'block))
-			   (;--Found complete statement
-			    (save-excursion (forward-sexp 1)
-					    (= (following-char) ?\;))
-			    (setq complete t))
-			   )))))
+           (oldpos (point))
+           (state (save-excursion (parse-partial-sexp (point-min) (point))))
+           (nest 0) (par 0) (complete (looking-at "[ \t]*end\\>"))
+           (elsed (looking-at "[ \t]*else\\>")) (funccnt 0)
+           (did-func (looking-at "[ \t]*\\(procedure\\|function\\)\\>"))
+           (type (catch 'nesting
+                   ;; Check if inside a string, comment or parenthesis
+                   (cond ((nth 3 state) (throw 'nesting 'string))
+                         ((nth 4 state) (throw 'nesting 'comment))
+                         ((> (car state) 0)
+                          (goto-char (scan-lists (point) -1 (car state)))
+                          (setq par (1+ (current-column))))
+                         ((save-excursion (beginning-of-line)
+                                          (eq (following-char) ?#))
+                          (throw 'nesting 'cpp)))
+                   ;; Loop until correct indent is found
+                   (while t
+                     (backward-sexp 1)
+                     (cond (;--Escape from case statements
+                            (and (looking-at "[A-Za-z0-9]+[ \t]*:[^=]")
+                                 (not complete)
+                                 (save-excursion (skip-chars-backward " \t")
+                                                 (bolp))
+                                 (= (save-excursion
+                                      (end-of-line) (backward-sexp) (point))
+                                    (point))
+                                 (> (save-excursion (goto-char oldpos)
+                                                    (beginning-of-line)
+                                                    (point))
+                                    (point)))
+                            (throw 'nesting 'caseblock))
+                           (;--Beginning of program
+                            (looking-at pl1-progbeg-re)
+                            (throw 'nesting 'progbeg))
+                           (;--No known statements
+                            (bobp)
+                            (throw 'nesting 'progbeg))
+                           (;--Nest block outwards
+                            (looking-at pl1-beg-block-re)
+                            (if (= nest 0)
+                                (cond ((looking-at "case\\>")
+                                       (throw 'nesting 'case))
+                                      ((looking-at "record\\>")
+                                       (throw 'nesting 'declaration))
+                                      (t (throw 'nesting 'block)))
+                              (if (and (looking-at "record\\>") (= nest 1))
+                                  (setq funccnt (1- funccnt)))
+                              (setq nest (1- nest))))
+                           (;--Nest block inwards
+                            (looking-at pl1-end-block-re)
+                            (if (and (looking-at "end\\s ")
+                                     elsed (not complete))
+                                (throw 'nesting 'block))
+                            (if (= nest 0)
+                                (setq funccnt (1+ funccnt)))
+                            (setq complete t
+                                  nest (1+ nest)))
+                           (;--Defun (or parameter list)
+                            (and (looking-at pl1-defun-re)
+                                 (progn (setq funccnt (1- funccnt)
+                                              did-func t)
+                                        (or (bolp) (< funccnt 0))))
+                            ;; Prevent searching whole buffer
+                            (if (and (bolp) (>= funccnt 0))
+                                (throw 'nesting 'progbeg))
+                            (if (= 0 par)
+                                (throw 'nesting 'defun)
+                              (setq par 0)
+                              (let ((n 0))
+                                (while (re-search-forward
+                                        "\\(\\<record\\>\\)\\|\\<end\\>"
+                                        oldpos t)
+                                  (if (match-end 1)
+                                      (setq n (1+ n)) (setq n (1- n))))
+                                (if (> n 0)
+                                    (throw 'nesting 'declaration)
+                                  (throw 'nesting 'paramlist)))))
+                           (;--Declaration part
+                            (and (looking-at pl1-declaration-re)
+                                 (not did-func)
+                                 (= funccnt 0))
+                            (if (save-excursion
+                                  (goto-char oldpos)
+                                  (forward-line -1)
+                                  (looking-at "^[ \t]*$"))
+                                (throw 'nesting 'unknown)
+                              (throw 'nesting 'declaration)))
+                           (;--If, else or while statement
+                            (and (not complete)
+                                 (looking-at pl1-sub-block-re))
+                            (throw 'nesting 'block))
+                           (;--Found complete statement
+                            (save-excursion (forward-sexp 1)
+                                            (= (following-char) ?\;))
+                            (setq complete t))
+                           )))))
 
       ;; Return type of block and indent level.
       (if (> par 0)                               ; Unclosed Parenthesis
-	  (list 'contexp par)
-	(list type (pl1-indent-level))))))
+          (list 'contexp par)
+        (list type (pl1-indent-level))))))
 
 (defun pl1-indent-level ()
   "Return the indent-level the current statement has.
@@ -987,9 +987,9 @@ Do not count labels, case-statements or records."
   (save-excursion
     (beginning-of-line)
     (if (looking-at "[ \t]*[0-9a-zA-Z]+[ \t]*:[^=]")
-	(search-forward ":" nil t)
+        (search-forward ":" nil t)
       (if (looking-at ".*=[ \t]*record\\>")
-	  (search-forward "=" nil t)))
+          (search-forward "=" nil t)))
     (skip-chars-forward " \t")
     (current-column)))
 
@@ -998,43 +998,43 @@ Do not count labels, case-statements or records."
   (save-excursion
     (re-search-backward "\\((\\*\\)\\|{" nil t)
     (if (match-beginning 1)
-	(1+ (current-column))
+        (1+ (current-column))
       (current-column))))
 
 (defun pl1-indent-case ()
   "Indent within case statements."
   (let ((savepos (point-marker))
-	(end (prog2
-		 (end-of-line)
-		 (point-marker)
-	       (re-search-backward "\\<case\\>" nil t)))
-	(beg (point))
-	(ind 0))
+        (end (prog2
+                 (end-of-line)
+                 (point-marker)
+               (re-search-backward "\\<case\\>" nil t)))
+        (beg (point))
+        (ind 0))
     ;; Get right indent
     (while (< (point) end)
       (if (re-search-forward
-	   "^[ \t]*[^ \t,:]+[ \t]*\\(,[ \t]*[^ \t,:]+[ \t]*\\)*:"
-	   (marker-position end) 'move)
-	  (forward-char -1))
+           "^[ \t]*[^ \t,:]+[ \t]*\\(,[ \t]*[^ \t,:]+[ \t]*\\)*:"
+           (marker-position end) 'move)
+          (forward-char -1))
       (if (< (point) end)
-	  (progn
-	    (delete-horizontal-space)
-	    (if (> (current-column) ind)
-		(setq ind (current-column)))
-	    (pl1-end-of-statement))))
+          (progn
+            (delete-horizontal-space)
+            (if (> (current-column) ind)
+                (setq ind (current-column)))
+            (pl1-end-of-statement))))
     (goto-char beg)
     ;; Indent all case statements
     (while (< (point) end)
       (if (re-search-forward
-	   "^[ \t]*[^][ \t,\\.:]+[ \t]*\\(,[ \t]*[^ \t,:]+[ \t]*\\)*:"
-	   (marker-position end) 'move)
-	  (forward-char -1))
+           "^[ \t]*[^][ \t,\\.:]+[ \t]*\\(,[ \t]*[^ \t,:]+[ \t]*\\)*:"
+           (marker-position end) 'move)
+          (forward-char -1))
       (indent-to (1+ ind))
       (if (/= (following-char) ?:)
-	  ()
-	(forward-char 1)
-	(delete-horizontal-space)
-	(insert " "))
+          ()
+        (forward-char 1)
+        (delete-horizontal-space)
+        (insert " "))
       (pl1-end-of-statement))
     (goto-char savepos)))
 
@@ -1044,69 +1044,69 @@ If optional arg is non-nil, just return the
 indent of the current line in parameterlist."
   (save-excursion
     (let* ((oldpos (point))
-	   (stpos (progn (goto-char (scan-lists (point) -1 1)) (point)))
-	   (stcol (1+ (current-column)))
-	   (edpos (progn (pl1-declaration-end)
-			 (search-backward ")" (pl1-get-beg-of-line) t)
-			 (point)))
-	   (usevar (re-search-backward "\\<var\\>" stpos t)))
+           (stpos (progn (goto-char (scan-lists (point) -1 1)) (point)))
+           (stcol (1+ (current-column)))
+           (edpos (progn (pl1-declaration-end)
+                         (search-backward ")" (pl1-get-beg-of-line) t)
+                         (point)))
+           (usevar (re-search-backward "\\<var\\>" stpos t)))
       (if arg (progn
-		;; If arg, just return indent
-		(goto-char oldpos)
-		(beginning-of-line)
-		(if (or (not usevar) (looking-at "[ \t]*var\\>"))
-		    stcol (+ 4 stcol)))
-	(goto-char stpos)
-	(forward-char 1)
-	(delete-horizontal-space)
-	(if (and usevar (not (looking-at "var\\>")))
-	    (indent-to (+ 4 stcol)))
-	(pl1-indent-declaration nil stpos edpos)))))
+                ;; If arg, just return indent
+                (goto-char oldpos)
+                (beginning-of-line)
+                (if (or (not usevar) (looking-at "[ \t]*var\\>"))
+                    stcol (+ 4 stcol)))
+        (goto-char stpos)
+        (forward-char 1)
+        (delete-horizontal-space)
+        (if (and usevar (not (looking-at "var\\>")))
+            (indent-to (+ 4 stcol)))
+        (pl1-indent-declaration nil stpos edpos)))))
 
 (defun pl1-indent-declaration (&optional arg start end)
   "Indent current lines as declaration, lining up the `:'s or `='s."
   (let ((pos (point-marker)))
     (if (and (not (or arg start)) (not (pl1-declaration-beg)))
-	()
+        ()
       (let ((lineup (if (or (looking-at "\\<var\\>\\|\\<record\\>") arg start)
-			":" "="))
-	    (stpos (if start start
-		       (forward-word 2) (backward-word 1) (point)))
-	    (edpos (set-marker (make-marker)
-			       (if end end
-				 (max (progn (pl1-declaration-end)
-					     (point))
-				      pos))))
-	    ind)
+                        ":" "="))
+            (stpos (if start start
+                       (forward-word 2) (backward-word 1) (point)))
+            (edpos (set-marker (make-marker)
+                               (if end end
+                                 (max (progn (pl1-declaration-end)
+                                             (point))
+                                      pos))))
+            ind)
 
-	(goto-char stpos)
-	;; Indent lines in record block
-	(if arg
-	    (while (<= (point) edpos)
-	      (beginning-of-line)
-	      (delete-horizontal-space)
-	      (if (looking-at "end\\>")
-		  (indent-to arg)
-		(indent-to (+ arg pl1-indent-level)))
-	      (forward-line 1)))
+        (goto-char stpos)
+        ;; Indent lines in record block
+        (if arg
+            (while (<= (point) edpos)
+              (beginning-of-line)
+              (delete-horizontal-space)
+              (if (looking-at "end\\>")
+                  (indent-to arg)
+                (indent-to (+ arg pl1-indent-level)))
+              (forward-line 1)))
 
-	;; Do lineup
-	(setq ind (pl1-get-lineup-indent stpos edpos lineup))
-	(goto-char stpos)
-	(while (and (<= (point) edpos) (not (eobp)))
-	  (if (search-forward lineup (pl1-get-end-of-line) 'move)
-	      (forward-char -1))
-	  (delete-horizontal-space)
-	  (indent-to ind)
-	  (if (not (looking-at lineup))
-	      (forward-line 1) ; No more indent if there is no : or =
-	    (forward-char 1)
-	    (delete-horizontal-space)
-	    (insert " ")
-	    ;; Indent record block
-	    (if (looking-at "record\\>")
-		(pl1-indent-declaration (current-column)))
-	    (forward-line 1)))))
+        ;; Do lineup
+        (setq ind (pl1-get-lineup-indent stpos edpos lineup))
+        (goto-char stpos)
+        (while (and (<= (point) edpos) (not (eobp)))
+          (if (search-forward lineup (pl1-get-end-of-line) 'move)
+              (forward-char -1))
+          (delete-horizontal-space)
+          (indent-to ind)
+          (if (not (looking-at lineup))
+              (forward-line 1) ; No more indent if there is no : or =
+            (forward-char 1)
+            (delete-horizontal-space)
+            (insert " ")
+            ;; Indent record block
+            (if (looking-at "record\\>")
+                (pl1-indent-declaration (current-column)))
+            (forward-line 1)))))
 
     ;; If arg - move point
     (if arg (forward-line -1)
@@ -1117,33 +1117,33 @@ indent of the current line in parameterlist."
 (defun pl1-get-lineup-indent (b e str)
   (save-excursion
     (let ((ind 0)
-	  (reg (concat str "\\|\\(\\<record\\>\\)\\|" pl1-defun-re)))
+          (reg (concat str "\\|\\(\\<record\\>\\)\\|" pl1-defun-re)))
       (goto-char b)
       ;; Get rightmost position
       (while (< (point) e)
-	(and (re-search-forward reg (min e (pl1-get-end-of-line 2)) 'move)
-	     (cond ((match-beginning 1)
-		    ;; Skip record blocks
-		    (pl1-declaration-end))
-		   ((match-beginning 2)
-		    ;; We have entered a new procedure.  Exit.
-		    (goto-char e))
-		   (t
-		    (goto-char (match-beginning 0))
-		    (skip-chars-backward " \t")
-		    (if (> (current-column) ind)
-			(setq ind (current-column)))
-		    (goto-char (match-end 0))
-		    (end-of-line)
-		    ))))
+        (and (re-search-forward reg (min e (pl1-get-end-of-line 2)) 'move)
+             (cond ((match-beginning 1)
+                    ;; Skip record blocks
+                    (pl1-declaration-end))
+                   ((match-beginning 2)
+                    ;; We have entered a new procedure.  Exit.
+                    (goto-char e))
+                   (t
+                    (goto-char (match-beginning 0))
+                    (skip-chars-backward " \t")
+                    (if (> (current-column) ind)
+                        (setq ind (current-column)))
+                    (goto-char (match-end 0))
+                    (end-of-line)
+                    ))))
       ;; In case no lineup was found
       (if (> ind 0)
-	  (1+ ind)
-	;; No lineup-string found
-	(goto-char b)
-	(end-of-line)
-	(skip-chars-backward " \t")
-	(1+ (current-column))))))
+          (1+ ind)
+        ;; No lineup-string found
+        (goto-char b)
+        (end-of-line)
+        (skip-chars-backward " \t")
+        (1+ (current-column))))))
 
 
 
@@ -1155,12 +1155,12 @@ indent of the current line in parameterlist."
   (catch 'done
     (let ((diff 0))
       (while t
-	(if (or (> (1+ diff) (length str1))
-		(> (1+ diff) (length str2)))
-	    (throw 'done diff))
-	(or (equal (aref str1 diff) (aref str2 diff))
-	    (throw 'done diff))
-	(setq diff (1+ diff))))))
+        (if (or (> (1+ diff) (length str1))
+                (> (1+ diff) (length str2)))
+            (throw 'done diff))
+        (or (equal (aref str1 diff) (aref str2 diff))
+            (throw 'done diff))
+        (setq diff (1+ diff))))))
 
 ;; Calculate all possible completions for functions if argument is `function',
 ;; completions for procedures if argument is `procedure' or both functions and
@@ -1197,24 +1197,24 @@ indent of the current line in parameterlist."
   ;; Macro for searching through current declaration (var, type or const)
   ;; for matches of `str' and adding the occurrence to `all'
   (let ((end (save-excursion (pl1-declaration-end)
-			     (point)))
+                             (point)))
         (pl1-all ())
-	match)
+        match)
     ;; Traverse lines
     (while (< (point) end)
       (if (re-search-forward "[:=]" (pl1-get-end-of-line) t)
-	  ;; Traverse current line
-	  (while (and (re-search-backward
-		       (concat "\\((\\|\\<\\(var\\|type\\|const\\)\\>\\)\\|"
-			       pl1-symbol-re)
-		       (pl1-get-beg-of-line) t)
-		      (not (match-end 1)))
-	    (setq match (buffer-substring (match-beginning 0) (match-end 0)))
-	    (if (string-match (concat "\\<" pl1-str) match)
+          ;; Traverse current line
+          (while (and (re-search-backward
+                       (concat "\\((\\|\\<\\(var\\|type\\|const\\)\\>\\)\\|"
+                               pl1-symbol-re)
+                       (pl1-get-beg-of-line) t)
+                      (not (match-end 1)))
+            (setq match (buffer-substring (match-beginning 0) (match-end 0)))
+            (if (string-match (concat "\\<" pl1-str) match)
                 (push match pl1-all))))
       (if (re-search-forward "\\<record\\>" (pl1-get-end-of-line) t)
-	  (pl1-declaration-end)
-	(forward-line 1)))
+          (pl1-declaration-end)
+        (forward-line 1)))
 
     pl1-all))
 
@@ -1222,19 +1222,19 @@ indent of the current line in parameterlist."
   "Calculate all possible completions for types."
   (let ((start (point))
         (pl1-all ())
-	goon)
+        goon)
     ;; Search for all reachable type declarations
     (while (or (pl1-beg-of-defun)
-	       (setq goon (not goon)))
+               (setq goon (not goon)))
       (save-excursion
-	(if (and (< start (prog1 (save-excursion (pl1-end-of-defun)
-						 (point))
-			    (forward-char 1)))
-		 (re-search-forward
-		  "\\<type\\>\\|\\<\\(begin\\|function\\|procedure\\)\\>"
-		  start t)
-		 (not (match-end 1)))
-	    ;; Check current type declaration
+        (if (and (< start (prog1 (save-excursion (pl1-end-of-defun)
+                                                 (point))
+                            (forward-char 1)))
+                 (re-search-forward
+                  "\\<type\\>\\|\\<\\(begin\\|function\\|procedure\\)\\>"
+                  start t)
+                 (not (match-end 1)))
+            ;; Check current type declaration
             (setq pl1-all
                   (nconc (pl1-get-completion-decl pl1-str)
                          pl1-all)))))
@@ -1355,29 +1355,29 @@ indent of the current line in parameterlist."
 `pl1-start-keywords' and `pl1-separator-keywords'.)"
   (interactive)
   (let* ((b (save-excursion (skip-chars-backward "a-zA-Z0-9_") (point)))
-	 (e (save-excursion (skip-chars-forward "a-zA-Z0-9_") (point))))
+         (e (save-excursion (skip-chars-forward "a-zA-Z0-9_") (point))))
 
     ;; Toggle-completions inserts whole labels
     (if pl1-toggle-completions
-	(let* ((pl1-str (buffer-substring b e))
+        (let* ((pl1-str (buffer-substring b e))
                (allcomp (if (and pl1-toggle-completions
                                  (string= pl1-last-word-shown pl1-str))
                             pl1-last-completions
                           (all-completions pl1-str 'pl1-completion))))
-	  ;; Update entry number in list
-	  (setq pl1-last-completions allcomp
-		pl1-last-word-numb
-		(if (>= pl1-last-word-numb (1- (length allcomp)))
-		    0
-		  (1+ pl1-last-word-numb)))
-	  (setq pl1-last-word-shown (elt allcomp pl1-last-word-numb))
-	  ;; Display next match or same string if no match was found
-	  (if allcomp
+          ;; Update entry number in list
+          (setq pl1-last-completions allcomp
+                pl1-last-word-numb
+                (if (>= pl1-last-word-numb (1- (length allcomp)))
+                    0
+                  (1+ pl1-last-word-numb)))
+          (setq pl1-last-word-shown (elt allcomp pl1-last-word-numb))
+          ;; Display next match or same string if no match was found
+          (if allcomp
               (progn
                 (goto-char e)
                 (insert-before-markers pl1-last-word-shown)
                 (delete-region b e))
-	    (message "(No match)")))
+            (message "(No match)")))
       ;; The other form of completion does not necessarily do that.
       (completion-in-region b e 'pl1-completion))))
 
@@ -1385,12 +1385,12 @@ indent of the current line in parameterlist."
   "Show all possible completions at current point."
   (interactive)
   (let* ((b (save-excursion (skip-chars-backward "a-zA-Z0-9_") (point)))
-	 (e (save-excursion (skip-chars-forward "a-zA-Z0-9_") (point)))
-	 (pl1-str (buffer-substring b e))
-	 (allcomp (if (and pl1-toggle-completions
-			   (string= pl1-last-word-shown pl1-str))
-		      pl1-last-completions
-		    (all-completions pl1-str 'pl1-completion))))
+         (e (save-excursion (skip-chars-forward "a-zA-Z0-9_") (point)))
+         (pl1-str (buffer-substring b e))
+         (allcomp (if (and pl1-toggle-completions
+                           (string= pl1-last-word-shown pl1-str))
+                      pl1-last-completions
+                    (all-completions pl1-str 'pl1-completion))))
     ;; Show possible completions in a temporary buffer.
     (with-output-to-temp-buffer "*Completions*"
       (display-completion-list allcomp pl1-str))
@@ -1403,12 +1403,12 @@ indent of the current line in parameterlist."
   "Return symbol around current point as a string."
   (save-excursion
     (buffer-substring (progn
-			(skip-chars-backward " \t")
-			(skip-chars-backward "a-zA-Z0-9_")
-			(point))
-		      (progn
-			(skip-chars-forward "a-zA-Z0-9_")
-			(point)))))
+                        (skip-chars-backward " \t")
+                        (skip-chars-backward "a-zA-Z0-9_")
+                        (point))
+                      (progn
+                        (skip-chars-forward "a-zA-Z0-9_")
+                        (point)))))
 
 (defun pl1-build-defun-re (str &optional arg)
   "Return function/procedure starting with STR as regular expression.
@@ -1448,9 +1448,9 @@ With optional second arg non-nil, STR is the complete name of the instruction."
 The default is a name found in the buffer around point."
   (interactive)
   (let* ((default (pl1-get-default-symbol))
-	 (default (if (pl1-comp-defun default nil 'lambda)
-		      default ""))
-	 (label
+         (default (if (pl1-comp-defun default nil 'lambda)
+                      default ""))
+         (label
           ;; Do completion with default
           (completing-read (if (not (string= default ""))
                                (concat "Label (default " default "): ")
@@ -1464,13 +1464,13 @@ The default is a name found in the buffer around point."
                            nil t "")))
     ;; If there was no response on prompt, use default value
     (if (string= label "")
-	(setq label default))
+        (setq label default))
     ;; Goto right place in buffer if label is not an empty string
     (or (string= label "")
-	(progn
-	  (goto-char (point-min))
-	  (re-search-forward (pl1-build-defun-re label t))
-	  (beginning-of-line)))))
+        (progn
+          (goto-char (point-min))
+          (re-search-forward (pl1-build-defun-re label t))
+          (beginning-of-line)))))
 
 
 
@@ -1539,51 +1539,51 @@ Pl1 Outline mode provides some additional commands.
   (interactive)
   (save-excursion
     (let ((beg (progn (if (not (looking-at "\\(function\\|procedure\\)\\>"))
-			  (pl1-beg-of-defun))
-		      (point)))
-	  (end (progn (pl1-end-of-defun)
-		      (backward-sexp 1)
-		      (search-forward "\n\\|\^M" nil t)
-		      (point)))
-	  (opoint (point-min)))
+                          (pl1-beg-of-defun))
+                      (point)))
+          (end (progn (pl1-end-of-defun)
+                      (backward-sexp 1)
+                      (search-forward "\n\\|\^M" nil t)
+                      (point)))
+          (opoint (point-min)))
       (goto-char (point-min))
 
       ;; Hide all functions before current function
       (while (re-search-forward "^\\(function\\|procedure\\)\\>" beg 'move)
-	(pl1-outline-change opoint (1- (match-beginning 0)) ?\^M)
-	(setq opoint (point))
-	;; Functions may be nested
-	(if (> (progn (pl1-end-of-defun) (point)) beg)
-	    (goto-char opoint)))
+        (pl1-outline-change opoint (1- (match-beginning 0)) ?\^M)
+        (setq opoint (point))
+        ;; Functions may be nested
+        (if (> (progn (pl1-end-of-defun) (point)) beg)
+            (goto-char opoint)))
       (if (> beg opoint)
-	  (pl1-outline-change opoint (1- beg) ?\^M))
+          (pl1-outline-change opoint (1- beg) ?\^M))
 
       ;; Show current function
       (pl1-outline-change beg end ?\n)
       ;; Hide nested functions
       (forward-char 1)
       (while (re-search-forward "^\\(function\\|procedure\\)\\>" end 'move)
-	(setq opoint (point))
-	(pl1-end-of-defun)
-	(pl1-outline-change opoint (point) ?\^M))
+        (setq opoint (point))
+        (pl1-end-of-defun)
+        (pl1-outline-change opoint (point) ?\^M))
 
       (goto-char end)
       (setq opoint end)
 
       ;; Hide all function after current function
       (while (re-search-forward "^\\(function\\|procedure\\)\\>" nil 'move)
-	(pl1-outline-change opoint (1- (match-beginning 0)) ?\^M)
-	(setq opoint (point))
-	(pl1-end-of-defun))
+        (pl1-outline-change opoint (1- (match-beginning 0)) ?\^M)
+        (setq opoint (point))
+        (pl1-end-of-defun))
       (pl1-outline-change opoint (point-max) ?\^M)
 
       ;; Hide main program
       (if (< (progn (forward-line -1) (point)) end)
-	  (progn
-	    (goto-char beg)
-	    (pl1-end-of-defun)
-	    (backward-sexp 1)
-	    (pl1-outline-change (point) (point-max) ?\^M))))))
+          (progn
+            (goto-char beg)
+            (pl1-end-of-defun)
+            (backward-sexp 1)
+            (pl1-outline-change (point) (point-max) ?\^M))))))
 
 (defun pl1-outline-next-defun ()
   "Move to next function/procedure, hiding all others."

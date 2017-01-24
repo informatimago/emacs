@@ -6,8 +6,8 @@
 ;;;;USER-INTERFACE:     emacs
 ;;;;DESCRIPTION
 ;;;;
-;;;;	The purpose of this program is to generate a structure encoding the
-;;;;	hierarchical structucture of states into a bit field.
+;;;;    The purpose of this program is to generate a structure encoding the
+;;;;    hierarchical structucture of states into a bit field.
 ;;;;
 ;;;;     A (AA AB AC) B C (CA) D (DA DB DC  DD (DDA DDB) DE DF)
 ;;;;
@@ -51,7 +51,7 @@
 ;;;;
 ;;;;EXAMPLE:
 ;;;;
-;;;;     (setq states 
+;;;;     (setq states
 ;;;;           '(
 ;;;;             "EFTState" :abstract
 ;;;;             ("Idle")
@@ -91,10 +91,10 @@
 ;;;;             ))
 ;;;;
 ;;;; (insert  (c-mask-and-value-enum-for-states states))
-;;;;  
+;;;;
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    1997-06-18 <PJB> Creation.
 ;;;;    2000-01-07 <PJB> Completed implementation. Adapted to emacs lisp.
@@ -176,10 +176,10 @@
 
 
 (defun bits-for-count (count)
-	(cond
-		((< count 0) (error "bits-for-count expects a positive number."))
-		((< count 2) 1)
-		(t (1+ (bits-for-count (/ count 2))))));;bits-for-count
+        (cond
+                ((< count 0) (error "bits-for-count expects a positive number."))
+                ((< count 2) 1)
+                (t (1+ (bits-for-count (/ count 2))))));;bits-for-count
 
 (defun make-mask-with-set-bits (nbits)
 "
@@ -196,7 +196,7 @@ RETURN: a new mask with NBITS set from 0 to NBITS-1.
 (defun make-mask (&optional initial-value)
   "
 RETURN: a new mask. If an initial-value is not specified, the new mask is null.
-INITIAL-VALUE may be either a list of integer, each one being the number of a bit 
+INITIAL-VALUE may be either a list of integer, each one being the number of a bit
               set in the mask, or an integer atom with the bits of the mask.
 "
   (cond
@@ -216,14 +216,14 @@ INITIAL-VALUE may be either a list of integer, each one being the number of a bi
 
 (defun mask-clear-bit (mask bit)
   (remove-element mask bit));;mask-clear-bit
-      
+
 (defun mask-or (mask other-mask)
   (remove-duplicates (sort (append mask other-mask) '>)));;mask-or
 
 (defun mask-and (mask other-mask)
   (cond
    ((null mask) nil)
-   ((member (car mask) other-mask) 
+   ((member (car mask) other-mask)
     (cons (car mask) (mask-and (cdr mask) other-mask)))
    (t (mask-and (cdr mask) other-mask))));;mask-and
 
@@ -269,34 +269,34 @@ RETURN: an integer with the (positive) bits of mask set.
 
 
 (defun substates (states)
-	(cond
-		((null states) ())
-		((atom (car states)) (substates (cdr states)))
-		(t (cons (car states) (substates (cdr states))))));;substates
-		
+        (cond
+                ((null states) ())
+                ((atom (car states)) (substates (cdr states)))
+                (t (cons (car states) (substates (cdr states))))));;substates
+
 (defun state-is-abstract (states)
-	(member :abstract states));;state-is-abstract
+        (member :abstract states));;state-is-abstract
 
 
 
 (defun int-to-hex (n)
-	(if (< n 16) 
-		(nth n '("0" "1" "2" "3" "4" "5" "6" "7" 
+        (if (< n 16)
+                (nth n '("0" "1" "2" "3" "4" "5" "6" "7"
                  "8" "9" "a" "b" "c" "d" "e" "f"))
-		(string-concat (int-to-hex (truncate (/ n 16))) 
+                (string-concat (int-to-hex (truncate (/ n 16)))
                        (int-to-hex (mod n 16)))));;int-to-hex
 
 (defun complete-hex (str char len)
-	(if (< 0 len)
-		(complete-hex (string-concat char str) char (- len 1))
-		str));;complete-hex
-		
+        (if (< 0 len)
+                (complete-hex (string-concat char str) char (- len 1))
+                str));;complete-hex
+
 (defun mask-to-hex (mask)
-	(let ((h (int-to-hex (mask-to-integer mask))))
-		(if (< (length h) 8)
-			(string-concat "0x" (complete-hex h "0" (- 8 (length h))))
+        (let ((h (int-to-hex (mask-to-integer mask))))
+                (if (< (length h) 8)
+                        (string-concat "0x" (complete-hex h "0" (- 8 (length h))))
           (string-concat "0x" h))));;mask-to-hex
-			
+
 
 
 
@@ -309,7 +309,7 @@ RETURN: an integer with the (positive) bits of mask set.
        (code-states state (cons current-bit current-mask) next-bit)
        (setq next-bit (- next-bit 1)))
      subs))
-  (print-format code-states-format 
+  (print-format code-states-format
                 (mask-to-hex current-mask) (car states) (car states)))
 
 ;;     ( state & A_mask   ) == A_state
@@ -323,7 +323,7 @@ RETURN: an integer with the (positive) bits of mask set.
 (defun compute-code-of-state (state ;; and its substates.
                               value-of-parent ;; (mask)
                               mask-of-state ;; (mask)
-                              index-of-state ;; (integer) value 
+                              index-of-state ;; (integer) value
                               base-of-state ;; (integer) N
                               )
   "
@@ -342,11 +342,11 @@ RETURN: a list of triplets (state-name state-mask state-value)
     (error "compute-code-of-state: INDEX-OF-STATE must be an integer."))
    ((not (integer-or-marker-p base-of-state))
     (error "compute-code-of-state: BASE-OF-STATE must be an integer."))
-   ((< base-of-state 0) 
+   ((< base-of-state 0)
     (error "compute-code-of-state: BASE-OF-STATE must be positive."))
    (t)
    )
-  (let* 
+  (let*
       ((value-of-state    (mask-or value-of-parent
                                    (mask-shift (integer-to-mask index-of-state)
                                                base-of-state)))
@@ -356,12 +356,12 @@ RETURN: a list of triplets (state-name state-mask state-value)
        (bits-of-substate  (bits-for-count (+ index-of-substate (length subs))))
        (base-of-substate  (if mask-of-state (1+ (mask-high-bit mask-of-state)) 0))
        (mask-of-substate  (mask-or mask-of-state
-                                   (mask-shift 
+                                   (mask-shift
                                     (make-mask-with-set-bits bits-of-substate)
                                     base-of-substate))))
     (mapc (lambda (sub)
               (setq results (append results
-                                    (compute-code-of-state sub 
+                                    (compute-code-of-state sub
                                                            value-of-state
                                                            mask-of-substate
                                                            index-of-substate
@@ -375,7 +375,7 @@ RETURN: a list of triplets (state-name state-mask state-value)
 
 
 (defun c-mask-and-value-enum-for-states (states)
-  (let* ((masks-and-values (compute-code-of-state states 
+  (let* ((masks-and-values (compute-code-of-state states
                                                   (make-mask) ;; value of parent
                                                   (make-mask) ;; mask
                                                   0 ;; index
@@ -394,10 +394,10 @@ RETURN: a list of triplets (state-name state-mask state-value)
                             (margin (concatenate 'string margin margin)))
                         (list
                          (format "%s%-50s = %12s,\n" margin
-                                 (format "%s_%s_mask" sname name) 
+                                 (format "%s_%s_mask" sname name)
                                  (format "0x%08x" (mask-to-integer mask)))
                          (format "%s%-50s = %12s,\n" margin
-                                 (format "%s_%s_state" sname name) 
+                                 (format "%s_%s_state" sname name)
                                  (format "0x%08x" (mask-to-integer value)))
                          )))
                     (cdr masks-and-values)))
@@ -409,7 +409,7 @@ RETURN: a list of triplets (state-name state-mask state-value)
 
 
 
-;;;     (setq states 
+;;;     (setq states
 ;;;           '(
 ;;;             "EFTState" :abstract
 ;;;             ("Idle")
@@ -447,9 +447,9 @@ RETURN: a list of triplets (state-name state-mask state-value)
 ;;;               ("ReceivingFile")
 ;;;               ("EndingFolder")))
 ;;;             ))
-  
+
 ;;;     (insert  (c-mask-and-value-enum-for-states states))
 
 
-  
+
 ;;;; pjb-state-coding.el              -- 2003-12-04 05:33:31 -- pascal   ;;;;

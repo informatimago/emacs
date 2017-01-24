@@ -129,16 +129,16 @@
 
        (defun-block-intro     . +)
        ;; The first line in a top-level defun.
-       
+
        (class-open            . 0)
        ;; Brace that opens a class definition.
-       
+
        (class-close           . 0)
        ;; Brace that closes a class definition.
-       
+
        (inline-open           . 0)
        ;; Brace that opens an in-class inline method.
-       
+
        (inline-close          . 0)
        ;; Brace that closes an in-class inline method.
        (func-decl-cont        . (c-lineup-java-throws ++))
@@ -148,105 +148,105 @@
        ;; cannot put anything but whitespace and comments
        ;; between them; in C++ and Java, throws declarations
        ;; and other things can appear in this context.
-       
+
        (knr-argdecl-intro     . +)
        ;; First line of a K&R C argument declaration.
-       
+
        (knr-argdecl           . +)
        ;; Subsequent lines in a K&R C argument declaration.
-       
+
        (topmost-intro         . 0)
        ;; The first line in a topmost construct definition.
-       
+
        (topmost-intro-cont    . (c-lineup-string-cont
                                  0))
        ;; Topmost definition continuation lines.
-       
+
        (member-init-intro     . +)
        ;; First line in a member initialization list.
-       
+
        (member-init-cont      . ++)
        ;; Subsequent member initialization list lines.
-       
+
        (inher-intro           . +)
        ;; First line of a multiple inheritance list.
-       
+
        (inher-cont            . ++)
        ;; Subsequent multiple inheritance lines.
-       
+
        (block-open            . 0)
        ;; Statement block open brace.
-       
+
        (block-close           . 0)
        ;; Statement block close brace.
-       
+
        (brace-list-open       . 0)
        ;; Open brace of an enum or static array list.
-       
+
        (brace-list-close      . 0)
        ;; Close brace of an enum or static array list.
-       
+
        (brace-list-intro      . +)
        ;; First line in an enum or static array list.
-       
+
        (brace-list-entry      . 0)
        ;; Subsequent lines in an enum or static array list.
-       
+
        (brace-entry-open      . +)
        ;; Subsequent lines in an enum or static array
        ;; list that start with an open brace.
-       
+
        (statement             . (c-lineup-runin-statements
                                  0))
        ;; A C (or like) statement.
-       
+
        (statement-cont        . (c-lineup-string-cont
                                  ++))
        ;; A continuation of a C (or like) statement.
-       
+
        (statement-block-intro . +)
        ;; The first line in a new statement block.
-       
+
        (statement-case-intro  . +)
        ;; The first line in a case "block".
-       
+
        (statement-case-open   . +)
        ;; The first line in a case block starting with brace.
-       
+
        (substatement          . +)
        ;; The first line after an if/while/for/do/else.
-       
+
        (substatement-open     . 0)
        ;; The brace that opens a substatement block.
-       
+
        (substatement-label    . /)
        ;; Labelled line after an if/while/for/do/else.
-       
+
        (case-label            . *)
        ;; A "case" or "default" label.
-       
+
        (access-label          . -)
        ;; C++ private/protected/public access label.
-       
+
        (label                 . /)
        ;; Any ordinary label.
-       
+
        (do-while-closure      . 0)
        ;; The "while" that ends a do/while construct.
-       
+
        (else-clause           . 0)
        ;; The "else" of an if/else construct.
-       
+
        (catch-clause          . 0)
        ;; The "catch" or "finally" of a try/catch construct.
-       
+
        (comment-intro         . 0)
        ;; A line containing only a comment introduction.
 
        (arglist-intro . (c-lineup-arglist-intro-after-paren))
        ;; (arglist-intro         . +)
        ;; The first line in an argument list.
-       
+
        (arglist-cont          . (c-lineup-string-cont
                                  c-lineup-arglist-intro-after-paren
                                  c-lineup-argcont
@@ -254,7 +254,7 @@
        ;; Subsequent argument list lines when no
        ;; arguments follow on the same line as the
        ;; arglist opening paren.
-       
+
        (arglist-cont-nonempty . (c-lineup-string-cont
                                  c-lineup-arglist-intro-after-paren
                                  c-lineup-argcont
@@ -262,86 +262,86 @@
        ;; Subsequent argument list lines when at
        ;; least one argument follows on the same
        ;; line as the arglist opening paren.
-       
+
        (arglist-close         . (c-lineup-argcont
                                  c-lineup-arglist-intro-after-paren
                                  -))
        ;; The solo close paren of an argument list.
-       
+
        (stream-op             . (c-lineup-streamop +))
        ;; Lines continuing a stream operator construct.
-       
+
        (inclass               . +)
        ;; The construct is nested inside a class definition.
        ;; Used together with e.g. `topmost-intro'.
-       
+
        (cpp-macro             . [0])
        ;; The start of a C preprocessor macro definition.
-       
+
        (cpp-macro-cont        . [8])
        ;; Inside a multi-line C preprocessor macro definition.
-       
+
        (friend                . 0)
        ;; A C++ friend declaration.
-       
+
        (objc-method-intro     . 0)
        ;; The first line of an Objective-C method definition.
-       
+
        (objc-method-args-cont . (c-lineup-ObjC-method-args-2
                                  +))
        ;; Lines continuing an Objective-C method definition.
-       
+
        (objc-method-call-cont . (c-lineup-ObjC-method-call-colons
                                  c-lineup-ObjC-method-call
                                  +))
        ;; Lines continuing an Objective-C method call.
-       
+
        (extern-lang-open      . 0)
        ;; Brace that opens an "extern" block.
-       
+
        (extern-lang-close     . 0)
        ;; Brace that closes an "extern" block.
-       
+
        (inextern-lang         . +)
        ;; Analogous to the `inclass' syntactic symbol,
        ;; but used inside "extern" blocks.
-       
+
        (namespace-open        . 0)
-       
+
        (namespace-close       . 0)
-       
+
        (innamespace           . +)
        ;; Similar to the three `extern-lang' symbols, but for
        ;; C++ "namespace" blocks.
-       
+
        (module-open           . 0)
-       
+
        (module-close          . 0)
-       
+
        (inmodule              . +)
        ;; Similar to the three `extern-lang' symbols, but for
        ;; CORBA IDL "module" blocks.
-       
+
        (composition-open      . 0)
-       
+
        (composition-close     . 0)
-       
+
        (incomposition         . +)
        ;; Similar to the three `extern-lang' symbols, but for
        ;; CORBA CIDL "composition" blocks.
-       
+
        (template-args-cont    . (c-lineup-template-args +))
        ;; C++ template argument list continuations.
-       
+
        (inlambda              . +)
        ;; In the header or body of a lambda function.
-       
+
        (lambda-intro-cont     . ++)
        ;; Continuation of the header of a lambda function.
-       
+
        (inexpr-statement      . +)
        ;; The statement is inside an expression.
-       
+
        (inexpr-class          . +)
        ;; The class is inside an expression.  Used e.g. for
        ;; Java anonymous classes.

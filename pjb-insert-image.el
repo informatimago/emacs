@@ -5,10 +5,10 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    A patch to emacs to be able to insert images in a comint buffer
 ;;;;    such as inferior-lisp REPL.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -16,19 +16,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2010 - 2010
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;;;    PURPOSE.  See the GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public
 ;;;;    License along with this program; if not, write to the Free
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -59,7 +59,7 @@
                                  t
                                  comint-preoutput-filter-functions))
               (strings (list string)))
-          
+
           (while (and functions strings)
             (setf strings (loop
                              with result = ()
@@ -68,7 +68,7 @@
                              finally (return (nreverse result))))
             (setq functions (cdr functions)))
           (setf string strings))
-        
+
         ;; Insert STRING
         (let ((inhibit-read-only t)
               ;; The point should float after any insertion we do.
@@ -92,7 +92,7 @@
                     ((consp   item) (insert-image (first item) (second item)))
                     (t (error "Unexpected kind of insert %S" item))))
 
-            
+
             ;; Advance process-mark
             (set-marker (process-mark process) (point))
             (setf string (buffer-substring comint-last-output-start (point)))

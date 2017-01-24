@@ -464,7 +464,7 @@ DOES:    Checks that the values for the fields are within limits.
 ;;;                                            (* (amount-ht self)
 ;;;                                               (vat-rate self)) (devise self))))
 ;;;   (setf (slot-value self 'amount-ttc) (euro-round
-;;;                                        (+ (amount-ht self) 
+;;;                                        (+ (amount-ht self)
 ;;;                                           (amount-vat self)) (devise self)))
 
 ;;;   );;compute-amount-ttc
@@ -1920,7 +1920,7 @@ RETURN: a list containing the totals:
 
 
 (defun kind-to-order (kind)
-  (cond 
+  (cond
    ((eq kind PRESTACION-NACIONAL)          1)
    ((eq kind PRESTACION-INTRACOMUNITARIA)  2)
    ((eq kind IMPUESTO)                     3)
@@ -1933,7 +1933,7 @@ RETURN: a list containing the totals:
   "DOES:   Insert the formated entries of the journal into the current buffer
         at the current point."
   (journal-sort)
-  (let* ((entries 
+  (let* ((entries
           (sort (journal-extract year trimestre)
                 (lambda (a b)
                   (cond
@@ -2046,10 +2046,10 @@ SEE-ALSO:    impuestos-file-path."
 
   (unless (member (/ (round (abs (/  amount-vat amount-ht)) 0.01) 100.0)
                   vat-rates)
-  (error "Invalid VAT amount (%f/%f not in %S)." 
+  (error "Invalid VAT amount (%f/%f not in %S)."
          amount-vat amount-ht vat-rates))
 
-  (when (/= (round amount-ttc 0.01) 
+  (when (/= (round amount-ttc 0.01)
             (+ (round  amount-ht 0.01) (round amount-vat 0.01)))
     (error "amount-ttc /= amount-ht + amount-vat (%f /= %f + %f)."
            amount-ttc amount-ht amount-vat))
@@ -2057,7 +2057,7 @@ SEE-ALSO:    impuestos-file-path."
   (when (/= (round (/ amount-vat amount-ht) 0.01) (round vat-rate 0.01))
     (error "vat-rate /= amount-vat / amount-ht (%f /= %f / %f)."
            vat-rate amount-vat amount-ht))
-  
+
   );;check-vat
 
 
@@ -2087,7 +2087,7 @@ RETURN: the IVA data for the given ENTRIES of journal."
          ((= vat-rate 0.16)
           (setq base-iva-16 (+ base-iva-16 (credit-ht entry))))
          (t
-          (error "Invalid VAT rate %f in entry %S of journal." 
+          (error "Invalid VAT rate %f in entry %S of journal."
                  vat-rate entry))))
        ((member kind '(PRESTACION-INTRACOMUNITARIA IMPUESTO))
         ;; Nada que hacer.

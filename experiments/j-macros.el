@@ -7,8 +7,8 @@
 ;; // EXAMPLE: classPathName=other.OwnerClass.pathName;eval(computeCxxClassName);otherClassName=cxxClassName;
 ;; String computeCxxClassName=" this{ Package currentPackage=rootPackage; string sep=~"~"; string s=classPathName; string[] items=s.segment(~":~"); int i; cxxClassName=~"~"; for(i=1; i<items.size()-1; i=i+1){ this{ Package subPackage; string item; boolean found=false; getItemSet(items,i,item); StdErr.write(item,NL); subPackage=currentPackage.getPackageByName(item); subPackage.TagTaggedValue.<while(not(found)){ getTagType().<while(not(found)){ found=Name==~"C++NoNameSpace~"; } } if(not(found)){ cxxClassName=cxxClassName+sep+subPackage.Name; sep=~"::~"; } currentPackage=subPackage; } } this{ string item; getItemSet(items,items.size()-1,item); cxxClassName=cxxClassName+sep+item; } } ";
 ;; // PARAMETERS:
-;; String           classPathName;                              // input    
-;; String           cxxClassName;                               // output   
+;; String           classPathName;                              // input
+;; String           cxxClassName;                               // output
 ;; // END FUNCTION
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26,7 +26,7 @@ properly escaped.."
                 (re-search-forward "^\\([^\"/]\\|\"\\([^\"~]\\|~.\\)*\"\\|/[^/]\\)*\\(//.*\\)$" (point-max) t))
       (with-marker (current (match-end 3))
         (delete-region (match-beginning 3) current)
-        (goto-char current)) 
+        (goto-char current))
       (beginning-of-line 1))
     (goto-char (point-min))             ; remove spaces before
     (while (and (< (point) (point-max)) (re-search-forward "^ +" (point-max) t))

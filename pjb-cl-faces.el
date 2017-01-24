@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Defines font-lock faces for COMMON-LISP symbols.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2004 - 2011
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 ;;;;    PURPOSE.  See the GNU General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU General Public
 ;;;;    License along with this program; if not, write to the Free
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
@@ -54,13 +54,13 @@
 
 
 ;;; (mapcar
-;;;  (lambda (kind) 
+;;;  (lambda (kind)
 ;;;    (insert (format "%S\n"
-;;;              (list kind 
+;;;              (list kind
 ;;;                    (intern
 ;;;                     (concatenate 'string
-;;;                       "font-lock-cl-" 
-;;;                       (replace-regexp-in-string 
+;;;                       "font-lock-cl-"
+;;;                       (replace-regexp-in-string
 ;;;                        " " "-" (string-downcase kind))
 ;;;                       "-face"))
 ;;;                     '(spec tty glight gdark clight cdark default)))))
@@ -77,14 +77,14 @@
   `(ident-list
     (((type tty) (class color)) ,tty)
     (((class grayscale) (background light)) ,gray-light)
-    (((class grayscale) (background dark)) ,gray-dark) 
-    (((class color) (background light)) ,color-light) 
-    (((class color) (background dark)) ,color-dark) 
+    (((class grayscale) (background dark)) ,gray-dark)
+    (((class color) (background light)) ,color-light)
+    (((class color) (background dark)) ,color-dark)
     (t ,default))
   ) ;;spec
 
 
-;; :family :width :height 
+;; :family :width :height
 ;; :weight :slant :underline :overline :strike-through :box
 ;; :foreground :background :stipple :inverse-video :inherit
 
@@ -306,7 +306,7 @@
             (:underline nil :bold t  :foreground "CornflowerBlue")
             (:underline nil :bold t )))
     ("Keyword" ;; from the KEYWORD package
-     ("\\(\\<:\\sw\\sw+\\>\\)" 
+     ("\\(\\<:\\sw\\sw+\\>\\)"
       (0 font-lock-cl-keyword-face t))
      font-lock-cl-keyword-face
      ,(spec (:foreground "magenta")
@@ -375,7 +375,7 @@
 ;;;              (goto-char (match-end 0)))
 ;;;             ((looking-at "|#")
 ;;;              (decf level)
-;;;              (when (= 0 level) 
+;;;              (when (= 0 level)
 ;;;                (push (cons start (match-end 0)) comments)
 ;;;                (setf state :out))
 ;;;              (goto-char (match-end 0)))
@@ -383,14 +383,14 @@
 ;;;             ((looking-at ".")))))
 ;;;         (goto-char (match-end 0)))))
 ;;;   );;pjb-cl$update-cache
-   
+
 
 
 ;; dichotomy (vector value compare &optional start end key)
-;; PRE:	entry is the element to be searched in the table.
+;; PRE: entry is the element to be searched in the table.
 ;;         (<= start end)
 ;; RETURN: (values found index order)
-;; POST:	(<= start index end)
+;; POST:        (<= start index end)
 ;;         +-------------------+----------+-------+----------+----------------+
 ;;         | Case              |  found   | index |  order   |     Error      |
 ;;         +-------------------+----------+-------+----------+----------------+
@@ -404,9 +404,9 @@
 
 ;;; (defun pjb-cl$find-in-cache (min max cache)
 ;;;   (multiple-value-bind (found index order)
-;;;       (dichotomy cache min (lambda (a b) (cond ((< a b) -1) 
+;;;       (dichotomy cache min (lambda (a b) (cond ((< a b) -1)
 ;;;                                           ((= a b) 0)
-;;;                                           (t 1))) 
+;;;                                           (t 1)))
 ;;;                  0 (length cache) (function car))
 ;;;     (let ((se))
 ;;;       (cond
@@ -467,13 +467,13 @@
                (start)
                (found nil)
                (done  nil))
-              (done 
+              (done
                (progn
                  (message "pjb-cl$find-object done found=%S" found)
-                 (fo-put-in-cache limit kind found 
+                 (fo-put-in-cache limit kind found
                                   (if found (match-beginning 0) from)
                                   (if found (match-end 0)       from))
-                 (unless found 
+                 (unless found
                    ;; we must reset the matches
                    (goto-char from)
                    (looking-at (regexp-quote
@@ -503,7 +503,7 @@
                   (goto-char (match-end 0)))
                  ((looking-at "|#")
                   (decf level)
-                  (when (= 0 level) 
+                  (when (= 0 level)
                     (goto-char start)
                     (looking-at (format ".{%d}" (- (match-end 0) start)))
                     (setf done t found t))
@@ -515,21 +515,21 @@
           )))) ;;pjb-cl$find-object
 
 
-(defun pjb-cl$find-string (limit) 
+(defun pjb-cl$find-string (limit)
   (pjb-cl$find-object limit 'string)
   ;; (pjb-cl$update-cache)
   ;; (pjb-cl$find-in-cache (point) limit (clfss-strings pjb-cl$*state*))
   ) ;;pjb-cl$find-string
 
 
-(defun pjb-cl$find-symbol (limit) 
+(defun pjb-cl$find-symbol (limit)
   (pjb-cl$find-object limit 'symbol)
   ;; (pjb-cl$update-cache)
   ;; (pjb-cl$find-in-cache (point) limit (clfss-symbols pjb-cl$*state*))
   ) ;;pjb-cl$find-symbol
 
 
-(defun pjb-cl$find-comment (limit) 
+(defun pjb-cl$find-comment (limit)
   (pjb-cl$find-object limit 'comment)
   ;; (pjb-cl$update-cache)
   ;; (pjb-cl$find-in-cache (point) limit (clfss-comments pjb-cl$*state*))
@@ -538,7 +538,7 @@
 
 
 
-(custom-declare-group 
+(custom-declare-group
  'common-lisp-faces
  (mapcar (lambda (kf) (list (kf-face kf) 'custom-face)) *kind-to-face-map*)
  "COMMON-LISP Faces"
@@ -546,7 +546,7 @@
 
 
 (map nil
-     (lambda (kf) 
+     (lambda (kf)
        (let ((kind (kf-kind kf))
              (face (kf-face kf))
              (spec (kf-spec kf)) )
@@ -1756,7 +1756,7 @@
     STRING-TRIM TAN STRING-UPCASE TANH STRING/= TENTH STRING< TERPRI
     STRING<= THE STRING= THIRD STRING> THROW STRING>= TIME STRINGP TRACE
     STRUCTURE TRANSLATE-LOGICAL-PATHNAME STRUCTURE-CLASS
-    TRANSLATE-PATHNAME STRUCTURE-OBJECT TREE-EQUAL STYLE-WARNING TRUENAME 
+    TRANSLATE-PATHNAME STRUCTURE-OBJECT TREE-EQUAL STYLE-WARNING TRUENAME
     TRUNCATE VALUES-LIST TWO-WAY-STREAM VARIABLE
     TWO-WAY-STREAM-INPUT-STREAM VECTOR TWO-WAY-STREAM-OUTPUT-STREAM
     VECTOR-POP TYPE VECTOR-PUSH TYPE-ERROR VECTOR-PUSH-EXTEND
@@ -1776,11 +1776,11 @@
     )) ;;*common-lisp-exports*
 
 
-(defun up-down-case (sym) 
+(defun up-down-case (sym)
   "
 RETURN: A list containg the name of sym in down case and in up case.
 "
-  (list (string-downcase (symbol-name sym)) 
+  (list (string-downcase (symbol-name sym))
         (string-upcase   (symbol-name sym))))
 
 
@@ -1838,7 +1838,7 @@ RETURN: A regexp that match the given REGEXP, but
             ;;                   (1 ,face t))))))
             (list (format-regexp-in lock)))
            ((null lock)
-            ;; "Warning" 
+            ;; "Warning"
             ;; (error "No lock and no symbols")
             nil)
            ((some-format-p (car lock))
@@ -1865,7 +1865,7 @@ RETURN: A regexp that match the given REGEXP, but
                  (greek-letter-font-lock))
                (copy-list
                 `(
-                  (,(format "(%s[ 	']*\\(\\sw+\\)?" 
+                  (,(format "(%s[       ']*\\(\\sw+\\)?"
                             (regexp-opt
                              (mapcar (function cl:string)
                                      '(catch throw block return-from))
@@ -1874,20 +1874,20 @@ RETURN: A regexp that match the given REGEXP, but
                              'words))
                     (1 font-lock-cl-special-operator-face t)
                     (2 font-lock-constant-face nil t))
-                  (,(format "(%s[ 	']*\\(\\sw+\\)?" 
+                  (,(format "(%s[       ']*\\(\\sw+\\)?"
                             (regexp-opt
                              (mapcar (function cl:string)
                                      '(provide require))
                              ;; (mapcan (function up-down-case) '(provide require))
                              'words))
                     (1 font-lock-cl-function-face t)
-                    (2 font-lock-constant-face nil t)) 
-                  (,(format "(%s" 
+                    (2 font-lock-constant-face nil t))
+                  (,(format "(%s"
                             (regexp-opt
                              (mapcar (function cl:string)
                                      '(abort assert error signal))
                              ;; (mapcan (function up-down-case)
-                             ;;         '(abort assert error signal)) 
+                             ;;         '(abort assert error signal))
                              'words))
                     (1 font-lock-cl-warning-face t))))
                (common-lisp-font-lock)))))))

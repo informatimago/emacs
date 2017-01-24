@@ -38,9 +38,9 @@ bufni
 bufsp
 builtin
 by
-byaddr		
-byvalue		
-bx		
+byaddr
+byvalue
+bx
 c
 call
 cdecl
@@ -69,23 +69,23 @@ dcl|declare
 deact(ivate)?
 dec(imal)?
 dft|default
-delay		
-delete		
-define		
-def(ined)?	
-descriptor	
-descriptors	
-detach		
-dim(ension)?	
-direct		
-display		
-do	 	
-downthru	
-e		
-edit	 	
-else		
-endendfile		
-endpage		
+delay
+delete
+define
+def(ined)?
+descriptor
+descriptors
+detach
+dim(ension)?
+direct
+display
+do
+downthru
+e
+edit
+else
+endendfile
+endpage
 entry
 env(ironment)?
 error
@@ -120,10 +120,10 @@ go
 goto
 graphic
 gx
-handle		
-hexadec		
+handle
+hexadec
 i
-ieee		
+ieee
 if
 ignore
 imported
@@ -140,7 +140,7 @@ int(ernal)?
 into
 invalidop
 irred(ucible)?
-iterate		
+iterate
 key
 keyed
 keyfrom
@@ -155,7 +155,7 @@ line
 linesize
 linkage
 list
-littleendian	
+littleendian
 local
 locate
 loop
@@ -173,20 +173,20 @@ nolock
 nonassignable|nonasgn
 nonconn(ected)?
 none
-nonvar(ying)?	
+nonvar(ying)?
 non_quick
-no_quick_blocks	
+no_quick_blocks
 noinit
 noinline
 noinvalidop
 noo(verflow|fl)
-noprint		
-normal		
+noprint
+normal
 nosize
 nosub(scriptrange|rg)
 nostr(ingrange|g)
 nostr(ingsize|z)
-note      	
+note
 nou(nderflow|fl)
 nowrite
 noz(erodivide|div)
@@ -199,8 +199,8 @@ optlink
 order
 ordinal
 other(wise)?
-output		
-overflow|ofl	
+output
+overflow|ofl
 p
 package
 packed_decimal
@@ -208,13 +208,13 @@ packed
 page
 pagesize
 par(m|ameter)
-password	
-pending		
-pic(ture)?	
-pointer|ptr	
-pos(ition)?	
-prec(ision)?	
-print	
+password
+pending
+pic(ture)?
+pointer|ptr
+pos(ition)?
+prec(ision)?
+print
 priority
 proc(edure)?
 put
@@ -225,7 +225,7 @@ real
 record
 recsize
 recursive
-red(ucible)?	
+red(ucible)?
 reentrant
 refer
 regional
@@ -234,46 +234,46 @@ rename
 reorder
 repeat
 replace
-reply		
-reread		
-reserved	
-reserves	
-resignal	
-retcode		
-return		
-returns		
-reuse		
-revert		
-rewrite		
-scalarvarying	
-select		
-separate_static	
+reply
+reread
+reserved
+reserves
+resignal
+retcode
+return
+returns
+reuse
+revert
+rewrite
+scalarvarying
+select
+separate_static
 set
-sequential|seql	
+sequential|seql
 signal
 signed
 sis
 size
 skip
 snap
-static		
-stdcall		
-storage		
-stop		
-stream		
-string	 	
+static
+stdcall
+storage
+stop
+stream
+string
 stringrange|strg
-stringsize|strz		
-stringvalue	
-structure	
+stringsize|strz
+stringvalue
+structure
 sub
-subscriptrange|subrg	
-support		
-system		
-task		
-then		
-thread		
-title		
+subscriptrange|subrg
+support
+system
+task
+then
+thread
+title
 to
 total
 tp
@@ -367,13 +367,13 @@ zerodivide|zdiv
 
 
 
-;; (mapcar 'parse-lex-regexp 
+;; (mapcar 'parse-lex-regexp
 ;;         '("write" "zerodivide|zdiv" "var(ying)?z" "var((yi)(ng))?z" "par(m|ameter)"
 ;;           "((a|b)(c|d))" "beg((a|b)(c|d))?end"))
 
 
 (defparameter *expanded-keywords*
-  (mapcar (lambda (regexp) (parse-lex-regexp (string-trim " 	" regexp)))
+  (mapcar (lambda (regexp) (parse-lex-regexp (string-trim "     " regexp)))
          (split-sequence:split-sequence  #\newline  *pl1-keywords* :remove-empty-subseqs t)))
 
 ;; (reduce (function append) *expanded-keywords*)

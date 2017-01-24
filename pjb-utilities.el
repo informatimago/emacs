@@ -9,7 +9,7 @@
 ;;;;    This module exports various utility functions.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2005-07-28 <PJB> Added compiletime-cond
 ;;;;    2002-02-17 <PJB> Added stderr and stdout parameters to printf.
@@ -58,9 +58,9 @@
   "Applies recursively the function  atom-func on each and every pairs
 that can  be found recursively  in the two parallel  structures a-list
 and b-list. Only the elements from a-list must be an atom to be passed
-to atom-func. Examples: 
+to atom-func. Examples:
 
-  (recursive-apply '+ '((1 2) (3 4)) '((1 0) (0 1))) 
+  (recursive-apply '+ '((1 2) (3 4)) '((1 0) (0 1)))
         ---> ((2 2) (3 5))
 
   (recursive-apply (lambda (atom other) (cons atom other))
@@ -71,7 +71,7 @@ to atom-func. Examples:
 "
   (cond ((null a-list) nil)
         ((atom a-list) (apply atom-func (list a-list b-list)))
-        (t (cons (recursive-apply atom-func (car a-list) (car b-list)) 
+        (t (cons (recursive-apply atom-func (car a-list) (car b-list))
                  (recursive-apply atom-func (cdr a-list) (cdr b-list))))))
 
 (defun padd (a b)  (recursive-apply '+ a b))
@@ -106,7 +106,7 @@ to atom-func. Examples:
 
 (defun pjb-diff (a b)
   "
-DO:      Show deep differences between a and b. a and b should be  
+DO:      Show deep differences between a and b. a and b should be
          lists  of same structure (recursively).
 RETURN:  Whether there are differences between a and b.
 "
@@ -127,7 +127,7 @@ RETURN:  Whether there are differences between a and b.
 (defun pjb-struct-diff (a b &optional cmp)
   "
 DO:      Compare two structures and return the differences.
-RETURN:  A list structured like a and b containing nil where elements 
+RETURN:  A list structured like a and b containing nil where elements
          from a and b match or (cons elt-a elt-b) when elt-a and elt-b differ.
 NOTE:    cmp is a function used to compare atoms ('eq, 'equal or whatever).
          Default is 'eq.
@@ -170,11 +170,11 @@ NOTE:    cmp is a function used to compare atoms ('eq, 'equal or whatever).
             number+1  (1+ number)
             precision (1+ precision)))
     precision))
-  
+
 
 
 (defun float-to-base (number base)
-  "DO:      Convert  a number  value into  a string  contening 
+  "DO:      Convert  a number  value into  a string  contening
             the  same value expressed into the given base. 1<base<37.
 SEE-ALSO:decimal-to-base."
   (cond
@@ -203,7 +203,7 @@ SEE-ALSO:decimal-to-base."
 
 
 (defun float-from-base (string-number-in-base base)
-  "DO:      Convert the value encoded as a string containing a number 
+  "DO:      Convert the value encoded as a string containing a number
          expressed in base into a float. 1<base<37. Anycase
          letter are accepted as  digits  values from  10  to  36  for
          A  to  Z.  The value  may  be signed.  The string  sould
@@ -214,7 +214,7 @@ SEE-ALSO:float-from-base."
   (cond
    ((not (integerp base))         (error "Invalid base (%S)." base))
    ((or (< base 2) (< 36 base))   (error "Invalid base (%d)." base))
-   ((not (stringp string-number-in-base))      
+   ((not (stringp string-number-in-base))
     (error "For now, I only convert from string values.")))
   (let (
         (number  0.0)
@@ -231,9 +231,9 @@ SEE-ALSO:float-from-base."
      ((= digit ?+) (setq min 2 b 1))
      ((= digit ?-) (setq min 2 b 1 sign -1)))
     (if (<= len min)
-        (error 
+        (error
          "The input string must contain at least one digit (consider \"0\")."))
-    (if (< base 10) 
+    (if (< base 10)
          (setq max-nine   (- (+ ?0 base) 1)
                max-biga   0
                max-smalla 0)
@@ -242,7 +242,7 @@ SEE-ALSO:float-from-base."
                max-smalla (- (+ ?a base) 11)))
     (while (< b len)
       (setq digit (aref string-number-in-base b))
-      (cond 
+      (cond
        ((and (<= ?0 digit) (<= digit max-nine))
         (setq number (+ (* number base) (- digit ?0))))
        ((and (<= ?A digit) (<= digit max-biga))
@@ -263,16 +263,16 @@ SEE-ALSO:float-from-base."
 (defun integer-to-base (decimal base &optional width padchar
                                 commachar comma-interval)
   "
-DO:      Convert  a decimal  value into  a string  contening the 
+DO:      Convert  a decimal  value into  a string  contening the
          same value expressed into the given base. 1<base<37.
-         The optional WIDTH specifies the minimum length of the returned 
+         The optional WIDTH specifies the minimum length of the returned
          string (0-left-filled), not counting a '-' sign.
 SEE-ALSO:float-to-base."
     ;;TODO: Implement commachar, comma-interval
   (cond
    ((not (integerp base))         (error "Invalid base (%S)." base))
    ((or (< base 2) (< 36 base))   (error "Invalid base (%d)." base))
-   ((not (integerp decimal))      
+   ((not (integerp decimal))
     (error "For now, I only convert integer values.")))
   (let ((digits "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         (buffer (make-string 32 ?0))
@@ -290,7 +290,7 @@ SEE-ALSO:float-to-base."
     (if width (if (< 32 width)
                   (setq sign (concat sign (make-string (- width 32) padchar))
                         width 32)))
-    (concat sign 
+    (concat sign
             (if (and width (< (- 32 width) (+ 1 b) ))
                 (substring buffer (- 32 width))
               (if (= b 31) "0" (substring buffer (+ 1 b)))))))
@@ -299,7 +299,7 @@ SEE-ALSO:float-to-base."
 
 (defun integer-from-base (string-number-in-base base)
   "
-DO:      Convert the value encoded as a string containing a number 
+DO:      Convert the value encoded as a string containing a number
          expressed in base into an integer. 1<base<37. Anycase
          letter are accepted as  digits  values from  10  to  36  for
          A  to  Z.  The value  may  be signed.  The string  sould
@@ -310,7 +310,7 @@ SEE-ALSO:float-from-base."
 
    ((not (integerp base))         (error "Invalid base (%S)." base))
    ((or (< base 2) (< 36 base))   (error "Invalid base (%d)." base))
-   ((not (stringp string-number-in-base))      
+   ((not (stringp string-number-in-base))
     (error "For now, I only convert from string values.")))
   (let (
         (decimal 0)
@@ -327,9 +327,9 @@ SEE-ALSO:float-from-base."
      ((= digit ?+) (setq min 2 b 1))
      ((= digit ?-) (setq min 2 b 1 sign -1)))
     (if (<= len min)
-        (error 
+        (error
          "The input string must contain at least one digit (consider \"0\")."))
-    (if (< base 10) 
+    (if (< base 10)
          (setq max-nine   (- (+ ?0 base) 1)
                max-biga   0
                max-smalla 0)
@@ -338,7 +338,7 @@ SEE-ALSO:float-from-base."
                max-smalla (- (+ ?a base) 11)))
     (while (< b len)
       (setq digit (aref string-number-in-base b))
-      (cond 
+      (cond
        ((and (<= ?0 digit) (<= digit max-nine))
         (setq decimal (+ (* decimal base) (- digit ?0))))
        ((and (<= ?A digit) (<= digit max-biga))
@@ -357,16 +357,16 @@ SEE-ALSO:float-from-base."
 
 
 (defun pjb-seconds-to-time (secs)
-  "Converts a value givent as 3600th, into an integer and 60th and 3600th 
+  "Converts a value givent as 3600th, into an integer and 60th and 3600th
 encoded as a \"HH:MM:SS.sss\" string."
   (let ((s (% (truncate secs) 60)))
-	(let ((m (% (truncate (/ secs 60)) 60)))
-	  (let ((h (truncate (/ secs 3600))))
-		(format "%02d:%02d:%02d = %d seconds" h m s (truncate secs))))))
+        (let ((m (% (truncate (/ secs 60)) 60)))
+          (let ((h (truncate (/ secs 3600))))
+                (format "%02d:%02d:%02d = %d seconds" h m s (truncate secs))))))
 
 
 (defun d-dms (d)
-  "Convert a decimal value into an integer and 60th and 3600th 
+  "Convert a decimal value into an integer and 60th and 3600th
 encoded as a \"HH:MM:SS.sss\" string."
   (let ((epsilon 0.000001)
         (hou) (min*) (min) (sec*) (sec))
@@ -398,10 +398,10 @@ encoded as a  \"HH:MM:SS.sss\" string, into a decimal value."
              (one (string-match ":" arg))
              (hou (string-to-number (substring arg 0 one)))
              (two (if (null one) nil (string-match ":" arg (+ one 1))))
-             (min (if (null one) 0 
+             (min (if (null one) 0
                     (string-to-number (substring arg (+ one 1) two))))
              (tre (if (null two) nil  (string-match ":" arg (+ two 1))))
-             (sec (if (null two) 0 
+             (sec (if (null two) 0
                     (string-to-number (substring arg (+ two 1)))))
              )
         (if (null rest)
@@ -413,10 +413,10 @@ encoded as a  \"HH:MM:SS.sss\" string, into a decimal value."
       (+ hou (/ min 60.0) (/ sec 3600.0)))))
 
 
- 
+
 (defmacro commented-out (&rest stuff)
-  "Use this macro to 'comment-out' some lisp. 
-Note: the ignore function evaluates its arguments, 
+  "Use this macro to 'comment-out' some lisp.
+Note: the ignore function evaluates its arguments,
       while the commented-out macro doesn't."
   nil)
 
@@ -429,10 +429,10 @@ Note: the ignore function evaluates its arguments,
 (defun split-cl-format (format-string)
   "
 PRE:    format-string  is a string containing Common-Lisp format specifiers.
-RETURN: a list of strings, each either a specifier-less string 
-        or containing only one specifier (thus beginning with ~ ; 
+RETURN: a list of strings, each either a specifier-less string
+        or containing only one specifier (thus beginning with ~ ;
         ~~ is considered a specifier).
-NOTE:   The clisp reader does not know anything about backslash escapes 
+NOTE:   The clisp reader does not know anything about backslash escapes
         such as \n.   Only \" and \\ are recognized as expected.
 "
   (let ((positions '())
@@ -451,7 +451,7 @@ The first argument is optional. When present, it may be either:
   - a function of one character argument,
   - a buffer (output is inserted before point),
   - a marker (output is inserted and the marker is advanced),
-  - the symbol t (output appears in the echo area 
+  - the symbol t (output appears in the echo area
     that is, *Message* buffer when interactive, stdout when in batch),
   - the symbol :stderr (output appears in *Message* or on /dev/stderr),
   - the symbol :stdout (output appears in the current buffer or on /dev/stdout).
@@ -460,7 +460,7 @@ The first argument is optional. When present, it may be either:
   output        interactive               non-interactive
   ------------  ------------------------  ------------------------
   functionp     (apply fun one-char)      (apply fun one-char)
-  bufferp       inserted before point     inserted before point 
+  bufferp       inserted before point     inserted before point
   markerp       inserted and advanced     inserted and advanced
   nil           (current-buffer)          /dev/stdout
   t             *STANDARD-OUTPUT*         *STANDARD-OUTPUT*
@@ -474,20 +474,20 @@ inserted into the current buffer, at the current point, or to stdout.
 
 The second argument is a format string (with % specifiers  like C printf).
 
-The optional remaining arguments are formated. 
+The optional remaining arguments are formated.
 
 "
   (block :print
     (let ( (kind (car args))
            format-args write out)
-            
-      (cond 
+
+      (cond
        ;; no optional first argument -> out is current buffer
        ;; TODO: This should be the same as :stdout !
        ((stringp kind)
         (setq out (current-buffer)
               format-args args
-              write (lambda (s) (write-string s out)) 
+              write (lambda (s) (write-string s out))
               ))
 
        ;; printf stderr -> (message          in any case
@@ -504,7 +504,7 @@ The optional remaining arguments are formated.
        ;;               -> (printf t ...)                 if batch
        ((eq :stdout kind)
         (setq format-args (cdr args)
-              write (lambda (s) 
+              write (lambda (s)
                       (write-string s (if noninteractive t (current-buffer))))
               ))
 
@@ -529,7 +529,7 @@ SEE-ALSO: `write-char'.
 
 (defun show (&rest x)
   "Insert the formated value X."
-  (unless (= (point) (progn (beginning-of-line) (point))) 
+  (unless (= (point) (progn (beginning-of-line) (point)))
     (end-of-line)
     (insert "\n"))
   (insert (format ";; --> %S\n"
@@ -556,7 +556,7 @@ SEE-ALSO: `write-char'.
            (while (>= ,var ,tempvar)
              ,@body
              (setq ,var (- ,var 1)))))))
-   
+
 
 (defun today ()
   "Returns the date of today in YYYY-MM-DD format."
@@ -570,7 +570,7 @@ SEE-ALSO: `write-char'.
 (defun remove-parity-from-region ()
   "Replace the region by the same 8-bit text with the parity bit set to 0 (7-bit)."
   (interactive)
-  (let* ((text-8 (buffer-substring-no-properties (region-beginning) 
+  (let* ((text-8 (buffer-substring-no-properties (region-beginning)
                                                  (region-end)))
          (len    (length text-8))
          (text-7 (make-string len ??))
@@ -607,14 +607,14 @@ SEE-ALSO: `write-char'.
   (interactive "P")
   (let ((buffers (buffer-list))
         (buf))
-    (while buffers 
+    (while buffers
       (setq buf (car buffers)
             buffers (cdr buffers))
       (set-buffer buf)
       (when (or
              (= 0 (buffer-size))
              (and invisibles-too (= 32 (string-to-char (buffer-name buf)))))
-        (set-buffer buf)    
+        (set-buffer buf)
         (set-buffer-modified-p nil)
         (kill-buffer buf)
         ))
@@ -622,7 +622,7 @@ SEE-ALSO: `write-char'.
 
 
 (defun process-with-id (pid)
-  "RETURN:  The process whose process-id is pid 
+  "RETURN:  The process whose process-id is pid
          (or nil of none is found in (process-list))."
   (let ( (pl (process-list))
          (pr) )
@@ -672,8 +672,8 @@ RETURN:  et expressed as a scalar."
 RETURN: A list of list of strings (interface-name ip-address up-or-down)
         ip-address and up-or-down (\"UP\" or \"DOWN\") may be absent.
 "
-  (let ((l 
-         (mapcar 
+  (let ((l
+         (mapcar
           (lambda (line)
             (cond
              ((string-match "^\\([^ ]+\\) .*" line)
@@ -690,7 +690,7 @@ RETURN: A list of list of strings (interface-name ip-address up-or-down)
         (r nil) (i nil))
 
     (while l
-      (cond 
+      (cond
        ((null (car l))
         ;; nop
         )
@@ -704,8 +704,8 @@ RETURN: A list of list of strings (interface-name ip-address up-or-down)
 
 
 (commented-out
- (list-colors-display 
-  (mapcar (lambda (c) 
+ (list-colors-display
+  (mapcar (lambda (c)
             (color-value-to-name (darker (x-color-values c) 0.8)))
           x-colors))
  (show (color-value-to-name (lighter (x-color-values "MediumSpringGreen") 0.8)))
@@ -722,7 +722,7 @@ RETURN: A list of list of strings (interface-name ip-address up-or-down)
  (letter-incr "VMS" 1)
 
  (defun make-list (length init)
-   (cond 
+   (cond
      ((>= 0 length) nil)
      ((= 1 length) (list init))
      (t  (cons init (make-list (1- length) init)))))
@@ -747,10 +747,10 @@ RETURN: A list of list of strings (interface-name ip-address up-or-down)
 
 (defun dichotomy (vector value compare &optional start end key)
   "
-PRE:	entry is the element to be searched in the table.
+PRE:    entry is the element to be searched in the table.
         (<= start end)
 RETURN: (values found index order)
-POST:	(<= start index end)
+POST:   (<= start index end)
         +-------------------+----------+-------+----------+----------------+
         | Case              |  found   | index |  order   |     Error      |
         +-------------------+----------+-------+----------+----------------+

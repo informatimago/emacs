@@ -2978,7 +2978,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
 
 (defun c-variable-to-lisp-alien ()
   (interactive)
-  (while (re-search-forward "extern \\(.*[^A-Z0-9a-z_]\\)\\([a-zA-Z_][A-Z0-9a-z_]*\\)[ 	]*;" nil t)
+  (while (re-search-forward "extern \\(.*[^A-Z0-9a-z_]\\)\\([a-zA-Z_][A-Z0-9a-z_]*\\)[  ]*;" nil t)
     (let ((start   (match-beginning 0))
           (end     (match-end 0))
           (type    (match-string-no-properties 1))
@@ -3000,7 +3000,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
   "Substitute #define C constants into lisp defconstant forms."
   (interactive)
   (let ((start (point)))
-    (while (re-search-forward  "^#[	 ]*define[	 ][	 ]*\\([A-Za-z_][A-Za-z_0-9]*\\)[	 ][	 ]*\\(.*?\\)[	 ][	 ]*/\\* *\\(..*\\) *\\*/ *$" nil t)
+    (while (re-search-forward  "^#[      ]*define[       ][      ]*\\([A-Za-z_][A-Za-z_0-9]*\\)[         ][      ]*\\(.*?\\)[    ][      ]*/\\* *\\(..*\\) *\\*/ *$" nil t)
       (let ((start   (match-beginning 0))
             (end     (match-end 0))
             (name    (match-string-no-properties 1))
@@ -3012,7 +3012,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
                   (if (= 0 (length comment))
                       "" (format " \"%s\"" comment))))))
     (goto-char start)
-    (while (re-search-forward  "^#[	 ]*define[	 ][	 ]*\\([A-Za-z_][A-Za-z_0-9]*\\)[	 ][	 ]*\\(.*?\\)[	 ]*$" nil t)
+    (while (re-search-forward  "^#[      ]*define[       ][      ]*\\([A-Za-z_][A-Za-z_0-9]*\\)[         ][      ]*\\(.*?\\)[    ]*$" nil t)
       (let ((start   (match-beginning 0))
             (end     (match-end 0))
             (name    (match-string-no-properties 1))
