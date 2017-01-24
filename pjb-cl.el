@@ -14,7 +14,7 @@
 ;;;;    2006-11-14 <PJB> Removed most of CL functions and downcased the rest
 ;;;;                     to avoid collision with emacs-cl.
 ;;;;    2004-11-01 <PJB> Upcased COMMON-LISP symbols.  This will avoid name
-;;;;                     collision between Common-Lisp and emacs-lisp. 
+;;;;                     collision between Common-Lisp and emacs-lisp.
 ;;;;    2003-01-20 <PJB> Replaced pjb-cl%%string-replace
 ;;;;                     by regexp-replace-in-string.
 ;;;;    2002-04-10 <PJB> Creation.
@@ -141,9 +141,9 @@ RETURN: Whether `char' is in `bag'.
      (setq   ,symbol ,initvalue)))
 
 
-(defmacro multiple-value-prog1 (first-form &rest forms) 
+(defmacro multiple-value-prog1 (first-form &rest forms)
   ;; Multiple values are implemented as list of values. BAD.
-  `(prog1 ,first-form ,@forms)) 
+  `(prog1 ,first-form ,@forms))
 
 
 (defconstant multiple-value-limit 4098)
@@ -167,7 +167,7 @@ RETURN: Whether `char' is in `bag'.
 
 ;; (defmacro handler-case (expression &rest clauses)
 ;;   "Evaluate expression with `condition-case' and catch errors with CLAUSES.
-;; 
+;;
 ;; Longer explanation here..."
 ;;   (let* ((var (gensym))
 ;;          (neclause (assoc :NO-ERROR clauses))
@@ -231,7 +231,7 @@ RETURN: Whether `char' is in `bag'.
   "Common-Lisp
 IMPLEMENTATION: The clause variable symbols are substituted by one single
                 condition-case variable symbol.  This may cause problems
-                if the same symbol is used as data or if it's a dynamic 
+                if the same symbol is used as data or if it's a dynamic
                 variable.
 "
   (let* ((var (gensym))
@@ -244,7 +244,7 @@ IMPLEMENTATION: The clause variable symbols are substituted by one single
                                    (body     (cddr clause)))
                                (cons (if (and (consp typespec)
                                               (eq 'or (car typespec)))
-                                         (cdr typespec) 
+                                         (cdr typespec)
                                          typespec)
                                      (if (null clausvar)
                                          body
@@ -276,7 +276,7 @@ IMPLEMENTATION: The clause variable symbols are substituted by one single
   (let ((new (make-symbol (cl:string symbol))))
     (when copy-properties
       (setf (symbol-plist new) (COPY-SEQ (symbol-plist symbol))))
-    (setf (symbol-value    new)  (symbol-value    symbol) 
+    (setf (symbol-value    new)  (symbol-value    symbol)
           (symbol-function new)  (symbol-function symbol))
     new))
 
@@ -299,7 +299,7 @@ colon if it contains one."
 double colon if any, or the symbol name."
   (let* ((name (symbol-name sym))
          (colon (position (character ":") name)))
-    (cond 
+    (cond
       ((and colon (char= (character ":") (char name (1+ colon))))
        (subseq name (+ 2 colon)))
       (colon
@@ -492,9 +492,9 @@ url:      http://www.informatimago.com/local/lisp/hyperspec/body/f_chareq.htm
   (if (= 1 (length characters))
       t
       (loop with already-seen = nil
-            with result = t 
+            with result = t
             for c in characters
-            while result 
+            while result
             do (if (memq c already-seen)
                    (setq result nil)
                    (push c already-seen))
@@ -623,7 +623,7 @@ URL:      http://www.informatimago.com/local/lisp/HyperSpec/Body/f_chareq.htm
 
 
 (defun ensure-character (ch)
-  (cond 
+  (cond
     ((characterp ch) ch)
     ((stringp ch)    (char ch 0))
     ((symbolp ch)    (char (cl:symbol-name ch) 0))
@@ -636,8 +636,8 @@ URL:      http://www.informatimago.com/local/lisp/HyperSpec/Body/f_chareq.htm
 COMMON-LISP
 IMPLEMENTATION: Assumes ISO-8859-1!
 "
-;;;   (string-match 
-;;;    "\\(\\c0\\|\\c1\\|\\c2\\|\\c3\\|\\c4\\|\\c6\\|\\c7\\|\\c8\\|\\c9\\)" 
+;;;   (string-match
+;;;    "\\(\\c0\\|\\c1\\|\\c2\\|\\c3\\|\\c4\\|\\c6\\|\\c7\\|\\c8\\|\\c9\\)"
 ;;;    (format "%c" ch))
   ;; 0: consonant
   ;; 1: base (independent) vowel
@@ -711,7 +711,7 @@ IMPLEMENTATION: Assumes ISO-8859-1!
 
 ;; c[ad]{2,4}r are defined in cl-macs.el
 ;; butlast, nbutlast are primitives in emacs 21.2.
- 
+
 
 ;; ---------------
 ;; - 15 - Arrays -
@@ -1371,7 +1371,7 @@ by the corresponding lowercase characters.
              (min (apply (function min) (mapcar (function length) sequences)))
              (target result-sequence (cdr target)))
             ((or (null target) (>= source min)) result-sequence)
-          (setf (car target) 
+          (setf (car target)
                 (apply function (mapcar (lambda (seq) (aref seq source))
                                         sequences)))))
        ((vectorp* result-sequence)
@@ -1386,7 +1386,7 @@ by the corresponding lowercase characters.
     (t
      (do ((res
            (make-instance
-               (cond 
+               (cond
                  ((listp    result-sequence) 'iterator-list)
                  ((vectorp* result-sequence) 'iterator-vector)
                  (t (error "RESULT-SEQUENCE is neither a LIST or a VECTOR.")))
@@ -1395,7 +1395,7 @@ by the corresponding lowercase characters.
            (mapcar
             (lambda (seq)
               (make-instance
-                  (cond 
+                  (cond
                     ((listp    seq) 'iterator-list)
                     ((vectorp* seq) 'iterator-vector)
                     (t (error "A SEQUENCE is neither a LIST or a VECTOR.")))
@@ -1717,7 +1717,7 @@ URL: http://www.informatimago.com/local/lisp/HyperSpec/Body/m_time.htm
         (time (gensym)))
     `(let* ((,start  (get-internal-real-time))
             (,result (progn ,@body))
-            (,stop   (get-internal-real-time)) 
+            (,stop   (get-internal-real-time))
             (,time   (- ,stop ,start)) )
        (printf *trace-output* "Time: %e ms\n" ,time))))
 
@@ -2112,7 +2112,7 @@ Valid clauses are:
     STRING-TRIM TAN STRING-UPCASE TANH STRING/= TENTH STRING< TERPRI
     STRING<= THE STRING= THIRD STRING> THROW STRING>= TIME STRINGP TRACE
     STRUCTURE TRANSLATE-LOGICAL-PATHNAME STRUCTURE-CLASS
-    TRANSLATE-PATHNAME STRUCTURE-OBJECT TREE-EQUAL STYLE-WARNING TRUENAME 
+    TRANSLATE-PATHNAME STRUCTURE-OBJECT TREE-EQUAL STYLE-WARNING TRUENAME
     TRUNCATE VALUES-LIST TWO-WAY-STREAM VARIABLE
     TWO-WAY-STREAM-INPUT-STREAM VECTOR TWO-WAY-STREAM-OUTPUT-STREAM
     VECTOR-POP TYPE VECTOR-PUSH TYPE-ERROR VECTOR-PUSH-EXTEND
@@ -2134,4 +2134,3 @@ Valid clauses are:
 
 (provide 'pjb-cl)
 ;;;; THE END ;;;;
-

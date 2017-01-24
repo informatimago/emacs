@@ -6,11 +6,11 @@
 ;;;;USER-INTERFACE:     emacs
 ;;;;DESCRIPTION
 ;;;;
-;;;;    This module exports function to insert timestamps when 
+;;;;    This module exports function to insert timestamps when
 ;;;;    starting and stoping work, and updating total lines.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    199?-??-?? <PJB> Creation.
 ;;;;BUGS
@@ -38,7 +38,7 @@
 (require 'pjb-cl)
 (provide 'pjb-work)
 
-(defun duree (a b) 
+(defun duree (a b)
   (let ((da (dms-d a)) (db (dms-d b)))
     (d-dms (+ (if (<= da db) 0 24) (- db da)))))
 
@@ -86,7 +86,7 @@ found backward from the point."
   (interactive)
   (search-backward-regexp  *pjb-work-duration-regexp*)
   (let ((mat (match-data))
-        (duration (duree (match-string-no-properties 1) 
+        (duration (duree (match-string-no-properties 1)
                          (match-string-no-properties 2))))
     (store-match-data mat)
     (replace-match (format " ; %s" (if (< (length duration) 8)
@@ -129,7 +129,7 @@ found backward from the point."
             p (cdr p)))
     ;; build the total string.
     (setq amount (* total hourly-rate))
-    (setq totalstring 
+    (setq totalstring
           (concat
            (format " Total %30s %10s = %5.2f j   (%6.2f h)\n" "" (d-dms total) (/ total 8.0) total)
            (format " Facturation %34s %8.2f EUR HT\n" "" amount)
@@ -150,7 +150,7 @@ found backward from the point."
   "
 RETURN:  The file name formated from the firm, project and date.
 "
-  (format "%s/firms/%s/interventions/%s-%s.txt" 
+  (format "%s/firms/%s/interventions/%s-%s.txt"
     (getenv "HOME") firm date  project))
 
 
@@ -160,7 +160,7 @@ RETURN: A list of the names of the directories directly in ~/firms/
         that have an intervention subdirectory that is accessible.
         (We skip names beginning with an underline or ending with a tilde).
 "
-  (mapcan 
+  (mapcan
    (lambda (path)
      (when (and (file-directory-p path)
                 (not (string-match ".*/_[^/]*$\\|~$" path))
@@ -173,32 +173,32 @@ RETURN: A list of the names of the directories directly in ~/firms/
 
 (defun get-project-list (firm)
   "
-RETURN: A list of the names of projects initiated for the FIRM. 
-        It is determined from the name of the files in the interventions 
+RETURN: A list of the names of projects initiated for the FIRM.
+        It is determined from the name of the files in the interventions
         subdirectory of the firm.
 "
   (delete-duplicates
    (mapcan
     (lambda (path)
-      (when (string-match 
+      (when (string-match
              ".*/\\([0-9][0-9][0-9][0-9][0-9]*\\)-\\([^-/][^-/]*\\).txt$" path)
         (list (match-string 2 path))))
-    (file-expand-wildcards 
+    (file-expand-wildcards
      (format "%s/firms/%s/interventions/[0-9]*-*.txt" (getenv "HOME") firm) t))
    :test (function cl:string=)))
 
 
 (defun find-last-intervention (firm project)
-  (car 
-   (sort 
+  (car
+   (sort
     (delete-duplicates
-     (mapcan 
+     (mapcan
       (lambda (path)
         (when (string-match
                ".*/\\([0-9][0-9][0-9][0-9][0-9]*\\)-\\([^-/][^-/]*\\).txt$" path)
           (list (match-string 1 path))))
-      (file-expand-wildcards 
-       (format "%s/firms/%s/interventions/[0-9]*-%s.txt" 
+      (file-expand-wildcards
+       (format "%s/firms/%s/interventions/[0-9]*-%s.txt"
          (getenv "HOME") firm project) t)))
     (function cl:string>=))))
 
@@ -207,14 +207,14 @@ RETURN: A list of the names of projects initiated for the FIRM.
 
 (defun pjb-intervention (firm project)
   (interactive
-   (list 
+   (list
     ;; firms
-    (completing-read 
+    (completing-read
      "Firm: " (mapcar (lambda (x) (cons x nil)) (get-firm-list))
      (lambda (firm) (setq *pjb-intervention-firm* (car firm)))  t)
     ;; projects:
     (completing-read
-     "Project: " (mapcar (lambda (x) (cons x nil)) 
+     "Project: " (mapcar (lambda (x) (cons x nil))
                          (get-project-list *pjb-intervention-firm*))
      (function identity) nil)))
   (let ((date)
@@ -246,9 +246,9 @@ RETURN: A list of the names of projects initiated for the FIRM.
                 (search-forward-regexp " Total.*\n Facturation.*" nil t))
          (beginning-of-line)
          (if (search-backward "===="
-                              (save-excursion (forward-line -5) (point)) t) 
+                              (save-excursion (forward-line -5) (point)) t)
              (progn (beginning-of-line) (open-line 2))
-             (progn (forward-line -1) (open-line 1) 
+             (progn (forward-line -1) (open-line 1)
                     (insert footer)
                     (beginning-of-line) (open-line 2))))
         ((progn (goto-char (point-min))
@@ -269,7 +269,7 @@ RETURN: A list of the names of projects initiated for the FIRM.
 ;; (defvar *inactivity-timer*       nil)
 ;; (defvar *slice-activity-timer*   nil)
 
-;; (defvar *command-count*          0)     
+;; (defvar *command-count*          0)
 
 (defvar *current-command*       nil)
 (defvar *hostname*
@@ -292,7 +292,7 @@ RETURN: A list of the names of projects initiated for the FIRM.
   client
   project
   annotation)
-               
+
 
 (defun activity-send-message (message)
   (message "%S" message))
@@ -342,14 +342,14 @@ RETURN: A list of the names of projects initiated for the FIRM.
 
 (defun activity-switch (client project)
   (interactive
-   (list 
+   (list
     ;; firms
-    (completing-read 
+    (completing-read
      "Firm: " (mapcar (lambda (x) (cons x nil)) (get-firm-list))
      (lambda (firm) (setq *pjb-intervention-firm* (car firm)))  t)
     ;; projects:
     (completing-read
-     "Project: " (mapcar (lambda (x) (cons x nil)) 
+     "Project: " (mapcar (lambda (x) (cons x nil))
                          (get-project-list *pjb-intervention-firm*))
      (function identity) nil)))
   (activity-enqueue-event (make-activity :event 'switch :client client :project project))
@@ -412,7 +412,7 @@ RETURN: A list of the names of projects initiated for the FIRM.
 ;;   (when *slice-activity-timer*
 ;;     (cancel-timer *slice-activity-timer*))
 ;;   (setf *slice-activity-timer* (run-with-timer 60 60 'activity-slice)))
-;; 
+;;
 ;; (defun activity-remove-timers ()
 ;; ;;   (when *start-inactivity-timer*
 ;; ;;     (cancel-timer *start-inactivity-timer*)
@@ -430,11 +430,11 @@ RETURN: A list of the names of projects initiated for the FIRM.
 
 ;; activity-switch         (client project &optional annotation)
 ;; activity-add-annotation (annotation)
-;; 
+;;
 ;; each minute
 ;; count the number of commands
 ;; see if the minute is idle
-;; 
+;;
 ;; collect lav too...
 
 
