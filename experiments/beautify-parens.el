@@ -4,7 +4,7 @@
   "Common-Lisp
 IMPLEMENTATION: The clause variable symbols are substituted by one single
                 condition-case variable symbol.  This may cause problems
-                if the same symbol is used as data or if it's a dynamic 
+                if the same symbol is used as data or if it's a dynamic
                 variable.
 "
   (let* ((var (gensym))
@@ -17,7 +17,7 @@ IMPLEMENTATION: The clause variable symbols are substituted by one single
                                    (body     (cddr clause)))
                                (cons (if (and (consp typespec)
                                               (eq 'or (car typespec)))
-                                         (cdr typespec) 
+                                         (cdr typespec)
                                          typespec)
                                      (if (null clausvar)
                                          body
@@ -59,9 +59,9 @@ IMPLEMENTATION: The clause variable symbols are substituted by one single
       (forward-sexp))))
 
 ;; (let ((r '())) (forward-sexp)(push (point) r)(forward-sexp)(backward-sexp)(push (point) r) r)
-;; 
+;;
 ;; ((abc))
-;; ( (abc) )  
+;; ( (abc) )
 ;; (abc)
 ;; ( abc )
 

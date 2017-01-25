@@ -63,9 +63,9 @@ There are 338 functions, macros or special operators in COMMON-LISP
 that have a fixed number of arguments, therefore for which
 parenthesis can be deduced automatically.
 When a space is typed, the current sexps is analysed, and parenthesis
-are added before the point accordingly to what is known of the 
-Common-Lisp syntax. 
-In addition, the expected argument is indicated in the mini-buffer. 
+are added before the point accordingly to what is known of the
+Common-Lisp syntax.
+In addition, the expected argument is indicated in the mini-buffer.
 Usage with slime:  (byte-compile-file &quot;pjb-cl-magic.el&quot;)
 (load-file &quot;pjb-cl-magic.elc&quot;)
 (setf *pjb-cl-magic-case*   (function identity-region)
@@ -74,16 +74,16 @@ To use with another common-lisp mode, add to your common-lisp mode hook:
 (local-set-key  &quot; &quot; 'pjb-cl-magic-space)
 
 This is a proof-of-concept.  There remains quite a number of
-missing features (see BUGS below). 
+missing features (see BUGS below).
 More sophisticated or complete handling would need to parse the
 whole file or the whole project sources, (or worse, introspect
 an inferior-lisp where the already typed in code would have
-been REPLed, like in Slime). 
+been REPLed, like in Slime).
 This would be impractical (having to patch (or hook) a lot of
 emacs input, or too slow (here, we have to parse again the current
 sexps every time a space is typed).
 
-My conclusion is that it would be better to have a synthesizer 
+My conclusion is that it would be better to have a synthesizer
 editor, (which could be implemented in emacs or hemlock).
 
 </pre></li>
@@ -223,11 +223,11 @@ The layers are pages (separated by ^L) which can be merged.
 <tt>
 <b>
 <a href="pjb-make-depends.el">pjb-make-depends</a></b></tt>
-<pre>This elisp script generates dependencies for lisp sources, based on 
+<pre>This elisp script generates dependencies for lisp sources, based on
 (require) sexps, a load-path, and ad-hoc processing.
 
 Object files can be either elisp compiled (.elc) or clisp compiled
-(.fas) or cmucl compiled (.x86f) 
+(.fas) or cmucl compiled (.x86f)
 and source files can be either elisp (.el) or clisp or cmucl (.lisp,
 .lsp, .cl), and elisp sources may (require) common-lisp files
 (.lisp, .lsp, .cl extensions for sources, but .elc compiled form).
@@ -242,7 +242,7 @@ and source files can be either elisp (.el) or clisp or cmucl (.lisp,
 <tt>
 <b>
 <a href="pjb-object.el">pjb-object</a></b></tt>
-<pre>This is a root class for my classes. 
+<pre>This is a root class for my classes.
 The main purpose is to implement here compatibility stuff.
 </pre></li>
 <li>
@@ -254,20 +254,20 @@ It can be configured by a set of constants and a variable.
 variable pgp-signer    --> Specifies the key used to sign.
 variable pgp-command   --> Specifies the OpenPGP program to use.
 The public (interactive) functions are:
-pgp-encrypt-conventional-region (key) 
-pgp-encrypt-conventional-buffer (key) 
-pgp-decrypt-conventional-region (key) 
-pgp-decrypt-conventional-buffer (key) 
-pgp-sign-region (pass-phrase) 
-pgp-sign-buffer (pass-phrase) 
-pgp-check-sign-region () 
-pgp-check-sign-buffer () 
-pgp-sign-encrypt-region (pass-phrase recipients) 
-pgp-sign-encrypt-buffer (pass-phrase recipients) 
-pgp-just-encrypt-region (recipients) 
-pgp-just-encrypt-buffer (recipients) 
-pgp-decrypt-region (pass-phrase) 
-pgp-decrypt-buffer (pass-phrase) 
+pgp-encrypt-conventional-region (key)
+pgp-encrypt-conventional-buffer (key)
+pgp-decrypt-conventional-region (key)
+pgp-decrypt-conventional-buffer (key)
+pgp-sign-region (pass-phrase)
+pgp-sign-buffer (pass-phrase)
+pgp-check-sign-region ()
+pgp-check-sign-buffer ()
+pgp-sign-encrypt-region (pass-phrase recipients)
+pgp-sign-encrypt-buffer (pass-phrase recipients)
+pgp-just-encrypt-region (recipients)
+pgp-just-encrypt-buffer (recipients)
+pgp-decrypt-region (pass-phrase)
+pgp-decrypt-buffer (pass-phrase)
 </pre></li>
 <li>
 <tt>
@@ -293,10 +293,10 @@ FIFO operations, keeping a pointer to the head and the tail of a list.
 <b>
 <a href="pjb-secouer.el">pjb-secouer</a></b></tt>
 <pre>
-Exports a function &quot;secouer&quot; that will randomize the order of 
+Exports a function &quot;secouer&quot; that will randomize the order of
 internal letters of words in the selected region.
 
-Eroxtps a funtcion &quot;scuoeer&quot; that wlil raoindmze the oedrr of 
+Eroxtps a funtcion &quot;scuoeer&quot; that wlil raoindmze the oedrr of
 intnaerl letetrs of wrods in the steceeld rgioen.
 </pre></li>
 <li>
@@ -324,8 +324,8 @@ See also state-coding.el
 <tt>
 <b>
 <a href="pjb-state-coding.el">pjb-state-coding</a></b></tt>
-<pre>	The purpose of this program is to generate a structure encoding the
-	hierarchical structucture of states into a bit field.
+<pre>   The purpose of this program is to generate a structure encoding the
+        hierarchical structucture of states into a bit field.
 A (AA AB AC) B C (CA) D (DA DB DC  DD (DDA DDB) DE DF)
 00000011 top-level-states
 00000000 A
@@ -378,7 +378,7 @@ shell/nshell defined as functions instead of advices.
 <b>
 <a href="pjb-transpose.el">pjb-transpose</a></b></tt>
 <pre>
-This file exports functions to transpose or rotate the 
+This file exports functions to transpose or rotate the
 characters of a region.
 
 </pre></li>
@@ -398,7 +398,7 @@ characters of a region.
 <tt>
 <b>
 <a href="pjb-work.el">pjb-work</a></b></tt>
-<pre>This module exports function to insert timestamps when 
+<pre>This module exports function to insert timestamps when
 starting and stoping work, and updating total lines.
 </pre></li>
 <li>

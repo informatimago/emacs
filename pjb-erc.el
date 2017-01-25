@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    ERC stuff.
-;;;;    
+;;;;
 ;;;;    Don't worry anymore about flooding a channel!
 ;;;;
 ;;;;    This yank function for erc uses lisppaste when the text to yank
@@ -39,14 +39,14 @@
 ;;;;    if there is, add: annotate=#pastenumber to get an annotation.
 ;;;;LEGAL
 ;;;;    GPL
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2006 - 2014
-;;;;    
+;;;;
 ;;;;    This program is free software; you can redistribute it and/or
 ;;;;    modify it under the terms of the GNU General Public License
 ;;;;    as published by the Free Software Foundation; either version
 ;;;;    2 of the License, or (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be
 ;;;;    useful, but WITHOUT ANY WARRANTY; without even the implied
 ;;;;    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
@@ -62,7 +62,7 @@
 (require 'w3           nil t) ; not anymore. we should clean them up.
 (require 'w3-forms     nil t)
 
-(require 'xml) ; parse-xml-region 
+(require 'xml) ; parse-xml-region
 
 
 (require 'pjb-cl)
@@ -149,7 +149,7 @@
 ;;;---------------------------------------------------------------------
 ;;; erc-yank / lisppaste
 ;;;---------------------------------------------------------------------
-  
+
 (defconst +newline+ 10)
 
 (defvar *erc-yank-flood-limit* 5
@@ -240,7 +240,7 @@
     (cache-lisp-paste))
   *lisp-paste-channels*)
 
-     
+
 (defun pjb-http-read (process)
   (accept-process-output process 5 0)
   (save-excursion
@@ -345,7 +345,7 @@
                                 (if result 'success 'failed)))
                (setf (car *paste-lisp-org-cache*) (GET-UNIVERSAL-TIME)
                      (cdr *paste-lisp-org-cache*) result))))))
-  
+
 
 
 (defun pjb-erc-yank (&optional arg)
@@ -374,7 +374,7 @@ Otherwise, just yank it.
                 (error "To many lines to yank: %d" lines))))
       (funcall *erc-yank-function* arg)))
 
- 
+
 
 ;;;---------------------------------------------------------------------
 ;;; erc answers
@@ -382,7 +382,7 @@ Otherwise, just yank it.
 
 (defparameter *pjb-erc-answers*
   '((macro . "The big secret of macros in lisp, is that they are functions
-just like the other functions.  
+just like the other functions.
 
 The only difference, is that defmacro hooks those functions into the
 compiler, to be called at compilation time, passed a form, and expected
@@ -391,94 +391,94 @@ to return a new form to be compiled instead of the original form.
 \(The original form is actually destructured according to the macro
 lambda list; in emacs &whole isn't implemented, but in Common Lisp it
 allows receiving the original form intact).")
-    (lisp-1-vs-lisp-2-technical-issues  
+    (lisp-1-vs-lisp-2-technical-issues
      . "Please read: http://www.nhplace.com/kent/Papers/Technical-Issues.html")
-    (equal         
+    (equal
      . "Please read: http://www.nhplace.com/kent/PS/EQUAL.html")
     (ambitious-eval
      . "Please read: http://www.nhplace.com/kent/PS/Ambitious.html")
-    (what-implementation  
+    (what-implementation
      . "To get help choosing a CL implementation, connect to telnet://voyager.informatimago.com:8101 ; have a look at http://www.cliki.net/Common%20Lisp%20implementation")
-    (clhs          
+    (clhs
      . "http://www.lispworks.com/documentation/HyperSpec/Front/index.htm")
-    (intersection  
+    (intersection
      . "Have a look at (intersection common-lisp emacs-lisp scheme) http://www.informatimago.com/develop/lisp/com/informatimago/small-cl-pgms/intersection-r5rs-common-lisp-emacs-lisp/")
-    (scheme-or-cl  
+    (scheme-or-cl
      . "CL vs. Scheme http://irreal.org/blog/?p=813")
-    (cliki         
+    (cliki
      . "Have a look at http://cliki.net/ ; start with http://www.cliki.net/Getting%20Started")
     (newbie
      . "http://cliki.net/Getting%20Started or http://articulate-lisp.com/ ")
-    (getting-started 
+    (getting-started
      . "Start with http://www.cliki.net/Getting%20Started  or  http://articulate-lisp.com/" )
     (emacs-lisp-intro
      . "An Introduction to Programming in Emacs Lisp  http://www.gnu.org/software/emacs/emacs-lisp-intro/  or  M-: (info \"(eintr)Top\") RET (for non-programmers)")
-    (emacs-lisp      
+    (emacs-lisp
      . "Emacs Lisp Manual http://www.gnu.org/software/emacs/manual/elisp.html  or  M-: (info \"(elisp)Top\") RET")
-    (emacs-manual    
+    (emacs-manual
      . "Emacs Manual http://www.gnu.org/software/emacs/manual/   or  M-: (info \"(emacs)Top\") RET")
-    (the-art-of-unix-programming    
+    (the-art-of-unix-programming
      . "The Art of Unix Programming http://www.faqs.org/docs/artu/")
-    (hacker-howto    
+    (hacker-howto
      . "http://www.catb.org/~esr/faqs/hacker-howto.html")
-    (the-craft-of-text-editing    
+    (the-craft-of-text-editing
      . "The Craft of Text Editing   http://www.finseth.com/craft/")
-    (essentials-of-programming-languages     
+    (essentials-of-programming-languages
      . "Essentials of Programming Languages, 3rd ed.   Daniel P. Friedman and Mitchell Wand   ISBN: 978-0-262-06279-4   http://MITPress.MIT.Edu/0262062798/  http://WWW.EoPL3.Com/")
-    (practical-common-lisp      
+    (practical-common-lisp
      . "Practical Common Lisp http://www.gigamonkeys.com/book/")
-    (common-lisp-a-gentle-introduction-to-symbolic-computation   
+    (common-lisp-a-gentle-introduction-to-symbolic-computation
      . "Common Lisp: A Gentle Introduction to Symbolic Computation  http://www.cs.cmu.edu/~dst/LispBook/  http://www-cgi.cs.cmu.edu/afs/cs.cmu.edu/user/dst/www/LispBook/index.html")
-    (common-lisp-programming-for-artificial-intelligence   
+    (common-lisp-programming-for-artificial-intelligence
      . "Common Lisp Programming for Artificial Intelligence  Tony Hasemer & John Domingue - 1989  International Computer Science Series  Addison & Wesley  ISBN 0-201-17579-7")
-    (common-lisp-an-interactive-approach    
+    (common-lisp-an-interactive-approach
      . "Common Lisp: An Interactive Approach  by Stuart C. Shapiro   http://www.cse.buffalo.edu/~shapiro/Commonlisp/")
-    (paradigms-of-artificial-intellgience     
+    (paradigms-of-artificial-intellgience
      . "Paradigms of Artificial Intelligence Programming: Case Studies in Common Lisp")
-    (artifical-intelligence-a-modern-approach     
+    (artifical-intelligence-a-modern-approach
      . "Artificial Intelligence: A Modern Approach  http://aima.cs.berkeley.edu")
-    (sicp     
+    (sicp
      . "Structure and Interpretation of Computer Programs  http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-4.html  http://swiss.csail.mit.edu/classes/6.001/abelson-sussman-lectures/")
-    (sicp-mit 
+    (sicp-mit
      . "http://web.mit.edu/alexmv/6.S184/")
-    (6.S184   
+    (6.S184
      . "http://web.mit.edu/alexmv/6.S184/")
     ;; http://www.codepoetics.com/wiki/index.php?title=Topics:SICP_in_other_languages
     ;; http://eli.thegreenplace.net/category/programming/lisp/sicp/
     ;; http://www.neilvandyke.org/sicp-plt/
     ;; http://www.youtube.com/watch?v=rdj6deraQ6k
-    (r5rs     
+    (r5rs
      . "http://www.schemers.org/Documents/Standards/R5RS/HTML/")
-    (how-to-design-programs     
+    (how-to-design-programs
      . "How to Design Programs -- An Introduction to Computing and Programming  http://www.htdp.org/2003-09-26/Book/  ")
-    (concrete-abstraction       
+    (concrete-abstraction
      . "Concrete Abstractions -- An Introduction to Computer Science Using Scheme  http://www.gustavus.edu/+max/concrete-abstractions.html")
-    (lisp-in-small-pieces     
+    (lisp-in-small-pieces
      . "Lisp in Small Pieces   http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html  http://pagesperso-systeme.lip6.fr/Christian.Queinnec/Books/LiSP-2ndEdition-2006Dec11.tgz")
-    (on-lisp   
+    (on-lisp
      . "On Lisp  Paul Graham   http://www.paulgraham.com/onlisptext.html  http://www.bookshelf.jp/texi/onlisp/onlisp.html  http://www.bookshelf.jp/texi/onlisp/onlisp.tar.gz")
-    (compiler-principle-techniques-and-tools     
+    (compiler-principle-techniques-and-tools
      . "Compiler Principles Techniques and Tools, Aho et al. http://dragonbook.stanford.edu/")
-    (the-art-of-computer-programming    
+    (the-art-of-computer-programming
      . "The Art of Computer Programming  Donald E. Knuth  Addison & Wesley")
-    (goedel-escher-bach      
+    (goedel-escher-bach
      . "Gödel, Escher, Bach: An Eternal Golden Braid  Douglas Hofstadter")
-    (basic-lisp-technique      
+    (basic-lisp-technique
      . "Basic Lisp Techniques  Cooper - 2003 Franz, Inc. - 100 pages.  http://www.franz.com/resources/educational_resources/cooper.book.pdf")
-    (casting-speels-in-lisp  
+    (casting-speels-in-lisp
      . "Casting Spels in Lisp  Conrad Barski, M.D.  http://www.lisperati.com/casting.html")
     (floating-point
-     . "What Every Computer Scientist Should Know About Floating-Point Arithmetic http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html   and   What Every Programmer Should Know About Floating-Point Arithmetic http://floating-point-gui.de/") 
+     . "What Every Computer Scientist Should Know About Floating-Point Arithmetic http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html   and   What Every Programmer Should Know About Floating-Point Arithmetic http://floating-point-gui.de/")
     ;; --
-    (gitlab-lisp 
+    (gitlab-lisp
      . "https://gitlab.com/com-informatimago/com-informatimago")
     (gitlab-emacs
      . "https://gitlab.com/com-informatimago/emacs")
-    (rc       
+    (rc
      . "http://git.informatimago.com/viewgit/index.php?a=summary&p=public/rc")
-    (bin      
+    (bin
      . "http://git.informatimago.com/viewgit/index.php?a=summary&p=public/bin")
-    (idiots   
+    (idiots
      . "There, there, we know there are idiots on the Internet.  Lisp will make it all better.")
     (maintained-illustration
      . "http://tinyurl.com/last-commit-six-month-ago http://tinyurl.com/monthly-commits http://tinyurl.com/last-commit-yesterday http://tinyurl.com/last-commit-before-VCS-existed")
@@ -487,24 +487,24 @@ allows receiving the original form intact).")
     ;; --
     (see-defpackage
      . ";;;;    See defpackage documentation string.\n")
-    (agpl3         
+    (agpl3
      . "
 License:
 
     AGPL3
-    
+
     Copyright Pascal J. Bourguignon 1994 - 2012
-    
+
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Affero General Public License for more details.
-    
+
     You should have received a copy of the GNU Affero General Public License
     along with this program.
     If not, see <a href=\\\"http://www.gnu.org/licenses/\\\">http://www.gnu.org/licenses/</a>.
@@ -519,8 +519,8 @@ License:
 (defvar *pjb-erc-last-answer* nil)
 
 (defun pjb-erc-answer (key)
-  (interactive (list 
-                (intern (completing-read 
+  (interactive (list
+                (intern (completing-read
                          "What? " (mapcar (lambda (x) (cons x nil)) (pjb-erc-get-answers))
                          (lambda (answer) (setq *pjb-erc-last-answer* (car answer)))
                          t))))
@@ -579,7 +579,7 @@ displaying erc buffers."
                  finally (return width))) 72)))
 
 (defvar *erc-cancel-auto-adjust-width* nil)
-  
+
 (defun pjb-erc-auto-adjust-width ()
   (interactive)
   (if  *erc-cancel-auto-adjust-width*
@@ -592,7 +592,7 @@ displaying erc buffers."
   (setf *erc-cancel-auto-adjust-width* t))
 
 
-  
+
 (defun pjb-erc-user-input ()
   "Return the input of the user in the current buffer."
   ;; We use erc-bol to ignore the prompt.
@@ -846,7 +846,7 @@ be printed just before the window-width."
             (erc-put-text-property from (1+ (point)) 'rear-nonsticky t)
             (setf from (point))))))))
 
-  
+
 ;;;---------------------------------------------------------------------
 ;;; erc/irc emacs commands
 ;;;---------------------------------------------------------------------
@@ -873,7 +873,7 @@ be printed just before the window-width."
      ;;"#sicp"
      "#scheme")
     ;; (pjb-erc-add-fools "Xach")
-      
+
     (dolist (fool '("NP" "Xah" "xah" "xahlee"  "xahlee_" "xahlee__"))
       (pjb-erc-add-fools fool)))
   ;; --------------------
@@ -892,7 +892,7 @@ be printed just before the window-width."
   ;; --------------------
   (erc-auto-adjust-width)
   (balance-windows))
-  
+
 
 (defun irc ()
   (interactive)
@@ -919,7 +919,7 @@ be printed just before the window-width."
      ;;"#sicp"
      "#scheme")
     ;; (pjb-erc-add-fools "Xach")
-      
+
     (dolist (fool '("NP" "Xah" "xah" "xahlee"  "xahlee_" "xahlee__"))
       (pjb-erc-add-fools fool)))
   ;; --------------------
@@ -975,7 +975,7 @@ be printed just before the window-width."
          (nick (cdr (assoc 'nick result))))
     (erc-display-message nil 'notice (current-buffer)
                          (format "%s (%s %s)" nick fname lname))))
-  
+
 (defun pjb-erc-cmd-CLEAR ()
   (interactive)
   ;;(save-buffer)
@@ -1068,7 +1068,7 @@ command).
   (interactive)
   (let ((current-prefix-arg t)
         (expression (slime-last-expression)))
-    (push-mark) 
+    (push-mark)
     (slime-eval-async `(swank:eval-and-grab-output-and-error ,expression)
                       (lambda (result)
                         (destructuring-bind (output values) result
@@ -1114,7 +1114,7 @@ command).
      (pjb-erc-keybindings)))
   (loop with current-channel = (buffer-name)
         for (channels . eval-function)
-          in '((("#lisp" "##lisp" "#lispcafe" "#lispgame"  "#lisp-lab" "#lisp-fr" "#lisp-es" 
+          in '((("#lisp" "##lisp" "#lispcafe" "#lispgame"  "#lisp-lab" "#lisp-fr" "#lisp-es"
                  "#ccl" "#sbcl" "#quicklisp")
                 . cl-eval-last-expression)
                (("#emacs")

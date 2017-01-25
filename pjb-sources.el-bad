@@ -6,24 +6,24 @@
 ;;DESCRIPTION
 ;;
 ;;    This module exports functions helpful in writting programs.
-;;    
+;;
 ;;    See also state-coding.el
 ;;
 ;;AUTHORS
-;;    <PJB> Pascal J. Bourguignon 
+;;    <PJB> Pascal J. Bourguignon
 ;;MODIFICATIONS
 ;;    2004-11-01 <PJB> Renamed carnot to karnaugh.
 ;;                     Nicolas Léonard Sadi Carnot (1796 - 1832)
-;;                     -- French Mathematician (2nd law of thermodynamics) vs. 
-;;                     Maurice Karnaugh 
+;;                     -- French Mathematician (2nd law of thermodynamics) vs.
+;;                     Maurice Karnaugh
 ;;                     -- Bell Labs Telecommunication Engineer.
-;;                     Thanks to josephoswaldgg@hotmail.com for reminding me 
+;;                     Thanks to josephoswaldgg@hotmail.com for reminding me
 ;;                     the correct name.
 ;;    2004-09-16 <PJB> Corrected an out-of-bound bug in case-lisp-region
 ;;                     reported by starseeke@cy.iec.udel.edu
 ;;    2004-03-23 <PJB> Added insert-columns.
 ;;    2003-06-02 <PJB> Corrected pjb-add-change-log-entry
-;;    2003-01-20 <PJB> Added walk-sexps, map-sexps, replace-sexps; 
+;;    2003-01-20 <PJB> Added walk-sexps, map-sexps, replace-sexps;
 ;;                     reimplemented get-sexps with walk-sexps.
 ;;    2003-01-19 <PJB> Added comment regexp in pjb-sources-data.
 ;;    2003-01-18 <PJB> Added pjb-add-change-log-entry.
@@ -102,14 +102,14 @@
                    person-count ;; 1+
                    experience-ratio ;; [0.0 .. 1.0]
                    )
-  (interactive "sProject name: 
-nKey Class Count: 
-nReusable Domain Objects: 
-nUser Interface Complexity (1 2 3): 
-nPerson Count: 
+  (interactive "sProject name:
+nKey Class Count:
+nReusable Domain Objects:
+nUser Interface Complexity (1 2 3):
+nPerson Count:
 nExperience Ratio [0.0,1.0]: ")
   (let* ((person-day-per-class (+ 15 (* 2.5 (- 1.0 experience-ratio))))
-         (total-class-count    (* key-class-count 
+         (total-class-count    (* key-class-count
                                   (+ 1.0 user-interface-complexity)))
          (total-person-days (* total-class-count person-day-per-class))
          (total-months (/ total-person-days 20.0 person-count)))
@@ -142,11 +142,11 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
         is passed first or second argument of test...
         This one specify that item is passed as first argument and the
         key from the seq as second element.
-        Common-Lisp does not specify either what happens when both 
+        Common-Lisp does not specify either what happens when both
         :test and :test-not are given.
         If both are given, this function calls both as in:
          (if (and (test item key) (not (test-not item key))) :found :not-found)
-        Common-Lisp does not specify what test is done when :test and 
+        Common-Lisp does not specify what test is done when :test and
         :test-not are not specified.
         This function specify that the default for :test is (equal item key)
         and the default for :test-not is no test.
@@ -155,15 +155,15 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
         ... (elt seq (- :end 2)) (elt seq (- :end 1)).
         The default for :start is 0 and for :end is (length seq).
         (Note that Common-Lisp specifies as default for :end nil, but this
-        is not compatible with the definition of _bounded_ which ask for 
+        is not compatible with the definition of _bounded_ which ask for
         a numerical index!)
 "
   (cl-parsing-keywords (:test :test-not :key (:start 0) :end :from-end) ()
     (setf cl-key  (or cl-key (function identity)))
     (flet ((found (item key) nil))
       (if cl-test
-          (if cl-test-not 
-              (fset 'found (lambda (item key) 
+          (if cl-test-not
+              (fset 'found (lambda (item key)
                              (and (funcall cl-test item key)
                                   (not (funcall cl-test-not item key)))))
             (fset 'found cl-test))
@@ -193,7 +193,7 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
                     (elements seq (cdr elements))
                     (element (car elements) (car elements))
                     (key (funcall cl-key element) (funcall cl-key element)))
-                  ((or (<= cl-end i) (endp elements) (found item key)) 
+                  ((or (<= cl-end i) (endp elements) (found item key))
                    (if (or (<= cl-end i) (endp elements)) nil element))
                 ))
           (do ((i cl-start (1+ i))
@@ -216,40 +216,40 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
 
 
 ;;; OBSOLETE
-;;; (defvar pjb-ue-extensions 
+;;; (defvar pjb-ue-extensions
 ;;;   '(
-;;;     ( CSOURCE 
+;;;     ( CSOURCE
 ;;;       "\\.\\([Hh]\\|[Cc]\\)\\(\\1\\|[Pp][Pp]\\|\\+\\+\\)?\\([PpTt]\\)?$"
 ;;;       "\\.[Mm]$" )
-;;;     ( LSOURCE 
+;;;     ( LSOURCE
 ;;;       "\\.el$" "\\.lsp$" "\\.lisp$" )
-;;;     ( MAKEFILE 
+;;;     ( MAKEFILE
 ;;;       "[Mm]akefile" "\\.mak$" "\\.make$" )
 ;;;     )
-;;;   "This list contains lists whose car is a key (used in pjb-eu-formats) 
+;;;   "This list contains lists whose car is a key (used in pjb-eu-formats)
 ;;; and whose cdr is a list of file name extension strings.
 ;;; Actually, it should be replaced by more sophisticated mechanisms such as
-;;; MIME types, file(1), and intelligent text recognizer, but extensions are 
+;;; MIME types, file(1), and intelligent text recognizer, but extensions are
 ;;; so easy to tag source files...")
 
-  
-(DEFPARAMETER pjb-sources-data 
+
+(DEFPARAMETER pjb-sources-data
   '(
-    ( ASOURCE    "---- %-32s -- %19s -- %-8s ----" 
+    ( ASOURCE    "---- %-32s -- %19s -- %-8s ----"
                  (ada-mode snmp-mode snmpv2-mode vhdl-mode )
                  "--%s"
                  "--%s"
                  "--%s"
                  "--    %s"
                  "--.*$")
-    ( DSOURCE    "!!!! %-32s -- %19s -- %-8s !!!!" 
+    ( DSOURCE    "!!!! %-32s -- %19s -- %-8s !!!!"
                  (dcl-mode simula-mode )
                  "!!%s"
                  "!!%s"
                  "!!%s"
                  "!!    %s"
                  "!.*$")
-    ( CSOURCE    "/*** %-32s -- %19s -- %-8s ***/" 
+    ( CSOURCE    "/*** %-32s -- %19s -- %-8s ***/"
                  (c++-mode c-initialize-cc-mode c-mode cperl-mode cwarn-mode
                            idl-mode idlwave-mode java-mode objc-mode pike-mode
                            prolog-mode sql-mode )
@@ -258,7 +258,7 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
                  "%s"
                  "    %s"
                  "\\(/\\*.*?\\*/\\)\\|\\(//.*$\\)") ;; \(/\*.*?\*/\)\|\(//.*$\)
-    ( LSOURCE    ";;;; %-32s -- %19s -- %-8s ;;;;" 
+    ( LSOURCE    ";;;; %-32s -- %19s -- %-8s ;;;;"
                  (asm-mode dsssl-mode emacs-lisp-mode ledit-mode
                            lisp-interaction-mode lisp-mode scheme-mode
                            zone-mode  )
@@ -267,14 +267,14 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
                  ";;%s"
                  ";;    %s"
                  "\\(#|\\([^|]\\||[^#]\\)*|#\\)\\|\\(;.*$\\)")
-    ( TEXT       "";;";;;; %-32s -- %19s -- %-8s ;;;;" 
+    ( TEXT       "";;";;;; %-32s -- %19s -- %-8s ;;;;"
                  (text-mode)
                  "%s"
                  "%s"
                  "%s"
                  "    %s"
                  "\\(^;.*$\\)")
-    ( MAKEFILE   "#### %-32s -- %19s -- %-8s ####" 
+    ( MAKEFILE   "#### %-32s -- %19s -- %-8s ####"
                  (awk-mode eshell-mode icon-mode m4-mode makefile-mode
                            octave-mode perl-mode sh-mode shell-script-mode
                            tcl-mode makefile-gmake-mode)
@@ -283,36 +283,36 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
                  "#%s"
                  "#    %s"
                  "#.*$")
-    ( PSOURCE    "(*** %-32s -- %19s -- %-8s ***)" 
+    ( PSOURCE    "(*** %-32s -- %19s -- %-8s ***)"
                  (caml-mode delphi-mode modula-2-mode pascal-mode )
                  "(*%s"
                  "%s*)"
                  "%s"
                  "    %s"
                  "(\\*.*?\\*)")
-    ( FSOURCE    "CCCC %-32s -- %19s -- %-8s CCCC" 
+    ( FSOURCE    "CCCC %-32s -- %19s -- %-8s CCCC"
                  (f90-mode fortran-mode )
                  "C%s"
                  "C%s"
                  "C%s"
                  "C    %s"
                  "^C.*$")
-    ( RSOURCE    "\\\"\"\" %-32s -- %19s -- %-8s \"\"\"\"" 
+    ( RSOURCE    "\\\"\"\" %-32s -- %19s -- %-8s \"\"\"\""
                  (nroff-mode )
                  "\\\"\"\"%s"
                  "\\\"\"\"%s"
                  "\\\"\"\"%s"
                  "\\\"\"\"    %s"
                  "\\\".*$")
-    ( SSOURCE    "<!-- %-32s == %19s == %-8s -->" 
+    ( SSOURCE    "<!-- %-32s == %19s == %-8s -->"
                  (html-autoview-mode html-mode sgml-mode sgml-name-8bit-mode )
                  "<!--%s"
                  "%s-->"
                  "%s"
                  "    %s"
                  "<!--.*?-->")
-    ( TSOURCE    "%%%%%%%% %-32s -- %19s -- %-8s %%%%%%%%" 
-                 (latex-mode matlab-mode metafont-mode metapost-mode 
+    ( TSOURCE    "%%%%%%%% %-32s -- %19s -- %-8s %%%%%%%%"
+                 (latex-mode matlab-mode metafont-mode metapost-mode
                              plain-TeX-mode plain-tex-mode ps-mode
                              reftex-index-phrases-mode reftex-mode
                              slitex-mode tex-mode )
@@ -321,7 +321,7 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
                  "%%%s"
                  "%%    %s"
                  "%%.*$")
-    ( SCRIBESOURCE "@Comment[ %-32s -- %19s -- %-8s ]" 
+    ( SCRIBESOURCE "@Comment[ %-32s -- %19s -- %-8s ]"
                    (scribe-mode )
                    "@Comment[%68s]"
                    "@Comment[%68s]"
@@ -349,7 +349,7 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
 
 
 (defun pjb-source-get-data-for-mode (mode)
-  (pjb-find mode pjb-sources-data 
+  (pjb-find mode pjb-sources-data
             :key  (function pjb-source-major-modes)
             :test (lambda (item key)
                     (MEMBER item key :TEST (function eq))))
@@ -375,7 +375,7 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
 (defun cl-looking-at-what ()
   (cond
    ((looking-at "[ \n\t\v\f\r]") :space)
-   ((looking-at ";")  :semicolon-comment) ; ;xxx 
+   ((looking-at ";")  :semicolon-comment) ; ;xxx
    ((looking-at "#|") :sharp-comment) ;  #|xxx|#
    ((looking-at "\"") :string) ; "xx\"x"
    ((looking-at "(")  :beginning-of-list)
@@ -415,14 +415,14 @@ DO:     Like Common-Lisp find, but we cannot use find from 'cl because
 
 
 (defun cl-what-is-at-point ()
-  (interactive) 
+  (interactive)
   (message "%s" (cl-looking-at-what)))
 
-  
+
 (defun case-lisp-region (start end transform)
   "
 DO:      Applies transform on all subregions from start to end that are not
-         a quoted character, a quote symbol, a comment (;... or #|...|#), 
+         a quoted character, a quote symbol, a comment (;... or #|...|#),
          or a string.
 "
   (save-excursion
@@ -463,7 +463,7 @@ DO:      Applies transform on all subregions from start to end that are not
 ;;     (map nil (lambda (row)
 ;;                (maplist (lambda (widths items)
 ;;                           (setf (car widths)
-;;                                   (max (car widths) 
+;;                                   (max (car widths)
 ;;                                        (length (format "%s" (car items))))))
 ;;                         widths row)) rows)
 ;;     (setf ctrl (format "%%s%s\n"
@@ -471,8 +471,8 @@ DO:      Applies transform on all subregions from start to end that are not
 ;;                         (mapcar (lambda (width) (format "%%-%ds " width)) widths))))
 ;;     (map nil (lambda (row)
 ;;                (insert (apply (function format) ctrl margin row))) rows)))
-;; 
-;; 
+;;
+;;
 ;; (defun parse-cl-rows (start end)
 ;;   (goto-char start)
 ;;   (let ((rows '())
@@ -496,9 +496,9 @@ DO:      Applies transform on all subregions from start to end that are not
 ;;        (t (error "Cannot parse that")))
 ;;       (goto-char (match-end 0)))
 ;;     rows))
-;; 
+;;
 ;; (defvar *parse-rows* (function parse-cl-rows))
-;; 
+;;
 ;; (defun align-columns (start end)
 ;;   (interactive "*r")
 ;;   (let* ((margin (progn (goto-char start)
@@ -599,16 +599,16 @@ DO:      Replace the selection with a case insensitive regexp,
          (insert (subseq replacement 0 rlen))))
     (if (position (CHAR text i) letters)
       (progn
-        (setf (CHAR replacement rlen) (CHARACTER "["))               
+        (setf (CHAR replacement rlen) (CHARACTER "["))
         (incf rlen)
-        (setf (CHAR replacement rlen) (CHAR-UPCASE   (CHAR text i))) 
+        (setf (CHAR replacement rlen) (CHAR-UPCASE   (CHAR text i)))
         (incf rlen)
-        (setf (CHAR replacement rlen) (CHAR-DOWNCASE (CHAR text i))) 
+        (setf (CHAR replacement rlen) (CHAR-DOWNCASE (CHAR text i)))
         (incf rlen)
-        (setf (CHAR replacement rlen) (CHARACTER "]"))               
+        (setf (CHAR replacement rlen) (CHARACTER "]"))
         (incf rlen))
       (progn
-        (setf (CHAR replacement rlen) (CHAR text i)) 
+        (setf (CHAR replacement rlen) (CHAR text i))
         (incf rlen))))
   );;pjb-case-insensitive-regexp
 
@@ -633,10 +633,10 @@ DO:      Replace the selection with a case insensitive regexp,
     "DELTA-UNDERBAR" "DIAMOND-UNDERBAR" "JOT-UNDERBAR" "CIRCLE-UNDERBAR"
     "UP-SHOE-JOT" "QUOTE-QUAD" "CIRCLE-STAR" "QUAD-COLON" "UP-TACK-DIAERESIS"
     "DEL-DIAERESIS" "STAR-DIAERESIS" "JOT-DIAERESIS" "CIRCLE-DIAERESIS"
-    "DOWN-SHOE-STILE" "LEFT-SHOE-STILE" "TILDE-DIAERESIS" 
-    "GREATER-THAN-DIAERESIS" "COMMA-BAR" "DEL-TILDE" "ZILDE" 
+    "DOWN-SHOE-STILE" "LEFT-SHOE-STILE" "TILDE-DIAERESIS"
+    "GREATER-THAN-DIAERESIS" "COMMA-BAR" "DEL-TILDE" "ZILDE"
     "STILE-TILDE" "SEMICOLON-UNDERBAR"
-    "QUAD-NOT-EQUAL" "QUAD-QUESTION" "DOWN-CARET-TILDE" "UP-CARET-TILDE" 
+    "QUAD-NOT-EQUAL" "QUAD-QUESTION" "DOWN-CARET-TILDE" "UP-CARET-TILDE"
     nil nil nil "ALPHA-UNDERBAR" "EPSILON-UNDERBAR" "IOTA-UNDERBAR"
     "OMEGA-UNDERBAR" nil)
   "APL functional characters from unicode.")
@@ -723,7 +723,7 @@ DO:      Replace the selection with a case insensitive regexp,
 
 (defun apl-letter-font-lock ()
   "
-RETURN: A font-lock-keywords list mapping greek letter names 
+RETURN: A font-lock-keywords list mapping greek letter names
         to greek characters.
 "
   (when (<= 21 emacs-major-version)
@@ -735,8 +735,8 @@ RETURN: A font-lock-keywords list mapping greek letter names
                                  'decompose-region)
                  nil)))
      (let ((code1 123) (code2 (1- 54)))
-       (mapcan 
-        (lambda (letter) 
+       (mapcan
+        (lambda (letter)
           (incf code2)
           (when letter
             `((,(format +letter-regexp-format+ letter)
@@ -749,9 +749,9 @@ RETURN: A font-lock-keywords list mapping greek letter names
 
 
 
-(DEFCONSTANT *greek-letters*  
+(DEFCONSTANT *greek-letters*
   '( "alpha" "beta" "gamma" "delta" "epsilon" "zeta" "eta"
-     "theta" "iota" "kappa" "lambda" "mu" "nu" "xi" "omicron" "pi" 
+     "theta" "iota" "kappa" "lambda" "mu" "nu" "xi" "omicron" "pi"
      "rho"  "terminalsigma" "sigma" "tau"
      "upsilon" "phi" "chi" "psi" "omega" )
   "The order of these strings is fixed by the encoding of greek-iso8859-7!")
@@ -759,13 +759,13 @@ RETURN: A font-lock-keywords list mapping greek letter names
 
 (defun greek-letter-font-lock ()
   "
-RETURN: A font-lock-keywords list mapping greek letter names 
+RETURN: A font-lock-keywords list mapping greek letter names
         to greek characters.
 "
   (when (<= 21 emacs-major-version)
     (let ((maj 64) (min 96))
-      (mapcan 
-       (lambda (letter) 
+      (mapcan
+       (lambda (letter)
          (incf maj) (incf min)
          `(
            (,(format +letter-regexp-format+ (upcase letter))
@@ -813,7 +813,7 @@ Show LAMBDA keyword as a greek letter lambda in lisp source code.
 
 
 
-;; (dolist (item   (greek-letter-font-lock)) 
+;; (dolist (item   (greek-letter-font-lock))
 ;;   (insert (format "%S\n" item)))
 
 
@@ -856,7 +856,7 @@ DO:      Update comments at the end of each defmacro,defun,defwhatever
                 (let ((sexp (progn (when (looking-at "#!") (forward-line 1))
                                    (sexp-at-point))))
                   (when verbose
-                    (message "point:%6d --  sexp: %s" 
+                    (message "point:%6d --  sexp: %s"
                              (point) (if (consp sexp) (car sexp) sexp)))
                   (forward-sexp)
                   (when (and
@@ -869,23 +869,23 @@ DO:      Update comments at the end of each defmacro,defun,defwhatever
                     (insert (format ";;%s"
                               (def-name (first sexp) (second sexp)))))))
               (HANDLER-CASE (forward-sexp)
-                (scan-error (err) 
+                (scan-error (err)
                             (setq error-point (point))
                             (message "signal 1 %S %S" 'scan-error err)
                             (signal 'scan-error err)) )))
-        (error (err) 
+        (error (err)
                (when error-point
                  (goto-char error-point)
                  (skip-to-next-sexp))
                (message "signal 2 %S %S" (car err) (cdr err))
                (signal (car err) (cdr err)))))));;update-def-names
-  
+
 
 ;; ------------------------------------------------------------------------
 ;; map-sexps
 ;; ------------------------------------------------------------------------
 ;; Applies a function on all s-exps from a lisp source file.
-;; 
+;;
 
 (defun skip-comments ()
   "
@@ -896,7 +896,7 @@ RETURN: (not eof)
   (interactive)
   (let* ((data (pjb-source-get-data-for-mode major-mode))
          (comment-regexp (pjb-source-comment-regexp data))
-         (space-or-comment (format "\\(%s\\)\\|\\(%s\\)" 
+         (space-or-comment (format "\\(%s\\)\\|\\(%s\\)"
                                    "[ \t\n\v\f\r]+"
                                    comment-regexp)) )
     (unless data
@@ -910,18 +910,18 @@ RETURN: (not eof)
 
 (defun walk-sexps (fun)
   "
-DO:     Recursively scan sexps from (point) in current buffer up to 
-        the end-of-file or until scan-sexps raises a scan-error. 
+DO:     Recursively scan sexps from (point) in current buffer up to
+        the end-of-file or until scan-sexps raises a scan-error.
         Call fun on each sexps and each of their children etc.
-fun:    A function (sexp start end) 
+fun:    A function (sexp start end)
         sexp:    The sexp parsed from a source file.
         start:   The point starting the sexp.
         end:     The point ending the sexp.
-NOTE:   All positions are kept in markers, so modifying the buffer between 
+NOTE:   All positions are kept in markers, so modifying the buffer between
         start and end should be OK.
-        However  ' or ` are passed as (quote ...) or (backquote ...) 
-        to the function fun without reparsing the sexp inside them. 
-        Ie. if you modify such a source, (which can be detected looking at 
+        However  ' or ` are passed as (quote ...) or (backquote ...)
+        to the function fun without reparsing the sexp inside them.
+        Ie. if you modify such a source, (which can be detected looking at
         the character at start position),  you still get the original sexp.
 "
   (let ((quote-stack '())
@@ -931,7 +931,7 @@ NOTE:   All positions are kept in markers, so modifying the buffer between
         )
     (skip-comments)
     (when (/= (point) (point-max))
-      (when (member major-mode '( emacs-lisp-mode 
+      (when (member major-mode '( emacs-lisp-mode
                                   ledit-mode lisp-interaction-mode
                                   lisp-mode scheme-mode))
         ;; gather the quotes:
@@ -952,12 +952,12 @@ NOTE:   All positions are kept in markers, so modifying the buffer between
       (setq sexp (sexp-at-point))
       ;; push the quotes on the sexp:
       (setq quote-depth (length quote-stack))
-      (while quote-stack 
+      (while quote-stack
         (setq sexp (cons (pop quote-stack) (list sexp))))
       ;; process the quotes:
       (setq start-stack (nreverse start-stack))
       (dotimes (i quote-depth)
-        (funcall fun sexp 
+        (funcall fun sexp
                  (marker-position (car start-stack)) (marker-position end-m))
         (set-marker (pop start-stack) nil)
         (setq sexp (cadr sexp)))
@@ -968,7 +968,7 @@ NOTE:   All positions are kept in markers, so modifying the buffer between
         (goto-char (marker-position start-m))
         (down-list 1)
         (loop
-         (condition-case err 
+         (condition-case err
              (walk-sexps fun)
            (scan-error (return-from nil))))
         (up-list 1))
@@ -995,14 +995,14 @@ NOTE:   All positions are kept in markers, so modifying the buffer between
 
 (defun map-sexps (source-file fun &rest cl-keys)
   "
-DO:     Scan all sexps in the source file. 
+DO:     Scan all sexps in the source file.
         (skipping spaces and comment between top-level sexps).
-        If the deeply flag is set, 
+        If the deeply flag is set,
         then subsexps are also passed to the function fun, after the sexp,
-        else only the top-level sexps are 
+        else only the top-level sexps are
         If the atoms flags is set
         then atoms are also considered (and passed to the selector).
-fun:    A function (sexp start end) 
+fun:    A function (sexp start end)
         sexp:    The sexp parsed from a source file.
         start:   The point starting the sexp.
         end:     The point ending the sexp.
@@ -1039,13 +1039,13 @@ RETURN: The list of results from fun.
 
 (defun old-map-sexps (source-file fun)
   "
-DO:     Scan all top-level sexps in the source file. 
+DO:     Scan all top-level sexps in the source file.
         (skipping spaces and comment between top-level sexps).
-fun:    A function (sexp start end) 
+fun:    A function (sexp start end)
         sexp:    The sexp parsed from a source file.
         start:   The point starting the sexp.
         end:     The point ending the sexp.
-:deeply         
+:deeply
 NOTE:   Scanning stops as soon as an error is detected by forward-sexp.
 RETURN: The list of results from fun.
 "
@@ -1070,7 +1070,7 @@ RETURN: The list of results from fun.
                   for sexp  = (condition-case nil (sexp-at-point) (error eof))
                   until (eq eof sexp)
                   collect (funcall fun sexp start end) into map-sexps-result
-                  do (condition-case nil 
+                  do (condition-case nil
                          (forward-sexp 1)
                        (error               (goto-char (point-max)))
                        (wrong-type-argument (goto-char (point-max))))
@@ -1106,22 +1106,22 @@ RETURN: The list of results from fun.
 KEYS:    :selector (function: sexp --> boolean, default: (lambda (s) t))
          :deeply   (boolean,  default nil)
          :atoms    (boolean,  default nil)
-DO:      Scan all sexp in the source-file.  
-         A selector function may indicate which sexp must be collected. 
-         If the deeply flag is set, 
-         then if a sexp is not selected then sub-sexp are scanned and tested.  
+DO:      Scan all sexp in the source-file.
+         A selector function may indicate which sexp must be collected.
+         If the deeply flag is set,
+         then if a sexp is not selected then sub-sexp are scanned and tested.
          If the atoms flags is set
          then atoms are also considered (and passed to the selector).
 NOTE:    Scanning stops as soon as an error is detected by forward-sexp.
 RETURN:  A list of selected sexp.
 "
   (save-excursion
-    (cl-parsing-keywords ((:selector (function (lambda (s) t))) 
+    (cl-parsing-keywords ((:selector (function (lambda (s) t)))
                           (:deeply   nil)
                           (:atoms    nil)) nil
       (let ((get-sexps-result '()))
-        (map-sexps 
-         source-file 
+        (map-sexps
+         source-file
          (lambda (sexp start end)
            (when (funcall cl-selector sexp)
              (push sexp get-sexps-result)))
@@ -1144,7 +1144,7 @@ RETURN:  A list of selected sexp.
 ;;;       result))
 ;;;   (lambda (a b) (< (car a) (car b))))
 ;;;  )
-;;; 
+;;;
 ;;; ==> ((1 . 325) (2 . 329) (3 . 231) (4 . 163) (5 . 138) (6 . 158) (7 .
 ;;; 102) (8 . 94) (9 . 63) (10 . 40) (11 . 16) (12 . 20) (13 . 9) (14 . 4)
 ;;; (15 . 5) (16 . 4) (17 . 2) (19 . 2) (23 . 1))
@@ -1156,15 +1156,15 @@ RETURN:  A list of selected sexp.
 KEYS:    :selector (a function, default: true)
          :deeply   (a boolean,  default nil)
          :atoms    (a boolean,  default nil)
-DO:      Scan all sexp in the source-file.  
-         A selector function (sexp->bool) may indicate which sexp must 
+DO:      Scan all sexp in the source-file.
+         A selector function (sexp->bool) may indicate which sexp must
          be collected.  If the deeply flag is set, then if a sexp is not
-         selected then sub-sexp are scanned and tested.  If the atoms flags 
+         selected then sub-sexp are scanned and tested.  If the atoms flags
          is set then atoms are also considered (and passed to the selector).
 NOTE:    Scanning stops as soon as an error is detected by forward-sexp.
 RETURN:  A list of selected sexp.
 "
-  (cl-parsing-keywords ((:selector (function identity)) 
+  (cl-parsing-keywords ((:selector (function identity))
                         (:deeply   nil)
                         (:atoms    nil)) nil
     (save-excursion
@@ -1178,21 +1178,21 @@ RETURN:  A list of selected sexp.
           (loop with result = nil
                 while (/= (point) (point-max))
                 for sexp = (condition-case nil (sexp-at-point) (error nil))
-                do (flet ((deeply-select 
+                do (flet ((deeply-select
                            (sexp)
                            (if (atom sexp)
                                (if (and cl-atoms (funcall cl-selector sexp))
                                    (push sexp result))
                              (let (subsexp)
                                (while sexp
-                                 (if (consp sexp) 
+                                 (if (consp sexp)
                                      (setq subsexp (car sexp)
                                            sexp    (cdr sexp))
                                    (setq subsexp sexp
                                          sexp    nil))
                                  (cond
                                   ((atom subsexp)
-                                   (if (and cl-atoms 
+                                   (if (and cl-atoms
                                             (funcall cl-selector subsexp))
                                        (push subsexp result)))
                                   ((funcall cl-selector subsexp)
@@ -1207,8 +1207,8 @@ RETURN:  A list of selected sexp.
                          (push sexp result))
                         (cl-deeply
                          (deeply-select sexp)))))
-                (condition-case nil 
-                    (forward-sexp 1) 
+                (condition-case nil
+                    (forward-sexp 1)
                   (error (goto-char (point-max)))
                   (wrong-type-argument (goto-char (point-max))))
                 finally (unless existing-buffer (kill-buffer source-file))
@@ -1227,32 +1227,32 @@ RETURN:  A list of selected sexp.
 
 ;;; TODO: Use CLISP to pretty print, or find an elisp pretty printer.
 ;;; "(LET ((*PRINT-READABLY* T))
-;;;    (SETF (READTABLE-CASE *READTABLE*) :PRESERVE) 
+;;;    (SETF (READTABLE-CASE *READTABLE*) :PRESERVE)
 ;;;    (WRITE (QUOTE ~S )))"
 
 
 (defun replace-sexps (source-file transformer &rest cl-keys)
   "
 DO:             Scan all sexp in the source-file.
-                Each sexps is given to the transformer function whose result 
+                Each sexps is given to the transformer function whose result
                 replaces the original sexps in the source-file.
-                If the deeply flag is set, then the transformer is applied 
+                If the deeply flag is set, then the transformer is applied
                 recursively to the sub-sexps.
-                If the atoms flags is set then atoms are also considered 
+                If the atoms flags is set then atoms are also considered
                 (and passed to the transformer).
 KEYS:           :deeply    (a boolean,  default nil)
                 :atoms     (a boolean,  default nil)
 transformer:    A function sexp --> sexp.
                 If returing its argument (eq),
                 then no replacement takes place (the comments and formating
-                is then preserved.  Otherwise the source of the sexp is 
-                replaced by the returned sexp.  
+                is then preserved.  Otherwise the source of the sexp is
+                replaced by the returned sexp.
 NOTE:           For now, no pretty-printing is done.
 "
   (cl-parsing-keywords ((:deeply   nil)
                         (:atoms    nil)) nil
-    (map-sexps 
-     source-file 
+    (map-sexps
+     source-file
      (lambda (sexp start end)
        (let ((replacement (funcall transformer sexp)))
          (unless (eq replacement sexp)
@@ -1292,7 +1292,7 @@ NOTE:           For now, no pretty-printing is done.
 
 
 (defun unescape-sharp ()
-  (interactive) 
+  (interactive)
   (save-excursion
   (goto-char (point-min))
   (while (re-search-forward "\\(|ESCAPED-SHARP:\\([A-Za-z0-9+/=*]*\\)|\\)" nil t)
@@ -1313,7 +1313,7 @@ NOTE:           For now, no pretty-printing is done.
          (let ((backquoted (eql '\` (car sexp)))
                (original-sexp sexp))
            (when backquoted (setq sexp (second sexp)))
-           (if (and (consp sexp) (symbolp (car sexp)) 
+           (if (and (consp sexp) (symbolp (car sexp))
                     (STRING-EQUAL 'IF* (car sexp)))
              (do* ((subs (cons 'ELSEIF (cdr sexp)))
                    (clauses '())
@@ -1326,11 +1326,11 @@ NOTE:           For now, no pretty-printing is done.
                            (setq clauses (nreverse clauses))
                            (cond
                             ((and (= 1 (length clauses))
-                                  (every 
+                                  (every
                                    (lambda (clause) (not (null (cdr clause))))
                                      ;; clause = (cons condition statements)
                                    clauses)) ;; a when
-                             `(when ,(car (first clauses)) 
+                             `(when ,(car (first clauses))
                                 ,@(cdr (first clauses))))
                             ((or (= 1 (length clauses))
                                  (< 2 (length clauses))
@@ -1364,7 +1364,7 @@ NOTE:           For now, no pretty-printing is done.
                 (t
                  (error "unexpected token %S in %S" token sexp)))
                ;; read the statements:
-               (do () ((or (null subs)  
+               (do () ((or (null subs)
                            (and (consp subs) (symbolp (car subs))
                                 (MEMBER (car subs) '(ELSEIF ELSE)
                                         :TEST (FUNCTION STRING-EQUAL)))))
@@ -1388,8 +1388,8 @@ NOTE:           For now, no pretty-printing is done.
   "
 This macro outputs an attribute s-exp as used in defclass.
 ARGS  may be of length 1 or 2.
-      If (LENGTH ARGS) = 1 
-      then if the argument is a string, 
+      If (LENGTH ARGS) = 1
+      then if the argument is a string,
            then it's taken as the documentation and the initial value is NIL
            else it's taken as the initial value and the documentation is NIL.
       else the first is the initial value and the second is the documentation.
@@ -1397,7 +1397,7 @@ The initarg an accessor are the same keyword built from the name.
 "
   (let ((iarg (intern (format ":%s" name)))
         init doc)
-    (cond 
+    (cond
      ((= 2 (length args))
       (setq init (car  args)
             doc  (cadr args)) )
@@ -1412,8 +1412,8 @@ The initarg an accessor are the same keyword built from the name.
         (setq type (list 'or 'null type)))
     (if (null doc)
         (setq doc (symbol-name name)))
-    `(,name 
-      :initform ,init 
+    `(,name
+      :initform ,init
       :initarg  ,iarg
       :accessor ,name
       :type     ,type
@@ -1465,7 +1465,7 @@ RETURN:  The list of the binary digits of n, from the least significant.
   (cl-parsing-keywords (:length) nil
     (unless (integerp n)
       (error "Argument must be integer, not %S." n))
-    (when (< n 0) 
+    (when (< n 0)
       (setq n (abs n)))
     (if cl-length
         (loop for m = n then (/ m 2)
@@ -1479,8 +1479,8 @@ RETURN:  The list of the binary digits of n, from the least significant.
   );;integer-to-bool-list
 
 
-;;; (insert (karnaugh '(a b c d e) 
-;;;                 '(( do-1 . (lambda (a b c d e) (and a (or b c)))) 
+;;; (insert (karnaugh '(a b c d e)
+;;;                 '(( do-1 . (lambda (a b c d e) (and a (or b c))))
 ;;;                   ( do-2 . (lambda (a b c d e) (or (not a) b)))
 ;;;                   ( do-3 . (lambda (a b c d e) (and (not a) b (not c)))))
 ;;;                 '(FAUX . VRAI)))
@@ -1490,12 +1490,12 @@ RETURN:  The list of the binary digits of n, from the least significant.
 ;;;                           '(( 0 0  0 0)
 ;;;                             ( 0 1  0 1)
 ;;;                             ( 1 0  0 1)
-;;;                             ( 1 1  1 0)) 
+;;;                             ( 1 1  1 0))
 ;;;                           '( 0 . 1))
 ;;; )
 
-;;; (insert (karnaugh '(a b c) 
-;;;                 '((action . (lambda (a b c) 
+;;; (insert (karnaugh '(a b c)
+;;;                 '((action . (lambda (a b c)
 ;;;                               (or (and a (and b (not c)))
 ;;;                                   (or (and (not a) (and b (not c)))
 ;;;                                       (or (and (not a) c)
@@ -1526,7 +1526,7 @@ EXAMPLE:    (karnaugh-solve '(a b) '(carry sum)
                           '(( 0 0  0 0)
                             ( 0 1  0 1)
                             ( 1 0  0 1)
-                            ( 1 1  1 0)) 
+                            ( 1 1  1 0))
                           '( 0 . 1))
             ==> ((carry . (lambda (a b) (and a b)))
                  (sum   . (lambda (a b) (or (and a (not b)) (and (not a) b)))))
@@ -1548,7 +1548,7 @@ SEE ALSO:   `karnaugh'.
          (a-no    (car action-vals))
          (a-yes   (cdr action-vals))
          (i       (length conditions))
-         (act-ind (mapcar (lambda (action) 
+         (act-ind (mapcar (lambda (action)
                             (prog1 (list action i) (setq i (1+ i))))
                           actions))
          )
@@ -1559,11 +1559,11 @@ SEE ALSO:   `karnaugh'.
                   act-ind)
             )
           table)
-    (mapcar 
+    (mapcar
      (lambda (action)
        (cons (car action)
-             (list 'lambda conditions 
-                   (cons 'or 
+             (list 'lambda conditions
+                   (cons 'or
                          (mapcar
                           (lambda (line)
                             (cons 'and
@@ -1579,7 +1579,7 @@ SEE ALSO:   `karnaugh'.
   );;karnaugh-solve
 
 
-        
+
 (defun karnaugh (conditions actions &optional bool-vals action-vals)
   "
 DO:           Generates a truth table for all combinations of the conditions.
@@ -1606,34 +1606,34 @@ SEE ALSO:     `karnaugh-solve'.
   (when (< 8 (length conditions))
     (error "Too many conditions."))
   (setf conditions (mapcar (lambda (item)
-                             (if (stringp item) item (format "%s" item))) 
+                             (if (stringp item) item (format "%s" item)))
                            conditions))
   (let* ((size-bool-vals (reduce (function max)
                                  (mapcar (function length) bool-vals)))
          (c-count (length conditions))
          (a-count (length actions))
          (s-count (+ c-count a-count))
-         (a-title 
+         (a-title
           (mapcar (lambda (item)
-                    (cond 
+                    (cond
                      ((stringp item) item)
                      ((symbolp item) (symbol-name item))
                      ((consp item)
-                      (cond 
+                      (cond
                        ((stringp (car item)) (car item))
                        ((symbolp (car item)) (symbol-name (car item)))
                        (t (error "Invalid action %S." item)))
                       )
                      (t (error "Invalid action %S." item))))
                   actions))
-         (a-indic (MAKE-ARRAY (list a-count) 
+         (a-indic (MAKE-ARRAY (list a-count)
                               :initial-contents (mapcar (lambda (item)
                                                           (if (consp item)
                                                               (cdr item) nil))
                                                         actions)))
          (a-complex (loop for i across a-indic until i finally return i))
          ;; whether a-indic contains at least one indicator.
-         (sizes  
+         (sizes
           (let ((sizes (MAKE-ARRAY (list s-count))))
             (loop for cnd in conditions
                   for i = 0 then (1+ i)
@@ -1642,27 +1642,27 @@ SEE ALSO:     `karnaugh-solve'.
                   for i = c-count then (1+ i)
                   do (setf (aref sizes i) (max 3 (length act))))
             sizes))
-         (line-length 
+         (line-length
           (loop for i from 0 below s-count
                 sum  (+ 3 (aref sizes i)) into l
                 finally return (1+ l)))
-         (line 
-          (loop with line = (MAKE-STRING line-length 
+         (line
+          (loop with line = (MAKE-STRING line-length
                                          :INITIAL-ELEMENT (CHARACTER "-"))
                 for i from 0 below s-count
-                for position = (+ (aref sizes i) 3) 
+                for position = (+ (aref sizes i) 3)
                 then (+ position  (aref sizes i) 3)
                 ;;do (printf "sizes=%S i=%d p=%d\n" sizes i position)
                 do      (setf (aref line position) (CHARACTER "+"))
                 finally (setf (aref line 0) (CHARACTER "+"))
                 finally return line))
-         (act-part 
+         (act-part
           (if a-complex
               nil
             (loop for i from c-count below s-count
-                  collect (concatenate 
+                  collect (concatenate
                               'string
-                            (MAKE-STRING 
+                            (MAKE-STRING
                              (+ 2 (aref sizes i))
                              :INITIAL-ELEMENT (CHARACTER " "))
                             "|")
@@ -1672,38 +1672,38 @@ SEE ALSO:     `karnaugh-solve'.
          (new-line (MAKE-STRING 1 :INITIAL-ELEMENT (CHARACTER 10)))
          )
     ;;(printf "line-length=%d\n" line-length)
-    (concatenate 'string 
+    (concatenate 'string
       line new-line
 
-      "|" 
-          
+      "|"
+
       (loop for item in conditions
             for i from 0 below c-count
-            collect (concatenate 'string 
-                      " " (string-pad item (aref sizes i) :center) " |") 
+            collect (concatenate 'string
+                      " " (string-pad item (aref sizes i) :center) " |")
             into title
             finally return (apply 'concatenate 'string title))
-         
+
       (loop for item in a-title
             for i from c-count below s-count
-            collect (concatenate 'string 
-                      " " (string-pad item (aref sizes i) :center) " |") 
+            collect (concatenate 'string
+                      " " (string-pad item (aref sizes i) :center) " |")
             into title
             finally return  (apply 'concatenate 'string title))
       new-line
 
       line new-line
-        
+
       (loop for i from (1- (expt 2 c-count)) downto 0
             for conditions = (nreverse (integer-to-bool-list i :length c-count))
-            collect (concatenate 'string 
+            collect (concatenate 'string
 
                       ;; conditions
-                      (loop 
+                      (loop
                        for k from 0 below c-count
-                       for c in conditions 
+                       for c in conditions
                        for l = (+ 3 (aref sizes k))
-                       for s = (string-pad 
+                       for s = (string-pad
                                 (if c (second bool-vals) (first bool-vals))
                                 l :center)
                        do (setf (CHAR s (1- l)) (CHARACTER "|"))
@@ -1713,12 +1713,12 @@ SEE ALSO:     `karnaugh-solve'.
                       ;; actions
                       (if act-part
                           act-part
-                        (loop 
+                        (loop
                          for k from 0 below a-count
                          for l = (+ 3 (aref sizes (+ c-count k)))
                          for f = (aref a-indic k)
                          for s = (string-pad
-                                  (if f (if (apply f conditions) 
+                                  (if f (if (apply f conditions)
                                             (second action-vals)
                                             (first action-vals)) "")
                                   l :center)
@@ -1745,10 +1745,10 @@ SEE ALSO:     `karnaugh-solve'.
 ;; ------------------------------------------------------------------------
 ;; pjb-add-change-log-entry
 ;; ------------------------------------------------------------------------
-;; Inserts a change log entry in the current source, 
+;; Inserts a change log entry in the current source,
 ;; and in the GNU-style ChangeLog file.
 
-(defvar *pjb-sources-initials* nil 
+(defvar *pjb-sources-initials* nil
   "Initials of the developer, to be inserted in MODIFICATIONS log entries
 by pjb-add-change-log-entry.");;*pjb-sources-initials*
 
@@ -1763,24 +1763,24 @@ by pjb-add-change-log-entry.");;*pjb-sources-initials*
      (t (when (< olen flen)
           (setq other-margin
                 (concatenate 'string other-margin
-                             (MAKE-STRING (- flen olen) 
+                             (MAKE-STRING (- flen olen)
                                           :INITIAL-ELEMENT (CHARACTER " ")))))
         (apply (function concatenate)
                'string
                first-margin
-               (list-insert-separator 
+               (list-insert-separator
                 lines  (concatenate 'string "\n" other-margin))))
      )));;pjb-source-justify-text
 
 
-    
+
 (defun pjb-add-change-log-entry (&optional log-entry)
   (interactive "*")
   (widen)
   (goto-char (point-min))
   (let* ((data (pjb-source-get-data-for-mode major-mode))
          (comment-format (pjb-source-header-comment-format data))
-         (entry-head (format "%s <%s> " 
+         (entry-head (format "%s <%s> "
                              (funcall add-log-time-format)
                              (or *pjb-sources-initials*
                                  (user-real-login-name)
@@ -1822,13 +1822,13 @@ by pjb-add-change-log-entry.");;*pjb-sources-initials*
         (setq end (match-beginning 0))
         (goto-char start)
         (while (re-search-forward "\\<\\([0-9][0-9]\\)/\\([0-9][0-9]\\)/\\([0-9][0-9][0-9][0-9]\\)\\> <" end t)
-          (replace-match 
-           (format "%s-%s-%s <" 
+          (replace-match
+           (format "%s-%s-%s <"
                    (match-string 3) (match-string 2) (match-string 1))))
         (goto-char start)
         (while (re-search-forward "\\<\\([0-9][0-9][0-9][0-9]\\)/\\([0-9][0-9]\\)/\\([0-9][0-9]\\)\\> <" end t)
-          (replace-match 
-           (format "%s-%s-%s <" 
+          (replace-match
+           (format "%s-%s-%s <"
                    (match-string 1) (match-string 2) (match-string 3))))
         )))
   );;pjb-reformat-change-log-dates
@@ -1842,7 +1842,7 @@ by pjb-add-change-log-entry.");;*pjb-sources-initials*
 (defun pjb-insert-package (pname)
   (interactive "sPackage name: ")
   (setq pname (STRING-UPCASE pname))
-  (let ((nick (subseq pname (1+ (or (position (CHARACTER ".") 
+  (let ((nick (subseq pname (1+ (or (position (CHARACTER ".")
                                               pname :from-end t) -1)))))
     (format-insert
      ("(DEFINE-PACKAGE \"%s\"\n" pname)
@@ -1869,8 +1869,8 @@ by pjb-add-change-log-entry.");;*pjb-sources-initials*
       ((<= (length line) length) line)));;pjb-fill-a-line
 
 
-(DEFPARAMETER pjb-sources-licenses 
-  '(("GPL"           
+(DEFPARAMETER pjb-sources-licenses
+  '(("GPL"
      t
      "This program is free software; you can redistribute it and/or"
      "modify it under the terms of the GNU General Public License"
@@ -1887,7 +1887,7 @@ by pjb-add-change-log-entry.");;*pjb-sources-initials*
      "Software Foundation, Inc., 59 Temple Place, Suite 330,"
      "Boston, MA 02111-1307 USA")
 
-    ("LGPL"          
+    ("LGPL"
      t
      "This library is free software; you can redistribute it and/or"
      "modify it under the terms of the GNU Lesser General Public"
@@ -1938,12 +1938,12 @@ by pjb-add-change-log-entry.");;*pjb-sources-initials*
      "IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF"
      "THE POSSIBILITY OF SUCH DAMAGE.")
 
-    ("Public Domain" 
+    ("Public Domain"
      nil
      "This software is in Public Domain."
      "You're free to do with it as you please.")
 
-    ("Reserved"      
+    ("Reserved"
      t
      "All Rights Reserved."
      ""
@@ -1952,7 +1952,7 @@ by pjb-add-change-log-entry.");;*pjb-sources-initials*
      "for any non-commercial purpose, provided that this header is"
      "always included.")
 
-    ("Proprietary"      
+    ("Proprietary"
      t
      "All Rights Reserved."
      ""
@@ -1976,7 +1976,7 @@ by pjb-add-change-log-entry.");;*pjb-sources-initials*
   (insert (format comment-format ""))
   (insert "\n")
   (when (pop lic-data)
-    (dolist (line formated-copyright-lines) 
+    (dolist (line formated-copyright-lines)
       (insert line)
       (insert "\n"))
     (insert (format comment-format ""))
@@ -1991,7 +1991,7 @@ by pjb-add-change-log-entry.");;*pjb-sources-initials*
 comment-start
 (defun pjb-add-header ()
   "
-DO:         Inserts a header at the beginning of the file with various 
+DO:         Inserts a header at the beginning of the file with various
             informations.
 "
   (interactive "*")
@@ -2003,7 +2003,7 @@ DO:         Inserts a header at the beginning of the file with various
          (comment-format (pjb-source-header-comment-format data))
          (file-name      (basename (or (buffer-file-name (current-buffer))
                                        "Untitled")))
-         (language       (subseq (symbol-name major-mode) 
+         (language       (subseq (symbol-name major-mode)
                                  0 (search "-mode" (symbol-name major-mode))))
          (author-abrev   *pjb-sources-initials*)
          (author         (or add-log-full-name (user-full-name)))
@@ -2029,7 +2029,7 @@ DO:         Inserts a header at the beginning of the file with various
       (save-restriction
         (widen)
         (goto-char (point-min))
-        (insert (pjb-fill-a-line first-format line-length)) 
+        (insert (pjb-fill-a-line first-format line-length))
         (insert "\n")
         (insert (format title-format (format "%-20s%s" "FILE:" file-name)))
         (insert "\n")
@@ -2037,7 +2037,7 @@ DO:         Inserts a header at the beginning of the file with various
         (insert "\n")
         (insert (format title-format (format "%-20s%s" "SYSTEM:" system)))
         (insert "\n")
-        (insert (format title-format (format "%-20s%s" "USER-INTERFACE:" 
+        (insert (format title-format (format "%-20s%s" "USER-INTERFACE:"
                                              user-interface)))
         (insert "\n")
         (insert (format title-format "DESCRIPTION"))
@@ -2050,14 +2050,14 @@ DO:         Inserts a header at the beginning of the file with various
         (insert "\n")
         (insert (format title-format "AUTHORS"))
         (insert "\n")
-        (insert (format comment-format (format "<%s> %s <%s>" 
+        (insert (format comment-format (format "<%s> %s <%s>"
                                                author-abrev author email)))
         (insert "\n")
         (insert (format title-format "MODIFICATIONS"))
         (insert "\n")
         (insert (format title-format "BUGS"))
         (insert "\n")
-        (pjb-insert-license 
+        (pjb-insert-license
          license lic-data
          (list (format comment-format (format "Copyright %s %04d - %04d"
                                               author year year))
@@ -2082,7 +2082,7 @@ DO:         Inserts a header at the beginning of the file with various
 DO:         Assuming there's already a header with a LEGAL section,
             change the license.
 "
-  (interactive (list 
+  (interactive (list
                 (completing-read "License: " pjb-sources-licenses
                                  nil t nil nil "GPL")))
   (let* ((data           (pjb-source-get-data-for-mode major-mode))
@@ -2092,7 +2092,7 @@ DO:         Assuming there's already a header with a LEGAL section,
          (comment-format (pjb-source-header-comment-format data))
          (file-name      (basename (or (buffer-file-name (current-buffer))
                                        "Untitled")))
-         (language       (subseq (symbol-name major-mode) 
+         (language       (subseq (symbol-name major-mode)
                                  0 (search "-mode" (symbol-name major-mode))))
          (author-abrev   *pjb-sources-initials*)
          (author         (or add-log-full-name (user-full-name)))
@@ -2110,24 +2110,24 @@ DO:         Assuming there's already a header with a LEGAL section,
       (save-restriction
         (widen)
         (goto-char (point-min))
-        (if (re-search-forward 
+        (if (re-search-forward
              (format "^%s" (regexp-quote (format title-format "LEGAL")))
              nil t)
           (progn (beginning-of-line)  (setq start (point)))
           (error "Can't find a LEGAL section. Please use M-x pjb-add-header"))
-        (if (re-search-forward 
-             (format "^%s" 
-                     (format (regexp-quote last-format) 
-                             (format "%s.*" 
+        (if (re-search-forward
+             (format "^%s"
+                     (format (regexp-quote last-format)
+                             (format "%s.*"
                                      (regexp-quote "*************"))))
              nil t)
           (progn (beginning-of-line) (setq end (point)))
-          (error 
+          (error
            "Can't find the end of the header. Please use M-x pjb-add-header"))
         (goto-char start)
-        (while (re-search-forward 
-                (format "^%s" 
-                        (regexp-quote 
+        (while (re-search-forward
+                (format "^%s"
+                        (regexp-quote
                          (let ((comm-line (format comment-format "Copyright")))
                            (subseq comm-line 0
                                    (+ (search "Copyright" comm-line)
@@ -2137,7 +2137,7 @@ DO:         Assuming there's already a header with a LEGAL section,
                  (progn (beginning-of-line) (point))
                  (progn (end-of-line) (point)))
                 copyrights))
-        (unless copyrights 
+        (unless copyrights
           (setq copyrights
                 (list (format comment-format
                               (format "Copyright %s %04d - %04d"
@@ -2162,9 +2162,9 @@ DO:         Assuming there's already a header with a LEGAL section,
 ;;; (mapc (lambda (s) (printf "%s\n" s))
 ;;;       (sort
 ;;;        (let ((res '()))
-;;;          (mapatoms (lambda (sym) 
+;;;          (mapatoms (lambda (sym)
 ;;;                      (when (and (fboundp sym)
-;;;                                 (string-has-suffix 
+;;;                                 (string-has-suffix
 ;;;                                   (symbol-name sym) "-mode"))
 ;;;                        (push sym res))))
 ;;;          res)
@@ -2175,7 +2175,7 @@ DO:         Assuming there's already a header with a LEGAL section,
 
 ;;; (defun pjb-ue-file-kind (name)
 ;;;   "
-;;; DO:     Determine the file kind based on matching patterns in 
+;;; DO:     Determine the file kind based on matching patterns in
 ;;;         pjb-ue-extensions. If this cannot be done, looks at the major-mode.
 ;;; "
 ;;;   (let ((e pjb-ue-extensions)
@@ -2191,21 +2191,21 @@ DO:         Assuming there's already a header with a LEGAL section,
 ;;;                   e nil
 ;;;                   l nil))
 ;;;         (setq l (cdr l))))
-;;;     r));;pjb-ue-file-kind 
+;;;     r));;pjb-ue-file-kind
 
 
-(defvar *silent* nil 
-  "A special variable indicating that no error is issued 
+(defvar *silent* nil
+  "A special variable indicating that no error is issued
 when file kind can't be determined.");;*silent*
- 
+
 ;;; (defun pjb-ue-get-format-for-file-name (name)
 ;;;   (let ((kind (pjb-ue-file-kind name)))
 ;;;     (cond
 ;;;      ((not (null kind))
 ;;;       (nth 1 (assoc kind pjb-sources-data)))
-;;;      (*silent* 
+;;;      (*silent*
 ;;;       "")
-;;;      (t 
+;;;      (t
 ;;;       (error (format "Unknown file kind for file named '%s'." name))))
 ;;;     ));;pjb-ue-get-format-for-file-name
 
@@ -2251,8 +2251,8 @@ when file kind can't be determined.");;*silent*
 
 (defun pjb-ue-make-regexp-for-current-buffer (format-string)
   (concat "^"
-          (unsplit-string 
-           (mapcar 'regexp-quote 
+          (unsplit-string
+           (mapcar 'regexp-quote
                    (pjb-ue-split-format-string format-string)) ".*")
           "$")
   );;pjb-ue-make-regexp-for-current-buffer
@@ -2260,7 +2260,7 @@ when file kind can't be determined.");;*silent*
 
 (defun pjb-update-eof (&optional *silent*)
   "
-DO:         Insert a comment at the end of the source file with 
+DO:         Insert a comment at the end of the source file with
             the name of the file, the author, and the date.
 silent:     When non-nil, don't issue any message whent the file type can't
             be determined.
@@ -2296,7 +2296,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
 ;;;       (insert "***************************************************************************\n")
 ;;;       (insert "                  A TITLE COMMENT                    \n")
 ;;;       (insert "****************************************************/\n")
-;;;       (let ((i 0)) 
+;;;       (let ((i 0))
 ;;;         (while (< i 100)
 ;;;           (insert " a b c d e f g h i j k l m n o p q r s t u v w x y z \n")
 ;;;           (insert " A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \n")
@@ -2313,8 +2313,8 @@ silent:     When non-nil, don't issue any message whent the file type can't
 ;;;           (insert "/*** REPLACE -- REPLACE -- REPLACE ***/")))))
 ;;;   )
 
-    
-    
+
+
 
 
 (defun pjb-grep-here (pattern)
@@ -2330,25 +2330,25 @@ silent:     When non-nil, don't issue any message whent the file type can't
 
 
 ;;    We need to parse C arguments.
-;; 
+;;
 ;;    We may have string or character literals (in which we must ignore
 ;;    parenthesis coma and new-lines).
-;; 
+;;
 ;;    We may have other parenthesis (expected well formed).
-;; 
+;;
 ;;    We may have coma, inside parenthesis.
-;; 
+;;
 ;; Syntax:
-;; 
+;;
 ;;    arglist  ::= '(' argument [ ',' argument ] ...  ')' .
-;;    argument ::=  [ stuff | arglist ] ... 
+;;    argument ::=  [ stuff | arglist ] ...
 ;;    stuff    ::=  string | char | not-coma-or-paren .
 ;;    string   ::=  '"' [ not-dbl-quote | '\' any-char ] '"' .
 ;;    char     ::=  ''' [ not-sgl-quote | '\' any-char ] ''' .
-;; 
+;;
 
 ;;;  (defun pjb-rotate-arguments ()
-;;;  "This function will swap the argument the point is over with the 
+;;;  "This function will swap the argument the point is over with the
 ;;; previous one (or the last if it's over the first)."
 ;;;  (interactive)
 ;;;  (let ( start
@@ -2358,7 +2358,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
 ;;;    (error "Point not at closing parenthesis."))
 ;;;    (goto-char end)
 ;;;   ;; search the opening parenthesis (code stollen from blink-matching-open).
-;;;    (setq start (and 
+;;;    (setq start (and
 ;;;           (> (point) (1+ (point-min)))
 ;;;           ;; Verify an even number of quoting characters precede the close.
 ;;;           (= 1 (logand 1 (- (point)
@@ -2387,22 +2387,22 @@ silent:     When non-nil, don't issue any message whent the file type can't
 ;;;                (or (null (matching-paren (char-after blinkpos)))
 ;;;                  (/= (char-after (1- oldpos))
 ;;;                    (matching-paren (char-after blinkpos))))))
-;;;           (when mismatch 
+;;;           (when mismatch
 ;;;             (error "Mismatch."))
 ;;;           blinkpos
 ;;;           )))
-;;;    (unless start 
+;;;    (unless start
 ;;;      (error "Could not find a corresponding opening parenthesis."))
 ;;;    (message "Should parse this: %S." (buffer-substring start end))
 ;;;    )) ;;pjb-rotate-arguments
-  
+
 
 
 
 ;; ------------------------------------------------------------------------
 ;; generate-options
 ;; ------------------------------------------------------------------------
-;; Generate C source to parse simple flag options in argv 
+;; Generate C source to parse simple flag options in argv
 ;;
 
 (defun true-atom (atom)
@@ -2441,7 +2441,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
 (defun collapse-alist (alist)
   " sorts the alist on the car of each item, then colapse the cdr of each item
  whose car is the same into a list consed with that car."
-  
+
   (do* ((items (sort (copy-seq alist)
                      (lambda (a b) (STRING<= (symbol-name (car a))
                                              (symbol-name (car b)))))
@@ -2537,7 +2537,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
 
 
 (defun lse-newline ()
-  "Insert newline and line number incremented with the same step 
+  "Insert newline and line number incremented with the same step
    as previously."
   (interactive)
   (newline)
@@ -2563,15 +2563,15 @@ silent:     When non-nil, don't issue any message whent the file type can't
 (defvar line-num-map (make-sparse-keymap))
 (define-key line-num-map "\n"  'lse-newline)
 (define-key line-num-map "\r"  'lse-newline)
-     
+
 (defun insert-line-numbers ()
   (interactive)
   (save-excursion
     (save-restriction
       (widen)
       (let ((fmt (format "%%0%dd "
-                         (1+ (truncate 
-                              (log (count-lines (point-min) (point-max)) 
+                         (1+ (truncate
+                              (log (count-lines (point-min) (point-max))
                                    10)))))
             (i 0))
         (goto-char (point-min))
@@ -2594,7 +2594,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
           (forward-line))))
   );;delete-line-numbers
 
-  
+
 (defun renumber-lines ()
     (interactive)
     (delete-line-numbers)
@@ -2605,13 +2605,13 @@ silent:     When non-nil, don't issue any message whent the file type can't
   (interactive)
   (when (<= 21 emacs-major-version)
     (let ((fmt (format "\n%%0%dd "
-                 (1+ (truncate 
-                      (log (count-lines (point-min) (point-max)) 
+                 (1+ (truncate
+                      (log (count-lines (point-min) (point-max))
                            10)))))
           (number 1))
       (goto-char (point-min))
       (while  (re-search-forward "\n" (point-max) t)
-        (compose-region (match-beginning 0) 
+        (compose-region (match-beginning 0)
                         (match-end 0)
                         (format fmt number)
                         'decompose-region)
@@ -2651,7 +2651,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
 
 (defun c-variable-to-lisp-alien ()
   (interactive)
-  (while (re-search-forward "extern \\(.*[^A-Z0-9a-z_]\\)\\([a-zA-Z_][A-Z0-9a-z_]*\\)[ 	]*;" nil t)
+  (while (re-search-forward "extern \\(.*[^A-Z0-9a-z_]\\)\\([a-zA-Z_][A-Z0-9a-z_]*\\)[  ]*;" nil t)
     (let ((start   (match-beginning 0))
           (end     (match-end 0))
           (type    (match-string-no-properties 1))
@@ -2673,7 +2673,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
 (defun c-define-to-lisp-constant ()
   (interactive)
   (let ((start (point)))
-    (while (re-search-forward  "^#[	 ]*define[	 ][	 ]*\\([A-Za-z_][A-Za-z_0-9]*\\)[	 ][	 ]*\\(.*?\\)[	 ][	 ]*/\\* *\\(..*\\) *\\*/ *$" nil t)
+    (while (re-search-forward  "^#[      ]*define[       ][      ]*\\([A-Za-z_][A-Za-z_0-9]*\\)[         ][      ]*\\(.*?\\)[    ][      ]*/\\* *\\(..*\\) *\\*/ *$" nil t)
       (let ((start   (match-beginning 0))
             (end     (match-end 0))
             (name    (match-string-no-properties 1))
@@ -2685,7 +2685,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
                         (if (= 0 (length comment))
                           "" (format " \"%s\"" comment))))))
     (goto-char start)
-    (while (re-search-forward  "^#[	 ]*define[	 ][	 ]*\\([A-Za-z_][A-Za-z_0-9]*\\)[	 ][	 ]*\\(.*?\\)[	 ]*$" nil t)
+    (while (re-search-forward  "^#[      ]*define[       ][      ]*\\([A-Za-z_][A-Za-z_0-9]*\\)[         ][      ]*\\(.*?\\)[    ]*$" nil t)
       (let ((start   (match-beginning 0))
             (end     (match-end 0))
             (name    (match-string-no-properties 1))
@@ -2693,10 +2693,10 @@ silent:     When non-nil, don't issue any message whent the file type can't
         (delete-region start end)
         (insert (format "(DEFCONSTANT %s %s)"  name value))))
     ));;c-define-to-lisp-constant
-          
-   
+
+
 (defun c-left-shift-to-number ()
-  (interactive)         
+  (interactive)
   (while (re-search-forward  "(\\([0-9]*\\)<<\\([0-9]*\\))" nil t)
     (let ((start   (match-beginning 0))
           (end     (match-end 0))
@@ -2707,7 +2707,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
       (insert (format "%d" (* n (expt 2 s))))))
   );;c-left-shift-to-number
 
-          
+
 (defun c-comments-to-lisp ()
   (interactive)
   (while (re-search-forward "/\\*\\(\\([^*]\\|\\*[^/]\\)*\\)\\*/" nil t)
@@ -2735,7 +2735,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
          (digit (mod num base)))
     (if (< num base)
        (STRING (CHAR +arg-chars+ num))
-       (concatenate 'string 
+       (concatenate 'string
          (arg-name (1- (/ num base)))
          (STRING (CHAR +arg-chars+ digit))))));;arg-name
 
@@ -2743,10 +2743,10 @@ silent:     When non-nil, don't issue any message whent the file type can't
 
 (defun clean-arg-list (arg-list)
   (let ((arg-num -1))
-    (mapcar 
+    (mapcar
      (lambda (arg)
-       (cond 
-        ((member arg '(&WHOLE &REST &OPTIONAL &KEY &ENVIRONMENT &BODY 
+       (cond
+        ((member arg '(&WHOLE &REST &OPTIONAL &KEY &ENVIRONMENT &BODY
                               &AUX &ALLOW-OTHER-KEYS
                               &whole &rest &optional &key &environment
                               &body &aux &allow-other-keys))
@@ -2765,18 +2765,18 @@ silent:     When non-nil, don't issue any message whent the file type can't
    (let ((m (delete-duplicates
              (get-sexps
               file
-              :selector (lambda (sexp) 
+              :selector (lambda (sexp)
                           (and (listp sexp)
                                (symbolp (car sexp))
                                (STRING-EQUAL (car sexp) "DEFMETHOD"))))
              :key (function second)
              :test (function eql)))
-         (g (if all 
+         (g (if all
               nil
               (delete-duplicates
                (get-sexps
                 file
-                :selector (lambda (sexp) 
+                :selector (lambda (sexp)
                             (and (listp sexp)
                                  (symbolp (car sexp))
                                  (STRING-EQUAL (car sexp) "DEFGENERIC"))))
@@ -2835,7 +2835,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
 
 
 
-;; Don't test pjb-update-eof without an eof string in this file, 
+;; Don't test pjb-update-eof without an eof string in this file,
 ;; since it contains matching format string much higher in the text...
 
 

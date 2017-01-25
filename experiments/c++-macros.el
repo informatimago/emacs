@@ -126,7 +126,7 @@
 
 
 (defmacro c++/foreach ((type var container) &rest statements)
-  (with-extended-c++-environment (type var container) 
+  (with-extended-c++-environment (type var container)
     `(progn
        ,(c++/gen-insert-item (list "foreach" type var container))
        (insert "{\n")

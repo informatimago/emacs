@@ -9,7 +9,7 @@
 ;;;;    This module exports
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    199?/??/?? <PJB> Creation.
 ;;;;BUGS
@@ -44,18 +44,18 @@
 
 (defvar euro-parities '(
     ;; Cours fixes:
-	(:EUR 1.00000  0.01 "%10.2f" "Euro")
+        (:EUR 1.00000  0.01 "%10.2f" "Euro")
     (:BEF 40.3399  1.00 "%10.0f" "Franc Belge")
-	(:DEM 1.95583  0.01 "%10.2f" "Mark Allemand")
-	(:ESP 166.386  1.00 "%10.0f" "Peseta Espagnole")
+        (:DEM 1.95583  0.01 "%10.2f" "Mark Allemand")
+        (:ESP 166.386  1.00 "%10.0f" "Peseta Espagnole")
     (:FRF 6.55957  0.01 "%10.2f" "Franc Français")
-	(:IEP 0.787564 0.01 "%10.2f" "Lire Irlandaise")
-	(:ITL 1936.27  1.00 "%10.0f" "Lire Italienne")
-	(:LUF 40.3399  1.00 "%10.0f" "Franc Luxembourgeois")
-	(:NLG 2.20371  1.00 "%10.2f" "Florin Néerlandais")
-	(:ATS 13.7604  0.01 "%10.2f" "Shilling Autrichien")
-	(:PTE 200.428  1.00 "%10.0f" "Escudo Portuguais")
-	(:FIM 5.94573  1.00 "%10.0f" "Mark Finlandais")
+        (:IEP 0.787564 0.01 "%10.2f" "Lire Irlandaise")
+        (:ITL 1936.27  1.00 "%10.0f" "Lire Italienne")
+        (:LUF 40.3399  1.00 "%10.0f" "Franc Luxembourgeois")
+        (:NLG 2.20371  1.00 "%10.2f" "Florin Néerlandais")
+        (:ATS 13.7604  0.01 "%10.2f" "Shilling Autrichien")
+        (:PTE 200.428  1.00 "%10.0f" "Escudo Portuguais")
+        (:FIM 5.94573  1.00 "%10.0f" "Mark Finlandais")
     ;; Cours variables:
     (:UKL 1.0 0.01 "%10.2f" "Livre Sterling")
     (:AUD 1.0 0.01 "%10.2f" "Dollar Australien")
@@ -67,7 +67,7 @@
     (:DKK 1.0 0.01 "%10.2f" "Couronne Danoise")
     (:NOK 1.0 0.01 "%10.2f" "Couronne Norvégienne")
     )
-"This is the list of the devises that are in the euro, 
+"This is the list of the devises that are in the euro,
 with their conversion ratios.
 To update the devises with variable quotes, use update-devises.
 ")
@@ -89,11 +89,11 @@ To update the devises with variable quotes, use update-devises.
 (defun euro-update-devise-body (cours devise parities)
   "PRIVATE"
   (cond ((null parities) parities)
-        ((eq (caar parities) devise) 
-         (cons (euro-parity-replace-ratio (car parities) cours) 
+        ((eq (caar parities) devise)
+         (cons (euro-parity-replace-ratio (car parities) cours)
                (cdr parities)))
-        (t 
-         (cons (car parities) 
+        (t
+         (cons (car parities)
                (euro-update-devise-body cours devise (cdr parities))))))
 
 (defun euro-update-devise (cours devise)
@@ -106,10 +106,10 @@ To update the devises with variable quotes, use update-devises.
 (defun update-devisess ()
   "DO:  Retrieves the devise quotes from the url at `*devise-url*'."
   (interactive)
-  ;; (shell-command-to-string 
+  ;; (shell-command-to-string
   ;;  "update-devisess boursorama > ~/.emacs-devises~ && mv ~/.emacs-devises~  ~/.emacs-devises ")
   ;;  (load "~/.emacs-devises")
-  
+
   ;; (with-file ("~/.emacs-devises" :save t :kill t)
   ;;   (erase-buffer)
   ;; )
@@ -136,8 +136,8 @@ To update the devises with variable quotes, use update-devises.
 (defun euro-get-parity (parities devise)
   "PRIVATE"
   (cond ((null parities) parities)
-		((equal (caar parities) devise) (car parities))
-		(t (euro-get-parity (cdr parities) devise))))
+                ((equal (caar parities) devise) (car parities))
+                (t (euro-get-parity (cdr parities) devise))))
 
 (defun euro-is-devise (devise)
   "RETURN: Whether devise is a known devise."
@@ -149,7 +149,7 @@ To update the devises with variable quotes, use update-devises.
   (cadr (euro-get-parity euro-parities devise)))
 
 (defun euro-get-round (devise)
-  "RETURN: The smallest strictly positive value that can be expressed 
+  "RETURN: The smallest strictly positive value that can be expressed
         in the devise.
 NOTE:   This value is used to round the values in the device."
   (caddr (euro-get-parity euro-parities devise)))
@@ -164,8 +164,8 @@ NOTE:   This value is used to round the values in the device."
 
 
 (defun euro-value-to-string (value devise)
-  "Return a string containing the value formated with the number of 
-decimals needed for the devise, followed by a space, then by the 
+  "Return a string containing the value formated with the number of
+decimals needed for the devise, followed by a space, then by the
 three-letter devise code. The value is euro-round'ed before formating."
   (if (not (euro-is-devise devise))
       (error "DEVISE must be a devise. See (euro-update-devisess)."))
@@ -195,7 +195,7 @@ three-letter devise code. The value is euro-round'ed before formating."
   (interactive)
   (insert
    (format (concat "\n"
-                   (euro-get-format devise) " %s = " 
+                   (euro-get-format devise) " %s = "
                    (euro-get-format :EUR) " %s")
            value devise
            (euro-round (/ value (euro-get-ratio devise)) :EUR) :EUR)))
@@ -205,7 +205,7 @@ three-letter devise code. The value is euro-round'ed before formating."
   (interactive)
   (insert
    (format (concat "\n"
-                   (euro-get-format :EUR) " %s = " 
+                   (euro-get-format :EUR) " %s = "
                    (euro-get-format devise) " %s")
            value-euro :EUR
            (euro-round (* value-euro (euro-get-ratio devise)) devise) devise)))
@@ -238,7 +238,7 @@ three-letter devise code. The value is euro-round'ed before formating."
 
 
 
-(defparameter gold-coins 
+(defparameter gold-coins
   '(
     ("Kruger Rand" 31.1)
     ("1/2 Kruger Rand" 15.54)
@@ -275,7 +275,7 @@ three-letter devise code. The value is euro-round'ed before formating."
     (set s-max   max)
     (set s-step  step)
     `(lambda ()
-       (if (<= ,s-value ,s-max) 
+       (if (<= ,s-value ,s-max)
          (values (prog1 ,s-value (incf ,s-value ,s-step)) t)
          (values nil nil)))
     ));;between
@@ -325,11 +325,11 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
 (defun make-gold-table ()
   (setq gold-coins
         (sort gold-coins
-              (lambda (a b) 
+              (lambda (a b)
                 (or (< (second a) (second b))
                     (and (= (second a) (second b))
                          (STRING> (first a) (first b)))))))
-  (let ((umass-coins 
+  (let ((umass-coins
          (set-difference
           (remove-duplicates gold-coins :key (lambda (a) (second a)))
           '(("Barre") ("Lingot"))
@@ -338,7 +338,7 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
         (prices (between 9400 11000 50))
         (lines '())
         (line  '()))
-    (map-enumerator 
+    (map-enumerator
      (lambda (price)
        (setq line (list (format "%.0f" price)))
        (dolist (coin umass-coins)
@@ -357,7 +357,7 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
          (lines    (cdr ll))
          (widths   (mapcar (lambda (line) (mapcar (function length) line)) lines))
          col-widths top-cols)
-    (macrolet ((h-bars 
+    (macrolet ((h-bars
                 () `(do ((col-widths col-widths (cdr col-widths)))
                         ((null col-widths))
                       (insert (make-string* (car col-widths)
@@ -373,7 +373,7 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
       ;; compute the top-lines columns:
       (setq top-cols
             (do ((col-widths col-widths (cdr col-widths))
-                 (cur-col 0 (+ 1 cur-col (car col-widths))) 
+                 (cur-col 0 (+ 1 cur-col (car col-widths)))
                  (top-cols '()))
                 ((null col-widths) (nreverse top-cols))
               (push (+ (/ (car col-widths) 2) cur-col) top-cols)))
@@ -383,7 +383,7 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
            (right    "" (format "%s|%s"
                                 (if (endp (rest titles))
                                     0
-                                    (make-string* (- (first top-cols) 
+                                    (make-string* (- (first top-cols)
                                                      (or (second top-cols) 0) 1)
                                                   :initial-element (character " ")))
                                 right))
@@ -394,7 +394,7 @@ RETURN:        An enumerator that enumerates all the enumerators in turn.
         (insert
          (if (<= (length name) col)
            (format "%s%s+%s\n"
-                   name 
+                   name
                    (make-string* (- col (length name))
                                 :initial-element (character "-"))
                    right)
@@ -433,10 +433,10 @@ DO:      update-devisess and insert some eurotunnel data.
   (let ((today (calendar-current-date)))
     (update-devisess)
     (mapcar
-     (lambda (line) 
+     (lambda (line)
        (let* ((fields   (split-string line ";"))
               (sym      (nth 0 fields))
-              (quo      (string-to-number 
+              (quo      (string-to-number
                          (replace-regexp-in-string "," "." (nth 1 fields) nil nil))))
          (cond
 
@@ -462,8 +462,8 @@ DO:      update-devisess and insert some eurotunnel data.
 
            (t))))
 
-     (split-string 
-      (url-retrieve-as-string 
+     (split-string
+      (url-retrieve-as-string
        "http://fr.finance.yahoo.com/d/quos.csv?s=22456+22457+12537+GBP=X&m=PA&f=sl1d1t1c1ohgv&e=.csv")))))
 
 

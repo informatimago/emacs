@@ -3,11 +3,11 @@
 
 (DEFUN no-package (tree)
   (COND ((SYMBOLP tree)
-         (COND ((CHAR= (CHARACTER "?") 
+         (COND ((CHAR= (CHARACTER "?")
                        (CHAR (SYMBOL-NAME tree)
                              (1- (LENGTH (SYMBOL-NAME tree)))))
                 (INTERN (FORMAT nil "~A-P"
-                                (SUBSEQ (SYMBOL-NAME tree) 0 
+                                (SUBSEQ (SYMBOL-NAME tree) 0
                                         (1- (LENGTH (SYMBOL-NAME tree)))))))
                (t (INTERN (SYMBOL-NAME tree)))))
         ((ATOM tree) tree)
@@ -35,7 +35,7 @@ lambda-list-kind:  (member +cl-lambda-list-kinds+)
     (do ((llk '(&MANDATORY &OPTIONAL &KEY &ALLOW-OTHER-KEYS &AUX &REST &BODY))
          (args (if (member (first lambda-list) +cl-lambda-list-keywords+)
                    lambda-list
-                   (cons '&MANDATORY lambda-list)) 
+                   (cons '&MANDATORY lambda-list))
                (cdr args))
          (chunk '())
          (result '()))
@@ -74,7 +74,7 @@ lambda-list-kind:  (member +cl-lambda-list-kinds+)
 
 (WITH-OPEN-FILE (out (MAKE-PATHNAME :defaults (USER-HOMEDIR-PATHNAME)
                                     :NAME "CL-INTRO" :type "DATA"
-                                    :CASE :common) 
+                                    :CASE :common)
                      :direction :output
                      :if-does-not-exist :create :if-exists :supersede)
   (let ((*print-pretty* nil))

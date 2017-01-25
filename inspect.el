@@ -81,7 +81,7 @@
 (defun inspect:function-argument-counts (function)
   "Return a cons continaing the minimum and maximum number of arguments
 the FUNCTION can take."
-  (let* ((args (split-lambda-list-on-keywords 
+  (let* ((args (split-lambda-list-on-keywords
                 (maptree (lambda (item)
                            (if (memq item '(&optional &rest))
                                (intern (string-upcase item))
@@ -130,13 +130,13 @@ the FUNCTION can take."
      ;; text-properties-at
      length
      string-bytes)
-    
+
     (integer
      identity)
 
     (float
      identity)
-    
+
     (symbol
      symbol-name
      (boundp symbol-value)
@@ -155,12 +155,12 @@ the FUNCTION can take."
     (subr
      subr-name
      subr-arity)
-    
+
     (marker
      marker-buffer
      marker-position
      marker-insertion-type)
-    
+
     (char-table
      ;; char-table-extra-slot
      ;; char-table-range
@@ -172,8 +172,8 @@ the FUNCTION can take."
      overlay-start
      overlay-end
      overlay-properties)
-    
-    
+
+
     (buffer
      buffer-name
      buffer-file-name
@@ -185,7 +185,7 @@ the FUNCTION can take."
      buffer-modified-p
      buffer-modified-tick
      (:contents inspect:buffer-slots))
-    
+
 
     (hash-table
      hash-table-test
@@ -218,9 +218,9 @@ the FUNCTION can take."
      process-status
      process-exit-status
      process-tty-name)
-    
+
     (frame
-      
+
       frame-name
       frame-title
 
@@ -287,10 +287,10 @@ the FUNCTION can take."
       window-list
       window-tree
       buffer-list)
-    
+
     (window-configuration
      window-configuration-frame)
-    
+
     (window
      window-atom-root window-body-size window-body-height
      window-body-width window-buffer window-buffer-height
@@ -336,7 +336,7 @@ Each attribute is either:
 
 
 (defun inspect:max-slot-name-width (slots)
-  (loop       
+  (loop
      for slot in slots
      maximize (cond
                 ((symbolp slot) (length (symbol-name slot)))

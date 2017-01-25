@@ -7,7 +7,7 @@
 
 (slime)
 
-(setf slime-enable-evaluate-in-emacs t) 
+(setf slime-enable-evaluate-in-emacs t)
 
 (defun eval-in-cl (cl-expression-string process-result-values)
   (slime-eval-with-transcript

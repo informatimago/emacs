@@ -16,7 +16,7 @@
 ;;;;              parse from a string instead of from a parsed i-expr.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2002-12-27 <PJB> Creation.
 ;;;;BUGS

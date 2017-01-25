@@ -9,7 +9,7 @@
 ;;;;    This module exports
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    199?/??/?? <PJB> Creation.
 ;;;;BUGS
@@ -41,8 +41,8 @@
 
 (defun alist-setObject-forKey (alist object key)
   (cond ((null alist) (list (cons key object)))
-	((eq (caar alist) key) (cons (cons key object) (cdr alist)))
-	(t (cons (car alist) (alist-setObject-forKey (cdr alist) object key)))))
+        ((eq (caar alist) key) (cons (cons key object) (cdr alist)))
+        (t (cons (car alist) (alist-setObject-forKey (cdr alist) object key)))))
 
 
 (defvar c-indent-level)
@@ -128,7 +128,7 @@ DO:     Move the point at the beginning of the comment."
 
 (defun first-line-of-comment ()
   "
-RETURN: whether the current line is on the first line of a comment, 
+RETURN: whether the current line is on the first line of a comment,
         discounting the comment-intro on the previous line.
 
      // YES comment-intro  /* NO  comment-intro  /*    NO  comment-intro
@@ -140,7 +140,7 @@ RETURN: whether the current line is on the first line of a comment,
     (let ((boc (assoc 'c c-syntactic-context)))
       (if boc
           ;; within a /* comment.
-          (progn 
+          (progn
             (beginning-of-comment)
             (= (point) (cdr boc)))
         ;; within a range of // comments.
@@ -155,7 +155,7 @@ RETURN: whether the given langelem is really a comment intro, and not a mere
         // comment following a // comment or a comment inside a /* comment.
 "
   (save-excursion
-    (and (eq (car langelem) 'comment-intro) 
+    (and (eq (car langelem) 'comment-intro)
          (not (assoc 'c c-syntactic-context)))))
 
 
@@ -193,7 +193,7 @@ SEE-ALSO:  c-indent-line
         (message "result=%S"         (- (current-column) (c-langelem-col langelem)))
         0) ;;(- (current-column) (c-langelem-col langelem)))
 
-       ((first-line-of-comment)  
+       ((first-line-of-comment)
         c-basic-offset)
 
        (t
@@ -232,7 +232,7 @@ SEE-ALSO:  c-indent-line
 
 
 (defconst c-C++-method-key
-   (concat 
+   (concat
     "^\\s *"
     "\\(ABSTRACTMETHOD\\|CLASSMETHOD\\|METHOD"
     "\\|PROCEDURE\\|CONSTRUCTOR2?\\|DESTRUCTOR\\)"
@@ -272,23 +272,23 @@ Key bindings:
   (kill-all-local-variables)
   (set-syntax-table c++-mode-syntax-table)
   (setq major-mode 'c++-mode
-	mode-name "C++"
-	local-abbrev-table c++-mode-abbrev-table)
+        mode-name "C++"
+        local-abbrev-table c++-mode-abbrev-table)
   (use-local-map c++-mode-map)
   (c-common-init)
   (setq comment-start "// "
-	comment-end ""
-	c-conditional-key c-C++-conditional-key
-	c-comment-start-regexp c-C++-comment-start-regexp
-	c-class-key c-C++-class-key
-	c-extra-toplevel-key c-C++-extra-toplevel-key
-	c-access-key c-C++-access-key
+        comment-end ""
+        c-conditional-key c-C++-conditional-key
+        c-comment-start-regexp c-C++-comment-start-regexp
+        c-class-key c-C++-class-key
+        c-extra-toplevel-key c-C++-extra-toplevel-key
+        c-access-key c-C++-access-key
     c-method-key c-C++-method-key
-	c-recognize-knr-p nil
-	imenu-generic-expression cc-imenu-c++-generic-expression
-	imenu-case-fold-search nil
+        c-recognize-knr-p nil
+        imenu-generic-expression cc-imenu-c++-generic-expression
+        imenu-case-fold-search nil
     case-fold-search nil
-	)
+        )
   (run-hooks 'c-mode-common-hook)
   (run-hooks 'c++-mode-hook)
   (c-update-modeline))
@@ -346,7 +346,7 @@ Key bindings:
       )))
 
 
-(defconst todo-regexp 
+(defconst todo-regexp
   "\\(\\(//\\)? *\\(TODO\\|SEE\\):.*\\|/\\* *\\(TODO\\|SEE\\):\\(\\*[^/]\\|[^\\*]\\)* \\*/\\)"
   "regexp to match a TODO: (obsolete SEE:) comment.")
 
@@ -359,11 +359,11 @@ Key bindings:
 
 
 (add-hook 'c-mode-common-hook
-          (lambda () 
+          (lambda ()
             (define-key c-mode-map "{"  'self-insert-command)))
 
 (add-hook 'objc-mode-hook
-          (lambda () 
+          (lambda ()
             (define-key c-mode-map "{"  'self-insert-command)))
 
 

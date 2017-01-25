@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Some Objective-C refactoring tools.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal Bourguignon <pbourguignon@dxo.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal Bourguignon 2013 - 2013
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU Affero General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -91,7 +91,7 @@ It should have the same signature as NSLog.")
     ((NSPoint)                     . ("{x=%f,y=%f}" pjb-objc-ide--point-formatter-arguments))
     ((NSSize)                      . ("{w=%f,h=%f}" pjb-objc-ide--size-formatter-arguments))
     ((NSRect)                      . ("{{x=%f,y=%f},{w=%f,h=%f}}" pjb-objc-ide--rect-formatter-arguments))
-    (pjb-objc-ide--ns-class-type-p . "%@")) 
+    (pjb-objc-ide--ns-class-type-p . "%@"))
   "A list of conses.
 
 The car slots are lists representing Objective-C types,
@@ -150,7 +150,7 @@ The excursion is saved while running `processor'.
 "
   (loop
      with count = (or count 1)
-     for i from 0         
+     for i from 0
      while (or (minusp count) (< i count))
      do
        (incf i)
@@ -238,13 +238,13 @@ The excursion is saved.
        ;; {
        ;;     return a+b;
        ;; }
-       ;; --> 
+       ;; -->
        ;; {
        ;;     /*** TAG ***/ ResultTypeFromMethodSignature result=a+b;
        ;;     /*** TAG ***/ NSLog(@"%p returns %d", __PRETTY_FUNCTION__, result);
-       ;;     /*** TAG ***/ return result; 
+       ;;     /*** TAG ***/ return result;
        ;;     return a+b;
-       ;; }    
+       ;; }
        (with-marker (end-pt end-pt)
          (loop
             while (re-search-forward "^\\s-*return \\([^;]*\\);" end-pt t)

@@ -9,7 +9,7 @@
 ;;;;    This module exports various functions related to mail handling.
 ;;;;
 ;;;;AUTHORS
-;;;;    <PJB> Pascal J. Bourguignon 
+;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
 ;;;;    2002-10-01 <PJB> Created.
 ;;;;
@@ -53,17 +53,17 @@
   "
 DO:     Extract a value from a property list.
 PLIST:  is a property list, which is a list of the form
-        (PROP1 VALUE1 PROP2 VALUE2...).  
+        (PROP1 VALUE1 PROP2 VALUE2...).
 RETURN: the value corresponding to the given PROP, or nil if PROP is not
         one of the properties on the list.
-NOTE:   The difference with plist-get is that this function works with 
+NOTE:   The difference with plist-get is that this function works with
         strings properties.
-OPTIONS can contain :ignore-case in which case the case string and prefix 
+OPTIONS can contain :ignore-case in which case the case string and prefix
         are matched case insensitively.
 "
   (let ((ignore-case (member :ignore-case options))
         )
-    (when ignore-case 
+    (when ignore-case
       (setq prop (upcase prop)))
     (loop for clist = slist then (cddr clist)
        while clist
@@ -105,7 +105,7 @@ NOTE:   See original code: message-remove-header
         last)
     (while (and (not (eobp))
                 (not last))
-      (if (let ((case-fold-search t)) 
+      (if (let ((case-fold-search t))
             ;; case is not significant in headers whatever what.
             (if reverse
                 (not (looking-at regexp))
@@ -136,7 +136,7 @@ NOTE:   See original code: message-remove-header
 RETURN:  A unique string that can be used as a boundary.
 "
   (let ((ut (decode-time)))
-    (format "%s.%08d.%04d-%02d-%02d-%02d-%02d-%02d/%02d" 
+    (format "%s.%08d.%04d-%02d-%02d-%02d-%02d-%02d/%02d"
       (system-name) (random 100000000)
       (elt ut 5) (elt ut 4) (elt ut 3)
       (elt ut 2) (elt ut 1) (elt ut 0)
@@ -157,7 +157,7 @@ DO:     Inserts at point 'Content-' MIME headers as directed by headers-k-v
      while current
      for key = (car current)
      for value = (cadr current)
-     do (insert (format "Content-%s: %s\n" 
+     do (insert (format "Content-%s: %s\n"
                   (capitalize (subseq (symbol-name key) 1))
                   value))
      ) ;;loop
@@ -181,18 +181,18 @@ RETURN:  The sublist of the elements from LIST for which the indicator function
 (defun pjb-mail-make-mime ()
   "
 PRE:    the current buffer contains a RFC822 message.
-DO:     If the mail is not already a MIME message, 
+DO:     If the mail is not already a MIME message,
         then makes it a MIME message.
 POST:   the current buffer contains a MIME multipart/mixed message,
         either the original one, or a new one with the old message contents
         as the first MIME section.
 "
-  (let  ((headers 
+  (let  ((headers
           (progn (widen) (goto-char (point-min)) (mail-header-extract)))
          boundary)
 
     (unless (mail-header 'mime-version headers)
-      ;; not already a MIME message. 
+      ;; not already a MIME message.
       ;; let's encapusulate the existing body into the first section before
       ;; adding a new section for the attached file.
       (setq boundary (pjb-mail-make-boundary))
@@ -225,17 +225,17 @@ POST:   the current buffer contains a MIME multipart/mixed message,
 (defun pjb-mail-make-multipart/mixed ()
   "
 PRE:    the current buffer contains a MIME message.
-DO:     if it's not already a multipart/mixed message, 
+DO:     if it's not already a multipart/mixed message,
         then makes it multipart/mixed.
 POST:   the current buffer contains a MIME multipart/mixed message,
         either the original one, or a new one with the old message contents
         as the first MIME section.
 "
-  (let ((headers 
+  (let ((headers
          (progn (widen) (goto-char (point-min)) (mail-header-extract)))
         boundary)
 
-    (unless (pjb-string-prefix-p  (mail-header 'content-type headers) 
+    (unless (pjb-string-prefix-p  (mail-header 'content-type headers)
                               "multipart/mixed" :ignore-case)
       ;; already a MIME, but not a mixed
       ;; let's move the content- headers to the existing body and
@@ -244,7 +244,7 @@ POST:   the current buffer contains a MIME multipart/mixed message,
 
       (setq boundary (pjb-mail-make-boundary))
       ;; since it's not a multipart/mixed, there's no boundary yet.
-      
+
       ;; first, let's report the current "Content-" headers into the body.
       (widen)
       (mail-text)
@@ -253,13 +253,13 @@ POST:   the current buffer contains a MIME multipart/mixed message,
       (insert (format "--%s\n" boundary))
       (apply 'pjb-mail$$insert-content-headers
              (flatten
-              (mapcar 
+              (mapcar
                (lambda (item)
-                 (list (intern (concat ":" 
+                 (list (intern (concat ":"
                                        (chop-prefix (symbol-name (car item))
                                                     "content-" :ignore-case)))
                        (cdr item)))
-               (pjb-mail$$select 
+               (pjb-mail$$select
                  (lambda (item)
                    (pjb-string-prefix-p (symbol-name (car item))
                                     "content-" :ignore-case))
@@ -292,24 +292,24 @@ POST:   the current buffer contains a MIME multipart/mixed message,
 RETURN: the boundary attribute of the multipart/mixed content-type
         header in headers.
 "
-  (replace-regexp-in-string 
+  (replace-regexp-in-string
    "^\"\\(.*\\)\"$" "\\1"
    (slist-get (delete "" (flatten
                           (mapcar
                            (lambda (s) (split-string s "="))
                            (split-string (chop-prefix
-                                          (mail-header 'content-type headers) 
-                                          "multipart/mixed" :ignore-case) 
-                                         "[\n	 ]*;[\n	 ]*")))) 
+                                          (mail-header 'content-type headers)
+                                          "multipart/mixed" :ignore-case)
+                                         "[\n    ]*;[\n  ]*"))))
               "boundary" :ignore-case) nil nil))
 
 
 (defun pjb-mail-attach-file (file-name &optional compress)
   "
-DO:      Ask for the path of a file to attach to the message being edited 
+DO:      Ask for the path of a file to attach to the message being edited
          in the current buffer.
 "
-  (interactive "*fFile to attach: 
+  (interactive "*fFile to attach:
 P")
   ;; (unless (eq major-mode 'mail-mode)
   ;;   (error "I can attach a file only to a mail buffer."))
@@ -325,7 +325,7 @@ P")
         (error "Invalid multipart/mixed boundary. Please fix."))
       (widen)
       (goto-char (point-max))
-      (if (re-search-backward (format "^--%s\\(--\\)?\n" 
+      (if (re-search-backward (format "^--%s\\(--\\)?\n"
                                 (regexp-quote boundary))
                               (point-min) t)
           (progn ;; found
@@ -346,8 +346,8 @@ RETURN:  a list of strings containing each one address.
         (len (length adlist-string))
         (result  nil)
         (curaddr nil)
-        (state      :unknown) 
-        ;; ( :unknown :in-address 
+        (state      :unknown)
+        ;; ( :unknown :in-address
         ;;   :in-comment-paren :in-escape-quote :in-comment-angle )
         (prevstate  nil)
         (escape     nil) ;; ?\
@@ -363,13 +363,13 @@ RETURN:  a list of strings containing each one address.
         )
 
     (while (<= i len)
-      
+
       (if (< i len)
           (setq curchar (aref adlist-string i))
           (setq curchar nil))
-      
+
       (cond
-       
+
         ((eq state :unknown)
          (if (and escape curchar)
              (progn
@@ -381,12 +381,12 @@ RETURN:  a list of strings containing each one address.
                   (when (< 0 (length address))
                     (push (chop-spaces address) result))
                   (setq curaddr nil)))
-               ((= curchar dbl-quote) 
+               ((= curchar dbl-quote)
                 (push curchar curaddr)
                 (setq prevstate state
                       state     :in-escape-quote))
                ((= curchar left-paren)   (setq state  :in-comment-paren))
-               ((= curchar left-angle)   (setq state  :in-address 
+               ((= curchar left-angle)   (setq state  :in-address
                                                curaddr nil))
                ((= curchar anti-slash)
                 (push curchar curaddr)
@@ -406,7 +406,7 @@ RETURN:  a list of strings containing each one address.
                     (push (chop-spaces address) result))
                   (setq curaddr nil))
                 (setq state :in-comment-angle))
-               ((= curchar anti-slash)   
+               ((= curchar anti-slash)
                 (push curchar curaddr)
                 (setq escape t))
                (t (push curchar curaddr))
@@ -420,7 +420,7 @@ RETURN:  a list of strings containing each one address.
                ((= curchar right-paren) (setq state :unknown))
                ((= curchar anti-slash)  (setq escape t))
                ))) ;;state :in-comment-paren
-       
+
         ((eq state :in-escape-quote)
          (if escape
              (progn
@@ -430,10 +430,10 @@ RETURN:  a list of strings containing each one address.
                ((null curchar))
                ((= curchar dbl-quote)
                 (setq state prevstate))
-               ((= curchar anti-slash)  
+               ((= curchar anti-slash)
                 (push curchar curaddr)
                 (setq escape t))
-               (t 
+               (t
                 (push curchar curaddr))
                ))) ;;state :in-escape-quote
 
@@ -443,7 +443,7 @@ RETURN:  a list of strings containing each one address.
              (cond
                ((null curchar))
                ((= curchar anti-slash)  (setq escape t))
-               ((= curchar comma)       (setq state :unknown))        
+               ((= curchar comma)       (setq state :unknown))
                ))) ;;state :in-comment-angle
         )
       (setq i (1+ i))
@@ -489,7 +489,7 @@ RETURN:  a list of strings containing each one address.
 (defun pjb-mail-sign    (pass-phrase)
   "
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol=\"application/pgp-signature\"; boundary=\"5mCyUwZo2JvN/JJP\"
+        protocol=\"application/pgp-signature\"; boundary=\"5mCyUwZo2JvN/JJP\"
 
 --5mCyUwZo2JvN/JJP
 Content-Type: text/plain; charset=us-ascii
@@ -516,10 +516,10 @@ iD8DBQE9xuYI76uNUzjDrRQRAmiHAJ9rPkgxJBK6TdIaiaalc7U5JxLX+wCfU/IG
 (defun pjb-mail-encrypt (pass-phrase recipients &optional conv-utf-8)
   "
 DO:      Encrypt the current mail and put it into a multipart/encrypted MIME.
-         Sign and encrypt the buffer, with pgp-signer key, 
+         Sign and encrypt the buffer, with pgp-signer key,
          unlocked by the PASS-PHRASE, for the given RECIPIENTS.
 "
-  (interactive 
+  (interactive
    (list
     ;; pass-phrase
     (progn
@@ -532,15 +532,15 @@ DO:      Encrypt the current mail and put it into a multipart/encrypted MIME.
     (let ((recipients
            (unsplit-string
             (remove-duplicates
-             (flatten 
+             (flatten
               (mapcar ;; extract only the email addresses
                (lambda (item) (parse-address-list-string (cdr item)))
                (pjb-mail$$select ;; select only To: Cc: and Bcc: headers.
-                 (lambda (item) (member (car item) '(to cc bcc))) 
+                 (lambda (item) (member (car item) '(to cc bcc)))
                  (progn ;; get the headers.
-                   (widen) 
+                   (widen)
                    (expand-mail-aliases (point-min) (progn (mail-text) (point)))
-                   (goto-char (point-min)) 
+                   (goto-char (point-min))
                    (mail-header-extract)))))))))
       (if recipients
           recipients
@@ -551,10 +551,10 @@ DO:      Encrypt the current mail and put it into a multipart/encrypted MIME.
 
   (unless (eq major-mode 'mail-mode)
     (error "I can encrypt a message only in a mail buffer."))
-  
+
   (pjb-mail-make-mime)
-  
-  (let ((headers 
+
+  (let ((headers
          (progn (widen) (goto-char (point-min)) (mail-header-extract)))
         (boundary (pjb-mail-make-boundary))
         (text-beg (make-marker))
@@ -565,13 +565,13 @@ DO:      Encrypt the current mail and put it into a multipart/encrypted MIME.
     (mail-text)
     (apply 'pjb-mail$$insert-content-headers
            (flatten
-            (mapcar 
+            (mapcar
              (lambda (item)
-               (list (intern (concat ":" 
+               (list (intern (concat ":"
                                      (chop-prefix (symbol-name (car item))
                                                   "content-" :ignore-case)))
                      (cdr item)))
-             (pjb-mail$$select 
+             (pjb-mail$$select
                (lambda (item)
                  (pjb-string-prefix-p (symbol-name (car item))
                                   "content-" :ignore-case))
@@ -585,7 +585,7 @@ DO:      Encrypt the current mail and put it into a multipart/encrypted MIME.
     ;; let's add the new "Content-" headers.
     (goto-char (point-max)) ;; end of headers
     ;; no need to insert MIME-Version, it's aready a MIME message.
-    (pjb-mail$$insert-content-headers 
+    (pjb-mail$$insert-content-headers
      :transfer-encoding "7bit" ;; encrypted is pure ASCII
      :type (format (concat "multipart/encrypted; "
                            "protocol=\"application/pgp-encrypted\"; "
@@ -596,7 +596,7 @@ DO:      Encrypt the current mail and put it into a multipart/encrypted MIME.
     (mail-text)
     (set-marker text-beg (point))
     (set-marker text-end (point-max))
-    (insert-before-markers 
+    (insert-before-markers
      (format
          (concat "Beginning of MIME encrypted message.\n"
                  "\n"
@@ -625,11 +625,11 @@ DO:      Encrypt the current mail and put it into a multipart/encrypted MIME.
             (pgp-convert-to-utf-8 text-beg text-end) )
           (pgp-encrypt-pk-range pass-phrase recipients text-beg text-end)
           )
-      (error 
+      (error
        (message "PGP encryption raised an exception: %S" exception)))
     (set-marker text-beg nil)
     (set-marker text-end nil)
-    
+
     (if (< 0 (buffer-size (buffer-named "*PGP*")))
         (save-selected-window
           (switch-to-buffer-other-window "*PGP*")
@@ -642,19 +642,19 @@ DO:      Encrypt the current mail and put it into a multipart/encrypted MIME.
 (defun old-pjb-mail-attach-file (file-name &optional compress)
   "
 "
-  (interactive "*fFile to attach: 
+  (interactive "*fFile to attach:
 P")
   (unless (eq major-mode 'mail-mode)
     (error "I can attach a file only to a mail buffer."))
   (let (headers boundary
                 )
 
-    (setq headers 
+    (setq headers
           (progn (widen) (goto-char (point-min)) (mail-header-extract)))
 
     ;;(pjb-mail-narrow-to-headers)
     (unless (mail-header 'mime-version headers)
-      ;; not already a MIME message. 
+      ;; not already a MIME message.
       ;; let's encapusulate the existing body into the first section before
       ;; adding a new section for the attached file.
       (setq boundary (pjb-mail-make-boundary))
@@ -679,12 +679,12 @@ P")
       (insert "\n\n")
       (insert (format "--%s--\n" boundary))
       (insert "\n")
-      (setq headers 
+      (setq headers
             (progn (widen) (goto-char (point-min)) (mail-header-extract)))
       ) ;;unless not already a MIME message.
 
 
-    (unless (pjb-string-prefix-p  (mail-header 'content-type headers) 
+    (unless (pjb-string-prefix-p  (mail-header 'content-type headers)
                               "multipart/mixed" :ignore-case)
       ;; already a MIME, but not a mixed
       ;; let's move the content- headers to the existing body and
@@ -693,7 +693,7 @@ P")
 
       (setq boundary (pjb-mail-make-boundary))
       ;; since it's not a multipart/mixed, there's no boundary yet.
-      
+
       ;; first, let's report the current "Content-" headers into the body.
       (widen)
       (mail-text)
@@ -702,13 +702,13 @@ P")
       (insert (format "--%s\n" boundary))
       (apply 'pjb-mail$$insert-content-headers
              (flatten
-              (mapcar 
+              (mapcar
                (lambda (item)
-                 (list (intern (concat ":" 
+                 (list (intern (concat ":"
                                        (chop-prefix (symbol-name (car item))
                                                     "content-" :ignore-case)))
                        (cdr item)))
-               (pjb-mail$$select 
+               (pjb-mail$$select
                  (lambda (item)
                    (pjb-string-prefix-p (symbol-name (car item))
                                     "content-" :ignore-case))
@@ -730,8 +730,8 @@ P")
                                         :type (format "multipart/mixed; boundary=\"%s\""
                                                 boundary)
                                         :disposition "inline")
-      
-      (setq headers 
+
+      (setq headers
             (progn (widen) (goto-char (point-min)) (mail-header-extract)))
       ) ;;unless not already a multipart/mixed
 
@@ -740,12 +740,12 @@ P")
     ;; already a MIME and already a mixed
     ;; let's just recover the boundary and add a section.
     (setq boundary
-          (replace-regexp-in-string "^\"\\(.*\\)\"$" "\\1" (slist-get (flatten (mapcar (lambda (s) (split-string s "=")) (split-string (chop-prefix (mail-header (quote content-type) headers) "multipart/mixed" :ignore-case) "[\n	 ]*;[\n	 ]*"))) "boundary" :ignore-case) nil nil))
+          (replace-regexp-in-string "^\"\\(.*\\)\"$" "\\1" (slist-get (flatten (mapcar (lambda (s) (split-string s "=")) (split-string (chop-prefix (mail-header (quote content-type) headers) "multipart/mixed" :ignore-case) "[\n      ]*;[\n  ]*"))) "boundary" :ignore-case) nil nil))
     (when (or (null boundary) (= 0 (length boundary)))
       (error "Invalid multipart/mixed boundary. Please fix."))
     (widen)
     (goto-char (point-max))
-    (if (re-search-backward (format "^--%s\\(--\\)?\n" 
+    (if (re-search-backward (format "^--%s\\(--\\)?\n"
                               (regexp-quote boundary))
                             (point-min) t)
         (progn ;; found
@@ -764,7 +764,7 @@ P")
 (defvar *pjb-mail-inline-types*
   '("image/.*"))
 
-(defvar *pjb-mail-mime-type-as-8bit* 
+(defvar *pjb-mail-mime-type-as-8bit*
   '(
     "application/ghostview"
     "application/mac-binhex40"
@@ -821,7 +821,7 @@ DO:     Insert a file attachment at the point, prefixed with Content- headers
     (error "Can't attach a directory!"))
   (let ((out-fname (basename file-name))
         (type  nil)
-        transfer-encoding 
+        transfer-encoding
         description
         (disposition "attachment"))     ; may be "inline"
     (if compress
@@ -832,7 +832,7 @@ DO:     Insert a file attachment at the point, prefixed with Content- headers
           ;; (when (string-match "\\(\\.[^\\.]+\\)$" file-name)
           ;;   (setq type (mm-extension-to-mime (match-string 0 file-name))))
           (unless type
-            (setq type 
+            (setq type
                   (replace-regexp-in-string
                    ", English" ""
                    (car (split-string
@@ -840,7 +840,7 @@ DO:     Insert a file attachment at the point, prefixed with Content- headers
                          (shell-command-to-string
                           (format "file -L -b -i %s 2>/dev/null"
                             (shell-quote-argument file-name))) "\n")) t t)))
-          
+
           (when (or (null type) (= 0 (length type)) (string= "data" type))
             (setq type
                   (read-string "Can't determine mime-type. Please tell me: "
@@ -859,9 +859,9 @@ DO:     Insert a file attachment at the point, prefixed with Content- headers
             (setf disposition "inline"))))
     (setq description (read-string "Please enter attachment description: "))
     (when (= 0 (length description))
-      (setq description 
+      (setq description
             (format "Attachment %s" (shell-quote-argument out-fname))))
-    (pjb-mail$$insert-content-headers 
+    (pjb-mail$$insert-content-headers
      :transfer-encoding transfer-encoding
      :type type
      :disposition (format "%s; filename=\"%s\""
@@ -873,9 +873,9 @@ DO:     Insert a file attachment at the point, prefixed with Content- headers
     (if (string= "8bit" transfer-encoding)
         (insert-file-contents file-name)
         (if compress
-            (shell-command (format "gzip<%s|base64-encode" 
+            (shell-command (format "gzip<%s|base64-encode"
                              (shell-quote-argument file-name))  t nil)
-            (shell-command (format "base64<%s" 
+            (shell-command (format "base64<%s"
                              (shell-quote-argument file-name))  t nil)))))
 
 
@@ -900,17 +900,17 @@ DO:     Insert a file attachment at the point, prefixed with Content- headers
   ;; (defun pjb-vm-create-auto-folder-and-save-message (selector)
   ;;   (interactive
   ;;    (list
-  ;;     (completing-read 
+  ;;     (completing-read
   ;;      "Selector: " (mapcar (afr-label) *auto-folder-regexps*) nil t "From")))
   ;;   (let ((
-  ;; 
+  ;;
   ;;          (vm-subject-of message)
   ;;          (vm-from-of    message)
   ;;          (vm-to-of      message)
   ;;          (vm-cc-of      message)
-  ;;          
+  ;;
   ;; (vm-auto-select-folder vm-message-pointer vm-auto-folder-alist)
-  
+
   );; when require
 
 

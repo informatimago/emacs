@@ -6,17 +6,17 @@
 ;;;;USER-INTERFACE:    UNIX
 ;;;;DESCRIPTION
 ;;;;
-;;;;    This elisp script generates dependencies for lisp sources, based on 
+;;;;    This elisp script generates dependencies for lisp sources, based on
 ;;;;    (require) sexps, a load-path, and ad-hoc processing.
-;;;;    
+;;;;
 ;;;;    Object files can be either elisp compiled (.elc) or clisp compiled
-;;;;    (.fas) or cmucl compiled (.x86f) 
+;;;;    (.fas) or cmucl compiled (.x86f)
 ;;;;    and source files can be either elisp (.el) or clisp or cmucl (.lisp,
 ;;;;    .lsp, .cl), and elisp sources may (require) common-lisp files
 ;;;;    (.lisp, .lsp, .cl extensions for sources, but .elc compiled form).
 ;;;;
 ;;;;USAGE
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon
 ;;;;MODIFICATIONS
@@ -61,7 +61,7 @@ PRE:    sexp is of the form: (REQUIRE module-name &OPTIONAL pathname-list)
         module-name can be 'toto or (quote toto).
         Each path name can be either a namestring, a physical path name or
         a logical path name.
-RETURN: A new list containing the pathname-list if present, or a list 
+RETURN: A new list containing the pathname-list if present, or a list
                               containing the symbol-name  of the module-name.
 "
   (let ((symb  (nth 1 sexp))
@@ -84,13 +84,13 @@ RETURN:  A list of file or symbol names listed in require sexp in source-file.
               while (/= (point) (point-max))
               for sexp = (condition-case nil (sexp-at-point) (error nil))
               do
-              (when (and (consp sexp) 
+              (when (and (consp sexp)
                          (or (eq  (car sexp) 'require)
                              (eq  (car sexp) 'REQUIRE)))
-                (setq result 
+                (setq result
                       (nconc (extract-source-from-require-sexp sexp) result )))
-              (condition-case nil 
-                  (forward-sexp 1) 
+              (condition-case nil
+                  (forward-sexp 1)
                 (error (goto-char (point-max)))
                 (wrong-type-argument (goto-char (point-max))))
               finally return result)
@@ -105,9 +105,9 @@ RETURN:  nil or the path of fname found in one of dir-paths.
   (do* ((paths dir-paths   (cdr paths))
         (dpath (car paths) (car paths))
         (fpath ) )
-      ( (or (null dpath) 
-            (probe-file 
-             (setq fpath (if (cl:string= dpath ".") 
+      ( (or (null dpath)
+            (probe-file
+             (setq fpath (if (cl:string= dpath ".")
                              fname
                              (concatenate 'string dpath "/" fname)))))
         (if dpath  fpath nil) ))
@@ -118,7 +118,7 @@ RETURN:  nil or the path of fname found in one of dir-paths.
 (defvar *extensions-emacs* '((".el" . ".elc"))
   "A list of cons of extensions for source lisp and object lisp files.")
 
-(defvar *extensions-clisp* 
+(defvar *extensions-clisp*
   '((".lisp" . ".fas")  (".lsp" . ".fas") (".cl" . ".fas")
     (".lisp" . ".fasl") (".lsp" . ".fasl") (".cl" . ".fasl")
     (".lisp" . ".x86f") (".lsp" . ".x86f") (".cl" . ".x86f"))
@@ -130,7 +130,7 @@ RETURN:  nil or the path of fname found in one of dir-paths.
 ;; In  both cases, it  may have  as source,  either a  common-lisp source
 ;; (.lisp, .lsp  or .cl), or a elisp  source (.el). (If a  .fas, we seach
 ;; first for a .lisp, and if a .elc, we search first for a .el).
-;; 
+;;
 ;;
 ;; For  required files,  we search  whatever source  file (first  of same
 ;; class as  the source found for  object-file), and return  in anycase a
@@ -181,7 +181,7 @@ PRE:     Object-file is foo.fas or foo.elc, etc.
 RETURN:  A list of dependency for this object-file, including the source-file
          and all the object files of required files.
 "
-  (multiple-value-bind 
+  (multiple-value-bind
       (source-file extension *extensions*) (get-source-file object-file)
     (when source-file
       (cons source-file
@@ -209,11 +209,11 @@ RETURN:  A list of dependency for this object-file, including the source-file
   "
 RETURN: A list of object files recursively required by OBJECT-FILE.
 "
-  (multiple-value-bind 
-      (source-file extension *extensions*) 
+  (multiple-value-bind
+      (source-file extension *extensions*)
       (get-source-file object-file)
     (when source-file
-      (cons object-file 
+      (cons object-file
             (flatten
              (mapcar ;; for each required file
               (lambda (item)
@@ -223,7 +223,7 @@ RETURN: A list of object files recursively required by OBJECT-FILE.
                    (let* ((sname (concatenate 'string item (car sext-oext)))
                           (spath (find-file-path sname load-paths)))
                      (if spath
-                         (get-closed-dependencies 
+                         (get-closed-dependencies
                           (if (STRING= "." (dirname spath))
                               (concatenate 'string item extension)
                             (concatenate 'string
@@ -248,7 +248,7 @@ RETURN:     A list of (cons object-file dependency-list)
 DO:         Writes to *STANDARD-OUTPUT* Makefile rules for the object-files.
 "
   (dolist (object object-files)
-    (printf *STANDARD-OUTPUT* "%s :: %s\n" object 
+    (printf *STANDARD-OUTPUT* "%s :: %s\n" object
             (unsplit-string (get-dependencies object load-paths) " "))))
 
 

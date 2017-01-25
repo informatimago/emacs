@@ -5,13 +5,13 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Evaluate things too early.
 ;;;;
 ;;;;    Works only when paredit-mode is active, and with
 ;;;;    emacs-lisp-mode or lisp-mode+slime-mode
 ;;;;
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -19,19 +19,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2012 - 2012
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    gnu affero general public license for more details.
-;;;;    
+;;;;
 ;;;;    you should have received a copy of the gnu affero general public license
 ;;;;    along with this program.  if not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -172,7 +172,7 @@ A too-early index is a list of too-early-form"
       (setf (too-early-frame-main-window teframe) main-window))
     (when (too-early-frame-show-menu-p teframe)
       (too-early-frame-split-menu-window teframe))
-    (dolist (child (too-early-frame-child-buffers teframe)) 
+    (dolist (child (too-early-frame-child-buffers teframe))
       (too-early-frame-split-child-window teframe child))))
 
 

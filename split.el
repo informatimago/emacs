@@ -2,20 +2,20 @@
 (require 'pjb-cl)
 
 ;; With Emacs >= 24.1 do either
-;; 
+;;
 ;; (split-window (frame-root-window))
-;; 
+;;
 ;; or
-;; 
+;;
 ;; (split-window (window-parent))
 
 
 ;; Some time ago I wrote some suggestions about how to rewrite
 ;; balance-windows to use the windows split tree. I have tried to do
 ;; that. The file bw.el at
-;; 
+;;
 ;;    http://ourcomments.org/Emacs/DL/elisp/test/
-;; 
+;;
 ;; contains my rewrite of balance-windows. Could those who are interested
 ;; please test this version?
 
@@ -24,7 +24,7 @@
 ;; Since window parents are not normal emacs lisp windows, I'd assume
 ;; we'd export the window internals as a new data type. Let's call it
 ;; "split".
-;; 
+;;
 ;; (frame-split-root [frame])           --> split or nil
 ;; (window-configuration-split winconf) --> split or nil
 ;; (splitp object)                      --> boolean
@@ -38,24 +38,24 @@
 ;; ;; A split child may be a window or a split.
 ;; (split-parent sow) --> split
 ;; (enlarge-split sow increment preserve-before)
-;; 
-;; 
+;;
+;;
 ;; ;; The parent is null for root splits or windows,
 ;; ;; othewise it's always a split.
 ;; (or (null   (split-parent sow))
 ;;     (splitp (split-parent sow)))
-;; 
+;;
 ;; ;; the edges of the split are the same as the edge of an alone window:
 ;; (equal (split-edges split) (progn (delete-other-windows) (window-edges)))
-;; 
+;;
 ;; ;; the length is the number of collapsed windows or splits:
 ;; (= (length (split-cuts split)) (length (split-children split)))
-;; 
+;;
 ;; ;; child splits are perpendicular:
 ;; (every (lambda (child-split)
 ;;          (not (eq (split-direction split) (split-direction child-split))))
 ;;        (delete-if-not (function splitp) (split-children split)))
-;; 
+;;
 ;; ;; split cuts are sorted (hence the order of the corresponding split-children
 ;; ;; list):
 ;; (dotimes (i (1- (length (split-cuts split))))
@@ -83,25 +83,25 @@
 ;;               (list (function left) (function right))
 ;;               (list (function top)  (function bottom))))
 ;;    ))
-;; 
-;; 
-;; 
+;;
+;;
+;;
 ;; Several parallel cuts are collapsed into one split.
-;; 
+;;
 ;; (progn (delete-other-windows)
 ;;        (split-window-vertically)
 ;;        (split-window-vertically))
-;; 
+;;
 ;; and:
-;; 
+;;
 ;; (progn (delete-other-windows)
 ;;        (split-window-vertically)
 ;;        (other-window 1)
 ;;        (split-window-vertically))
-;; 
+;;
 ;; would both give (= 3 (length (split-cuts (frame-split-root)))).
 ;; And:
-;; 
+;;
 ;; (equal (progn (delete-other-windows)
 ;;               (split-window-vertically)
 ;;               (split-window-vertically)
@@ -111,9 +111,9 @@
 ;;               (other-window 1)
 ;;               (split-window-vertically)
 ;;               (frame-split-root)))
-;; 
-;; 
-;; 
+;;
+;;
+;;
 ;; The the balancing algorithm could be:
 
 (defun plusp  (x) (< 0 x))
@@ -127,7 +127,7 @@
 
 (defun split-width  (split)
   (- (right  (split-edges split)) (left (split-edges split))))
-   
+
 (defun balance-split (split)
   (labels ((count-children (sow direction)
              ;; This could be cached into then split-or-window structure
@@ -187,7 +187,7 @@
       (let* ((children (split-or-window-children parent))
              (i (position sow children)))
         (and i (plusp i) (nth (1- i) children))))))
-    
+
 (defun split-or-window-left (sow)
   (let ((parent (split-or-window-parent sow)))
     (if parent
@@ -350,7 +350,7 @@
     (setf (split-or-window-parent window) nil)
     (setf *frame-split-root* window
           *window-list* (list window))))
-     
+
 (defun split-describe (split &optional level)
   (setf level (or level ""))
   (if (splitp split)
@@ -434,8 +434,8 @@
 ;;       #<window :parent t :edges (20 40 40 48)>
 ;;     #<window :parent t :edges (40 32 60 48)>
 ;;   #<window :parent t :edges (0 48 60 56)>
-;; 
-;; 
+;;
+;;
 ;; +-----------------------------+-----------------------------+
 ;; |                             |                             |
 ;; |                             |                             |
@@ -602,7 +602,7 @@
                              (delete-if (constantly t) set
                                         :start index :end (1+ index))
                              t)))))
-                                         
+
 (defun make-chainlet    (list)   (cons list (last list)))
 (defun chainlet-list    (c) (car c))
 (defun chainlet-tail    (c) (cdr c))
@@ -709,7 +709,7 @@
                                 vertical)))
             (print sows))
        finally (return (car sows)))))
-                
+
 (defun split-describe (split &optional level)
   (setf level (or level ""))
   (etypecase split

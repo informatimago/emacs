@@ -4,273 +4,273 @@ http://www.geocities.com/dronak/smileys.html
 
 
 :)              Smiling, happy faces; don't take me too seriously
-		Happy
-		Midget smiley
-		Cheshire cat smile
-		Happy
-		Salamander
-		User is a midget
-		Smilie without a nose
-		Normal face
-		Leper
+                Happy
+                Midget smiley
+                Cheshire cat smile
+                Happy
+                Salamander
+                User is a midget
+                Smilie without a nose
+                Normal face
+                Leper
 
 :-)             Smiling, happy faces; don't take me too seriously
-		<smile> or <grin>
-		Your basic smiley
-		Ha ha
-		Comedy
-		Willie Shoemaker
-		"We are all, each of us, alone"
-		Happy
-		Humorous
-		Smiley standard
-		The normal smiling face
-		User is an orator
-		Happy user
-		Just kidding or happy
-		I'm a gentleman
-		User is nosy
+                <smile> or <grin>
+                Your basic smiley
+                Ha ha
+                Comedy
+                Willie Shoemaker
+                "We are all, each of us, alone"
+                Happy
+                Humorous
+                Smiley standard
+                The normal smiling face
+                User is an orator
+                Happy user
+                Just kidding or happy
+                I'm a gentleman
+                User is nosy
 
 :>              Smiling, happy faces; don't take me too seriously
-		Midget smiley
-		Hmm, let me think...
-		User is a midget
-		Devilish Grin
-		Sharp smile
+                Midget smiley
+                Hmm, let me think...
+                User is a midget
+                Devilish Grin
+                Sharp smile
 
 ;)              Winking happy faces (something said tongue-in-cheek)
-		Midget Wink
-		Winking
+                Midget Wink
+                Winking
 
 ;-)             Winking happy faces (something said tongue-in-cheek)
-		Wink (or wink and a smile)
-		Winking smiley
-		"If you touch my daughter again, they won't be blanks"
-		A practical joker who played one too many and got beat up
-		Beaten up
-		Could be pirate smiling face??
-		Crying with happiness
-		Getting fresh
-		Sardonic incredulity
-		Smiling face gets his lights punched out
-		User is making a flirtatious and/or sarcastic remark
-		Hinting
+                Wink (or wink and a smile)
+                Winking smiley
+                "If you touch my daughter again, they won't be blanks"
+                A practical joker who played one too many and got beat up
+                Beaten up
+                Could be pirate smiling face??
+                Crying with happiness
+                Getting fresh
+                Sardonic incredulity
+                Smiling face gets his lights punched out
+                User is making a flirtatious and/or sarcastic remark
+                Hinting
 
 ;>              Winking happy faces (something said tongue-in-cheek)
-		Midget wink
-		Saucy wink
+                Midget wink
+                Saucy wink
 
 B-)             Smiling face from a person wearing glasses
-		Smiling and wearing glasses or sunglasses
-		Message from Batman
-		User wears horn-rimmed glasses
-		Horn-rims
-		"Holy trichinosis!"
-		"I pray daily for death"
-		"Let's do the beach, man!"
-		User is ready for the beach
-		Cool or sunglasses
-		Ski glasses
+                Smiling and wearing glasses or sunglasses
+                Message from Batman
+                User wears horn-rimmed glasses
+                Horn-rims
+                "Holy trichinosis!"
+                "I pray daily for death"
+                "Let's do the beach, man!"
+                User is ready for the beach
+                Cool or sunglasses
+                Ski glasses
 
 8-)             Smiling face with a wide-eyed look
-		Smile with glasses
-		Smiling and wearing glasses
-		Wide-eyed look
-		User is wearing sunglasses
-		Smiley swimmer
-		Smiley with big eyes...perhaps wearing contact lenses
-		"I was the second gunman"
-		Excited
-		Bug-eyed smilie
-		Eight!?! (happy)
-		Swimmer
+                Smile with glasses
+                Smiling and wearing glasses
+                Wide-eyed look
+                User is wearing sunglasses
+                Smiley swimmer
+                Smiley with big eyes...perhaps wearing contact lenses
+                "I was the second gunman"
+                Excited
+                Bug-eyed smilie
+                Eight!?! (happy)
+                Swimmer
 
-8-(		Unhappy smiley
-		Wide-eyed unhappy smiley
-		Eight!?! (unhappy)
-		
+8-(             Unhappy smiley
+                Wide-eyed unhappy smiley
+                Eight!?! (unhappy)
+
 :D              Wider happy face (or Minstrel singers)
-		Laughter
-		Big smile
+                Laughter
+                Big smile
 
 :-D             Wider happy face (or Minstrel singers)
-		Big mouth
-		User is laughing (at you!)
-		Big smile
-		Said with a smile
-		Talking too much
-		User is a blabber mouth
-		Laugh-happy user
-		Comedy
+                Big mouth
+                User is laughing (at you!)
+                Big smile
+                Said with a smile
+                Talking too much
+                User is a blabber mouth
+                Laugh-happy user
+                Comedy
 
 :-o             "Oh, nooooooo!" (a la Mr. Bill)
-		User singing national anthem
-		Uh oh!
-		Surprise / shocker
-		"Oh, the humanity!"
-		Mr. Bill
-		Wow!
-		Shocked
-		Yawn
-		Talking/Peaceably
-		More versions of shouting
-		Bored
+                User singing national anthem
+                Uh oh!
+                Surprise / shocker
+                "Oh, the humanity!"
+                Mr. Bill
+                Wow!
+                Shocked
+                Yawn
+                Talking/Peaceably
+                More versions of shouting
+                Bored
 
 :-(             Sad or disappointed face
-		Unhappy
-		Frowning smilie.
-		Boo hoo
-		Drama
-		"I will start with those you love most"
-		Has read too many 'smiley' articles
-		Mad
-		Sad face, 'that comment makes me sad (mad)'
-		Un-smiley
-		Displeasure
-		Sad user
-		Depressed of frowning
-		"Have an ordinary day"
+                Unhappy
+                Frowning smilie.
+                Boo hoo
+                Drama
+                "I will start with those you love most"
+                Has read too many 'smiley' articles
+                Mad
+                Sad face, 'that comment makes me sad (mad)'
+                Un-smiley
+                Displeasure
+                Sad user
+                Depressed of frowning
+                "Have an ordinary day"
 
 :-P             Tongue stuck out
-		Wider happy face (or Minstrel singers)
-		Nyahhhh!
-		Nyah nyah
-		"I have a longer tongue than Gene Simmons"
-		Has a secret to tell you
-		Telling secrets
-		Tongue hanging out in anticipation
-		User is wanting to lick your neck
-		Keeping a straight face (tight-lipped)
+                Wider happy face (or Minstrel singers)
+                Nyahhhh!
+                Nyah nyah
+                "I have a longer tongue than Gene Simmons"
+                Has a secret to tell you
+                Telling secrets
+                Tongue hanging out in anticipation
+                User is wanting to lick your neck
+                Keeping a straight face (tight-lipped)
 
 :-J             Tongue in cheek
-		Tongue-in-cheek comments
-		Surfer
+                Tongue-in-cheek comments
+                Surfer
 
 :-#             Message concerning something that shouldn't have been said
-		Censored
-		User wears braces
-		Braces
-		"My lips are sealed"
-		Mouth zipped
-		Punched in the mouth
-		Talking with Braces
-		Blowing a kiss
+                Censored
+                User wears braces
+                Braces
+                "My lips are sealed"
+                Mouth zipped
+                Punched in the mouth
+                Talking with Braces
+                Blowing a kiss
 
 
 :-$             Message indicating person is ill
-		Put your money where your mouth is
-		Smiley face with it's mouth wired shut
-		"These braces sure do hurt!"
-		Mouth wired shut
-		Sellout (does NOT rhyme with zealot!)
-		Uncertainty
-		Jewish user
+                Put your money where your mouth is
+                Smiley face with it's mouth wired shut
+                "These braces sure do hurt!"
+                Mouth wired shut
+                Sellout (does NOT rhyme with zealot!)
+                Uncertainty
+                Jewish user
 
 :-&             Message indicating person is angry
-		User is tongue tied
-		Smiley which is tongue-tied
-		Perplexed
-		User eating spaghetti
+                User is tongue tied
+                Smiley which is tongue-tied
+                Perplexed
+                User eating spaghetti
 
 :-*             Kiss...
-		Oooops (covering mouth with hand)
-		User just ate a sour pickle
-		User just ate something sour
-		Smiley after eating something bitter
-		After eating something bitter or sour
-		Star-tled
-		Blowing a kiss
+                Oooops (covering mouth with hand)
+                User just ate a sour pickle
+                User just ate something sour
+                Smiley after eating something bitter
+                After eating something bitter or sour
+                Star-tled
+                Blowing a kiss
 
 :-x             Kiss kiss
-		"My lips are sealed" smiley
-		"My lips are sealed"
-		Not telling any secrets
-		User kissing
-		Blowing a kiss
+                "My lips are sealed" smiley
+                "My lips are sealed"
+                Not telling any secrets
+                User kissing
+                Blowing a kiss
 
 :-(=)           Message from a person with big teeth.
-		Message about people with big teeth
-		Bucktooth smiley
-		Big teeth
+                Message about people with big teeth
+                Bucktooth smiley
+                Big teeth
 
 <:-)            Dumb questions
-		For dumb questions
-		User is Vietnamese peasant
-		Hero user
-		Dunce
-		Magician
-		Skier
+                For dumb questions
+                User is Vietnamese peasant
+                Hero user
+                Dunce
+                Magician
+                Skier
 
 |-(             Late night messages
-		Nightmare.
-		Smiley lost his contact lenses
-		Asleep with nightmares
-		Yawn
+                Nightmare.
+                Smiley lost his contact lenses
+                Asleep with nightmares
+                Yawn
 
 :^)             From a person with a large nose
-		Messages teasing people about their noses
-		User has a broken nose
-		Smiley with pointy nose (righty)
-		Smiley with a personality
-		3/4 view of person with elf-type sharp nose
-		Broken nose
-		Happy
+                Messages teasing people about their noses
+                User has a broken nose
+                Smiley with pointy nose (righty)
+                Smiley with a personality
+                3/4 view of person with elf-type sharp nose
+                Broken nose
+                Happy
 
 :*)             Clowning around
-		Smile with moustache
-		I'm drunk
-		User is drunk
-		Ed McMahon
-		Drunk smiling face
-		Everyman
-		Smilie with the nose of a clown
-		
+                Smile with moustache
+                I'm drunk
+                User is drunk
+                Ed McMahon
+                Drunk smiling face
+                Everyman
+                Smilie with the nose of a clown
+
 :-{#}           From a person with braces
-		Messages teasing people about their braces
-		User is sick of messages teasing people about their braces
+                Messages teasing people about their braces
+                User is sick of messages teasing people about their braces
 
 &:-)            From a person with curly hair
-		Messages from people with curly hair
-		Curly hair
-		User is Guinan
-		Wig II
+                Messages from people with curly hair
+                Curly hair
+                User is Guinan
+                Wig II
 
 @:-)            From a person with wavy hair
-		User is wearing a turban
-		Smiley wearing a turban
-		Indian (East/Asian)
-		Elvis
-		A turban
+                User is wearing a turban
+                Smiley wearing a turban
+                Indian (East/Asian)
+                Elvis
+                A turban
 
 #:-)            From a person with matted hair
-		Done by someone with sort of matted hair
-		"Everything you know is wrong"
-		For people whose hair is in a mess
-		User has a crewcut
-		Smilie with a fur hat
-		Happy with Hair
+                Done by someone with sort of matted hair
+                "Everything you know is wrong"
+                For people whose hair is in a mess
+                User has a crewcut
+                Smilie with a fur hat
+                Happy with Hair
 
 O:-)            Angel
-		For those innocent souls
-		Angel smiley
-		Acting very innocent (halo)
-		With halo
+                For those innocent souls
+                Angel smiley
+                Acting very innocent (halo)
+                With halo
 
 C=:-)           Chef
-		User is a chef
-		Chef smiley
-		Galloping Gourmet
+                User is a chef
+                Chef smiley
+                Galloping Gourmet
 
 ;-)}<////>      Corporate-type guy (see the necktie?)
 
 :-) )-:         Masking theatrical comments
 
 :-|K-           Formal message
-		User is formally attired
-		Evening dress
+                User is formally attired
+                Evening dress
 
 <:>==           A turkey
-		A turkey emoticon
+                A turkey emoticon
 
 ...---...       S.O.S.
 
@@ -279,10 +279,10 @@ O:O             A girl is mooning you
 @*&$!%          You know what that means...
 
 2B|^2B          Message about Shakespeare
-		"Forty Seconal should suffice"
+                "Forty Seconal should suffice"
 
 (O--<           A fishy message...
-		User suspects something fishy is going on
+                User suspects something fishy is going on
 
 @}->--          A rose.
 
@@ -327,158 +327,158 @@ O:O             A girl is mooning you
 @--^--^--^--^------     A rose.
 
 (-_-)           Secret smile
-		User is happy (sideways)
+                User is happy (sideways)
 
 (.)(.)          Ms. Dos
-		User has big boobs
+                User has big boobs
 
 :/)             Not funny
 
 :-)))           Reeeel happy, big smile
-		I'm overweight
-		William Conrad
+                I'm overweight
+                William Conrad
 
 :->             Alternate happy face
-		User just made a really biting sarcastic remark.
-		Hey hey
-		Sarcastic smiley
-		Biting sarcastic face
-		Deformed lips
-		Happy
-		Yet another smiley
-		Smug
-		User just made a really devilish remark
-		Very Glad/Pleased/Very Happy
-		Leer
-		Grin
-		Smiley walrus
+                User just made a really biting sarcastic remark.
+                Hey hey
+                Sarcastic smiley
+                Biting sarcastic face
+                Deformed lips
+                Happy
+                Yet another smiley
+                Smug
+                User just made a really devilish remark
+                Very Glad/Pleased/Very Happy
+                Leer
+                Grin
+                Smiley walrus
 
 :-c             Real unhappy
-		Bummed out smiley
+                Bummed out smiley
 
 :-C             Unbelieving (jaw dropped)
-		User is really bummed
-		Real unhappy smiley
-		Dracula user
-		Count Dracula
+                User is really bummed
+                Real unhappy smiley
+                Dracula user
+                Count Dracula
 
 :-<             Forlorn
-		Real sad smiley
-		Walrus smiley
-		Frowning
-		Moustache
-		Amazed
-		Mad/Upset
-		Vampire
-		Dog
+                Real sad smiley
+                Walrus smiley
+                Frowning
+                Moustache
+                Amazed
+                Mad/Upset
+                Vampire
+                Dog
 
 ;-C             Sardonic incredulity
 
 :-}             Crooked Smile
-		Smiley variation on a theme
-		Beard
-		"Thish wine tashted pretty good"
-		Fiendish grin
-		Lipstick
-		Normal smiling face with pretty lips
-		Wears lipstick or some other lip appearance improving device
-		User has had a little too much to drink
-		Smilie with a curly smile
-		User happy Matthew
-		Ironic Smile
-		User is leering
+                Smiley variation on a theme
+                Beard
+                "Thish wine tashted pretty good"
+                Fiendish grin
+                Lipstick
+                Normal smiling face with pretty lips
+                Wears lipstick or some other lip appearance improving device
+                User has had a little too much to drink
+                Smilie with a curly smile
+                User happy Matthew
+                Ironic Smile
+                User is leering
 
 :-i             Semi-Smiley
-		User is half smiling
-		Smoking
+                User is half smiling
+                Smoking
 
 :-7             User after a wry statement
-		User just made a wry statement
-		Smiley after a wry statement
-		Smirking smiley
-		Smokes a pipe
-		Talking out of side of mouth
-		Wry face
+                User just made a wry statement
+                Smiley after a wry statement
+                Smirking smiley
+                Smokes a pipe
+                Talking out of side of mouth
+                Wry face
 
 (@ @)           You're kidding!
 
 :-"             Pursing lips
-		Whistling smiley
-		Heavy smoker
+                Whistling smiley
+                Heavy smoker
 
 :-v             Just another face (speaking) profiled from the side
-		Talking head smiley
-		Speaking
-		Orator
+                Talking head smiley
+                Speaking
+                Orator
 
 :-V             Shout
-		Shouting smiley
+                Shouting smiley
 
 :-O             Shout
-		Uh oh
-		Talkaktive smiley 
-		Mr. Bill
-		Wow!
-		Birth
-		Ohh, big mouth, Mick Jagger
-		Yelling
-		Shocked user
-		Orator
+                Uh oh
+                Talkaktive smiley
+                Mr. Bill
+                Wow!
+                Birth
+                Ohh, big mouth, Mick Jagger
+                Yelling
+                Shocked user
+                Orator
 
 :-w             Speak with forked tongue
 
 :-W             Shout with forked tongue
-		Speak with forked tongue
+                Speak with forked tongue
 
 :-r             Bleahhh (sticking tongue out)
-		Smiley raspberry
-		Sticking tongue out
+                Smiley raspberry
+                Sticking tongue out
 
 :-f             Bleahhh (sticking tongue out)
-		Sticking tongue out
+                Sticking tongue out
 
 :-p             Bleahhh (sticking tongue out)
-		Smiley sticking its tongue out (at you!)
-		User is talking, talking, talking
+                Smiley sticking its tongue out (at you!)
+                User is talking, talking, talking
 
 :-1             Smirks
-		Smiley bland face
-		Bland face
+                Smiley bland face
+                Bland face
 
 :-,             Smirks
-		"Hmmmm."
-		Smirking
-		Blank with cigarette or cigar
+                "Hmmmm."
+                Smirking
+                Blank with cigarette or cigar
 
 <:-O            Eeek!
-		User just saw a mouse, Eeek!
+                User just saw a mouse, Eeek!
 
 :-T             Keeping a straight face (tight-lipped)
 
 :-y             Wider happy face (or Minstrel singers)
-		Said with a smile
-		Keeping a straight face (tight-lipped)
-		Speaking doubtfully
+                Said with a smile
+                Keeping a straight face (tight-lipped)
+                Speaking doubtfully
 
 :-|             Disgusted
-		Man playing an harmonica
-		"Have an ordinary day" smiley
-		User is having an ordinary day
-		Grim
-		No expression
-		No expression face, 'that comment doesn't phase me'
-		Dead face
-		Blank look
-		Smiley monkey
+                Man playing an harmonica
+                "Have an ordinary day" smiley
+                User is having an ordinary day
+                Grim
+                No expression
+                No expression face, 'that comment doesn't phase me'
+                Dead face
+                Blank look
+                Smiley monkey
 
 :'-(            Shedding a tear
-		User is crying
-		Crying
-		Upset
+                User is crying
+                Crying
+                Upset
 
 :~-(            Shedding a tear
-		Crying
-		Bawling/Really Crying and Upset
+                Crying
+                Bawling/Really Crying and Upset
 
 :~(~~~          Crying
 
@@ -487,41 +487,41 @@ O:O             A girl is mooning you
 :-)~~~          Another drool
 
 |-)             Getting tired
-		A good dream!  Or a face looking into bright sunlight. 
-		Lt. LaForge 
-		Data
-		Hee hee
-		Chinese
-		Same as :-) but poster is Oriental
-		Asleep (boredom)
-		Nip user
-		Dreaming Pleasently/Sleeping
-		Oriental
-		Ray-Bans
-		User is sniggering
+                A good dream!  Or a face looking into bright sunlight.
+                Lt. LaForge
+                Data
+                Hee hee
+                Chinese
+                Same as :-) but poster is Oriental
+                Asleep (boredom)
+                Nip user
+                Dreaming Pleasently/Sleeping
+                Oriental
+                Ray-Bans
+                User is sniggering
 
 :~)             Yummee - lick lips
-		Peter Ubberoth
-		Needs a nosejob
-		Pointy nose (righty)
-		Smiling face needs a nosejob, no explanation necessary
-		Ugly nose
-		Ill with a cold
-		I might sneeze
+                Peter Ubberoth
+                Needs a nosejob
+                Pointy nose (righty)
+                Smiling face needs a nosejob, no explanation necessary
+                Ugly nose
+                Ill with a cold
+                I might sneeze
 
 :-?             Licking your lips
-		User smokes a pipe
-		Smiley smoking a pipe
-		Smoking a pipe
-		Tongue in cheek
-		User with a fetish for Blue Oyster Cult
-		Puzzled/Questioning
-		Jean Chretien's face
-		Speaks like a politician
-		"Mais que voulez-vous?" (I can't help)
+                User smokes a pipe
+                Smiley smoking a pipe
+                Smoking a pipe
+                Tongue in cheek
+                User with a fetish for Blue Oyster Cult
+                Puzzled/Questioning
+                Jean Chretien's face
+                Speaks like a politician
+                "Mais que voulez-vous?" (I can't help)
 
 :-8             Talking out both sides of your mouth
-		I just ate a pickle
+                I just ate a pickle
 
 o=              A burning candle for flames
 
@@ -530,70 +530,70 @@ o=              A burning candle for flames
 8               Infinity
 
 .-)             User has one eye
-		User is Sammy Davis, Jr.
+                User is Sammy Davis, Jr.
 
 :-:             User is mutant
-		Mutant smiley
-		Mutant
-		Toothless
-		
-		The invisible smilie
-		Smiley invisible man
-		Ghost smiley in invisible state
-		Here's the boat I lost
+                Mutant smiley
+                Mutant
+                Toothless
+
+                The invisible smilie
+                Smiley invisible man
+                Ghost smiley in invisible state
+                Here's the boat I lost
 
 :<)             For those with hairy lips
-		User is from an Ivy League School
-		User is a blabber mouth
+                User is from an Ivy League School
+                User is a blabber mouth
 
 :^{             For those with mustaches
 
 8*)             Smile with glasses and moustache
-		Glasses and a moustache
+                Glasses and a moustache
 
-B*)             Smile with Moustache and Designer Sunglasses! 
+B*)             Smile with Moustache and Designer Sunglasses!
 
 :<)=            For those with beards too
 
 :-=)            Older user with mustache
-		Older smiley with mustache
-		Adolph Hitler
+                Older smiley with mustache
+                Adolph Hitler
 
 :-#|            User with bushy mustache
-		Smiley face with bushy mustache
-		Bushy mustache
+                Smiley face with bushy mustache
+                Bushy mustache
 
 ::-)            User wears glasses
-		User wears normal glasses
-		User has four eyes
-		Bi-focals
+                User wears normal glasses
+                User has four eyes
+                Bi-focals
 
 8:-)            Glasses on forehead
-		From a little girl
-		User is a little girl
-		Little girl smiley
-		Wizard
-		Spectacles on their forehead
+                From a little girl
+                User is a little girl
+                Little girl smiley
+                Wizard
+                Spectacles on their forehead
 
 B-|             User is wearing cheap sunglasses
-		Cheap sunglasses
-		Batman (as played by Michael Keaton)
+                Cheap sunglasses
+                Batman (as played by Michael Keaton)
 
 P-)             Pirate
-		Colonel Klink (Hogan's Heroes)
-		Getting fresh
+                Colonel Klink (Hogan's Heroes)
+                Getting fresh
 
 :-{             Count Dracula
-		Smiley variation on a theme
-		Mustache
-		User sad Matthew
-		Alternate sad face
+                Smiley variation on a theme
+                Mustache
+                User sad Matthew
+                Alternate sad face
 
 =|:-)=          Uncle Sam
-		Abe Lincoln
+                Abe Lincoln
 
 7:)             Ronald Reagan
-		
+
 :~i             Smoking
 
 :~j             Smoking and smiling
@@ -601,106 +601,106 @@ P-)             Pirate
 :/i             No smoking
 
 :-I             Indifferent smilie.
-		Hmm
-		Indifferent
-		Thinking
-		Poker face
-		It's something, but I don't know what...
-		User without a sense of humor
-		Angry
+                Hmm
+                Indifferent
+                Thinking
+                Poker face
+                It's something, but I don't know what...
+                User without a sense of humor
+                Angry
 
 :-B             Drooling (or overbite)
-		User is David Letterman (gap-toothed smile)
-		Buttmouth user
+                User is David Letterman (gap-toothed smile)
+                Buttmouth user
 
 ):-) :-) :-)    Loud guffaw
 
 (:-)            Msgs dealing with bicycle helmets
-		Captain Picard 
-		Smiley big-face
-		"I never sang for my grandfather"
-		Big-face
-		No hair
-		Surprised
-		User is bald
-		Wearing bicycle helmet
-		Smilie wearing skull cap
-		Soldier	
+                Captain Picard
+                Smiley big-face
+                "I never sang for my grandfather"
+                Big-face
+                No hair
+                Surprised
+                User is bald
+                Wearing bicycle helmet
+                Smilie wearing skull cap
+                Soldier
 
 @=              Warning about nuclear war
-		User is pro-nuclear war
-		"Kafka was a momma's boy"
-		Flame about nuclear war, power or weapons follows
-		Pro-nuclear activist
+                User is pro-nuclear war
+                "Kafka was a momma's boy"
+                Flame about nuclear war, power or weapons follows
+                Pro-nuclear activist
 
 OO              Headlights on msg
 
 :_)             I used to be a boxer, but it really got my nose out of joint
-		User's nose is sliding off of his face
-		After a fight where his nose was smashed in
-		Viet Nam vet user (with nose broken out of joint by some VC)
-		Tongue in cheek
-		Boxer
-		
+                User's nose is sliding off of his face
+                After a fight where his nose was smashed in
+                Viet Nam vet user (with nose broken out of joint by some VC)
+                Tongue in cheek
+                Boxer
+
 #:-o            "Oh, nooooooo!" (a la Mr. Bill)
-		"Jesus built my hotrod"        
-		Smiley done by someone with matted hair
-		Mr. Bill
+                "Jesus built my hotrod"
+                Smiley done by someone with matted hair
+                Mr. Bill
 
 (:-$            Message indicating person is ill
-		Ill
-		Ill-informed about the Renaissance
+                Ill
+                Ill-informed about the Renaissance
 
 (:-&            Message indicating person is angry
-		Rosicrucian
-		Angry
+                Rosicrucian
+                Angry
 
 (:-(            Message indicating person is VERY sad
-		Unsmiley frowning
-		Very unhappy smiley
-		The saddest smiley
-		Sting
-		Frowning
+                Unsmiley frowning
+                Very unhappy smiley
+                The saddest smiley
+                Sting
+                Frowning
 
 (:^(            Message concerning people with broken noses
-		Jack Nicholson in Chinatown
-		Broken nose
+                Jack Nicholson in Chinatown
+                Broken nose
 
 (:<)            Message concerning blabber mouths
-		Rastafari
-		Blabber mouth
+                Rastafari
+                Blabber mouth
 
 ?-(             Message about people with a black eye
-		Black eye
+                Black eye
 
 *:*             Message about fuzzy things
-		Fuzzy
+                Fuzzy
 
 *:**            Message about fuzzy things with fuzzy mustaches
-		Fuzzy with a fuzzy mustache
+                Fuzzy with a fuzzy mustache
 
 %-)             Message about people with broken glasses
-		User is cross-eyed
-		User has been staring at a green screen for 15 hours straight
-		Elephant man
-		After staring at the terminal for 36 hours
-		Broken glasses
-		Drunk with laughter
-		Long bangs
+                User is cross-eyed
+                User has been staring at a green screen for 15 hours straight
+                Elephant man
+                After staring at the terminal for 36 hours
+                Broken glasses
+                Drunk with laughter
+                Long bangs
 
 +<:-|           Message from a monk/nun
-		The Pope
+                The Pope
 
 {0-)            Message from cyclops
-		Hair-parted-in-the-middle-scuba-diver user smiling
+                Hair-parted-in-the-middle-scuba-diver user smiling
 
 (:-|K-          Formal message
-		Formally attired
-		A suit and tie
+                Formally attired
+                A suit and tie
 
 @%&$%&          You know what that means
-		N.W.A. fan
-		User is swearing up a storm
+                N.W.A. fan
+                User is swearing up a storm
 
 ||*(            Handshake offered (giving)
 
@@ -711,34 +711,34 @@ OO              Headlights on msg
 >< ><           Message about/to someone wearing argyle socks
 
 <{:-)}          Message in a bottle
-		In a bottle
+                In a bottle
 
 <:-)<<|         Message from a space rocket
-		In a space rocket
+                In a space rocket
 
 (:-...          Heart-breaking message
-		Heart-broken
+                Heart-broken
 
 <<<<(:-)        Message from a hat sales-man
 
 (:>-<           Message from a thief: hands up! (mini whole body)
 
 <I==I)          A message on four wheels
-		User is on four wheels
+                User is on four wheels
 
 {               Alfred Hitchcock
-		A psycho
-     
+                A psycho
+
 ..|._           Opposite of a rose
 
 &;-P            A suave guy on the make, who keeps advertising...just in case.
 
-*;-~i           A lady replying to the guy by closing both eyes & puffing    
-			nonchalantly on her cigarette.
+*;-~i           A lady replying to the guy by closing both eyes & puffing
+                        nonchalantly on her cigarette.
 
 >:-)            Devil
-		Nasty user
-		A little devil
+                Nasty user
+                A little devil
 
 >;-)            Devilish Wink
 
@@ -755,7 +755,7 @@ OO              Headlights on msg
 (8-}            Percy Dovetonsils
 
 >-)             Oriental Smiling Face
-		An alien
+                An alien
 
 &B-]}<////>     Another corporate-type with aviator glasses, wavy hair & tie.
 
@@ -766,169 +766,169 @@ O^O             A FEMALE moon
 ;|8-)           Hagar caught lying
 
 7:^]            I resemble Ronald Reagan
-		Ronald Reagan
+                Ronald Reagan
 
 *<|:-)          I'm Santa Claus
-		Santa Claus (Ho Ho Ho)
+                Santa Claus (Ho Ho Ho)
 
 )-:|<*          Sanity Clause
 
 [:-)            I'm wearing a walkman
-		Smiley wearing a walkman
-		Listening to walkman
-		User has a flattop
-		Frankenstein user
-		Garibaldi from Babylon 5 (author says note the flat top)
-		User is wearing a hard-hat
-		A personal stereo
-		Frankenstein's monster
+                Smiley wearing a walkman
+                Listening to walkman
+                User has a flattop
+                Frankenstein user
+                Garibaldi from Babylon 5 (author says note the flat top)
+                User is wearing a hard-hat
+                A personal stereo
+                Frankenstein's monster
 
 d:-)            I'm a Braves fan
-		Message about baseball
-		Baseball smiley
-		Baseball player
-		Smilie with a cap
-		Jockey
-		A baseball cap
+                Message about baseball
+                Baseball smiley
+                Baseball player
+                Smilie with a cap
+                Jockey
+                A baseball cap
 
 :-\             Popeye smiling face
-		Undecided smiley
-		User is VERY sad
-		Thinking
-		Skeptical
+                Undecided smiley
+                User is VERY sad
+                Thinking
+                Skeptical
 
 ;-\             Popeye gets his lights punched out
-		Popeye beaten up
+                Popeye beaten up
 
 :-s             User after a BIZARRE comment
-		Smiley after a BIZARRE comment
-		Confused
+                Smiley after a BIZARRE comment
+                Confused
 
 -:-)            User sports a mohawk and admmires Mr. T
-		User is a punk rocker
-		Has mohawk
+                User is a punk rocker
+                Has mohawk
 
 :%)%            User has acne
 
 :n)             User with funny-looking right nose
-		Smiley with funny-looking right nose
+                Smiley with funny-looking right nose
 
 :u)             User with funny-looking left nose
-		Smiley with funny-looking left nose
+                Smiley with funny-looking left nose
 
 '-)             User only has a left eye, which is closed
-		Winking smiley
-		One eyed man
+                Winking smiley
+                One eyed man
 
 (-:             User is left-handed
-		Australian
-		Don Ellis from Tektronix
-		Left-handed
+                Australian
+                Don Ellis from Tektronix
+                Left-handed
 
 (-)             User needs a haircut
 
 (:I             Egghead
-		User is an egghead
+                User is an egghead
 
 {:-)            Smiley with its hair parted in the middle
-		Kirk 
-		User wears a toupee
-		Smiley wears a toupee
-		New hair style
-		
+                Kirk
+                User wears a toupee
+                Smiley wears a toupee
+                New hair style
+
 +:-)            Smiley priest
-		Priest smiley
-		Priest
+                Priest smiley
+                Priest
 
 =:-)            Smiley punk-rocker
-		From a hosehead
-		Smiley is a punk
-		Punk rocker
-		User is a dickhead
+                From a hosehead
+                Smiley is a punk
+                Punk rocker
+                User is a dickhead
 
 %-^             User is Picasso
-		Picasso
-		User was painted by Picaso
+                Picasso
+                User was painted by Picaso
 
 @:I             Turban
 
 (><)            Anally retentive
 
 :-!             Foot in mouth
-		Smiley bland face
-		Bland face
-		Malcom McUser
-		Excited/Exclaiming
+                Smiley bland face
+                Bland face
+                Malcom McUser
+                Excited/Exclaiming
 
 #-)             Partied all night
-		Lt. LaForge
-		Zombie
+                Lt. LaForge
+                Zombie
 
 :-(*)           About to vomit
-		That comment made me sick
-		Sick of netnews articles, about to vomit
+                That comment made me sick
+                Sick of netnews articles, about to vomit
 
 %-\             Hungover
 
 :-)8            Well dressed
-		Man with bowtie
-		Thespian
+                Man with bowtie
+                Thespian
 
 :-)-{8          From a big girl
-		User is a big girl
+                User is a big girl
 
 :x(             Habe a code in by dose
 
 8:]             From a gorilla
-		Gorilla
+                Gorilla
 
 (:)-)           Scuba diver
-		Likes to scuba dive
-		Scuba diving
+                Likes to scuba dive
+                Scuba diving
 
 (-:|:-)         Siamese twins
 
 {:V             Sounds like a duck
 
 %+{             From the loser of a fight
-		Lost a fight
+                Lost a fight
 
 d :-)           Hats off to your great idea
 
 q:-)            For those who wear their caps backwards
-		Wearing baseball cap backwards
-		User is a baseball player
-		Baseball catcher
-		Rapper
+                Wearing baseball cap backwards
+                User is a baseball player
+                Baseball catcher
+                Rapper
 
 >:-|            Spock
-		Trekkie
+                Trekkie
 
 :-/             McCoy
-		User is skeptical
-		Lefty undecided smiley
-		Retarded user
-		Mixed/Apprenhensive
+                User is skeptical
+                Lefty undecided smiley
+                Retarded user
+                Mixed/Apprenhensive
 
 :-{)}           Commander Riker
 
-<>:{(}          Lt. Worf 
+<>:{(}          Lt. Worf
 
 **:-)           Counsellor Troi
 
-])              Lt. LaForge 
+])              Lt. LaForge
 
 [:-|            Data
 
 {(:-)           I am William Shatner
-		Wearing toupee
+                Wearing toupee
 
 } (:-(          I am William Shatner in a high wind
 
 8(:-)           Zippy
-		Mickey Mouse
-		Mousketeer
-		Walt Disney
+                Mickey Mouse
+                Mousketeer
+                Walt Disney
 
 ******:-)       Marge Simpson
 
@@ -941,151 +941,151 @@ q:-)            For those who wear their caps backwards
 --              When it's the occasion to boow (Japanese symbol)
 
 >:->            User just made a really devilish remark.
-		Devilish smiley
-		Devilish
-		User is leering
+                Devilish smiley
+                Devilish
+                User is leering
 
 >;->            Winky and devil combined.
-		A very lewd remark was just made
+                A very lewd remark was just made
 
 [:]             User is a robot
-		Robot smiley
-		Robot
+                Robot smiley
+                Robot
 
 B:-)            Sunglasses on head
-		User has glasses on forehead
+                User has glasses on forehead
 
 :-)-8           User is a big girl (partial body)
 
 :-{)            User has a mustache
-		Moustache
-		Normal smiling face with a moustache
-		Happy with Mustache
+                Moustache
+                Normal smiling face with a moustache
+                Happy with Mustache
 
 :-{}            User wears lipstick
-		Smiley wears lipstick
-		Heavy lipstick
-		Mick Jagger
-		Big mouth
+                Smiley wears lipstick
+                Heavy lipstick
+                Mick Jagger
+                Big mouth
 
 }:-(            Toupee in an updraft
-		Bull headed
+                Bull headed
 
 :-[             User is a Vampire
-		Un-smiley blockhead
-		Vampire smiley
-		Biting criticism
-		Blockhead
-		Pouting
-		Sarcastic
-		Count Dracula
-		Bad Mood/Grumpy
-		Severe Displeasure
-		
+                Un-smiley blockhead
+                Vampire smiley
+                Biting criticism
+                Blockhead
+                Pouting
+                Sarcastic
+                Count Dracula
+                Bad Mood/Grumpy
+                Severe Displeasure
+
 :-E             Bucktoothed vampire
-		Has major dental problems
+                Has major dental problems
 
 :-F             Bucktoothed vampire with one tooth missing
 
 :-)~            User drools
-		Drooling
+                Drooling
 
 :-~)            User has a cold
 
 :'-)            User is so happy, s/he is crying
-		Crying with happiness
+                Crying with happiness
 
 :-@             User is screaming
-		Smiley face screaming
-		User is saying, "It's true, I swear"
-		Beard has permanent wave *or* was drawn by Picasso.
-		Extremely angry
-		Swearing
-		User about to barf
-		Barking/Tounge Lashing
-		Tongue ring
+                Smiley face screaming
+                User is saying, "It's true, I swear"
+                Beard has permanent wave *or* was drawn by Picasso.
+                Extremely angry
+                Swearing
+                User about to barf
+                Barking/Tounge Lashing
+                Tongue ring
 
 :v)             User has a broken nose
-		Left-pointing nose smiley
-		Left-pointing broken nose
-		Big nose
+                Left-pointing nose smiley
+                Left-pointing broken nose
+                Big nose
 
 -:-(            Punk rocker (real punk rockeers don't smile)
 
 :=)             User has two noses
-		Orangutan smiley
+                Orangutan smiley
 
 +-:-)           User is the Pope or holds some other religious office
-		Priest
+                Priest
 
 `:-)            Shaved his right eyebrow off this morning
 
 ,:-)            David Ogden Stiers' toupee
-		Shaved his left eyebrow off this morning
+                Shaved his left eyebrow off this morning
 
 |-I             User is asleep
-		Sleeping
+                Sleeping
 
 |-O             User is yawning/snoring
-		Birth
-		Bored
-		User is bored by the article you submitted
+                Birth
+                Bored
+                User is bored by the article you submitted
 
 :-Q             User is a smoker
-		Smoker
-		Smoking smiley
-		User smoking a bud
-		Talking or Shouting with cigarette or cigar
+                Smoker
+                Smoking smiley
+                User smoking a bud
+                Talking or Shouting with cigarette or cigar
 
 O-)             Message from cyclops
-		Smiley after smoking a banana
-		Megaton Man, on patrol!
-		Scuba diver
-		Arc-welder
-		A Martian (happy)
+                Smiley after smoking a banana
+                Megaton Man, on patrol!
+                Scuba diver
+                Arc-welder
+                A Martian (happy)
 
 O :-)           User is an angel (at heart, at least)
-		Angel
+                Angel
 
 :-S             User just made an incoherent statement
-		What you say makes no sense
-		Sick smilie
-		Sheepish/confused
+                What you say makes no sense
+                Sick smilie
+                Sheepish/confused
 
 :-X             User's lips are sealed
-		Bow tie
-		A big wet kiss
-		User with taped-up mouth
-		User is swearing
+                Bow tie
+                A big wet kiss
+                User with taped-up mouth
+                User is swearing
 
 <|-)            User is Chinese
-		Rickshaw driver
-		A Vietnamese peasant
+                Rickshaw driver
+                A Vietnamese peasant
 
 <|-(            User is Chinese and doesn't like these kind of jokes/fortunes
 
 *<:-)           User is wearing a Santa Claus Hat
-		Santa Claus
-		Smilie with hat and pompom (cold weather smilie)
+                Santa Claus
+                Smilie with hat and pompom (cold weather smilie)
 
 (8-o            It's Mr. Bill!
 
 *:o)            It's Bozo the Clown!
-		User is a bozo
-		Clown
+                User is a bozo
+                Clown
 
 3:]             Pet smilie
 
 3:[             Mean Pet smilie
-		Pit bull smiley
+                Pit bull smiley
 
 d8=             Your pet beaver is wearing goggles and a hard hat
 
 E-:-)           User is a Ham radio operator
-		TV detector van operator
+                TV detector van operator
 
 :-9             User is licking his/her lips
-		Smiley licking it's lips
+                Smiley licking it's lips
 
 %-6             User is braindead
 
@@ -1094,172 +1094,172 @@ E-:-)           User is a Ham radio operator
 K:P             User is a little kid with a propeller beenie
 
 :-0             No Yelling!  (Quiet Lab)
-		Orator
-		Smiley orator
-		User can't find shift key
+                Orator
+                Smiley orator
+                User can't find shift key
 
 ..-)            User only has one eye
 
 ,-)             User only has one eye
-		Winking happy smiley
-		One eye ... and winking
-		Sammy Davis, Jr.
+                Winking happy smiley
+                One eye ... and winking
+                Sammy Davis, Jr.
 
 X-(             User just died
-		Net.suicide
-		You are brain dead
-		Dead user
+                Net.suicide
+                You are brain dead
+                Dead user
 
 8 :-)           User is a wizard
 
-C=}>;*{))       Mega-Smilie... A drunk, devilish chef with a toupee in an 
-			updraft, a mustache, and a double chin
+C=}>;*{))       Mega-Smilie... A drunk, devilish chef with a toupee in an
+                        updraft, a mustache, and a double chin
 
 :]              Gleep...a friendly midget smilie who will gladly be your friend
 
 =)              Variation on a theme
-		Chinese smiley
-		Interested smiley (big eyes)
-		The "cute" smiley
-		A different smiley
+                Chinese smiley
+                Interested smiley (big eyes)
+                The "cute" smiley
+                A different smiley
 
 :}              What should we call these? (what?)
-		The Grinch
-		If the user is a frenchmen and he has a curly mustache
+                The Grinch
+                If the user is a frenchmen and he has a curly mustache
 
 :@              Screaming
 
 :I              Hmmm...
-		Hmmm, not funny!
-		Bored
-		Cute guy
-		Pensive
-		Bad joke, but since I like you, I'll try to smile
-		Happy
+                Hmmm, not funny!
+                Bored
+                Cute guy
+                Pensive
+                Bad joke, but since I like you, I'll try to smile
+                Happy
 
 :(              Sad
-		Sad-turtle smiley
-		Frowning
+                Sad-turtle smiley
+                Frowning
 
 :[              Real Downer
-		A vampire
-		Very unhappy
+                A vampire
+                Very unhappy
 
 :<              Midget unsmiley
-		What pretences!
-		Sad boy
+                What pretences!
+                Sad boy
 
 :{              Oh boy, the headmaster!
 
 :O              Yelling
-		Amazed
-		Feed me smileys
-		Big gob
+                Amazed
+                Feed me smileys
+                Big gob
 
 :C              Bummed
 
 :Q              Smoking
-		Split/chapped lip
+                Split/chapped lip
 
 :,(             Crying
-		Crying smiley
+                Crying smiley
 
 []              Hugs
 
 :*              Kisses
-		Blowing kisses
+                Blowing kisses
 
 |I              Asleep
 
 |^o             Snoring
-		Hepcat
+                Hepcat
 
 :-`             Smiley spitting out its chewing tobacco
-		Spitting out chewing tobacco
+                Spitting out chewing tobacco
 
 :-%             Smiley banker
-		Banker
-		Bearded
-		Talking out of both sides of mouth
+                Banker
+                Bearded
+                Talking out of both sides of mouth
 
 :-6             Smiley after eating something sour
-		Smiley after eating something spicy
+                Smiley after eating something spicy
 
 ):-)            Smiley big-face
-		Impish smiley
+                Impish smiley
 
 ):-(            Unsmiley big-face
-		Nordic smiley
+                Nordic smiley
 
 )8-)            Scuba smiley big-face
 
 =:-(            Real punks never smile
-		Punk rocker (real punk rockers don't smile)
+                Punk rocker (real punk rockers don't smile)
 
 :-q             Smiley trying to touch its tongue to its nose
-		Trying to touch tongue to nose
+                Trying to touch tongue to nose
 
 :-e             Disappointed smiley
-		Disappointed
+                Disappointed
 
 :-t             Cross smiley
-		Pouting smiley
+                Pouting smiley
 
 :-]             Smiley blockhead
-		Biting sarcasm
-		Blockhead
-		Sarcastic
-		Smilie with straight smile
-		Obnoxious user
-		Good Mood/Grinning
-		Grim Smile
+                Biting sarcasm
+                Blockhead
+                Sarcastic
+                Smilie with straight smile
+                Obnoxious user
+                Good Mood/Grinning
+                Grim Smile
 
 }:-)            Hair parted in the middle in an updraft
-		Wearing toupee in an updraft
-		I have a bull head
-		Devil
+                Wearing toupee in an updraft
+                I have a bull head
+                Devil
 
 :-a             Lefty smilely touching tongue to nose
 
 :-d             Lefty smiley razzing you
-		Said with a smile
-		User is making razzbery Ththtpppttt
-		User is sticking out their tongue
+                Said with a smile
+                User is making razzbery Ththtpppttt
+                User is sticking out their tongue
 
 g-)             Wearing pince-nez glasses
 
 :-j             Left smiling smilely
-		User has a crooked smile
-		Smoking and smiling
+                User has a crooked smile
+                Smoking and smiling
 
 :-k             User is biting his/her lip
 
 :-l             Yet another smiley
-		User is almost smiling
+                User is almost smiling
 
 :-z             Yet another cross smiley
 
 :-b             Left-pointing tongue smiley
-		"I have a longer tongue than Gene Simmons, only it is cloven"
-		User is sticking out tongue
+                "I have a longer tongue than Gene Simmons, only it is cloven"
+                User is sticking out tongue
 
 .-]             One-eyed smilely
 
 ,-}             Wry and winking
 
 0-)             Smiley cyclops (scuba diver?)
-		Cyclops
-		Arc-welder
-		Scuba diver
-		User wears a scuba mask
-		Happy invader from Mars
-		Cross eyed
+                Cyclops
+                Arc-welder
+                Scuba diver
+                User wears a scuba mask
+                Happy invader from Mars
+                Cross eyed
 
-}:^#})          Mega-smiley:  updrafted bushy-mustached pointy nosed smiley 
-			with a double-chin
+}:^#})          Mega-smiley:  updrafted bushy-mustached pointy nosed smiley
+                        with a double-chin
 
 |-D             Ho ho
-		Laughing out loud, HO HO
+                Laughing out loud, HO HO
 
 ~~:-(           Net.flame
 
@@ -1270,48 +1270,48 @@ O |-)           Net.religion
 E-:-I           Net.ham-radio
 
 >:-I            Net.startrek
-		Trekkie
+                Trekkie
 
 3:o[            Net.pets
 
 |-P             Yuk!
-		Reaction to unusually ugly C code
+                Reaction to unusually ugly C code
 
 <:I             Dunce
 
 :-8(            Condescending stare
 
 >:-<            Mad
-		Angrily Mad/P'edoff
-		I'm getting angry!
+                Angrily Mad/P'edoff
+                I'm getting angry!
 
 8-|             Suspense / thriller
-		Eyes wide with surprise
+                Eyes wide with surprise
 
 :-              Male
-		Prolog programmer
+                Prolog programmer
 
 >-              Female
 
 8-#             Death
-		Dead smiley
-		User is dead
+                Dead smiley
+                User is dead
 
 8-O             "Omigod!!"
-		Took too many nodoz to work on thesis
-		User just before doubling over with pain
+                Took too many nodoz to work on thesis
+                User just before doubling over with pain
 
 ;-(             Crying smiley
-		'That makes me so mad that if I ever see you I'll punch your 
-			lights out'
-		Beaten up
-		Sad face gets his lights punched out
-		Sad or mad and got beat up
+                'That makes me so mad that if I ever see you I'll punch your
+                        lights out'
+                Beaten up
+                Sad face gets his lights punched out
+                Sad or mad and got beat up
 
 ;^)             Smirking smiley
 
 :-)8<           Big girl smiley
-		User is a big girl
+                User is a big girl
 
 :-}X            Bow tie-wearing smiley
 
@@ -1322,7 +1322,7 @@ E-:-I           Net.ham-radio
 @:-}            Smiley just back from the hairdresser
 
 X:-)            Little kid with a propeller beanie
-		User is Aunt Jemima
+                User is Aunt Jemima
 
 l^o             Hepcat smiley
 
@@ -1335,7 +1335,7 @@ l^o             Hepcat smiley
 P-(             Pirate smiley
 
 :8)             Pigish smiley
-		Pig
+                Pig
 
 :/\)            Extremely bignosed smiley
 
@@ -1348,29 +1348,29 @@ l-O             Smiley is yawning
 l:-O            Flattop loudmouth smiley
 
 $-)             Yuppie smiley
-		Alex P. Keaton (from "Family Ties")
-		Won big at Las Vegas
-		Won the lottery
+                Alex P. Keaton (from "Family Ties")
+                Won big at Las Vegas
+                Won the lottery
 
 :----}          You lie like pinnochio
-		Pinnochio
+                Pinnochio
 
 8<:-)           Smiley is a wizard
 
 :#)             Drunk smiley
 
 H-)             Cross-eyed smiley
-		User is Geordie LaForge
+                User is Geordie LaForge
 
 ]-I             Smiley wearing sunglasses
-		Very cool sunglasses (so smirks)
+                Very cool sunglasses (so smirks)
 
 V^J             Smiley with glasses, seen from left side (portrait, talking)
 
 +-(             Smiley, shot between the eyes
 
-~:-P            Smiley, thinking and steaming 
-		Having only one single hair
+~:-P            Smiley, thinking and steaming
+                Having only one single hair
 
 `'              Cat's eyes in the night
 
@@ -1378,16 +1378,16 @@ L-P             Totally scrambled smiley
 
 BI              A frog
 
- -(             Always should wear safety glasses, especially in the laser 
-			burn-in room 
-		User with gouged-out eyes
+ -(             Always should wear safety glasses, especially in the laser
+                        burn-in room
+                User with gouged-out eyes
 
 !-(             Black eye
 
 !-|             "I-am-a-Cylon-Centurian-with-one-red-eye-bouncing-back-
-			and-forth." 
-		Cyclon Centurian
-		Popeye User
+                        and-forth."
+                Cyclon Centurian
+                Popeye User
 
 !.'v            Flat top (profile)
 
@@ -1422,29 +1422,29 @@ $$$$            For people starting up their own company
 %-{             Sad variation
 
 %-|             Been working all night
-		I've been on the computer all night
+                I've been on the computer all night
 
 %-}             Humor variation
 
 %-~             Picasso
-		User was painted by Picaso
+                User was painted by Picaso
 
 %\v             Picasso
-		User was painted by Picaso
+                User was painted by Picaso
 
 &-|             Tearful
 
 &.(..           Crying
 
 ':-)            Accidentally shaved off one of his eyebrows this morning
-		One eyebrow
+                One eyebrow
 
 '~;E            Unspecified 4-legged critter
-      
+
       (         Unhappy Cheshire cat
 
 (!)             Reference to non-Vanderbilt SEC football
-		A tight ass
+                A tight ass
 
 ($)             Speculation on why Vanderbilt is in the SEC
 
@@ -1455,7 +1455,7 @@ $$$$            For people starting up their own company
 (-.-)Zzz...     Sleeping (sideways)
 
 (-::-)          Siamese twins
-		Putting heads together
+                Putting heads together
 
 (-E:            Wearing bifocals
 
@@ -1464,9 +1464,9 @@ $$$$            For people starting up their own company
 (00)            Mooning you
 
 (8-)            Wears glasses
-		Homer Simpson
-		I'm an Owl
-		Swimmer
+                Homer Simpson
+                I'm an Owl
+                Swimmer
 
 (8-{)}          Glasses, moustache and a beard
 
@@ -1477,7 +1477,7 @@ $$$$            For people starting up their own company
 (:-             Unsmiley frowning
 
 (:-#            I am smiling and I have braces (watch out for the glare!)
-		Said something he shouldn't have
+                Said something he shouldn't have
 
 (:-*            Kissing
 
@@ -1514,11 +1514,11 @@ $$$$            For people starting up their own company
 **-(            Too many shocks
 
 *-(             Cyclops got poked in the eye
-		Cyclops after meeting Odysseus
+                Cyclops after meeting Odysseus
 
 *-)             Shot dead
-		User was shot for the last posting
-		Cross-eyed smiley
+                User was shot for the last posting
+                Cross-eyed smiley
 
 *8-)            Beaker (the Muppet lab assistant)
 
@@ -1531,16 +1531,16 @@ $$$$            For people starting up their own company
 *L*             User is blotto (sideways)
 
 *|              For "oh what a beautiful sunset"
-		User is commenting on the sunset
+                User is commenting on the sunset
 
 +-(:-)          Religious leader
-		The Pope
+                The Pope
 
 +<.'v           Knight (profile)
 
 +<:-)           "Peace be upon you, my children..."
-		User is a bishop
-		Monk/nun
+                User is a bishop
+                Monk/nun
 
 +<||-)          Knight
 
@@ -1601,7 +1601,7 @@ $$$$            For people starting up their own company
 -]              One eye
 
 .---...         ABBA fan
-		SOS
+                SOS
 
 ...(            Wile E. Coyote after attempt on Road Runner's life
 
@@ -1609,9 +1609,9 @@ $$$$            For people starting up their own company
 
 ^v              Pointy nose (profile)
 
-_)              Suffering from Lorentz contraction (they're coming every 
-			ten minutes now)
-		Suffering from Lorentz contractions
+_)              Suffering from Lorentz contraction (they're coming every
+                        ten minutes now)
+                Suffering from Lorentz contractions
 
 /8^{~           User has a lopsided hair line, glasses, moustache, and goatee
 
@@ -1630,10 +1630,10 @@ _)              Suffering from Lorentz contraction (they're coming every
 3:*>            Rudolph the reindeer
 
 3:-o            Cow
-		Bull
+                Bull
 
 4:-)            George Washington
-		Sailor
+                Sailor
 
 5:-)            Elvis Presley
 
@@ -1642,9 +1642,9 @@ _)              Suffering from Lorentz contraction (they're coming every
 7:-)            Fred Flintstone
 
 8)              Frog
-		Wearing shades
-		Real cross eyed
-		User wears glasses
+                Wearing shades
+                Real cross eyed
+                User wears glasses
 
 8-*             Just ate a hot pepper
 
@@ -1655,27 +1655,27 @@ _)              Suffering from Lorentz contraction (they're coming every
 8-S             Sees all evil
 
 8-]             "Wow, maaan"
-		User is FDR
+                User is FDR
 
 8-o             Mr. Bill
-		Shocked
+                Shocked
 
 8:)             Pig
 
 8=:-)           Galloping Gourmet
-		Chef
+                Chef
 
 8P              Bullfrog in mating season
 
 8^              Chicken
 
 8_)             Don't get your nose out of joint
-		User has his nose out of joint
+                User has his nose out of joint
 
 8b              Bullfrog in mating season
 
 : )             Leper
-		Happy face
+                Happy face
 
 :###)           Jimmy Durante
 
@@ -1693,13 +1693,13 @@ _)              Suffering from Lorentz contraction (they're coming every
 
 :+(             Punched nose, hurt
 
-:+)             Carl Friedrich Gauss 
-		User has big nose
-		Teddy bear smiley
+:+)             Carl Friedrich Gauss
+                User has big nose
+                Teddy bear smiley
 
 :-'             Smoker
-		Chewing tobacco
-		User is spitting out chewing tobacco
+                Chewing tobacco
+                User is spitting out chewing tobacco
 
 :-'|            Has a cold
 
@@ -1708,16 +1708,16 @@ _)              Suffering from Lorentz contraction (they're coming every
 :-( :-( :-( :-! Taylor Caldwell
 
 :-()            User has stubbed toe
-		Negro user
-		Shout
-		"I stubbed my toe"
+                Negro user
+                Shout
+                "I stubbed my toe"
 
 :-(0)           Yelling
 
 :-(>~           "I just washed my goatee, and I can't do nuthin' with it."
 
 :-(O)           Yelling
-		Mick Jagger
+                Mick Jagger
 
 :-)   ,         Outie belly button
 
@@ -1738,11 +1738,11 @@ _)              Suffering from Lorentz contraction (they're coming every
 :-)'            Drooling
 
 :-))            Double chin
-		Very happy
-		Al Jolson
+                Very happy
+                Al Jolson
 
 :-)*            Speaks Esperanto
-		User is man with a bowtie
+                User is man with a bowtie
 
 :-)--           98-pound weakling (showing partial body)
 
@@ -1751,7 +1751,7 @@ _)              Suffering from Lorentz contraction (they're coming every
 :-)==           Arnold Schwarzenegger
 
 :-)X            Wearing a bowtie
-		Sen. Paul Simon
+                Sen. Paul Simon
 
 :-)}            Has goatee/beard
 
@@ -1760,11 +1760,11 @@ _)              Suffering from Lorentz contraction (they're coming every
 :------------)  Big liar
 
 :-.)            Madonna
-		Marilyn Monroe
-		Cindy Crawford
+                Marilyn Monroe
+                Cindy Crawford
 
 :->X==|         Smiley formal wear
-		Formal wear
+                Formal wear
 
 :-G-            Smoking cigarettes
 
@@ -1777,7 +1777,7 @@ _)              Suffering from Lorentz contraction (they're coming every
 :-R             Has the flu
 
 :-Y             A quiet aside
-		User is talking after the no yelling smiley
+                User is talking after the no yelling smiley
 
 :-bill          Zydeco Bill, with harmonica in mouth and washboard on chest
 
@@ -1814,10 +1814,10 @@ _)              Suffering from Lorentz contraction (they're coming every
 :?)             Philosopher
 
 :@)             Pig
-		Smilie with a pig nose
+                Smilie with a pig nose
 
 :P              Sticking out tongue
-		Blowing a raspberry
+                Blowing a raspberry
 
 :Q)             John Q. Public
 
@@ -1830,12 +1830,12 @@ _)              Suffering from Lorentz contraction (they're coming every
 :V)             Woodpecker
 
 :X              Lips are sealed
-		Sworn to secrecy
+                Sworn to secrecy
 
 :X)             Hearing no evil
 
 :^(             Has had his nose put out of joint
-		User has a broken nose
+                User has a broken nose
 
 :^D             "Great! I like it!"
 
@@ -1848,13 +1848,13 @@ _)              Suffering from Lorentz contraction (they're coming every
 :c<             Big nose variant
 
 :d              Stick out your tongue
-		Licking lips
+                Licking lips
 
 :o)             Stimpy (of Ren & Stimpy)
-		Smiley with a round nose
-		W.C. Fields
-		User has a pig nose
-		User has a cold
+                Smiley with a round nose
+                W.C. Fields
+                User has a pig nose
+                User has a cold
 
 :q              Vi user saying, "How do I get out of this damn emacs editor?"
 
@@ -1869,40 +1869,40 @@ _)              Suffering from Lorentz contraction (they're coming every
 ;(              Crying
 
 ;-?             Wry tongue in cheek
-		Constipated
+                Constipated
 
 ;-D             A friendly, winking, laughing smile
 
 ;-|             Beaten up but silent
-		No expression face gets his lights punched out
-		Says nothing but still gets beat up
+                No expression face gets his lights punched out
+                Says nothing but still gets beat up
 
 ;-}             Leer? (terminal dependent)
-		User is wry and winking
-		User is leering
+                User is wry and winking
+                User is leering
 
 ;:-)            Really bad toupee
 
 ;^?             Punched out
-		User was punched out for submitting sexist articles
+                User was punched out for submitting sexist articles
 
 <*:oDX          Clown with bowtie and dunce
 
 <:-(            Disappointed
-		Dunce
+                Dunce
 
 <=              For messages about housing in the Snow Belt
 
 <@:{(>X         Mustached chinese man with a toupee, goatee, bow tie
 
 <|-(=           Chinese and doesn't like this article
-		Chinese and unhappy
+                Chinese and unhappy
 
 <|-)=           Chinese
-		Chinese with a beard
+                Chinese with a beard
 
 =):-)           Uncle Sam
-		Happy in Cowboy Hat or Yippee
+                Happy in Cowboy Hat or Yippee
 
 =-O             The Enterprise
 
@@ -1919,7 +1919,7 @@ _)              Suffering from Lorentz contraction (they're coming every
 =8->            A nerd smiley that's unbearably pleased with itself
 
 =:-#}           Punk rocker with a mustache
-		Smiley punk with a mustache
+                Smiley punk with a mustache
 
 =:-H            Football player
 
@@ -1934,15 +1934,15 @@ _)              Suffering from Lorentz contraction (they're coming every
 =t==            Mexican run over by train
 
 =|:-)           Abe Lincoln
-		A top hat
+                A top hat
 
 >%)             Wile E. Coyote
 
 >-<             Absolutely livid!!
 
 >->             China man
-		Chinese
-		Illusionist
+                Chinese
+                Illusionist
 
 >-^);>          Fish
 
@@ -1953,7 +1953,7 @@ _)              Suffering from Lorentz contraction (they're coming every
 >:*)            Bozo the Clown
 
 >:-(            Mad, annoyed
-		Sick and tired of reading this nonsense
+                Sick and tired of reading this nonsense
 
 >:-b            Left-pointing tongue smiley
 
@@ -1976,9 +1976,9 @@ _)              Suffering from Lorentz contraction (they're coming every
 @-(             "Ulysses!  Bring me Ulysses!"
 
 @-)             Cyclops
-		Space... The Final Frontier
-		Seeing stars
-		Hypnotist
+                Space... The Final Frontier
+                Seeing stars
+                Hypnotist
 
 @.'v            Has curly hair (profile)
 
@@ -1995,13 +1995,13 @@ B^)             Hornrimmed glasses
 C:#             Football player
 
 C:-)            Large brain capacity
-		I'm an Egghead
-		"Bonjour, Monsieur..."
+                I'm an Egghead
+                "Bonjour, Monsieur..."
 
 C=>8*)          Devilish chef with glasses and a moustache
 
-C=}>;*{O)       Mega-smiley... a drunk, devilish chef with a toupee in an 
-			updraft, a mustache, and a double chin
+C=}>;*{O)       Mega-smiley... a drunk, devilish chef with a toupee in an
+                        updraft, a mustache, and a double chin
 
 C|:-=           Charlie Chaplin
 
@@ -2042,7 +2042,7 @@ R-)             Broken glasses
 [8-{)           Bearded smiley with glasses and headphones
 
 [:-]            Square head
-		Robot
+                Robot
 
 [:|]            Robot (or other AI project)
 
@@ -2053,19 +2053,19 @@ R-)             Broken glasses
 \/\/\/\,8-O     Really should fix frayed line cord on terminal
 
 \:-)            French hat
-		A beret
+                A beret
 
 \:^)            Gumby smiley
-		User is gumby
+                User is gumby
 
 \o/             PTL (praise the lord, or pass the loot?) (sideways)
 
 ]:-)            The Devil
-		Smilie with a nurse hat
-		Member of the Royal Family
+                Smilie with a nurse hat
+                Member of the Royal Family
 
 ]:->            The Devil
-		User is devilish
+                User is devilish
 
 ^(^             Happy variation (sideways)
 
@@ -2074,7 +2074,7 @@ R-)             Broken glasses
 ^L^             Happy (sideways)
 
 ^v^v^           Mountains
-		User is near the mountains
+                User is near the mountains
 
 _:^)            American Indian
 
@@ -2086,13 +2086,13 @@ __.             Properly chastised and/or chagrined, or is merely asleep
 
 __/~`-'~\_/     Line of thought isn't quite a line
 
-__Q~`__         Cat on a wall   
+__Q~`__         Cat on a wall
 
 Q~`             Cat
 
 _______         Wile E. Coyote under rock
-		A He-Ne laser line
-		Student EEG on Saturday night
+                A He-Ne laser line
+                Student EEG on Saturday night
 
 `-_-'           Have you hugged your wolf today?
 
@@ -2117,8 +2117,8 @@ o/              Raised hand
 oO:-)***        Santa Claus
 
 oo              "It's cold out"
-		Somebody's head-lights are on
-		A cups
+                Somebody's head-lights are on
+                A cups
 
 oo-             Puzzled, confused
 
@@ -2143,23 +2143,23 @@ y:-)            Bad toupee
 {=              For messages about housing
 
 {{-}}}          Refugee from the '60's
-		Hippie
+                Hippie
 
 {}              'No comment'
-		Hug
+                Hug
 
 |               For bike fleet messages
 
 |)              Salamander
 
 |-<>            Kissy face
-		Blowing a kiss
+                Blowing a kiss
 
 |-{             "Good Grief!"  (Charlie Brown)
 
 |:-)            Heavy eyebrows
-		User has the one eyebrow syndrome
-		Teacher
+                User has the one eyebrow syndrome
+                Teacher
 
 |:-O            Open mouth smiley (?)
 
@@ -2170,21 +2170,21 @@ y:-)            Bad toupee
 ||              For messages about cars or other four-wheeled vehicles
 
 |~(             "Someone just busted my nose"
-		User just had nose busted
+                User just had nose busted
 
 }(:-(           Wearing toupee in wind
-		A Viking
+                A Viking
 
 }-)             A wry grin
 
 }:-<            Cat
 
-}:~#})          Mega-smiley: updrafted bushy-mustached ugly nosed smiley 
-			with a double-chin
+}:~#})          Mega-smiley: updrafted bushy-mustached ugly nosed smiley
+                        with a double-chin
 
 ~:-(            Net.flame
-		User is being flamed
-		User is particularly angry (steamed)
+                User is being flamed
+                User is particularly angry (steamed)
 
 ~\8-O           Needs to fix frayed cord on terminal
 
@@ -2204,7 +2204,7 @@ y:-)            Bad toupee
 
 |-(=   =)       Yawning smiley from Vietnam
 
-IIII8^)X        Cat in the Hat 
+IIII8^)X        Cat in the Hat
 
 : .)            Cindy Crawford
 
@@ -2223,8 +2223,8 @@ C:\>            MS-DOS Programmer
 @_@             Boggled eyes smilie, or glasses (Japanese symbol)
 
 (_o_)           Kowtowing (bowing) person (Japanese symbol)
-		An ass that's been around
-		This ass costs you a lot less
+                An ass that's been around
+                This ass costs you a lot less
 
 ~\\ (^o^) /~/~  Octopus (Japanese symbol)
 
@@ -2233,7 +2233,7 @@ C:\>            MS-DOS Programmer
 (Y)oYo(Y)       Barutan, a monster from "Ultraman" (Japanese symbol)
 
 *^_^*           Blushing smilie (Japanese symbol)
-		Cute little girl
+                Cute little girl
 
 ^_^;;;          Embarassed smilie; cold sweat (Japanese symbol)
 
@@ -2246,10 +2246,10 @@ C:\>            MS-DOS Programmer
 =:=|            User is a priest
 
 *)              Mutant smiley
-		Here's Thor Hi-y'all.
+                Here's Thor Hi-y'all.
 
 ]B=8}           Dragon smiley
-		User is a dragon
+                User is a dragon
 
 `@_____         User is writing about snail mail
 
@@ -2262,13 +2262,13 @@ C:\>            MS-DOS Programmer
 ( o ) ( o )     User has big hooters
 
 (o)(o)          User has big boobs
-		Surprise
-		Perfect breasts
+                Surprise
+                Perfect breasts
 
 >[]I            User is watching television
 
 :^X^C           User is an emacs user saying "How do I get out of this damn
-			vi editor?"
+                        vi editor?"
 
 (OO)            User is mooning you (sideways)
 
@@ -2279,7 +2279,7 @@ oo---oo-Bo      User is a truck driver
 i-=<***         User is applying flame thrower
 
 ~~~c___         User is at the beach
- 
+
  ,,,^..^,,,     User is a cat peeking over a fence (sideways)
 
 ~M`'~           User is camel (sideways)
@@ -2293,7 +2293,7 @@ i-=<***         User is applying flame thrower
 (;.;)/~         User is waving goodbye (sideways, Japanese style)
 
 (>_<)           User is furious (sideways)
-		User is hurt (Japanese style)
+                User is hurt (Japanese style)
 
 (=_=)~          User is sleepy (sideways, Japanese style)
 
@@ -2306,7 +2306,7 @@ i-=<***         User is applying flame thrower
 (*_*)           User is in love (sideways)
 
 ($_$)           User is being greedy (sideways)
-		Yuppie
+                Yuppie
 
 (x_x)           User is dead (sideways)
 
@@ -2318,7 +2318,7 @@ i-=<***         User is applying flame thrower
 
 #!^~/           User is kissing and wears shades (profile)
 
-*<o'v           User is wearing snow cap (profile) 
+*<o'v           User is wearing snow cap (profile)
 
 |o'v            User has a flat top (profile)
 
@@ -2392,8 +2392,8 @@ C8<]            User is Darth Vader
 
 (8=X            User is Death (Mr. Death to you) (skull & X bones)
 
-(|-(            User is "Good Grief!"   
-		User is Charlie Brown
+(|-(            User is "Good Grief!"
+                User is Charlie Brown
 
 (|-|  F         User is Robocop
 
@@ -2402,9 +2402,9 @@ C8<]            User is Darth Vader
 *<|:-)>         User is Santa Claus
 
 3:-)            User is Bart Simpson
-		User has curly hair
+                User has curly hair
 
-		Smiley cow
+                Smiley cow
 
 7:^)            User is Ronald Reagan
 
@@ -2423,13 +2423,13 @@ C8<]            User is Darth Vader
 C|:-=)          User is Charlie Chaplin
 
 (:-|            User is Captain Jean Luc Picard
-		Soldier
+                Soldier
 
 }}:-(           User is Worf
 
-=:)             User is a bunny 
-		Smiley with raised eyebrows
-		Skull
+=:)             User is a bunny
+                Smiley with raised eyebrows
+                Skull
 
 =:x             User is a bunny
 
@@ -2438,7 +2438,7 @@ C|:-=)          User is Charlie Chaplin
 >>>>>:============      User is a vegetable (asparagus)
 
 (:=             User is a beaver
-		Skull
+                Skull
 
 :=8|            User is a baboon
 
@@ -2451,7 +2451,7 @@ C|:-=)          User is Charlie Chaplin
 .\/             User is a duck (profile)
 
 #B<>            User is a duck, with a spike haircut & Ray-Bans, quacking.
-   
+
    )            User is the Cheshire cat
 
 (:-) :   8-     User is a male
@@ -2459,7 +2459,7 @@ C|:-=)          User is Charlie Chaplin
 {:-} 8   >      User is a female
 
 (:-) : ==8      User is a male on the make
- 
+
 :-o : ^^:       User is a male after zipping up fly too fast
 
 {:-} 8   X      User is a female wearing chastity belt
@@ -2481,19 +2481,19 @@ $:-} B   >      User is a female prostitute
 {:-( :   >      User is a female with small breasts
 
 *:-} :   8-     User is a gay male (fem)
- 
+
 :-( :   :~      User is an impotent male
- 
+
 :-) : , 8-      User has an outie belly button
- 
+
 :-) :   8-^-    User is in need of some corrective surgery
- 
+
 :-) :   8-...   User is taking a leak
- 
+
 :-\ :   8o      User after a cold shower
 
 {:-| 8( )>      User is a pregnant female
- 
+
 :-} : =M8       User is taking matters into his own hand
 
 >:-( 8   >      User is a female after reading sexist opinions on feminists
@@ -2503,14 +2503,14 @@ $:-} B   >      User is a female prostitute
 {:-) 8   >d-:   Users are engaged in cuninlingus (showing body)
 
 @O=E<=          User is a woman in skirt wearing turtleneck sweater
-			(mini whole body)
+                        (mini whole body)
 
 B-)-[<          User is wearing sunglasses and swimming trunk (mini whole body)
 
 O>--<           User is dead on pavement  (mini whole body)
 
 o>8<|=          User is writing messages about interesting women
-			(mini whole body)
+                        (mini whole body)
 
 oO:)&           User is a grandmother
 
@@ -2561,9 +2561,9 @@ G-(             User is a scuba diver with a broken mask
 : (             User is a leper
 
 :-( )           User has had toes stepped on
-		Shocked
-		"You stepped on my toe"
-		User is SHOUTING VERY LOUD
+                Shocked
+                "You stepped on my toe"
+                User is SHOUTING VERY LOUD
 
 :-(=            User has buck teeth
 
@@ -2588,8 +2588,8 @@ G-(             User is a scuba diver with a broken mask
 >;-('           User is is so mad that s/he is spitting
 
 %-(             User is a practical joker who played one too many and got
-			beat up
-		Broken glasses
+                        beat up
+                Broken glasses
 
 ={:-)]          User is in a bottle
 
@@ -2610,21 +2610,21 @@ C:H             User is a football player
 I8${}           User is a Ubangi (bone in nose)
 
 K:-)            User is a little kid with a propeller beenie
-		Smiley with a graduation hat
-		A propeller hat/beanie
+                Smiley with a graduation hat
+                A propeller hat/beanie
 
 R-(             User has broken glasses
 
 @@@@@@:-)       User is Marge Simpson (Homer's wife)
 
 ~(:-)           User is Homer Simpson
-		Tonto
+                Tonto
 
 :-.             User has 'no comment'
-		Wispering/Talking Quietly.
+                Wispering/Talking Quietly.
 
 ~:o             User is a baby
-		Teacher
+                Teacher
 
 ~:@             User is a baby with a pacifier
 
@@ -2633,7 +2633,7 @@ R-(             User has broken glasses
 :-)  (-: +  :-o o-: + :-Pd-:    Users in a kissing sequence
 
 =-)             Sideways smily face
-		User is Aladdin
+                User is Aladdin
 
 :-o zz z z Z  Z Bored
 
@@ -2641,34 +2641,34 @@ R-(             User has broken glasses
 
 :^Y             Turned poker face
 
-:^r             Bleahhh (sticking tongue out)        
+:^r             Bleahhh (sticking tongue out)
 
-:^y             Turned smiling face                  
+:^y             Turned smiling face
 
-:^W             Turned face with tongue out          
+:^W             Turned face with tongue out
 
-:^"             Pursing lips                         
+:^"             Pursing lips
 
-:-[]            Robot face                           
+:-[]            Robot face
 
-:-[#]           Smilie with braces                   
-		Eating
+:-[#]           Smilie with braces
+                Eating
 
-%)              Artistic face                        
-		Here's a racing yacht
-		Cross-eyed
+%)              Artistic face
+                Here's a racing yacht
+                Cross-eyed
 
-C|:-)           Smilie with a bowler hat             
+C|:-)           Smilie with a bowler hat
 
-:-)=            Smilie with beard                    
+:-)=            Smilie with beard
 
-|-Q             Smoking and yelling chinese          
+|-Q             Smoking and yelling chinese
 
-!8-)            Nerd with combed hair                
+!8-)            Nerd with combed hair
 
-B-]             Batman smiley                        
+B-]             Batman smiley
 
-K-[             Batman with eyes poked out           
+K-[             Batman with eyes poked out
 
 =^-^=           Cat smile
 
@@ -2679,7 +2679,7 @@ K-[             Batman with eyes poked out
 |:/             Constipated
 
 :-+             User with too much lipstick
-		Exhausted
+                Exhausted
 
 :-*|            User with moustache
 
@@ -2690,7 +2690,7 @@ K-[             Batman with eyes poked out
 :-h             User with forked tongue
 
 :-)B            User with large breasts
-		User is a big girl
+                User is a big girl
 
 (*):            I Cyclops user
 
@@ -2701,7 +2701,7 @@ K-[             Batman with eyes poked out
 =(:-)           Punk user
 
 :::-)           ElephantmanUser
-		The Elephant Man
+                The Elephant Man
 
 ._/             Squashed user
 
@@ -2718,51 +2718,51 @@ K-[             Batman with eyes poked out
 @:-\            Elvis
 
 ___m_oo_m___            Spying at the wall
- 
+
 ___m_OO_m___            REALLY spying at the wall
- 
+
 ___m_+o+_m___           Clown spying at the wall
- 
+
 ^^m^^oo^^m^^^           Spying at the wall with nails
- 
+
 __mmmm_oo_mmmm__        Octopus spying at the wall
- 
+
 __\/_oo_\/__            Crab spying at the wall
- 
+
 ____V@_____             Snail spying at the wall
- 
+
 __m_(-O-)_m__           Koala spying at the wall
- 
+
 __m_.(%)._m__           Yet another pig spying at the wall
- 
+
 ______,________         Yet another ant spying at the wall
- 
+
 _____,P________         Ant with banner spying
- 
+
 ___,,,,,,,,,,,,,,,,,,___        Ants marching and spying at the wall
- 
+
 ___,,,,,,,,,,,,,,,,,P,___       Ant Platoon marching and spying at the wall
- 
+
 ____________            Invisible Man spying at the wall
- 
+
 __m__(((..)__m__        "Monica" spying at the wall
- 
+
 ___m_--_m___            Chinese spying at the wall
- 
+
 __m____m___             Dwarf spying at the wall
- 
+
 ___m_O_m___             Cyclops spying at the wall
- 
+
 ___m_@^@_m___           Man with glasses spying at the wall
- 
+
 _m_oo_m_m_oo_m_         Twins spying at the wall
- 
+
 _m_oo_mm_oo_m_          Siamese Twins spying at the wall
- 
+
 --m--xx--m--            Dead cartoon spying  at the wall
- 
+
 __m_oo_?__              Cap. Hook spying at the wall
- 
+
 __m_oo__                One-handed spying at the wall
 
 <B-v            User using glasses and speaking
@@ -2797,8 +2797,8 @@ OOOOX-~(        Dead-Marge Simpson-sad user with a cold
 
 {:0             Orator user wearing a toupee
 
-}::-?           User wearing a toupee in a updraft, using normal glasses 
-			and smoking a pipe
+}::-?           User wearing a toupee in a updraft, using normal glasses
+                        and smoking a pipe
 
 B:*/            Drunk-undecided user with sunglasses on head
 
@@ -2846,8 +2846,8 @@ O 8)            Angel user wearing sunglasses and smiling
 
 [B-~[           Vampire user using a walkman, using glasses and with a cold
 
-*!#^!*,-{\      Schizophrenic-one-winking-eye-only-undecided user 
-			using a mustache
+*!#^!*,-{\      Schizophrenic-one-winking-eye-only-undecided user
+                        using a mustache
 
 <:-)  >-        Female user smiling
 
@@ -2857,8 +2857,8 @@ O 8)            Angel user wearing sunglasses and smiling
 
 ::-{}           User using normal glasses and wearing lipstick
 
-+-B:p           Religious user with sunglasses on head and pointing 
-			the tongue out
++-B:p           Religious user with sunglasses on head and pointing
+                        the tongue out
 
 }0*O            Cyclops-drunk-big-mouth user wearing a toupee in a updraft
 
@@ -2885,7 +2885,7 @@ O 8)            Angel user wearing sunglasses and smiling
 @8[             Surprised-vampire user wearing a turban
 
 <:)             User smiling
-		A dunce (or fresher)
+                A dunce (or fresher)
 
 <&-I            Fool-tearful user
 
@@ -2962,8 +2962,8 @@ OOOO:@<         Pig-nose-Marge Simpson-mad user
 *<(;')          Frosty the Snowman
 
 /:-)            Gumby
-		A beret
-		User is a Frenchman
+                A beret
+                User is a Frenchman
 
 @@@@@@@@:)      Marge Simpson
 
@@ -3020,57 +3020,57 @@ o_o             Sideways Smiley Variation (?)
 ~x~             Sideways Smiley Variation (?)
 
 ><FISH>         A fish (?)
- 
+
 >-",",","-)D>   A fish (?)
- 
+
 __/\o_          A swimmer (?)
-		A caterpiller (?)
+                A caterpiller (?)
 
 /\o/\           A spider (?)
- 
+
 /\_/\           A mountain range  (?)
- 
+
 ^+^             Sideways Smiley Variation (?)
- 
+
 \,/             A grin  (?)
- 
+
 /'\             A mountain  (?)
- 
+
 /~'v'~\         Girl with pigtails  (?)
- 
+
 (~v~)           Sideways Smiley Variation  (?)
- 
+
 =^.^=           A cat smiley
-		Callsign of KingKat
- 
+                Callsign of KingKat
+
 -,-             Sleepy smiley
-		Not understanding or feeling ashamed of a misunderstanding
- 
+                Not understanding or feeling ashamed of a misunderstanding
+
 -.-             Sleepy smiley
-		Resigned
-		Not understanding or feeling ashamed of a misunderstanding
- 
+                Resigned
+                Not understanding or feeling ashamed of a misunderstanding
+
 \/              A grin  (?)
- 
+
 (^_^)           Ear to ear smile
-		Asian smiley
+                Asian smiley
 
 ~=o  oOo  oOo  o@=<     (?)
 
-ooo  O\O  ooo           KILROY!                                        
-							   
-ooo  *\*  ooo           Maybe;  (probably needs a wall)                
-									       
-__m_(OuO)_m__           With a wall. (some tty has nice 0's)           
-									       
---ooo-------ooo--       Hanged at the other  side of the wall ...      
+ooo  O\O  ooo           KILROY!
+
+ooo  *\*  ooo           Maybe;  (probably needs a wall)
+
+__m_(OuO)_m__           With a wall. (some tty has nice 0's)
+
+--ooo-------ooo--       Hanged at the other  side of the wall ...
 
 c=:             Phallus
- 
+
 C===:           XXL size
 
 c=.             Phallus of a Cyclop
- 
+
  =:             Eunuch's phallus
 
 c=;             Eunuch's phallus with a crushed testicle
@@ -3094,7 +3094,7 @@ c=3             In abstinence for a while
 c=B             Clergyman
 
 (y)             Pubis
- 
+
 8x              Scissors
 
 (8x)            Bobbit`s wife
@@ -3118,8 +3118,8 @@ c=B             Clergyman
 =o)             Big nose smiley
 
 (==)            Kosh from Babylon 5
-		Cotton reel
-		Hug
+                Cotton reel
+                Hug
 
 [-:-)           Garibaldi from Babylon 5 ("Male pattern baldness")
 
@@ -3152,10 +3152,10 @@ c=B             Clergyman
 <^O^>           Laughing loudly
 
 (@_@)           Stunned
-		Grin
+                Grin
 
 (o_o)           Shocked
-		Smile
+                Smile
 
 m(_ _)m         Deep bow used for apologizing or expressing thanks
 
@@ -3194,13 +3194,13 @@ v-|             Here's my life raft.
 ______2_2222_________           Ducks spying at the wall.
 
 _________@@__________           Imperial AT-AT spying over the wall of the
-				Hoth rebel base (pun intended).
- 
+                                Hoth rebel base (pun intended).
+
 _________0-n_________________   Key forgotten for someone that was
-				spying at this wall.
- 
+                                spying at this wall.
+
 __________p^o_________          One-armed person using a binocular for
-				spying at the wall, being far away.
+                                spying at the wall, being far away.
 <+|:')          The pope
 
 <+|:'@===       The vomiting pope
@@ -3209,11 +3209,11 @@ __________p^o_________          One-armed person using a binocular for
 
 (=(:->*         Uncle Sam
 
-((:- =)X        Charlie Chaplin           
+((:- =)X        Charlie Chaplin
 
 : - =           Hitler
 
-(-|---( : - )   The Pope     
+(-|---( : - )   The Pope
 
 [ : ]           Frankenstien
 
@@ -3221,53 +3221,53 @@ __________p^o_________          One-armed person using a binocular for
 
 ]:)|--<         I am the king
 
-*|:^)(.)(...)   Snowman                                                   
+*|:^)(.)(...)   Snowman
 
 :-)  -:         Smilie with an erection.
- 
+
 :-) 8  -        Female.
- 
+
 :-| 8( )-       Pregnant Female.
- 
+
 :-(   :-        Impotent (Or let down).
- 
+
 :-)   -8        Blue balls.
- 
+
 ;-)  o===8      Braggart.
- 
+
 :-\  8o         After a cold shower.
- 
+
 ;-)   ===8      Circumcised.
- 
+
 :-)  -^-:       In need of some corrective surgery.
- 
+
 :-)  :-...      Taking a leak.
- 
+
 :-}  -oo-:      Taking matters into hand.
- 
+
 :-o  ^^^^:      After zipping up fly too fast.
- 
+
 :-( :  -        You call those breasts?  I've seen bigger lumps in oatmeal!
 
 :-0===8         Oh yeah?  I bet that you...
 
 >]}             A dragon wearing sunglasses
 
-87)             Cartoon character with a long nose and happy.. 
+87)             Cartoon character with a long nose and happy..
 
-~87(            Cartoon character unhappy that he has only one hair on 
-			his head
+~87(            Cartoon character unhappy that he has only one hair on
+                        his head
 
-%87)            Cartoon character happy he has his curly hair 
+%87)            Cartoon character happy he has his curly hair
 
 87D             Cartoon character with a long nose.. and VERY happy
 
 87P O>w         Cartoon character enjoying eating his ice cream cone
 
 87P`` O>w       Cartoon character REALLY enjoying eating his ice cream
-			cone with drops of saliva dripping *smile*..
+                        cone with drops of saliva dripping *smile*..
 
-<:-EXB          Vampirella                                                           
+<:-EXB          Vampirella
 :p :q :d :b :D  User is licking his lips (sequence)
 
 |^)             Chink smiley face
@@ -3287,8 +3287,8 @@ x:<>            Smiley Edd the Duck
 <|)             Chinese smiley
 
 #(:             Left-handed user wearing a goatee
-		Left-handed user has a really bad tie on
- 
+                Left-handed user has a really bad tie on
+
 :)>             Basic goatee smiley
 
 <(:             Basic goatee smiley (left-handed)
@@ -3302,7 +3302,7 @@ x:<>            Smiley Edd the Duck
 >-COD           User is "floundering" for something to say
 
 ___(member '(A B C D 1 (A B)) A)___     LISP code spying at the wall.
-						(but it returns `t')
+                                                (but it returns `t')
 
 *<|B-3D>---|E   Santa Claus (?)
 
@@ -3311,9 +3311,9 @@ ___(member '(A B C D 1 (A B)) A)___     LISP code spying at the wall.
 =B-(            User with spiked hair and sunglasses, frowning
 
 )-:             Bass-Ackwards smiley.
-		Left-handed frowning smiley.
+                Left-handed frowning smiley.
 
-o:-)            Smiley with bullet hole in head (a.k.a. Dain-Bramaged Smiley)                                                               
+o:-)            Smiley with bullet hole in head (a.k.a. Dain-Bramaged Smiley)
 [*>-]           Philippine Flag
 
 o>-<|=          For messages of interest only to women.
@@ -3327,7 +3327,7 @@ o>-<|=          For messages of interest only to women.
 @@@:)           Marge Simpson smiley
 
 :|              Data Smiley
-		Indifferent
+                Indifferent
 
 v)              Star Trek "The Traveler" Smiley
 
@@ -3336,7 +3336,7 @@ v)              Star Trek "The Traveler" Smiley
 -(:-)           German soldier from WWI
 
 |^j             Profile, smiling, wearing those long, rectangular
-			sunglasses thingies.
+                        sunglasses thingies.
 
 /O\             User is ducking.
 
@@ -3454,10 +3454,10 @@ I-O             Starship (top)
 
 :-)/ >-<-0      Licking Smiley with partner
 
-:-)/ >0<0       Licking Smiley with fat partner 
+:-)/ >0<0       Licking Smiley with fat partner
 
-:-)/\/\/\/\/\/\/        Smiley with extendo froggie tongue for long distance 
-				licking
+:-)/\/\/\/\/\/\/        Smiley with extendo froggie tongue for long distance
+                                licking
 
 :-)/\/\/\/\/\/\/>-<-0   Smiley licking a partner who is far away
 
@@ -3488,13 +3488,13 @@ __~~~~~~__      Another hat
 (:>             Smiling
 
 ',:@ )          Dog
-		Harold the not-pig
+                Harold the not-pig
 
-}"{		Butterfly
+}"{             Butterfly
 
 &               Duck
 
-< > <	        Fish
+< > <           Fish
 
 hTd             Chairs and table
 
@@ -3517,7 +3517,7 @@ hTd             Chairs and table
 :' (            Crying
 
 -)              Cross-eyed
-		Jose Feliciano
+                Jose Feliciano
 
 ====|:-)=       Abe Lincoln
 
@@ -3550,7 +3550,7 @@ O:)             Angel
 ]:>             Devil
 
 }:>             Devil
-		Devilish grin
+                Devilish grin
 
 =:-()           Scared
 
@@ -3559,7 +3559,7 @@ O:)             Angel
 (:\/            I'm a duck
 
 :-)===          I'm a giraffe
-		Arnold Schwarzenegger
+                Arnold Schwarzenegger
 
 :-} -oo-:       User is taking matters into hand
 
@@ -3600,7 +3600,7 @@ d:)             Little boy with his little hat
 ://             Smiley with its mouth taped shut
 
 O??             Boxer
-		I challenge you!
+                I challenge you!
 
 [O]             Macho man
 
@@ -3657,7 +3657,7 @@ o==|======-     Sword
 ];[             Al Gore
 
 =;=             Butterfly disguised as a dragonfly
-		Dragonfly
+                Dragonfly
 
 +;+             Butterfly with propellors
 
@@ -3680,7 +3680,7 @@ Y;Y             Butterfly with split ends
 ***             Caterpillar
 
 O               Cocoon
-		Death Star (Star Wars)
+                Death Star (Star Wars)
 
 `@;;;;;;;;;;;   Caterpillar
 
@@ -3689,7 +3689,7 @@ O               Cocoon
 -O              Blackjack
 
 -|---           Dagger
-		Cross
+                Cross
 
 --=<>           Club
 
@@ -3752,7 +3752,7 @@ O               Cocoon
 %^)             Goofy grin or smile (profile)
 
 %-)             Someone slightly stunned and smiling
-		The Elephant Man
+                The Elephant Man
 
 ]:(             Spanish Civil Guard
 
@@ -3762,9 +3762,9 @@ __(2,C>         Mouse
 
 <:3 )--         Mouse
 
-----{,_,">	Mouse
+----{,_,">      Mouse
 
-<",_,}-._	Mouse
+<",_,}-._       Mouse
 
 =8-@            Horrified smilie
 
@@ -3783,29 +3783,29 @@ __(2,C>         Mouse
 <~_~>           Smiley (?)
 
 <-_->           Sleepy smiley
-		Not understanding, feeling ashamed of a misunderstanding
+                Not understanding, feeling ashamed of a misunderstanding
 
 <-.->           Sleepy smiley
-		Not understanding, feeling ashamed of a misunderstanding
+                Not understanding, feeling ashamed of a misunderstanding
 
 <-.~>           Winking smiley
 
 [^_^]           Smiley (?)
-		Graduate
+                Graduate
 
 <^_^>           Chinese smiley (?)
-		Joy!
-		Very big grin
+                Joy!
+                Very big grin
 
 (^.^)           Smiley
-		Being happy
+                Being happy
 
 (^v^)           Smiley
-		Evil smile
-		A crow
+                Evil smile
+                A crow
 
 (^|^)           Smiley
-		Smiley with a large nose
+                Smiley with a large nose
 
 ---(8:>         Mouse
 
@@ -3830,7 +3830,7 @@ H:)             Matted hair 3
 @:)             Turban
 
 :0              Baby's first two teeth
-		Wesley smiley (screaming as he finally gets killed off)
+                Wesley smiley (screaming as he finally gets killed off)
 
 D-)             Cyclops
 
@@ -3851,7 +3851,7 @@ D-)             Cyclops
 (`.')           Angry
 
 (-oo-)          Baboon
-		Tie Bomber (star wars, seen from front)
+                Tie Bomber (star wars, seen from front)
 
 (o_)~           Baseball cap
 
@@ -3870,7 +3870,7 @@ D-)             Cyclops
 {a_6}           Glasses
 
 :-)>-           Goatee
-		A tie
+                A tie
 
 (^y^)           Goatee
 
@@ -3912,319 +3912,319 @@ C=>:*'))        Sick chef
 
 (#.#)           Zombie
 
-[<(=)>] 	Brazil
+[<(=)>]         Brazil
 
-[<O>] 	        Brazil
+[<O>]           Brazil
 
-[ |*| ] 	Canada
+[ |*| ]         Canada
 
-[|*|] 		Canada
+[|*|]           Canada
 
-[*    ] 	China
+[*    ]         China
 
-[*  ] 		China
+[*  ]           China
 
-[-+---] 	Denmark
-        	Finland
-        	Iceland
-        	Norway
-        	Sweden
+[-+---]         Denmark
+                Finland
+                Iceland
+                Norway
+                Sweden
 
-[+--] 		Denmark
-      		Finland
-      		Iceland
-      		Norway
-		Sweden
+[+--]           Denmark
+                Finland
+                Iceland
+                Norway
+                Sweden
 
-[--+--] 	England
+[--+--]         England
 
-[-+-] 		England
+[-+-]           England
 
-[ | | ] 	France
-        	Ireland
-        	Italy
+[ | | ]         France
+                Ireland
+                Italy
 
-[| |] 		France
-      		Ireland
-      		Italy
+[| |]           France
+                Ireland
+                Italy
 
-[=====] 	Germany
-        	Luxembourg
-        	Netherlands
-        	Spain
+[=====]         Germany
+                Luxembourg
+                Netherlands
+                Spain
 
-[===] 		Germany
-      		Luxembourg
-      		Netherlands
-      		Spain
+[===]           Germany
+                Luxembourg
+                Netherlands
+                Spain
 
-[  o  ] 	Japan
+[  o  ]         Japan
 
-[ o ] 		Japan
+[ o ]           Japan
 
-[>====] 	Kuwait
+[>====]         Kuwait
 
-[>==] 	   	Kuwait
+[>==]           Kuwait
 
-[-----] 	Poland
+[-----]         Poland
 
-[---] 		Poland
+[---]           Poland
 
-[> <] 	        Scotland
+[> <]           Scotland
 
-[  +  ] 	Switzerland
+[  +  ]         Switzerland
 
-[ + ] 		Switzerland
+[ + ]           Switzerland
 
-[>----] 	Czech Republic
+[>----]         Czech Republic
 
-[>--] 	   	Czech Republic
+[>--]           Czech Republic
 
-[->|<-] 	United Kingdom (UK)
+[->|<-]         United Kingdom (UK)
 
-[>|<] 	        United Kingdom (UK)
+[>|<]           United Kingdom (UK)
 
-[  *  ] 	Vietnam
+[  *  ]         Vietnam
 
-[ * ] 		Vietnam
+[ * ]           Vietnam
 
-.    		Particle Man
+.               Particle Man
 
---.    		Particle Man running
+--.             Particle Man running
 
-:    		Particle Man jumping up and down really fast
+:               Particle Man jumping up and down really fast
 
-\.    		Particle Man playing baseball
+\.              Particle Man playing baseball
 
-!    		Particle Man gets a bright idea
+!               Particle Man gets a bright idea
 
-?    		Particle Man sliding down a water slide
+?               Particle Man sliding down a water slide
 
-%    		Particle Man looking in the mirror
+%               Particle Man looking in the mirror
 
-*    		Particle Man discovers the pool is empty
+*               Particle Man discovers the pool is empty
 
-./\.   		Particle Man swordfighting with a flea
+./\.            Particle Man swordfighting with a flea
 
-o   		Particle Man after seeing very sexy water molecule
-		Very bored smiley
+o               Particle Man after seeing very sexy water molecule
+                Very bored smiley
 
-.)		Sammy Davis Jr.
-		A Cyclops
+.)              Sammy Davis Jr.
+                A Cyclops
 
-.oooO		Left foot
+.oooO           Left foot
 
-Oooo.		Right foot
+Oooo.           Right foot
 
-.ooo0		Left foot
+.ooo0           Left foot
 
-0ooo.		Right foot
+0ooo.           Right foot
 
-<@_@>		Bixie
+<@_@>           Bixie
 
-<x_x>		Dead
+<x_x>           Dead
 
-<$_$>		Rich!
+<$_$>           Rich!
 
-<*_*>		Love
+<*_*>           Love
 
-<u_u>		Zzzz
+<u_u>           Zzzz
 
-<+_+>		Uhhh
+<+_+>           Uhhh
 
-<g_g>		Tired
+<g_g>           Tired
 
->>----->	Arrow
+>>----->        Arrow
 
-<'___)~  	Mouse
+<'___)~         Mouse
 
-O//////])==============================		Light sabre
+O//////])==============================         Light sabre
 
-*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*  	Ascii waves
+*~'`^`'~*-,._.,-*~'`^`'~*-,._.,-*~'`^`'~*       Ascii waves
 
-=\\\\\\\(============================-		Foil
+=\\\\\\\(============================-          Foil
 
-||||||[::]|||||||||||||		Belt
+||||||[::]|||||||||||||         Belt
 
-__/\o_ 		Swimming
+__/\o_          Swimming
 
-__/\o_ o   	Water polo
+__/\o_ o        Water polo
 
 |==|iiii|>----- Needle
 
-c[] 	 	Cup of tea
+c[]             Cup of tea
 
 |==[)XXXX>---   Different needle
 
-<(O)>    	An eye
+<(O)>           An eye
 
-/\_i\o	 	Guy dead from a sword wound
+/\_i\o          Guy dead from a sword wound
 
-///\oo/\\\	Spider (or some kind of bug)
+///\oo/\\\      Spider (or some kind of bug)
 
-<')))))><	Fish
+<')))))><       Fish
 
 oxx)=---------- Sword
 
-<:~__)-		Mouse
+<:~__)-         Mouse
 
-.		Flea
-		Ant
+.               Flea
+                Ant
 
-@(_)~~~		Hot coffee
+@(_)~~~         Hot coffee
 
-__@/		Snail
+__@/            Snail
 
-{>:|		User is a Klingon
+{>:|            User is a Klingon
 
-::--))		Bad vertical hold
+::--))          Bad vertical hold
 
-X-O		Sat on a pin
+X-O             Sat on a pin
 
-:E		Spider
+:E              Spider
 
-8<		Scissors
+8<              Scissors
 
->8		Scissors
+>8              Scissors
 
-@/		Snail
+@/              Snail
 
-\@		Snail
+\@              Snail
 
-"@		Snail
+"@              Snail
 
-8//=/\-.	Sex
+8//=/\-.        Sex
 
-(#)---==	Badminton racket
+(#)---==        Badminton racket
 
-,---'---'---'---=@===	Fishing rod
+,---'---'---'---=@===   Fishing rod
 
-j		Hook
+j               Hook
 
-W		Tooth
+W               Tooth
 
-,=;=;=;=;=;=;=O~	Centipede
+,=;=;=;=;=;=;=O~        Centipede
 
-=8>-()<		Chicken
+=8>-()<         Chicken
 
-(:O:)		Handiplus
+(:O:)           Handiplus
 
-'Oqqqqqqqqqqqqo-	Centipede
+'Oqqqqqqqqqqqqo-        Centipede
 
-[{-_-}] ZZZzz zz z...	A sleeping baby (pillow included)
+[{-_-}] ZZZzz zz z...   A sleeping baby (pillow included)
 
-:<3o~		A mouse
+:<3o~           A mouse
 
-^..^__)~	A piggie (in the mud)
+^..^__)~        A piggie (in the mud)
 
-&8)		Smiley wearing a hairpiece
+&8)             Smiley wearing a hairpiece
 
-::::::========------= ( )    (8)	Playing pool
+::::::========------= ( )    (8)        Playing pool
 
 -<>--=|=---^-'-`~'--+--8---#--/\--/o_-----\0/----'`._,'`._,'-
-		Sea with:  island, island with palmtree, shark chasing man to
-		boat, far away island with palmtree, sundown, far away island
-		with two palmtrees, shark chasing man closer, man being pulled
-		under by seamonster coming from right while causing waves.
+                Sea with:  island, island with palmtree, shark chasing man to
+                boat, far away island with palmtree, sundown, far away island
+                with two palmtrees, shark chasing man closer, man being pulled
+                under by seamonster coming from right while causing waves.
 
---=\=---=\=---	Barbwire
+--=\=---=\=---  Barbwire
 
-3#`		Scorpion
+3#`             Scorpion
 
--=:\:=-		Kayak
+-=:\:=-         Kayak
 
-[:-)I		Frankenstein smiley
+[:-)I           Frankenstein smiley
 
->8=[..		User is an alien or Martian
+>8=[..          User is an alien or Martian
 
->8=[~		User is an alien or Martian
+>8=[~           User is an alien or Martian
 
-==(:o3)		The Easter Bunny smiley
+==(:o3)         The Easter Bunny smiley
 
-{:^>)		Grinning man with curly hair (and chin)
+{:^>)           Grinning man with curly hair (and chin)
 
-:)3		Counselor Troi smiley (the 3 are her boobs)
-		Female
+:)3             Counselor Troi smiley (the 3 are her boobs)
+                Female
 
-:{}		Riker smiley (with moustache and beard)
-		Wearing lipstick
+:{}             Riker smiley (with moustache and beard)
+                Wearing lipstick
 
-8{0}		Riker smiley (observing Troi's 3's)
+8{0}            Riker smiley (observing Troi's 3's)
 
-{{{ : }		Worf smiley (note wrinkled forehead and smile)
+{{{ : }         Worf smiley (note wrinkled forehead and smile)
 
-:)\[-8		Smiley beating off with his left hand
+:)\[-8          Smiley beating off with his left hand
 
-1-)		One!?! (happy)
+1-)             One!?! (happy)
 
-1-(		One!?! (unhappy)
+1-(             One!?! (unhappy)
 
-2-)		Two!?! (happy)
+2-)             Two!?! (happy)
 
-2-(		Two!?! (unhappy)
+2-(             Two!?! (unhappy)
 
-3-)		Three!?! (happy)
-		Odd look (happy)
+3-)             Three!?! (happy)
+                Odd look (happy)
 
-3-(		Three!?! (unhappy)
-		Odd look (unhappy)
+3-(             Three!?! (unhappy)
+                Odd look (unhappy)
 
-4-)		Four!?! (happy)
+4-)             Four!?! (happy)
 
-4-(		Four!?! (unhappy)
+4-(             Four!?! (unhappy)
 
-5-)		Five!?! (happy)
+5-)             Five!?! (happy)
 
-5-(		Five!?! (unhappy)
+5-(             Five!?! (unhappy)
 
-6-)		Six!?! (happy)
+6-)             Six!?! (happy)
 
-6-(		Six!?! (unhappy)
+6-(             Six!?! (unhappy)
 
-7-)		Seven!?! (happy)
+7-)             Seven!?! (happy)
 
-7-(		Seven!?! (unhappy)
+7-(             Seven!?! (unhappy)
 
-9-)		Nine!?! (happy)
+9-)             Nine!?! (happy)
 
-9-(		Nine!?! (unhappy)
+9-(             Nine!?! (unhappy)
 
-69-)		Cancer
-		Pisces
-		Happy Moon Child
+69-)            Cancer
+                Pisces
+                Happy Moon Child
 
-(^)_(^)		Basic smilie (Japanese symbol) wearing glasses
+(^)_(^)         Basic smilie (Japanese symbol) wearing glasses
 
-- -- --- === --- -- -	ASCII dividing line
+- -- --- === --- -- -   ASCII dividing line
 
-(=		Smiling
+(=              Smiling
 
-[-:		Happy face
+[-:             Happy face
 
-<-|		Cool guy smiling
+<-|             Cool guy smiling
 
-}~;		Bruto with mustache
+}~;             Bruto with mustache
 
-<^:		Smiling, profile
+<^:             Smiling, profile
 
-{-%		Drunk
+{-%             Drunk
 
-]:)		Goat
+]:)             Goat
 
-^_+		Sees a good thing
+^_+             Sees a good thing
 
-+_^		Sees a good thing
++_^             Sees a good thing
 
-(XXXXX];;;;;;;;;;>	Knife or Sword
+(XXXXX];;;;;;;;;;>      Knife or Sword
 
-/*^_^*\		Sailor Moon
+/*^_^*\         Sailor Moon
 
-'ommmmmmmmmmmmmmmmmmmmmmmo	Millipede
+'ommmmmmmmmmmmmmmmmmmmmmmo      Millipede
 
-oOoOoOoO_OoOoOoOo	Severe distress
+oOoOoOoO_OoOoOoOo       Severe distress
 
-[b-] <(RESISTANCE IS FUTILE)	Borg smiley saying Borg catch-phrase before
-					assimilating a new species
+[b-] <(RESISTANCE IS FUTILE)    Borg smiley saying Borg catch-phrase before
+                                        assimilating a new species
 
 (_!_)           A regular ass
 
@@ -4232,13 +4232,13 @@ oOoOoOoO_OoOoOoOo	Severe distress
 
 (_._)           A flat ass
 
-(_^_)      	A bubble ass
+(_^_)           A bubble ass
 
 (_^^_)          A bubble ass
 
 (_*_)           A sore ass
-		A French ass
-		Tongue in cheek
+                A French ass
+                Tongue in cheek
 
 (_!__)          A lop-sided ass
 
@@ -4247,7 +4247,7 @@ oOoOoOoO_OoOoOoOo	Severe distress
 (_O_)           An ass that's been around even more
 
 (_$_)           This ass will cost you
-		Money coming out of his ass
+                Money coming out of his ass
 
 (_/_)           An asian ass
 
@@ -4265,7 +4265,7 @@ oOoOoOoO_OoOoOoOo	Severe distress
 
 (_oo_)          An ass built for two
 
-(_o^o_)   	A wise ass
+(_o^o_)         A wise ass
 
 (_o^^o_)        A wise ass
 
@@ -4273,786 +4273,786 @@ oOoOoOoO_OoOoOoOo	Severe distress
 
 (_Y_)           An ass that can't say No
 
-(_?_)   	A dumb ass
+(_?_)           A dumb ass
 
-(88888:-)	Marge Simpson
+(88888:-)       Marge Simpson
 
-|#|[:](|)	Crow T. Robot, long view (from MST3K)
+|#|[:](|)       Crow T. Robot, long view (from MST3K)
 
-^_^		Smile (Japanese symbol)
+^_^             Smile (Japanese symbol)
 
-(@@)		"You're kidding!" (Japanese symbol)
+(@@)            "You're kidding!" (Japanese symbol)
 
-m(_)m		Humble bow of thanks or apology (Japanese symbol)
+m(_)m           Humble bow of thanks or apology (Japanese symbol)
 
-@|@		User has spent too long looking at the terminal
+@|@             User has spent too long looking at the terminal
 
-d:-p		Adolescent
+d:-p            Adolescent
 
-V(8-|		Air Force pilot
+V(8-|           Air Force pilot
 
-(|:-#		American footballer
+(|:-#           American footballer
 
-_(D)		Astronaut
+_(D)            Astronaut
 
-(O)-<-<	        Astronaut
+(O)-<-<         Astronaut
 
-~:-o		Baby (crying)
+~:-o            Baby (crying)
 
-(: )t		Bankrobber
-		Terrorist
+(: )t           Bankrobber
+                Terrorist
 
-C):-O		Barbershop quartet member
+C):-O           Barbershop quartet member
 
-<>:-)	        Bishop
+<>:-)           Bishop
 
-X-#		Boxer
+X-#             Boxer
 
-Q=:-)		Chef (graduated)
+Q=:-)           Chef (graduated)
 
-*:-))		Clown
+*:-))           Clown
 
-<*:oDX		Clown
+<*:oDX          Clown
 
-::(:-)		Cosmonaut
+::(:-)          Cosmonaut
 
-C):-)		Cowboy
+C):-)           Cowboy
 
-c|:-O		Cowboy
+c|:-O           Cowboy
 
-~(O)|		Deep sea diver
+~(O)|           Deep sea diver
 
-(O)|		Deep sea diver
+(O)|            Deep sea diver
 
-:-L]		Dentist
+:-L]            Dentist
 
-)X->		Devil
+)X->            Devil
 
-=|:-)X		Diplomat
+=|:-)X          Diplomat
 
-::--((		Earthquake victim
+::--((          Earthquake victim
 
-((cc--		Fractal geometrist
+((cc--          Fractal geometrist
 
-]:-]		Gaelic musician
-		A Celt
+]:-]            Gaelic musician
+                A Celt
 
-~(:-|		General or marshal
+~(:-|           General or marshal
 
-|<:-)		Graduate
+|<:-)           Graduate
 
-<|##		Hangman
+<|##            Hangman
 
-<:<)}		Hippie
+<:<)}           Hippie
 
-(##]		Hockey player
+(##]            Hockey player
 
-[8-F		Hockey player
+[8-F            Hockey player
 
-<*:-)		Magician
+<*:-)           Magician
 
-(#-[		Marine
+(#-[            Marine
 
->X#-[		Marines never die, they just regroup in Hell
+>X#-[           Marines never die, they just regroup in Hell
 
-*(:-|		Military officer
+*(:-|           Military officer
 
-MP(:-[		Military Policeman
+MP(:-[          Military Policeman
 
-o(:-)		Miner
+o(:-)           Miner
 
-(B-I=		Modern art critic
+(B-I=           Modern art critic
 
-@*~		Pink Floyd fan
+@*~             Pink Floyd fan
 
-oX)		Pirate
+oX)             Pirate
 
-+(:-|		Priest (orthodox)
++(:-|           Priest (orthodox)
 
-@-D		Psychologist
+@-D             Psychologist
 
-=[O-)]		Racing driver
+=[O-)]          Racing driver
 
-E:-)		Radio ham
+E:-)            Radio ham
 
-:--]		Robot
+:--]            Robot
 
-*#*!^*&:-)	Schizophrenic
+*#*!^*&:-)      Schizophrenic
 
-O-(		Scuba diver with a broken mask
+O-(             Scuba diver with a broken mask
 
-(B^|		Secret agent
+(B^|            Secret agent
 
-=(#-I		Sepultura fan
+=(#-I           Sepultura fan
 
-C):-|*		Sheriff
+C):-|*          Sheriff
 
-:)%		Skateboarder
+:)%             Skateboarder
 
-$(:-|		Soldier (dog-soldier)
+$(:-|           Soldier (dog-soldier)
 
-(:-)"		Soldier with medals / officer
+(:-)"           Soldier with medals / officer
 
-_(:-|		Soldier from the communications corps
+_(:-|           Soldier from the communications corps
 
-|-(:-|		Soldier from the radar division
+|-(:-|          Soldier from the radar division
 
-$:-$		Stockbroker
+$:-$            Stockbroker
 
-(:=<		Stormtrooper (Star Wars)
+(:=<            Stormtrooper (Star Wars)
 
-<:|-|)<	        Student of physics
+<:|-|)<         Student of physics
 
-S:-)		Superuser
+S:-)            Superuser
 
-:-)J		Surfer
+:-)J            Surfer
 
--=*:-)		TeX wizard
+-=*:-)          TeX wizard
 
-:->-<	        Thief -- hands up!
+:->-<           Thief -- hands up!
 
-(D)		Welder
+(D)             Welder
 
-<:-D		Witch
+<:-D            Witch
 
-:-)(-:		Just married!
+:-)(-:          Just married!
 
-)-::-(		Married
+)-::-(          Married
 
-:-|:-|		Deja' vu
+:-|:-|          Deja' vu
 
-o>8<(=		Message about interesting women
+o>8<(=          Message about interesting women
 
-%~v		"God I hate line noise!"
+%~v             "God I hate line noise!"
 
-,`:-C		"Huh?  What's the matter?" / "What's wrong?"
+,`:-C           "Huh?  What's the matter?" / "What's wrong?"
 
-,':-)		"That's a really interesting idea!"
+,':-)           "That's a really interesting idea!"
 
-;-S		"I kind of like it"
+;-S             "I kind of like it"
 
-I-8)~V-|!	A left-handed general of an AF Apache radar section
+I-8)~V-|!       A left-handed general of an AF Apache radar section
 
-~8-|		An alien
+~8-|            An alien
 
-!:-|		An Apache
+!:-|            An Apache
 
-\%*}		An Apache after too much fire water
+\%*}            An Apache after too much fire water
 
-=|:-)~D		An Englishman (with cup of tea)
+=|:-)~D         An Englishman (with cup of tea)
 
-@:]		A goblin
-		Wearing a turban
+@:]             A goblin
+                Wearing a turban
 
-_:-)		An Indian (American)
+_:-)            An Indian (American)
 
--(8-:):		An Indian (American)
+-(8-:):         An Indian (American)
 
-:^$		Jewish
+:^$             Jewish
 
->>:-1		A Klingon
+>>:-1           A Klingon
 
-*):-)		A Muslim
+*):-)           A Muslim
 
-*):||		A Muslim woman
+*):||           A Muslim woman
 
-H=D		A Negro
+H=D             A Negro
 
-3:o]		Pet smiley
+3:o]            Pet smiley
 
->:-o		Smiley antelope
+>:-o            Smiley antelope
 
-:=|		Smiley baboon
+:=|             Smiley baboon
 
-3:-]		Smiley bullock
+3:-]            Smiley bullock
 
-:@|		Smiley bull terrier
+:@|             Smiley bull terrier
 
-3:o		Smiley calf
+3:o             Smiley calf
 
-.V		Smiley duck
+.V              Smiley duck
 
-B|		Smiley frog
+B|              Smiley frog
 
-><:>==	        Smiley turkey
+><:>==          Smiley turkey
 
-(:[		Smiley worm (or ant)
+(:[             Smiley worm (or ant)
 
-=:7)~~		Rat/mouse (the 7 is its nose)
+=:7)~~          Rat/mouse (the 7 is its nose)
 
-=;7)~~		Winky rat, sarcastic as ever
+=;7)~~          Winky rat, sarcastic as ever
 
-=:7(~~		Sad rat
+=:7(~~          Sad rat
 
-=:7>~~	        Sarcastic rat (the default)
+=:7>~~          Sarcastic rat (the default)
 
->;7)~~		Winky and devil combined
+>;7)~~          Winky and devil combined
 
-~~(*:=		Left-handed mouse (drunk?)
+~~(*:=          Left-handed mouse (drunk?)
 
-=%7)~~		Rat that has been staring at a green screen for 15 hours
+=%7)~~          Rat that has been staring at a green screen for 15 hours
 
-=87)~~		Rat with eyeglasses
+=87)~~          Rat with eyeglasses
 
-O=:--~~		Holy Rat in punker look
+O=:--~~         Holy Rat in punker look
 
-=^..^=		CyberKat
+=^..^=          CyberKat
 
-/\oo/\		Spider or bat
+/\oo/\          Spider or bat
 
-:o		User is shocked
+:o              User is shocked
 
-[:)		Wearing a Walkman
+[:)             Wearing a Walkman
 
-:?		Smoking a pipe
+:?              Smoking a pipe
 
-:&		Tongue-tied
+:&              Tongue-tied
 
-:{)		Moustachioed
+:{)             Moustachioed
 
-:)=		A vampire
+:)=             A vampire
 
-:))		Double-chinned
-		Cheshire Cat
+:))             Double-chinned
+                Cheshire Cat
 
-xd:)		Wearing a propeller hat
+xd:)            Wearing a propeller hat
 
-:/		Crying
+:/              Crying
 
-:)~		Drooling
+:)~             Drooling
 
-:#		Screaming
+:#              Screaming
 
-%6		Brain dead
+%6              Brain dead
 
-(I		Asleep
+(I              Asleep
 
-:')		Crying
+:')             Crying
 
-X)		Dead
-		An alien
+X)              Dead
+                An alien
 
->:>		Devilish
+>:>             Devilish
 
-|O		Yawning
+|O              Yawning
 
-P)		A pirate
+P)              A pirate
 
-:)8-		Male
+:)8-            Male
 
-(: )		A balaclava
+(: )            A balaclava
 
-D)		A crash helmet
+D)              A crash helmet
 
-G:-)		A football helmet
+G:-)            A football helmet
 
-*/:-)		A tam o'shanter
+*/:-)           A tam o'shanter
 
-*\:-)		A tam o'shanter
+*\:-)           A tam o'shanter
 
-c):-)		A bowler hat
+c):-)           A bowler hat
 
-@}:-)		A gardening hat
+@}:-)           A gardening hat
 
-(|:-)		A helmet
+(|:-)           A helmet
 
-o<:-)		A bobble hat
+o<:-)           A bobble hat
 
-<|:-)		A party hat
+<|:-)           A party hat
 
-{|:-)		A Mao suit
+{|:-)           A Mao suit
 
-:-)o-		A tie
+:-)o-           A tie
 
-:-)x===>	A tie
+:-)x===>        A tie
 
-:-)8>		A tuxedo
+:-)8>           A tuxedo
 
-:-)x>	   	A tuxedo
+:-)x>           A tuxedo
 
-:-)8---		A tuxedo
+:-)8---         A tuxedo
 
-:-)o->		A suit and tie
+:-)o->          A suit and tie
 
-(: (=|		A ghost costume
+(: (=|          A ghost costume
 
-B-)[<		Sunglasses and swimming trunks
+B-)[<           Sunglasses and swimming trunks
 
-(:-) : 8-	User is male
+(:-) : 8-       User is male
 
-(:-) : -8	User is male and on the make
+(:-) : -8       User is male and on the make
 
-*:-} 8 *	User is female
+*:-} 8 *        User is female
 
-*:-} 8 O	User is female and on the make
+*:-} 8 O        User is female and on the make
 
-(:-[ : 8-	User is a male sadist
+(:-[ : 8-       User is a male sadist
 
-(:/] > 8-	User is a male masochist
+(:/] > 8-       User is a male masochist
 
-B-o		User is a bondage fetishest
+B-o             User is a bondage fetishest
 
-(8-( : -8	User is a masked rapist
+(8-( : -8       User is a masked rapist
 
-*:-} 8 8-	User is a transvestite
+*:-} 8 8-       User is a transvestite
 
-{8:||		User is a transsexual
+{8:||           User is a transsexual
 
-;-)o===8	User is a braggart
+;-)o===8        User is a braggart
 
-:-\ 8o		User after a cold shower
+:-\ 8o          User after a cold shower
 
-:-o ^^^^:	User after zipping up fly too fast
+:-o ^^^^:       User after zipping up fly too fast
 
-:-{ -__-:	User after slamming the toilet seat
+:-{ -__-:       User after slamming the toilet seat
 
-:-) <		User is a slut
+:-) <           User is a slut
 
-$:-} 8 *	User is a prostitute
+$:-} 8 *        User is a prostitute
 
-$:-) : 8-	User is a gigolo
+$:-) : 8-       User is a gigolo
 
-*:-} : 8-	User is a gay male
+*:-} : 8-       User is a gay male
 
-[:-) : *	User is a gay female
+[:-) : *        User is a gay female
 
-(:-) ?		User has had a sex-change
+(:-) ?          User has had a sex-change
 
-:-) >		User is celibate
+:-) >           User is celibate
 
-:-( :-		User is impotent (or let down)
+:-( :-          User is impotent (or let down)
 
-:-) -8		User has blue balls
+:-) -8          User has blue balls
 
-:-) -:		User has an erection
+:-) -:          User has an erection
 
-:-) -^-:	User is masturbating
+:-) -^-:        User is masturbating
 
-:-):-*8(-:	User is having sex
+:-):-*8(-:      User is having sex
 
-:-) :-...	User is taking a leak
+:-) :-...       User is taking a leak
 
-8-O --*		User just before doubling over with pain
+8-O --*         User just before doubling over with pain
 
->:-( 8 \*>-<	User has disparaging opinion of feminists
+>:-( 8 \*>-<    User has disparaging opinion of feminists
 
-@:-X@		User enjoys bondage
+@:-X@           User enjoys bondage
 
-<=8:-)		User is a dickhead
+<=8:-)          User is a dickhead
 
-:-)3		User is a big girl
+:-)3            User is a big girl
 
-:-)-}8		User is a big girl
+:-)-}8          User is a big girl
 
-;-)-8		User is a big girl winking at you
+;-)-8           User is a big girl winking at you
 
-:-)O		User is a very messed up girl
+:-)O            User is a very messed up girl
 
-:-{8		User is very unhappy with the results of her breast implant
-			surgery
+:-{8            User is very unhappy with the results of her breast implant
+                        surgery
 
-:-O=		User is showing their tongue to the doctor
+:-O=            User is showing their tongue to the doctor
 
->8-0		User is in the throes of composition
+>8-0            User is in the throes of composition
 
-:-)|		User is out on the town
+:-)|            User is out on the town
 
-|-[#]		User is about to explode
+|-[#]           User is about to explode
 
-|[*]		User is exploding NOW!
+|[*]            User is exploding NOW!
 
--:		User is upside down with a brick in theiir mouth
+-:              User is upside down with a brick in theiir mouth
 
-:::)		User is smiling despite being riddled by bullets
+:::)            User is smiling despite being riddled by bullets
 
-:-D*		User is lughing so much they don't realize that there's a
-			spider hanging from their lip
+:-D*            User is lughing so much they don't realize that there's a
+                        spider hanging from their lip
 
-:*D		User is drunk and laughing in church for no good reason
+:*D             User is drunk and laughing in church for no good reason
 
-;>)		User is smirking
+;>)             User is smirking
 
-:,-(		User is crying
+:,-(            User is crying
 
-:~(~~		User is crying
+:~(~~           User is crying
 
-3-O		User is snoring
+3-O             User is snoring
 
-I-)		User is sniggering
+I-)             User is sniggering
 
-%-(|)		User is laughing out loud
+%-(|)           User is laughing out loud
 
-:'-D		User is laughing so much that they're crying
+:'-D            User is laughing so much that they're crying
 
-:,-D		User is laughing so much that they're crying
+:,-D            User is laughing so much that they're crying
 
-:-):-):-)	User is guffawing loudly
+:-):-):-)       User is guffawing loudly
 
-]:-} =]]]]>	King Arthur
+]:-} =]]]]>     King Arthur
 
-=|:=)		Charlie Chaplin
+=|:=)           Charlie Chaplin
 
-*<:-)>		Santa Claus
+*<:-)>          Santa Claus
 
-o-<:-}}}	Santa Claus
+o-<:-}}}        Santa Claus
 
-*<(:-)		Santa Claus
+*<(:-)          Santa Claus
 
-o-(:-{o{{{{	Santa Claus
+o-(:-{o{{{{     Santa Claus
 
-o<:-}}		Santa Claus
+o<:-}}          Santa Claus
 
-=:o]		Bill Clinton
+=:o]            Bill Clinton
 
-(*): I		Cyclops
+(*): I          Cyclops
 
-(O-)		Cyclops
+(O-)            Cyclops
 
-:-[x>		Count Dracula
+:-[x>           Count Dracula
 
-:g)		The Elephant Man
+:g)             The Elephant Man
 
-[:-|I		Frankenstein's monster
+[:-|I           Frankenstein's monster
 
-}:-{|		Clark Gable
-		Snidley Whiplash
+}:-{|           Clark Gable
+                Snidley Whiplash
 
-:=(		Adolf Hitler
+:=(             Adolf Hitler
 
-:-=(		Adolf Hitler
+:-=(            Adolf Hitler
 
-:-) ---		John Holmes
+:-) ---         John Holmes
 
-(:-) : 8===	John Holmes
+(:-) : 8===     John Holmes
 
-:-) ===8	John Holmes
+:-) ===8        John Holmes
 
-(8 )		The Invisible Man
+(8 )            The Invisible Man
 
-?8-o		Elton John
+?8-o            Elton John
 
-:-((		Al Jolson
+:-((            Al Jolson
 
-C)B-)		The Lone Ranger
+C)B-)           The Lone Ranger
 
-}B-i		Groucho Marx
+}B-i            Groucho Marx
 
-:-) 8		Dolly Parton
+:-) 8           Dolly Parton
 
-+<(:-)		The Pope
++<(:-)          The Pope
 
-@:-()		Elvis Presley
+@:-()           Elvis Presley
 
-|:]		Robocop
+|:]             Robocop
 
-c)P-(		Long John Silver
+c)P-(           Long John Silver
 
-:8-1		Bart Simpson
+:8-1            Bart Simpson
 
-3 :-)		Bart Simpson
+3 :-)           Bart Simpson
 
-****:-)		Marge Simpson
+****:-)         Marge Simpson
 
-Q:-o		William Tell, Jr.
+Q:-o            William Tell, Jr.
 
-(8<|		Darth Vader
+(8<|            Darth Vader
 
-=)||)		Zorro
+=)||)           Zorro
 
-8===8		Satellite Of Love (from MST3K)
+8===8           Satellite Of Love (from MST3K)
 
->----(^_^)----<		A hug
+>----(^_^)----<         A hug
 
-(|)		E-moon
-		You are being mooned
+(|)             E-moon
+                You are being mooned
 
-~===[]		A candle
+~===[]          A candle
 
---------8<----m-oo--m---------	Cut here iin order to spy at the wall
+--------8<----m-oo--m---------  Cut here iin order to spy at the wall
 
-_________8______________	Snowman spying at the wall (too small?)
+_________8______________        Snowman spying at the wall (too small?)
 
-X-)		An alien
+X-)             An alien
 
->)		An alien
+>)              An alien
 
 >{|>            An alien
-		Geordi with his visor
+                Geordi with his visor
 
-@_0		User is having a stroke (one pupil smaller than other)
+@_0             User is having a stroke (one pupil smaller than other)
 
-0_@		User is having a stroke (one pupil smaller than other)
+0_@             User is having a stroke (one pupil smaller than other)
 
-@_O		User is having a stroke (one pupil smaller than other)
+@_O             User is having a stroke (one pupil smaller than other)
 
-O_@		User is having a stroke (one pupil smaller than other)
+O_@             User is having a stroke (one pupil smaller than other)
 
-(_<>_)		An ass ready for action!
-		Buttcake
+(_<>_)          An ass ready for action!
+                Buttcake
 
-(_^?_)		Neat shaven ass
+(_^?_)          Neat shaven ass
 
-(_@_)		Buck ass
+(_@_)           Buck ass
 
-(_+_)		A boinker (never stand behind one)
+(_+_)           A boinker (never stand behind one)
 
-(1+1=2)		A smart ass
+(1+1=2)         A smart ass
 
-(2+2=3)		A dumb ass
+(2+2=3)         A dumb ass
 
-`o._.o'		A head with eyes and a nose
+`o._.o'         A head with eyes and a nose
 
-\-(o)-(o)-/	Pair of glasses and eyes
+\-(o)-(o)-/     Pair of glasses and eyes
 
-.-=-.		UFO
+.-=-.           UFO
 
-.-=o=-.		UFO
+.-=o=-.         UFO
 
-.-~-.-~-.-~	Waves
+.-~-.-~-.-~     Waves
 
-/)/)/)/)/)/)	Waves
+/)/)/)/)/)/)    Waves
 
-c^o-o^		Putting glasses on
+c^o-o^          Putting glasses on
 
-|-o-|		Small Tie Fighter
+|-o-|           Small Tie Fighter
 
-`'~,.,~'`'~,.,~'`'~,.,~'`'~,.,~'	Wave or banner decor
+`'~,.,~'`'~,.,~'`'~,.,~'`'~,.,~'        Wave or banner decor
 
-|><|		Hour glass on side
+|><|            Hour glass on side
 
-^*_*^		Forward facing smiley
+^*_*^           Forward facing smiley
 
-//O\\		Spider
+//O\\           Spider
 
-'==xx\0		Dead guy
+'==xx\0         Dead guy
 
-'==>x\9		Dead girl
+'==>x\9         Dead girl
 
-'-=,o		Dead child
+'-=,o           Dead child
 
-.....`=o=^o>  <o^=o'.....	2 cars fixing to crash
+.....`=o=^o>  <o^=o'.....       2 cars fixing to crash
 
-.......`o=^o>    '-=,o		Car about to run over dead child
+.......`o=^o>    '-=,o          Car about to run over dead child
 
-@[O],[O]	Dude with glasses
+@[O],[O]        Dude with glasses
 
-@(o),(o)	Dude with glasses
+@(o),(o)        Dude with glasses
 
-O==I======>	Small sword
+O==I======>     Small sword
 
-xxx-------->	Arrow
+xxx-------->    Arrow
 
-..'...-=...,.o......`o=^o>	Car ran over dead child
+..'...-=...,.o......`o=^o>      Car ran over dead child
 
---~~~=:>[XXXXXXXXX]>	Rocket
+--~~~=:>[XXXXXXXXX]>    Rocket
 
-Y-Y^y^-/|\--Y^y^yY	Looking ahead on a desert highway
+Y-Y^y^-/|\--Y^y^yY      Looking ahead on a desert highway
 
-``'//^\=Z  -=O		Turtle after a tadpole
+``'//^\=Z  -=O          Turtle after a tadpole
 
-___/<^>\___	Front view of a stealth bomber
+___/<^>\___     Front view of a stealth bomber
 
-& &  >^\\\<|	Big fish going after little ones
+& &  >^\\\<|    Big fish going after little ones
 
-~^~^~'====>`~^~^~^~^~	Torpedo in water
+~^~^~'====>`~^~^~^~^~   Torpedo in water
 
-(<>..<>) 	Alien Grey
+(<>..<>)        Alien Grey
 
 _."._."._."._."._."._."._         Another waveform
 
-<'><		Mini-fish
+<'><            Mini-fish
 
-><`>		Mini-fish
+><`>            Mini-fish
 
-db db db 	Big dots
+db db db        Big dots
 
--<=+		Mini-plane
+-<=+            Mini-plane
 
-[`.`.`.`]	Data plug
+[`.`.`.`]       Data plug
 
-<<>><<>><<>><<>><<>>	Head-band
+<<>><<>><<>><<>><<>>    Head-band
 
->< >< >< >< >< >< ><	Big Xs
+>< >< >< >< >< >< ><    Big Xs
 
-<:>:<:>:<:>:<:>:<:>:<:>:	Head-Band
+<:>:<:>:<:>:<:>:<:>:<:>:        Head-Band
 
-|/|\|/|\|/|\|/|\|	Another bar
+|/|\|/|\|/|\|/|\|       Another bar
 
-)(*)(*)(*)(*)(*)(*)(*)(		Border
+)(*)(*)(*)(*)(*)(*)(*)(         Border
 
-\__o- \__o- \__o-  \__o-	Duckies
+\__o- \__o- \__o-  \__o-        Duckies
 
->(((((*.	Fishy 
+>(((((*.        Fishy
 
-/^(o.o)^\	Bug
+/^(o.o)^\       Bug
 
---=============)@@@@@@-o	Sword
+--=============)@@@@@@-o        Sword
 
-[-oo-]		Tie Bomber
+[-oo-]          Tie Bomber
 
-3:-)		Bull or Cow
+3:-)            Bull or Cow
 
-*<:O)		Bozo the Clown
+*<:O)           Bozo the Clown
 
-*<( :-)}}}}	Santa
+*<( :-)}}}}     Santa
 
-(8)		Yo mamma's ass
+(8)             Yo mamma's ass
 
->:O)~		Wicked Clown
+>:O)~           Wicked Clown
 
-[-o-]		Darth Vader's Tie Fighter
+[-o-]           Darth Vader's Tie Fighter
 
-<-o->		Tie interceptor (star wars, seen from front)
+<-o->           Tie interceptor (star wars, seen from front)
 
-{-o-}		Darth Vader's tie fighter (star wars, seen from front)
+{-o-}           Darth Vader's tie fighter (star wars, seen from front)
 
->::<		X wing (star wars, seen from behind)
+>::<            X wing (star wars, seen from behind)
 
-<-E		Y wing (star wars, seen from above)
+<-E             Y wing (star wars, seen from above)
 
-<Q)		Mini-Millenium falcon (star wars, seen from above)
+<Q)             Mini-Millenium falcon (star wars, seen from above)
 
-<[=][		A-wing (star wars, seen from above)
+<[=][           A-wing (star wars, seen from above)
 
-(*)--(*)	Besbin twin cloud car (star wars, seen from front)
+(*)--(*)        Besbin twin cloud car (star wars, seen from front)
 
-::E--=		E-wing (star wars, seen from above)
+::E--=          E-wing (star wars, seen from above)
 
-<<<|->[		Victory star destroyer (star wars, seen from above)
+<<<|->[         Victory star destroyer (star wars, seen from above)
 
-C(((((cc-	Rebel transport (star wars, seen from above)
+C(((((cc-       Rebel transport (star wars, seen from above)
 
-=[<={[		Rebel snowspeeder (star wars, seen from above)
+=[<={[          Rebel snowspeeder (star wars, seen from above)
 
-<-E=->		Star cruiser (star wars, seen from above)
+<-E=->          Star cruiser (star wars, seen from above)
 
-,,,^._.^,,,	Cat
+,,,^._.^,,,     Cat
 
 oK              Someone walking
 
 O>              A birdie
 
-^?-)		Anonymous smiley
+^?-)            Anonymous smiley
 
-:-=|		Adolf Hitler smiley
+:-=|            Adolf Hitler smiley
 
-(:-))-|-<	Ever thought how Smiley's body looks like?
+(:-))-|-<       Ever thought how Smiley's body looks like?
 
-X=(;-))-|8-<=	Ever thought how Smiley's girlfriend looks like?
+X=(;-))-|8-<=   Ever thought how Smiley's girlfriend looks like?
 
-0=]:-)		Smiley with a top (silk) hat
+0=]:-)          Smiley with a top (silk) hat
 
 :s              A tounge tied person
 
 00              An Oreo being opened which resembles that you're going to
-			to take a snack break
+                        to take a snack break
 
 C=              Lightbulb resembling you have an idea
 
 = :>            Devil
 
-:B		Buck tooth boy
-		Person who needs braces
-		What's up doc?
+:B              Buck tooth boy
+                Person who needs braces
+                What's up doc?
 
-o_06		Face with a big drop of sweat
+o_06            Face with a big drop of sweat
 
-<><		Ichtus, a.k.a. Jesus fish
+<><             Ichtus, a.k.a. Jesus fish
 
-@(^_^)@		Princess Leia from Star Wars
+@(^_^)@         Princess Leia from Star Wars
 
-8===8<0>8===8	X-wing from Star Wars
+8===8<0>8===8   X-wing from Star Wars
 
-^.~		User is winking (Japanese-style symbol)
+^.~             User is winking (Japanese-style symbol)
 
-n.n		User is smiling
-		User is happy (Japanese-style symbol)
-		Cute smile, emphasis on cute
+n.n             User is smiling
+                User is happy (Japanese-style symbol)
+                Cute smile, emphasis on cute
 
-^_^x		Himura Kenshin from Rurouni Kenshin
-		User has a sweatdrop (Japanese symbol)
+^_^x            Himura Kenshin from Rurouni Kenshin
+                User has a sweatdrop (Japanese symbol)
 
-*(^-^)*		Sailor Moon from Bishoujo Senshi Sailor Moon
+*(^-^)*         Sailor Moon from Bishoujo Senshi Sailor Moon
 
-/*-_-*\		Sailor Moon from Bishoujo Senshi Sailor Moon
+/*-_-*\         Sailor Moon from Bishoujo Senshi Sailor Moon
 
-'-'--<3		Chibiusa's Time Key from Bishoujo Senshi Sailor Moon
+'-'--<3         Chibiusa's Time Key from Bishoujo Senshi Sailor Moon
 
-o^o-o|_		Forklift
+o^o-o|_         Forklift
 
-o^o-o{		Bulldozer
+o^o-o{          Bulldozer
 
-:-p*d-:		People French kissing
+:-p*d-:         People French kissing
 
-(o ) (o )	Headlights
+(o ) (o )       Headlights
 
-:-)`		Smiley with a dimple
+:-)`            Smiley with a dimple
 
----[ #]		Mouse
+---[ #]         Mouse
 
----( o)		Another mouse
+---( o)         Another mouse
 
----( 8)		Two-button mouse
+---( 8)         Two-button mouse
 
-(O)----		Trackball
+(O)----         Trackball
 
-E==)---		Joystick
+E==)---         Joystick
 
-[#]|		Computer
+[#]|            Computer
 
-[ ]|		Computer with blank screen
+[ ]|            Computer with blank screen
 
-_-~-_-~-*	Bouncy
+_-~-_-~-*       Bouncy
 
-+		Bouncy with a mohawk
++               Bouncy with a mohawk
 
-@		Bouncy on a bad hair day
+@               Bouncy on a bad hair day
 
-#		Bouncy with a fancy hairdo
+#               Bouncy with a fancy hairdo
 
-*-		Bouncy with a tie
+*-              Bouncy with a tie
 
-*- # + .	Bouncy family: father, mother, teenage son, and baby
+*- # + .        Bouncy family: father, mother, teenage son, and baby
 
-%*%==		Bouncy in a tree
+%*%==           Bouncy in a tree
 
--,O,'*		Hippo or cow
+-,O,'*          Hippo or cow
 
-/|**|`=		Mooo
+/|**|`=         Mooo
 
-`:-|		Spock
+`:-|            Spock
 
-:-<>		McCoy
+:-<>            McCoy
 
->;<*>-|--<	Person eating bouncy
+>;<*>-|--<      Person eating bouncy
 
-:)-8--<d:	Guess (?)
-		Woman performing oral sex on man
+:)-8--<d:       Guess (?)
+                Woman performing oral sex on man
 
-:9		Happy face sticking its tongue out
+:9              Happy face sticking its tongue out
 
-:6		Unhappy face with tongue out
-		Talking out of the side of the mouth
+:6              Unhappy face with tongue out
+                Talking out of the side of the mouth
 
-<*,^^,--	It's a dragon!
+<*,^^,--        It's a dragon!
 
-~~~<*,^^,--	It's a fire-breathing dragon!
+~~~<*,^^,--     It's a fire-breathing dragon!
 
--+#:|-|-<  <*,^^,--	Dragon vs. wizard
+-+#:|-|-<  <*,^^,--     Dragon vs. wizard
 
--+#:)->-< <* `vv`--	The wizard won
+-+#:)->-< <* `vv`--     The wizard won
 
--+#  ~~XO-!-(  `<*,^^,--	And sometimes thhe dragon wins.
+-+#  ~~XO-!-(  `<*,^^,--        And sometimes thhe dragon wins.
 
-8---		Male
+8---            Male
 
-(0)		Female
+(0)             Female
 
-8---(0)		Having sex
+8---(0)         Having sex
 
-=^V		Surprised (in profile)
+=^V             Surprised (in profile)
 
-o{||?:^D	Mike Nesmith from The Monkees (hat and wavy hair)
+o{||?:^D        Mike Nesmith from The Monkees (hat and wavy hair)
 
 ( :o)           Happy Bill Clinton
 
@@ -5063,329 +5063,329 @@ o{||?:^D	Mike Nesmith from The Monkees (hat and wavy hair)
 ( :op           Exhausted Bill Clinton
 
 ( 8o)           Bill Clinton checking out the new sexy interns
-		Bill Clinton jogging past a McDonalds
-		
+                Bill Clinton jogging past a McDonalds
+
 ( :oF           Bill Clinton enjoying some French fries
 
-( :o)-		Bill Clinton enjoying a cigar
+( :o)-          Bill Clinton enjoying a cigar
 
-{:B		Walrus
+{:B             Walrus
 
-<3~~~<3~~~<3	Hearts, love
+<3~~~<3~~~<3    Hearts, love
 
-o^~^o		Pikachu from Pokemon
+o^~^o           Pikachu from Pokemon
 
-=^~^=		RyoOhki from Tenchi Muyo
+=^~^=           RyoOhki from Tenchi Muyo
 
-^~^		Mokona from Magic Knight Rayearth
+^~^             Mokona from Magic Knight Rayearth
 
-:oj		Smile with a dimple.
+:oj             Smile with a dimple.
 
-<^/O\~		Rodent
-		"You Dirty Rat!"
+<^/O\~          Rodent
+                "You Dirty Rat!"
 
-;o)		Just kidding
-		Winking Bozo the Clown variant
+;o)             Just kidding
+                Winking Bozo the Clown variant
 
-*<|:o)X		Clown in full costume including hat and bow tie
+*<|:o)X         Clown in full costume including hat and bow tie
 
-:)~>-8-(:	Man performing oral sex on woman
+:)~>-8-(:       Man performing oral sex on woman
 
-@%<})		Smiley with thinning hair and offset glasses
+@%<})           Smiley with thinning hair and offset glasses
 
-}87(=		Vampire
+}87(=           Vampire
 
-:-) (-:		Twins
+:-) (-:         Twins
 
--Z-O-O-M-> |=====>	The BRB Rocket
+-Z-O-O-M-> |=====>      The BRB Rocket
 
-*.| /		Indian (India)
+*.| /           Indian (India)
 
-*.|...		India
+*.|...          India
 
-O<---		Sex
+O<---           Sex
 
-O+O=		Love
+O+O=            Love
 
-$$$		Money
+$$$             Money
 
-<:3)~~~~~	Mouse
+<:3)~~~~~       Mouse
 
-) ; (		Male torso with erection
+) ; (           Male torso with erection
 
->^ -.- ^<	Cat
+>^ -.- ^<       Cat
 
-:)~~(:		Kiss
+:)~~(:          Kiss
 
-{:)>~~		Smiley (?)
+{:)>~~          Smiley (?)
 
-['j']		Elephant
+['j']           Elephant
 
-['.']		Smiley (?)
+['.']           Smiley (?)
 
-['-']		Smiley (?)
+['-']           Smiley (?)
 
-())CRAYOLA()>	Crayon
+())CRAYOLA()>   Crayon
 
-(__TNT__)~	TNT
+(__TNT__)~      TNT
 
-~~~~\0/~~~~	Can't swim (drowning)
+~~~~\0/~~~~     Can't swim (drowning)
 
-(>'.'<)		Cat
+(>'.'<)         Cat
 
-[ ((*) ]	Tunisia
+[ ((*) ]        Tunisia
 
-(./\.)		Saggy boobs
+(./\.)          Saggy boobs
 
-( 8^(l)		Homer Simpson
+( 8^(l)         Homer Simpson
 
-@@@@@@@= )	Marge Simpson
+@@@@@@@= )      Marge Simpson
 
-( o Y o )	Big boobs
-		Playboy model breasts
+( o Y o )       Big boobs
+                Playboy model breasts
 
-}8}! >		Devil
+}8}! >          Devil
 
-80)		Clinton happy face
+80)             Clinton happy face
 
-:G		Gag/ralf
+:G              Gag/ralf
 
-':/		Raised eyebrow, not funny
+':/             Raised eyebrow, not funny
 
->:D		Evil grin
+>:D             Evil grin
 
-|-/		Asleep/closing eyes
+|-/             Asleep/closing eyes
 
-';/		Been clobbered (for crashes/reboots)
+';/             Been clobbered (for crashes/reboots)
 
-;P		Playfully poking out tongue
+;P              Playfully poking out tongue
 
-~_^		Japanese style wink
+~_^             Japanese style wink
 
-(_8^(|)		Homer Simpson
+(_8^(|)         Homer Simpson
 
-| \|/ |		Shaved girl
+| \|/ |         Shaved girl
 
 <============))(((((((o)))))))((============>
-		Double bladed light saber
+                Double bladed light saber
 
-:o(		W.C. Fields
-		User has a pig-nose
-		User has a cold
+:o(             W.C. Fields
+                User has a pig-nose
+                User has a cold
 
-{=*}		A hug and kiss
+{=*}            A hug and kiss
 
-( ((x)(x)) )	Oh my god they killed kenny!
+( ((x)(x)) )    Oh my god they killed kenny!
 
-{{{{{>-o	Bride of Frankenstein
+{{{{{>-o        Bride of Frankenstein
 
-(c8)		Bald man with a big nose
+(c8)            Bald man with a big nose
 
-")		Smile
+")              Smile
 
-8 )		Glasses
+8 )             Glasses
 
-"<		Feeling surprised or really stupid (quack, quack)
+"<              Feeling surprised or really stupid (quack, quack)
 
-*		Kiss
+*               Kiss
 
-{*}		Hugs and kisses
+{*}             Hugs and kisses
 
-(---->		Umbrella
+(---->          Umbrella
 
-<*-)		Drunk wearing traffic cone
+<*-)            Drunk wearing traffic cone
 
-<%-)		Very drunk wearing traffing cone
+<%-)            Very drunk wearing traffing cone
 
-))))8>o		Don King
+))))8>o         Don King
 
-^5		High five
+^5              High five
 
-<|<|=		Tree
+<|<|=           Tree
 
-<XXXXXXXXX#######	Smoking a joint
+<XXXXXXXXX#######       Smoking a joint
 
-=-))		Very happy
+=-))            Very happy
 
-=-D		Big smile
+=-D             Big smile
 
-=-}		Grin
+=-}             Grin
 
-=-)***		Smiling with drool
+=-)***          Smiling with drool
 
-=-P****		Tongue hanging out with drool
+=-P****         Tongue hanging out with drool
 
-AlA		Madonna's cleavage
+AlA             Madonna's cleavage
 
-( + )( + )	Fake silicone breasts
+( + )( + )      Fake silicone breasts
 
-(*)(*)		High nipple breasts
+(*)(*)          High nipple breasts
 
-(@)(@)		Big nipple breasts
+(@)(@)          Big nipple breasts
 
-{ O }{ O }	D cups
+{ O }{ O }      D cups
 
-(oYo)		Wonder bra breasts
+(oYo)           Wonder bra breasts
 
-( ^ )( ^ )	Cold breasts
+( ^ )( ^ )      Cold breasts
 
-< o < o		Electric shock breasts
+< o < o         Electric shock breasts
 
-(/)(o)		Scratched breasts (ouch)
+(/)(o)          Scratched breasts (ouch)
 
-(%)(o)		Extra nipple breasts
+(%)(o)          Extra nipple breasts
 
-(^o)(o)		Zit on your breast
+(^o)(o)         Zit on your breast
 
-(o)(O)		Lopsided breasts
+(o)(O)          Lopsided breasts
 
-(Q)(O)		Pierced breasts
+(Q)(O)          Pierced breasts
 
-(p)(p)		Hanging tassels breasts
+(p)(p)          Hanging tassels breasts
 
-\o/\o/		Grandma's breasts
+\o/\o/          Grandma's breasts
 
-(  -  )(  -  )	Flat against the shower door breasts
+(  -  )(  -  )  Flat against the shower door breasts
 
-|o||o|		Android breasts
+|o||o|          Android breasts
 
-($)($)		Jenny McCarthy's breasts
+($)($)          Jenny McCarthy's breasts
 
-[::( )::]	Band Aid
+[::( )::]       Band Aid
 
-[  ]=====================D	A penis
+[  ]=====================D      A penis
 
-=0)		Happy
+=0)             Happy
 
-=0P		Making fun of
+=0P             Making fun of
 
-=0x		Without words
+=0x             Without words
 
-@...@		Two hearts loving from a distance
+@...@           Two hearts loving from a distance
 
-( o )( o )	Boobs
+( o )( o )      Boobs
 
-{____Y____}	Ass
+{____Y____}     Ass
 
-:-0_		Dr. Evil (from Austin Powers)
+:-0_            Dr. Evil (from Austin Powers)
 
-XP		French kiss
+XP              French kiss
 
-(______(_____________()~~~~~~~~~	Taking a smoke break
+(______(_____________()~~~~~~~~~        Taking a smoke break
 
-(-: :-)		Happy dancers
-		Happy dancing
+(-: :-)         Happy dancers
+                Happy dancing
 
-:)->()<]:	Ninja turtle on a skateboard
+:)->()<]:       Ninja turtle on a skateboard
 
-$(:>(		Price on his head
+$(:>(           Price on his head
 
-(:>)$$$$$$$$$$$		Who wants to be a millionaire?
+(:>)$$$$$$$$$$$         Who wants to be a millionaire?
 
-=o=		X Wing (Star Wars)
+=o=             X Wing (Star Wars)
 
-_A_		Imperial Shuttle (Star Wars)
+_A_             Imperial Shuttle (Star Wars)
 
-oI--		B-Wing (Star Wars)
+oI--            B-Wing (Star Wars)
 
-o-O-o		Y-Wing (Star Wars)
+o-O-o           Y-Wing (Star Wars)
 
-.n.		Snowspeeder (Star Wars)
+.n.             Snowspeeder (Star Wars)
 
-P		Slave 1, side view (Star Wars)
+P               Slave 1, side view (Star Wars)
 
-iO		Millenium Falcon, top view (Star Wars)
+iO              Millenium Falcon, top view (Star Wars)
 
-,:-|		The Rock (of WWF fame)
+,:-|            The Rock (of WWF fame)
 
---|--		The middle finger
-		The bird
-		The International Driver's Salute
+--|--           The middle finger
+                The bird
+                The International Driver's Salute
 
-x_x		Dead, unconcious, etc.
+x_x             Dead, unconcious, etc.
 
-/~~;.;~~\	Fountain of tears
+/~~;.;~~\       Fountain of tears
 
-)-)-)-)-)-)-)(:-)	Captain Picard wearing toupee travelling at Warp 7
+)-)-)-)-)-)-)(:-)       Captain Picard wearing toupee travelling at Warp 7
 
-;@		Playful/mock anger
+;@              Playful/mock anger
 
-;0		Playful/mock surprise
+;0              Playful/mock surprise
 
-/8-(		The Rock (of the WWF)
+/8-(            The Rock (of the WWF)
 
-`\o/`		User waving goodbye (or hello)
+`\o/`           User waving goodbye (or hello)
 
-~~`\o/`~~	Drowning user
+~~`\o/`~~       Drowning user
 
-_\M/_		Lotus flower
+_\M/_           Lotus flower
 
-@(~0~)@		Koala
+@(~0~)@         Koala
 
-~.~		Friendly smile, often understanding
+~.~             Friendly smile, often understanding
 
-__m^.^m__	Hanging on a wall
+__m^.^m__       Hanging on a wall
 
-UUIUU		Menorah [anyone else have another/better version?]
+UUIUU           Menorah [anyone else have another/better version?]
 
-{8^{l}		Homer Simpson
+{8^{l}          Homer Simpson
 
-(_))===D~~	Male ejaculation
+(_))===D~~      Male ejaculation
 
-@(*o*)@		Koala
+@(*o*)@         Koala
 
-..|..  (>_<)  ..|..	Eminem
+..|..  (>_<)  ..|..     Eminem
 
-@:^)		Wilma Flintstone
+@:^)            Wilma Flintstone
 
-}:|		Mad
+}:|             Mad
 
-**=		Stars and Stripes Forever
+**=             Stars and Stripes Forever
 
-@:-[---		Osama bin Laden
+@:-[---         Osama bin Laden
 
-(>@		Paramotor flying
+(>@             Paramotor flying
 
-@<)		Paramotor flying
+@<)             Paramotor flying
 
-<"}}}><\	Fish
+<"}}}><\        Fish
 
-=)(=		Kissing
+=)(=            Kissing
 
-9_9		Rolling eyes
+9_9             Rolling eyes
 
-~(8-)=		One hair, bespectacled, smiley, goatee
+~(8-)=          One hair, bespectacled, smiley, goatee
 
-}:-8  ~(	Bull s---
+}:-8  ~(        Bull s---
 
->')|||||||||||<<	Arrowana fish
+>')|||||||||||<<        Arrowana fish
 
-8>)		Eyes, nose, and mouth of a smiling face
+8>)             Eyes, nose, and mouth of a smiling face
 
-c-------7	Fishing boat (sent as "domain art", c-------7.net)
+c-------7       Fishing boat (sent as "domain art", c-------7.net)
 
-ixxxxi		Tennis nets (sent as "domain art", ixxxxi.net)
+ixxxxi          Tennis nets (sent as "domain art", ixxxxi.net)
 
-c-oo		Sunglasses (sent as "domain art", c-oo.biz)
+c-oo            Sunglasses (sent as "domain art", c-oo.biz)
 
-o--0--o		Jet fighter
+o--0--o         Jet fighter
 
-|  \!/  |	A male lying on his back with legs spread
+|  \!/  |       A male lying on his back with legs spread
 
-|  \*/  |	A female lying on his back with legs spread
+|  \*/  |       A female lying on his back with legs spread
 
-,l,,		The finger
+,l,,            The finger
 
-X_x		User is dead (variation)
+X_x             User is dead (variation)
 
-O_o		"Whoa..."
-		User is shocked (variation)
+O_o             "Whoa..."
+                User is shocked (variation)
 
-----,-<-'--<@	This is your Rosebud...
+----,-<-'--<@   This is your Rosebud...
 
-`BD		Bill Gates (or any guy with glasses and stupid grin)
+`BD             Bill Gates (or any guy with glasses and stupid grin)
 
-(_____((____________()~~~~~~~~	Cigarette
+(_____((____________()~~~~~~~~  Cigarette
 
 @+              A+ in French (see you, bye until the next e-mail)
 

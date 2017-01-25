@@ -9,8 +9,8 @@
 ;;   "
 ;; This macro outputs an attribute s-exp as used in defclass.
 ;; ARGS  may be of length 1 or 2.
-;;       If (LENGTH ARGS) = 1 
-;;       then if the argument is a string, 
+;;       If (LENGTH ARGS) = 1
+;;       then if the argument is a string,
 ;;            then it's taken as the documentation and the initial value is NIL
 ;;            else it's taken as the initial value and the documentation is NIL.
 ;;       else the first is the initial value and the second is the documentation.
@@ -18,7 +18,7 @@
 ;; "
 ;;   (let ((iarg (intern (format ":%s" name)))
 ;;         init doc)
-;;     (cond 
+;;     (cond
 ;;       ((= 2 (length args))
 ;;        (setq init (car  args)
 ;;              doc  (cadr args)) )
@@ -33,8 +33,8 @@
 ;;         (setq type (list 'or 'null type)))
 ;;     (if (null doc)
 ;;         (setq doc (symbol-name name)))
-;;     `(,name 
-;;       :initform ,init 
+;;     `(,name
+;;       :initform ,init
 ;;       :initarg  ,iarg
 ;;       :accessor ,name
 ;;       :type     ,type

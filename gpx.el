@@ -30,10 +30,10 @@
     (verticalDilutionOfPrecision Double)
     (ageOfGpsData Double)
     (dGpsId Integer))
-  
+
   (java-defstruct Segment
     (points ArrayList<Point>))
-  
+
   (java-defstruct Track
     (name String)
     (comment String)
@@ -59,8 +59,8 @@
 
 
 (defun java-generate-structure-class (class-name slots)
-  (insert (format "\npublic class %s {\n" class-name)) 
-  (insert (format "  public %s(){}\n" class-name)) 
+  (insert (format "\npublic class %s {\n" class-name))
+  (insert (format "  public %s(){}\n" class-name))
   (dolist (slot slots)
     (destructuring-bind (name type &rest options) slot
       (let ((came (java-capitalize-first-letter (etypecase name
@@ -191,12 +191,12 @@
     (author String author)
     (year Integer year)
     (license String license))
-  
+
   (gpx-parse Person
     (name String name)
     (email Email email)
     (link Link link))
-  
+
   (gpx-parse Bounds
     (minimum-latitude Double minlat)
     (minimum-longitude Double minlon)
@@ -211,9 +211,9 @@
     (href String href)
     (text String text)
     (type String type))
-  
-  
-  (gpx-parse Point 
+
+
+  (gpx-parse Point
     (latitude Double lat :attribute)
     (longitude Double lon :attribute)
     (elevation Double ele)
@@ -233,10 +233,10 @@
     (verticalDilutionOfPrecision Double vdop)
     (ageOfGpsData Double ageofdgpsdata)
     (dGpsId Integer dgpsid))
-  
+
   (gpx-parse Segment
     (points ArrayList<Point> trkpt))
-  
+
   (gpx-parse Track
     (name String name)
     (comment String cmt)

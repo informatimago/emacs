@@ -62,7 +62,7 @@ for arg ; do
     -t)
         trace=1
         ;;
-    -c) 
+    -c)
         closure=1
         ;;
     -*)
@@ -87,7 +87,7 @@ if [ $closure -ne 0 ] ; then
      (load \"pjb-list.el\")
      (load \"pjb-make-depends.el\")
      (mapc (lambda (item) (princ item) (princ \" \"))
-           (nreverse (list-to-set (nreverse 
+           (nreverse (list-to-set (nreverse
              (get-closed-dependencies $OFILES '( $IDIRES )))))) ) "
 else
     emacs -q -nw --batch -l .emacs --eval "
@@ -97,7 +97,7 @@ else
       (add-to-list 'load-path \"$DIR\")
       (load \"pjb-cl.el\")
       (load \"pjb-make-depends.el\")
-      (make-depends '( $OFILES ) '( $IDIRES )) )" 
+      (make-depends '( $OFILES ) '( $IDIRES )) )"
 fi | grep -v Loading
 
 

@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    vm stuff -- obsolete.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2014 - 2014
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU Affero General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -118,7 +118,7 @@
               (t nil))))
     ) ;;when vm-sort
 
-  
+
 
   ;; (catch :found
   ;;   (let ((version emacs-version)
@@ -166,23 +166,23 @@
   ;;        (ad-activate (quote ,fname)))
   ;;     )) ;;advise-replace
   ;; (put 'advise-replace      'lisp-indent-function 2)
-  ;; 
-  ;; 
+  ;;
+  ;;
   ;; (advise-replace rmail-sort-by-correspondent (reverse)
   ;;   (vm-sort-messages  (if reverse "reversed-author" "author")))
-  ;; 
+  ;;
   ;; (advise-replace rmail-sort-by-date          (reverse)
   ;;   (vm-sort-messages  (if reverse "reversed-date" "date")))
-  ;; 
+  ;;
   ;; (advise-replace rmail-sort-by-labels        (reverse)
   ;;   (error "Not implemented with VM."))
-  ;; 
+  ;;
   ;; (advise-replace rmail-sort-by-lines         (reverse)
   ;;   (vm-sort-messages  (if reverse "reversed-line-count" "line-count")))
-  ;; 
+  ;;
   ;; (advise-replace rmail-sort-by-recipient     (reverse)
   ;;   (vm-sort-messages  (if reverse "reversed-recipients" "recipients")))
-  ;; 
+  ;;
   ;; (advise-replace rmail-sort-by-subject       (reverse)
   ;;   (vm-sort-messages  (if reverse "reversed-subject" "subject")))
 
@@ -437,7 +437,7 @@ See the documentation for vm-mode for more information."
                                       (default-value 'vm-folder-read-only)
                                       (and first-time buffer-read-only)))
         ;; If this is not a VM mode buffer then some initialization
-        ;; needs to be done 
+        ;; needs to be done
         (if first-time
             (progn
               (buffer-disable-undo (current-buffer))
@@ -554,7 +554,7 @@ See the documentation for vm-mode for more information."
 
         ;; Warn user about auto save file, if appropriate.
         (if (and full-startup preserve-auto-save-file)
-            (message 
+            (message
              (substitute-command-keys
               "Auto save file is newer; consider \\[recover-file].  FOLDER IS READ ONLY.")))
         ;; if we're not doing a full startup or if doing more would
@@ -562,7 +562,7 @@ See the documentation for vm-mode for more information."
         ;; stop here.
         (if (or (not full-startup) preserve-auto-save-file)
             (throw 'done t))
-        
+
         (if full-startup
             (message totals-blurb))
 
