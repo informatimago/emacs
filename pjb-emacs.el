@@ -2390,6 +2390,41 @@ to the buffer instead of local to the mode."
          nil))))
 
 
+(defun enough-namestring (path base)
+  "Compute a relative path to go to the `PATH' from a `BASE' directory.
+If `PATH' is an absolute pathname,
+then it is reduced to a pathname relative to `BASE'
+else it's returned as is."
+  (let ((separator "/")
+        (here      ".")
+        (back      ".."))
+    (if (string= (subseq path 0 (min 1 (length path))) separator)
+        (let* ((apath  (split-string path separator t))
+               (abase  (split-string base separator t))
+               (i      (mismatch apath abase :test (function string=))))
+          (if i
+              (mapconcat (function identity)
+                         (let ((new (or (nthcdr i apath) '(""))))
+                           (dotimes (n (- (length abase) i) new)
+                             (push back new)))
+                         separator)
+              (concat here separator)))
+        path)))
+
+
+(defun test/enough-namestring ()
+  "Test the enough-namestring function."
+  (assert (string= "a/b/c"          (enough-namestring "a/b/c" "/x/y/z")))
+  (assert (string= "./a/b/c"        (enough-namestring "./a/b/c" "/x/y/z")))
+  (assert (string= "../a/b/c"       (enough-namestring "../a/b/c" "/x/y/z")))
+  (assert (string= "../../../a/b/c" (enough-namestring "/a/b/c" "/x/y/z")))
+  (assert (string= "./"             (enough-namestring "/a/b/c" "/a/b/c")))
+  (assert (string= "../../../"      (enough-namestring "/a/b/c" "/a/b/c/d/e/f")))
+  (assert (string= "d/e/f"          (enough-namestring "/a/b/c/d/e/f" "/a/b/c")))
+  (assert (string= "../../../x/y/z" (enough-namestring "/a/b/c/x/y/z" "/a/b/c/d/e/f")))
+  :success)
+
+
 (defmacro* with-file (file-and-options &body body)
   "
 find-file or find-file-literally, process body, and optionally save the buffer
@@ -2854,6 +2889,7 @@ Attribution: ?"
   (local-set-key (kbd "<backtab>") (lambda () (interactive) (backward-button 1 t t))))
 
 
+(test/enough-namestring)
 
 (provide 'pjb-emacs)
 ;;;: THE END ;;;;
