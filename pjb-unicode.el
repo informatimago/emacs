@@ -33,7 +33,7 @@
 ;;;;**************************************************************************
 (require 'cl)
 
-(defun ascii ()
+(defun pjb-unicode-ascii ()
   (interactive)
   (loop for ch from ?0 to ?9
         do (local-set-key (kbd (string ch)) nil))
@@ -41,10 +41,82 @@
         do (local-set-key (kbd (string ch)) nil)
            (local-set-key (kbd (string (+ #x20 ch))) nil)))
 
-(defun double-struck ()
+
+(defun pjb-unicode-parenthesized-latin ()
   (interactive)
   (loop for ch from ?0 to ?9
-        for mf from #x1d7d8
+        for mf from #x1d7f6
+        do  (local-set-key (kbd (string ch))        (string mf)))
+  (loop for ch from ?a to ?z
+        for mf from 9372
+        do (local-set-key (kbd (string ch))          (string mf))))
+
+
+(defun pjb-unicode-circled-latin ()
+  (interactive)
+  (loop for ch from ?0 to ?9
+        for mf from 9450
+        do  (local-set-key (kbd (string ch))        (string mf)))
+  (loop for ch from ?A to ?Z
+        for mf from 9398
+        do (local-set-key (kbd (string ch))          (string mf))
+           (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
+
+
+(defun pjb-unicode-fullwidth-latin ()
+  (interactive)
+  (loop for ch from ?0 to ?9
+        for mf from 65296
+        do  (local-set-key (kbd (string ch))        (string mf)))
+  (loop for ch from ?A to ?Z
+        for mf from 65313
+        do (local-set-key (kbd (string ch))          (string mf))
+           (local-set-key (kbd (string (+ #x20 ch))) (string (+ 32 mf)))))
+
+(defun pjb-unicode-mathematical-bold ()
+  (interactive)
+  (loop for ch from ?0 to ?9
+        for mf from #x1d7f6
+        do  (local-set-key (kbd (string ch))        (string mf)))
+  (loop for ch from ?A to ?Z
+        for mf from 119808
+        do (local-set-key (kbd (string ch))          (string mf))
+           (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
+
+(defun pjb-unicode-mathematical-bold-italic ()
+  (interactive)
+  (loop for ch from ?0 to ?9
+        for mf from #x1d7f6
+        do  (local-set-key (kbd (string ch))        (string mf)))
+  (loop for ch from ?A to ?Z
+        for mf from 119912
+        do (local-set-key (kbd (string ch))          (string mf))
+           (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
+
+(defun pjb-unicode-mathematical-script ()
+  (interactive)
+  (loop for ch from ?0 to ?9
+        for mf from #x1d7f6
+        do  (local-set-key (kbd (string ch))        (string mf)))
+  (loop for ch from ?A to ?Z
+        for mf from 119964
+        do (local-set-key (kbd (string ch))          (string mf))
+           (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
+
+(defun pjb-unicode-mathematical-script-bold ()
+  (interactive)
+  (loop for ch from ?0 to ?9
+        for mf from 120782
+        do  (local-set-key (kbd (string ch))        (string mf)))
+  (loop for ch from ?A to ?Z
+        for mf from 120016
+        do (local-set-key (kbd (string ch))          (string mf))
+           (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
+
+(defun pjb-unicode-mathematical-double-struck ()
+  (interactive)
+  (loop for ch from ?0 to ?9
+        for mf from 120792
         do  (local-set-key (kbd (string ch))        (string mf)))
   (loop for ch from ?A to ?Z
         for mf from #x1d538
@@ -58,7 +130,7 @@
   (local-set-key (kbd "R") "ℝ")
   (local-set-key (kbd "Z") "ℤ"))
 
-(defun fraktur ()
+(defun pjb-unicode-mathematical-fraktur ()
   (interactive)
   (loop for ch from ?1 to ?9
         for mf from #x02170
@@ -73,7 +145,7 @@
   (local-set-key (kbd "R") "ℜ")
   (local-set-key (kbd "Z") "ℨ"))
 
-(defun fraktur-bold ()
+(defun pjb-unicode-mathematical-fraktur-bold ()
   (interactive)
   (loop for ch from ?1 to ?9
         for mf from #x02160
@@ -83,27 +155,27 @@
         do (local-set-key (kbd (string ch))          (string mf))
            (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
 
-(defun sans-serif ()
+(defun pjb-unicode-mathematical-sans-serif ()
   (interactive)
   (loop for ch from ?0 to ?9
-        for mf from #x1d7e2
+        for mf from 120802
         do  (local-set-key (kbd (string ch))        (string mf)))
   (loop for ch from ?A to ?Z
         for mf from #x1d5A0
         do (local-set-key (kbd (string ch))          (string mf))
            (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
 
-(defun sans-serif-bold ()
+(defun pjb-unicode-mathematical-sans-serif-bold ()
   (interactive)
   (loop for ch from ?0 to ?9
-        for mf from #x1d7ec
+        for mf from 120812
         do  (local-set-key (kbd (string ch))        (string mf)))
   (loop for ch from ?A to ?Z
         for mf from #x1d5D4
         do (local-set-key (kbd (string ch))          (string mf))
            (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
 
-(defun sans-serif-italic ()
+(defun pjb-unicode-mathematical-sans-serif-italic ()
   (interactive)
   (loop for ch from ?0 to ?9
         for mf from #x1d7ce
@@ -113,7 +185,17 @@
         do (local-set-key (kbd (string ch))          (string mf))
            (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
 
-(defun monospace ()
+(defun pjb-unicode-mathematical-sans-serif-bold-italic ()
+  (interactive)
+  (loop for ch from ?0 to ?9
+        for mf from #x1d7ce
+        do  (local-set-key (kbd (string ch))        (string mf)))
+  (loop for ch from ?A to ?Z
+        for mf from 120380
+        do (local-set-key (kbd (string ch))          (string mf))
+           (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
+
+(defun pjb-unicode-mathematical-monospace ()
   (interactive)
   (loop for ch from ?0 to ?9
         for mf from #x1d7f6
@@ -122,6 +204,5 @@
         for mf from #x1d670
         do (local-set-key (kbd (string ch))          (string mf))
            (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
-
 
 (provide 'pjb-unicode)
