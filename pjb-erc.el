@@ -1019,11 +1019,11 @@ the message given by REASON."
 
 
 (defun pjb/erc-send-pre-meat/filter-unix-commands (input)
-  "Avoids sending unix commands.
+  "Filter INPUT, avoiding sending unix commands.
 
 This filters the input to be sent to the erc channel.  If the first
 word of the input line is a unix command \(identified by which) then
-it is not sent, and a message is displayed. You can force sending it
+it is not sent, and a message is displayed.  You can force sending it
 with M-p C-u RET (or M-p and edit it so it doesn't look like a
 command).
 "
@@ -1033,7 +1033,11 @@ command).
         (if (or (intersection (coerce command 'list)
                               (coerce "!\"#$%&'()*+,:;<=>?@[\\]`{}" 'list))
                 (string= "" (or (ignore-errors
-                                 (shell-command-to-string (format "which %S" command)))
+                                 (let ((exec-path (remove-if
+                                                   (lambda (path)
+                                                     (prefixp (expand-file-name "~/") path))
+                                                   exec-path)))
+                                   (shell-command-to-string (format "which %S" command))))
                                 "")))
             t
             (progn
