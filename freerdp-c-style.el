@@ -402,7 +402,8 @@
 ;; =  -> if previous is [-+!<=>&|^*/]
 ;;       then remove previous spaces; add following space;
 ;;       else add following space;
-;; */^ -> add following space
+;; ^  -> add following space
+;; */ -> remove previous spaces; if previous is not other then insert one previous space; end; add following space;
 ;; -+&| -> if previous is same
 ;;         then remove previous spaces; add following space;
 ;;         else add following space;
@@ -448,7 +449,7 @@
          (freerdp-remove-previous-spaces)
          (when (or (/= (aref ch 0) (char-before))
                    (=  (aref ch 0) (char-before (1- (point)))))
-           (insert " ")) 
+           (insert " "))
          (self-insert-command 1)
          (insert " "))
        (self-insert-command repeat))))
@@ -461,7 +462,21 @@
          (when  (if (= ?= (char-before))
                     (position (char-before (1- (point))) =-prefixes)
                     (not (position (char-before) =-prefixes)))
-           (insert " ")) 
+           (insert " "))
+         (self-insert-command 1)
+         (insert " "))
+       (self-insert-command repeat)))
+
+(defun freerdp-electric-space-before-after-*/ (repeat)
+  (interactive "p")
+  (if (= 1 repeat)
+       (let ((ch (this-command-keys)))
+         (freerdp-remove-previous-spaces)
+         (when (cond
+               ((string= "*" ch) (/= ?/ (char-before)))
+               ((string= "/" ch) (/= ?* (char-before)))
+               (t                t))
+             (insert " "))
          (self-insert-command 1)
          (insert " "))
        (self-insert-command repeat)))
