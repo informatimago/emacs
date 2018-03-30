@@ -506,12 +506,24 @@
               (indent-region start (point)))))
        (self-insert-command repeat)))
 
+(defun freerdp-c-keyword-p (string-designator)
+   (intern-soft (etypecase string-designator
+                    (symbol    (symbol-name (symbol-at-point)))
+                    (string    string-designator)
+                    (character (string string-designator)))
+                c-keywords-obarray))
+
 (defun freerdp-electric-paren-open (repeat)
   (interactive "p")
   (if (= 1 repeat)
       (progn
         (freerdp-remove-previous-spaces)
-        (insert " ()")
+        (let ((current (point)))
+          (backward-sexp)
+          (if (prog1 (freerdp-c-keyword-p (symbol-at-point))
+                (forward-sexp))
+              (insert " ()")
+              (insert "()")))
         (backward-char))
       (self-insert-command repeat)))
 
