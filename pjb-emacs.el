@@ -137,10 +137,24 @@
 
 
 (defun recover-this-file ()
+  "Recovers the file of the current buffer, if any."
   (interactive)
   (let ((file-path  (buffer-file-name)))
     (if (and file-path (file-exists-p file-path) (file-regular-p file-path))
         (recover-file file-path)
+        (message "This buffer has no associated file."))))
+
+
+(defun delete-this-file (kill-buffer)
+  "Deletes the file of the current buffer, if any.
+When KILL-BUFFER is true (command prefix), also kills the buffer."
+  (interactive "P")
+  (let ((file-path  (buffer-file-name)))
+    (if (and file-path (file-exists-p file-path) (file-regular-p file-path))
+        (progn
+          (delete-file file-path)
+          (when kill-buffer
+            (kill-buffer)))
         (message "This buffer has no associated file."))))
 
 

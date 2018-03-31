@@ -1124,8 +1124,10 @@ command).
                (("#emacs")
                 . el-eval-last-expression)
                (("#scheme")
-                . scheme-eval-last-expression))
-        when (member* current-channel channels :test (function string=))
+                . scheme-eval-last-expression)
+               (t . cl-eval-last-expression))
+        when (or (eql channels t)
+                 (member* current-channel channels :test (function string=)))
           do (local-set-key (kbd "C-x C-e") eval-function)))
 
 (add-hook 'erc-join-hook 'pjb/erc-join-meat)
