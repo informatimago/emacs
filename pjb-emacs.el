@@ -53,7 +53,7 @@
 
 
 
-(defvar html-quick-keys t )
+(defvar html-quick-keys t)
 (defvar html-mode-map
   (let ((map (nconc (make-sparse-keymap) sgml-mode-map))
         (menu-map (make-sparse-keymap "HTML")))
@@ -1278,7 +1278,7 @@ RETURN: The origin and width and height of the screen where the frame lies,
 
 (defvar *frame-maximized-states*)
 
-;; (list (frame-pixel-left) (frame-pixel-top) (frame-width) (frame-height))
+;; (list (frame-pixel-left) (frame-pixel-top) (pjb-frame-width) (pjb-frame-height))
 ;; (0 (+ -23) 179 78)
 
 
@@ -1574,8 +1574,8 @@ only display one window with the scratch buffer"
          (screen-height (fourth area))
          (other-frames  (remove-if
                          (lambda (fr) (or (eq fr frame)
-                                     (not (equal (frame-display fr)
-                                                 (frame-display frame)))))
+                                     (not (equal (pjb-frame-display fr)
+                                                 (pjb-frame-display frame)))))
                          (frame-list))))
     (select-frame frame)
     (case (length other-frames)
@@ -1624,10 +1624,10 @@ only display one window with the scratch buffer"
                  nil ; no repeat
                  (lambda () ; a closure, thanks to lexical-binding above :-)
                    (toggle-tool-bar-mode-from-frame +1)
-                   (set-frame-size frame (1- (frame-width frame)) (1- (frame-height frame)))
+                   (set-frame-size frame (1- (pjb-frame-width frame)) (1- (pjb-frame-height frame)))
                    (forward-font -1)
                    (forward-font +1)
-                   (set-frame-size frame (1+ (frame-width frame)) (1+ (frame-height frame)))
+                   (set-frame-size frame (1+ (pjb-frame-width frame)) (1+ (pjb-frame-height frame)))
                    (toggle-tool-bar-mode-from-frame -1)))))
 
 (when (eq window-system 'ns)
