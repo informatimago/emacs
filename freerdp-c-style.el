@@ -408,9 +408,15 @@
 ;;         then remove previous spaces; add following space;
 ;;         else add following space;
 
-(defun freerdp-remove-previous-spaces ()
-  (while (= 32 (char-before))
-         (kill-backward-chars 1)))
+(defun spacep (ch)
+  (string-match "[[:blank:]]"  (string ch)))
+
+(defun* freerdp-remove-previous-spaces (&optional (from (point)))
+  (save-excursion
+   (goto-char from)
+   (while (spacep (char-before))
+          (delete-region (1- (point)) (point)))))
+
 
 (defun freerdp-electric-space-after (repeat)
   (interactive "p")
@@ -467,19 +473,55 @@
          (insert " "))
        (self-insert-command repeat)))
 
+(defun* freerdp-reverse-skip-spaces (&optional (from (point)))
+  (while (spacep (char-before from))
+         (decf from))
+  from)
+
+
+(defun freerdp-electric-space-before-after-> (repeat)
+  "Same as freerdp-electric-space-before-after-double
+unless -> in which case we remove the spaces."
+  (interactive "p")
+  (if (= 1 repeat)
+      (if (save-excursion (beginning-of-line)
+                          (thing-at-point-looking-at "[\t ]*#"))
+          (self-insert-command repeat)
+          (let ((space-after t))
+            ;;  x - - | x--  | x-- > | x-- >
+            ;;  x - > | x->a |
+            ;;  x>    | x >  |
+            (freerdp-remove-previous-spaces)
+            (if (= ?- (char-before))
+                (let ((pos (freerdp-reverse-skip-spaces (1- (point)))))
+                  (if (= ?- (char-before pos))
+                      (insert " ")
+                      (progn
+                        (freerdp-remove-previous-spaces (- (point) 1))
+                        (freerdp-remove-previous-spaces (- (point) 2))
+                        (setf space-after nil))))
+                (insert " "))
+            (self-insert-command 1)
+            (when space-after (insert " "))))
+      (self-insert-command repeat)))
+
 (defun freerdp-electric-space-before-after-*/ (repeat)
   (interactive "p")
   (if (= 1 repeat)
        (let ((ch (this-command-keys)))
          (freerdp-remove-previous-spaces)
          (when (cond
-               ((string= "*" ch) (/= ?/ (char-before)))
-               ((string= "/" ch) (/= ?* (char-before)))
-               (t                t))
-             (insert " "))
+                 ((string= "*" ch) (and (/= ?/  (char-before))
+                                        (/= ?\( (char-before))))
+                 ((string= "/" ch) (and (/= ?*  (char-before))
+                                        (/= ?/  (char-before))))
+                 (t                t))
+           (insert " "))
          (self-insert-command 1)
-         (insert " "))
+         (unless (and (string= "*" ch) (looking-at "[()]"))
+           (insert " ")))
        (self-insert-command repeat)))
+
 
 
 (defun freerdp-electric-brace-open (repeat)
@@ -517,13 +559,21 @@
   (interactive "p")
   (if (= 1 repeat)
       (progn
-        (freerdp-remove-previous-spaces)
-        (let ((current (point)))
-          (backward-sexp)
-          (if (prog1 (freerdp-c-keyword-p (symbol-at-point))
-                (forward-sexp))
-              (insert " ()")
-              (insert "()")))
+        (if (and (looking-at "[[:alpha:]_]")
+                 (or (bolp)
+                     (spacep (char-before))))
+            (insert "()")
+            (progn
+              (freerdp-remove-previous-spaces)
+              (let ((current (point)))
+                (if (bolp)
+                    (insert "()")
+                    (progn
+                      (backward-sexp)
+                      (if (prog1 (freerdp-c-keyword-p (symbol-at-point))
+                            (forward-sexp))
+                          (insert " ()")
+                          (insert "()")))))))
         (backward-char))
       (self-insert-command repeat)))
 
@@ -535,6 +585,23 @@
             (progn) ;;            (forward-char)
             (insert ")")))
        (self-insert-command repeat)))
+
+
+(defun freerdp-style-set-local-bindings ()
+  (interactive)
+  (local-set-key "," 'freerdp-electric-space-after)
+  (local-set-key "=" 'freerdp-electric-space-before-after-=)
+  (local-set-key ">" 'freerdp-electric-space-before-after->)
+  (dolist (key '("<" "+" "-" "&" "|"))
+    (local-set-key key 'freerdp-electric-space-before-after-double))
+  (dolist (key '("*" "/"))
+    (local-set-key key 'freerdp-electric-space-before-after-*/))
+  (dolist (key '("%" "^"))
+    (local-set-key key 'freerdp-electric-space-before-after))
+  (local-set-key "{" 'freerdp-electric-brace-open)
+  (local-set-key "}" 'freerdp-electric-brace-close)
+  (local-set-key "(" 'freerdp-electric-paren-open)
+  (local-set-key ")" 'freerdp-electric-paren-close))
 
 (provide 'freerdp-c-style)
 ;;;; THE END ;;;;
