@@ -375,7 +375,7 @@ This command assumes point is not in a string or comment."
 (defun pjb-ide-insert-tag-comment (&optional tag)
   (interactive "p")
   (let ((tag   (or tag 0)))
-    (unless (string= "" (string-trim " \t" (pjb-ide-beginning-of-line-to-point)))
+    (unless (string= "" (cl:string-trim " \t" (pjb-ide-beginning-of-line-to-point)))
       (insert "\n"))
     (if (region-active-p)
         (let ((start (region-beginning))

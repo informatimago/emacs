@@ -73,7 +73,7 @@
    (browse-url
     (format "https://developer.apple.com/library/mac/search/?q=%s"
             (browse-url-url-encode-chars
-             (string-trim *whitespaces* search-string)
+             (cl:string-trim *whitespaces* search-string)
              "[^A-Za-z0-9]")))))
 
 (defun osx-search-region (start end)
@@ -89,7 +89,7 @@
       (browse-url
        (format "https://developer.apple.com/library/ios/search/?q=%s"
                (browse-url-url-encode-chars
-                (string-trim *whitespaces* search-string)
+                (cl:string-trim *whitespaces* search-string)
                 "[^A-Za-z0-9]")))))
 
 (defun ios-search-region (start end)
@@ -113,7 +113,7 @@
                                 (mapconcat (function identity) words "/")))))
                   (format "http://developer.android.com/reference/index.html?q=%s"
                           (browse-url-url-encode-chars
-                           (string-trim *whitespaces* search-string)
+                           (cl:string-trim *whitespaces* search-string)
                            "[^A-Za-z0-9]")))))
 
 (defun android-search-region (start end)
@@ -139,7 +139,7 @@
    (format "http://www.google.com/search?as_q=%s&num=50&hl=en&ie=ISO8869-1&btnG=Google+Search&as_epq=&as_oq=&as_eq=&lr=&as_ft=i&as_filetype=&as_qdr=all&as_nlo=&as_nhi=&as_occt=any&as_dt=i&as_s
 itesearch=&safe=images"
            (browse-url-url-encode-chars
-            (string-trim *whitespaces* search-string)
+            (cl:string-trim *whitespaces* search-string)
             "[^A-Za-z0-9]"))))
 
 (defun google-search-region (start end)
