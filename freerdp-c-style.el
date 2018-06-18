@@ -555,13 +555,17 @@ unless -> in which case we remove the spaces."
                     (character (string string-designator)))
                 c-keywords-obarray))
 
+(defun freerdp-electric-special-character-p (ch)
+  (string-match "[[:punct:]]" (string ch)))
+
+(defvar freerdp-electric-identifier-character-regexp "[[:alnum:]_]")
+
 (defun freerdp-electric-paren-open (repeat)
   (interactive "p")
   (if (= 1 repeat)
       (progn
-        (if (and (looking-at "[[:alpha:]_]")
-                 (or (bolp)
-                     (spacep (char-before))))
+        (if (and (looking-at freerdp-electric-identifier-character-regexp)
+                 (looking-back freerdp-electric-identifier-character-regexp (- (point) 1)))
             (insert "()")
             (progn
               (freerdp-remove-previous-spaces)
