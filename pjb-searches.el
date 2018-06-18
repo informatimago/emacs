@@ -121,6 +121,40 @@
   (interactive "r")
   (%search-region start end 'symbol 'android-search))
 
+
+(defvar *pjb-search-exclude*            '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
+(defvar *pjb-search-include-extensions* '("xib" "h" "c" "m" "hh" "cc" "mm" "hxx" "cxx"
+                                          "lisp" "asd" "cl" "el"
+                                          "rb" "java" "xml"
+                                          "logs" "txt" "html" "iml"
+                                          "json" "md" "prefs"
+                                          "project" "properties"
+                                          "sh" "bash"))
+(defun git-search (search-string)
+  "Search a regex in the current git repository (with `find-grep' and `grep-find-command')."
+  (interactive "sSearch Git Regexp: ")
+  (let ((exclude *pjb-search-exclude*)
+        (include (mapcar (lambda (extension) (format "\\*.%s" extension))
+                         *pjb-search-include-extensions*)))
+    (find-grep (format "find %S \\( \\( %s \\) -prune \\) -o -type f %s -print0 | xargs -0 grep -nHi -e %s"
+
+                       (expand-file-name (vc-git-root (or (buffer-file-name) default-directory)))
+                       (mapconcat (lambda (name) (format "-name %s" name)) exclude " -o ")
+                       (if include
+                           (format "\\( %s \\)" (mapconcat (lambda (name) (format "-name %s" name)) include " -o "))
+                           "")
+                       (shell-quote-argument search-string)))))
+
+(defun git-search-region (start end)
+  "Search the text in the region in the current git repository."
+  (interactive "r")
+  (%search-region start end 'symbol 'git-search))
+
+(defun git-search-symbol-at-point ()
+  "Search the symbol at point in the current git repository."
+  (interactive)
+  (git-search (symbol-name (symbol-at-point))))
+
 (defun project-search (search-string)
   "Search a regex in the current project (with `find-grep' and `grep-find-command')."
   (interactive "sSearch Project Regexp: ")
