@@ -240,6 +240,7 @@ itesearch=&safe=images"
 
 ;;(global-set-key (kbd "C-h 1") 'android-search-region)
 ;;(global-set-key (kbd "C-h 1") 'osx-search-region)
+
 (global-set-key (kbd "C-h 1") 'ios-search-region)
 (global-set-key (kbd "C-h 2") 'google-search-region)
 (global-set-key (kbd "C-h 3") 'acronym-search-region)
@@ -247,7 +248,12 @@ itesearch=&safe=images"
 (global-set-key (kbd "C-h 5") 'includes-search-region)
 (global-set-key (kbd "C-h 6") 'hyperspec-search-region)
 (global-set-key (kbd "C-h 7") 'here-search-region)
-(global-set-key (kbd "C-h 0") 'android-browse-documentation-of-class-at-point)
+(global-set-key (kbd "C-h 8") 'git-search-region)
+
+(global-set-key (kbd "H-s")   'git-search-symbol-at-point)
+(global-set-key (kbd "C-H-s") 'git-search)
+(global-set-key (kbd "M-H-s") 'git-search-region)
+
 
 (defun set-osx-search-region-function ()
   (interactive)
