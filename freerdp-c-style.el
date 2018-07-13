@@ -219,7 +219,7 @@
        (substatement-label    . /)
        ;; Labelled line after an if/while/for/do/else.
 
-       (case-label            . *)
+       (case-label            . +)
        ;; A "case" or "default" label.
 
        (access-label          . -)
@@ -560,24 +560,27 @@ unless -> in which case we remove the spaces."
 
 (defvar freerdp-electric-identifier-character-regexp "[[:alnum:]_]")
 
+
 (defun freerdp-electric-paren-open (repeat)
   (interactive "p")
   (if (= 1 repeat)
       (progn
         (if (and (looking-at freerdp-electric-identifier-character-regexp)
-                 (looking-back freerdp-electric-identifier-character-regexp (- (point) 1)))
+                 ;; (looking-back freerdp-electric-identifier-character-regexp (- (point) 1))
+                 )
             (insert "()")
             (progn
               (freerdp-remove-previous-spaces)
               (let ((current (point)))
-                (if (bolp)
-                    (insert "()")
-                    (progn
-                      (backward-sexp)
-                      (if (prog1 (freerdp-c-keyword-p (symbol-at-point))
-                            (forward-sexp))
-                          (insert " ()")
-                          (insert "()")))))))
+                (cond
+                  ((bolp)
+                   (insert "()"))
+                  (t
+                   (backward-sexp)
+                   (if (prog1 (freerdp-c-keyword-p (symbol-at-point))
+                         (forward-sexp))
+                       (insert " ()")
+                       (insert "()")))))))
         (backward-char))
       (self-insert-command repeat)))
 
@@ -593,6 +596,8 @@ unless -> in which case we remove the spaces."
 
 (defun freerdp-style-set-local-bindings ()
   (interactive)
+  (setf indent-tabs-mode t
+        tab-width        8)
   (local-set-key "," 'freerdp-electric-space-after)
   (local-set-key "=" 'freerdp-electric-space-before-after-=)
   (local-set-key ">" 'freerdp-electric-space-before-after->)
