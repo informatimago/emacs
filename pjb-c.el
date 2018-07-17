@@ -360,4 +360,59 @@ SEE ALSO:       c-indent-line
 "))
 
 
+
+(defun ensure-string (object)
+  (typecase object
+    (symbol (symbol-name object))
+    (string object)
+    (t (prin1-to-string object))))
+
+(defun substitute-strings (substitutions string)
+  (with-temp-buffer
+      (loop
+        for (old new) in substitutions
+          initially (insert string)
+        do (replace-string (ensure-string old)
+                           (ensure-string new)
+                           nil (point-min) (point-max))
+        finally (return (buffer-substring-no-properties (point-min) (point-max))))))
+
+(when nil
+  (progn
+    (loop
+      for <T> in '("A" "W")
+      for TCHAR in '("char" "WCHAR")
+      do (insert (substitute-strings (list (list '<T> <T>) (list 'TCHAR TCHAR))
+                                 "
+BOOL contains<T> (TCHAR * string, char * substring)
+{
+    int wlen = strlen<T>(string);
+    int slen = strlen(substring);
+    int end = wlen - slen;
+    int i = 0;
+    for (i = 0; i < end; i ++ )
+    {
+        if (ncompare<T>(string + i, substring, slen) == 0)
+        {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+")))
+    (insert "
+BOOL contains (int widechar, BYTE * string, char * substring)
+{
+    if (widechar)
+    {
+        return containsW((WCHAR*)string,substring);
+    }
+    else
+    {
+        return containsA((char*)string,substring);
+    }
+}
+")))
+
+
 ;;;; THE END ;;;;
