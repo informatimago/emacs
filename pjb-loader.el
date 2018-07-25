@@ -52,7 +52,7 @@
       (delete-file "--version.lock"))
     (when show-messages
       (switch-to-buffer "*Messages*")
-      (split-window-vertically))))
+      (ignore-errors (split-window-vertically)))))
 
 
 (defvar *pjb-sources* '())
