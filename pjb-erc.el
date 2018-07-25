@@ -255,16 +255,16 @@
   (let* ((header-end (or (search "\r\n\r\n" http-output)
                          (search "\n\n" http-output)))
          (headers (mapcar
-                   (lambda (line) (string-trim "\r" line))
+                   (lambda (line) (cl:string-trim "\r" line))
                    (split-string (subseq http-output 0 header-end) "\n"))))
     (values
      (first headers)
      (mapcar (lambda (header)
                (let ((colon (position (character ":") header)))
-                 (cons (string-trim " " (subseq header 0 colon))
-                       (string-trim " " (subseq header (1+ colon))))))
+                 (cons (cl:string-trim " " (subseq header 0 colon))
+                       (cl:string-trim " " (subseq header (1+ colon))))))
              (rest headers))
-     (string-trim "\r\n" (subseq http-output  header-end)))))
+     (cl:string-trim "\r\n" (subseq http-output  header-end)))))
 
 (defun pjb-http-session (method url headers data)
   (with-temp-buffer
@@ -596,7 +596,7 @@ displaying erc buffers."
 (defun pjb-erc-user-input ()
   "Return the input of the user in the current buffer."
   ;; We use erc-bol to ignore the prompt.
-  (string-trim "\n" (buffer-substring
+  (cl:string-trim "\n" (buffer-substring
                      (progn
                        (goto-char (erc-beg-of-input-line))
                        (erc-bol))

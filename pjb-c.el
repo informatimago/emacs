@@ -319,7 +319,45 @@ SEE ALSO:       c-indent-line
 ;;;                                         ;  is when the TAB command is used.
 
 
+(defvar *pjb-c-word-size* 64 "Number of bits in a unsigned long long.")
+(defun pjb-c-label-function (name enum-type enum-constants)
+  (let* ((word-size   64)
+         (max-width   (loop for constant in enum-constants
+                            maximize (length (prin1-to-string constant))))
+         (case-format (format "    case %%-%ds: return %%S;\n" max-width))
+         (buffer-size (+ (length "Invalid  value: ")
+                         (length (prin1-to-string enum-type))
+                         (ceiling (* *pjb-c-word-size* (log 2 10)))
+                         1 ; terminating null
+                         16 ; safety.
+                         )))
+    (concat (format "const char* %s(%s value){
+    switch(value){
+" name enum-type)
+            (mapconcat (lambda (constant) (format case-format constant (prin1-to-string constant)))
+                       enum-constants "")
+            (format "    default: {
+        static char buffer[%d];
+        sprintf(buffer,\"Invalid %s value: %%d\",value);
+        return buffer;
+    }}
+}
+" buffer-size enum-type))))
 
 
+(assert (string= (pjb-c-label-function 'get_label 'foo '(foo_foo foo_bar foo_chiang))
+         "const char* get_label(foo value){
+    switch(value){
+    case foo_foo   : return \"foo_foo\";
+    case foo_bar   : return \"foo_bar\";
+    case foo_chiang: return \"foo_chiang\";
+    default: {
+        static char buffer[56];
+        sprintf(buffer,\"Invalid foo value: %d\",value);
+        return buffer;
+    }}
+}
+"))
 
-;;;; pjb-c.el                         -- 2003-10-10 23:50:40 -- pascal   ;;;;
+
+;;;; THE END ;;;;
