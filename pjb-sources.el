@@ -1128,9 +1128,9 @@ RETURN: The list of results from fun.
 ;; selector function.
 ;;
 
-(defun get-sexps (source-file &key (selector (function (lambda (s) t)))
-                                (deeply   nil)
-                                (atoms    nil))
+(defun* get-sexps (source-file &key (selector (function (lambda (s) t)))
+                               (deeply   nil)
+                               (atoms    nil))
   "
 KEYS:    :selector (function: sexp --> boolean, default: (lambda (s) t))
          :deeply   (boolean,  default nil)
