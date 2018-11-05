@@ -449,15 +449,18 @@
 
 (defun freerdp-electric-space-before-after-double (repeat)
   (interactive "p")
-  (let ((ch (this-command-keys)))
+  (let ((ch      (this-command-keys))
+        (include nil))
    (if (and (= 1 repeat) (stringp ch) (= 1 (length ch)))
        (progn
          (freerdp-remove-previous-spaces)
+         (setf include (looking-back "^#[ \t]*include" (save-excursion (beginning-of-line) (point))))
          (when (or (/= (aref ch 0) (char-before))
                    (=  (aref ch 0) (char-before (1- (point)))))
            (insert " "))
          (self-insert-command 1)
-         (insert " "))
+         (unless include
+           (insert " ")))
        (self-insert-command repeat))))
 
 (defun freerdp-electric-space-before-after-= (repeat)
