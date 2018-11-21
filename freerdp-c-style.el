@@ -615,5 +615,14 @@ unless -> in which case we remove the spaces."
   (local-set-key "(" 'freerdp-electric-paren-open)
   (local-set-key ")" 'freerdp-electric-paren-close))
 
+(defun freerdp-style-mode-off ()
+  (interactive)
+  (setf indent-tabs-mode nil
+        tab-width        4)
+  (dolist (chord '("," "=" ">" "<" "+" "-" "&" "|"
+                   "*" "/" "%" "^" "{" "}" "(" ")"))
+    (local-unset-key chord)))
+
+
 (provide 'freerdp-c-style)
 ;;;; THE END ;;;;
