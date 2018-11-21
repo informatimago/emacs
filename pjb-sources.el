@@ -3536,8 +3536,10 @@ SProject Type: ")
                                                                     (b (car b)))
                                                                (or (< (length a) (length b))
                                                                    (and (= (length a) (length b))
-                                                                        (string< a b)))))))))))))
-  (global-set-key (kbd "A-f") 'sources-find-file-named))
+                                                                        (string< a b))))))))))))))
+
+(global-set-key (kbd "A-f") 'sources-find-file-named)
+(global-set-key (kbd "C-c C-x C-f") 'sources-find-file-named)
 
 
 
