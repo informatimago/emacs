@@ -108,15 +108,15 @@ RETURN: The current frame.
   "Return the position and size of the `frame' as an X geometry specification string."
   (let ((frame (or frame (current-frame))))
     (format "%dx%d-%d+%d"
-            (pjb-frame-width frame) (pjb-frame-height frame)
-            (frame-pixel-left frame) (frame-pixel-top frame))))
+            (pjb-frame-width frame)      (pjb-frame-height frame)
+            (pjb-frame-pixel-left frame) (pjb-frame-pixel-top frame))))
 
 
 (defun pjb-frame-full-screen (&optional frame)
   "Return the full-screen X resource parameter for the `frame'."
   (let* ((frame    (or frame (current-frame)))
-         (fwidth   (frame-pixel-width))
-         (fheight  (frame-pixel-height))
+         (fwidth   (pjb-frame-pixel-width))
+         (fheight  (pjb-frame-pixel-height))
          (percent  0.95))
     (destructuring-bind (stop sleft sheight swidth) (screen-usable-area (current-frame))
       (flet ((within (percent a b)
