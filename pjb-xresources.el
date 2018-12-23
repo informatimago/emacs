@@ -92,8 +92,12 @@ RETURN: The current frame.
 (define-frame-parameter font)
 
 
-(defalias 'pjb-frame-pixel-top  'pjb-frame-top)
-(defalias 'pjb-frame-pixel-left 'pjb-frame-left)
+(defalias 'pjb-frame-pixel-top    'pjb-frame-top)
+(defalias 'pjb-frame-pixel-left   'pjb-frame-left)
+(defalias 'pjb-frame-pixel-bottom 'pjb-frame-bottom)
+(defalias 'pjb-frame-pixel-right  'pjb-frame-right)
+(defalias 'pjb-frame-pixel-height 'pjb-frame-height)
+(defalias 'pjb-frame-pixel-width  'pjb-frame-width)
 
 
 (defun set-default-frame-parameter (name value)
