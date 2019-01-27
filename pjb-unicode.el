@@ -206,3 +206,13 @@
            (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
 
 (provide 'pjb-unicode)
+(local-set-key (kbd "A-(")
+               (lambda (rep)
+                 (interactive "p")
+                 (insert (make-string rep ?⸨))))
+
+(local-set-key (kbd "A-)")
+               (lambda (rep)
+                 (interactive "p")
+                 (insert (make-string rep ?⸩))))
+
