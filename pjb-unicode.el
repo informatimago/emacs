@@ -101,7 +101,10 @@
   (loop for ch from ?A to ?Z
         for mf from 119964
         do (local-set-key (kbd (string ch))          (string mf))
-           (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
+           (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf))))
+  (local-set-key (kbd "e") (string #x212f))
+  (local-set-key (kbd "g") (string #x210A))
+  (local-set-key (kbd "o") (string #x2134)))
 
 (defun pjb-unicode-mathematical-script-bold ()
   (interactive)
