@@ -123,8 +123,8 @@
 
 
 (defvar *pjb-search-exclude*            '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
-(defvar *pjb-search-include-extensions* '("xib" "h" "c" "m" "hh" "cc" "mm" "hxx" "cxx"
-                                          "lisp" "asd" "cl" "el"
+(defvar *pjb-search-include-extensions* '("xib" "h" "c" "m" "hh" "cc" "mm" "hxx" "cxx" "swift"
+                                          "lisp" "" "cl" "el"
                                           "rb" "java" "xml"
                                           "logs" "txt" "html" "iml"
                                           "json" "md" "prefs"
