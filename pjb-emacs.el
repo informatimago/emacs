@@ -53,7 +53,7 @@
 
 
 
-(defvar html-quick-keys t )
+(defvar html-quick-keys t)
 (defvar html-mode-map
   (let ((map (nconc (make-sparse-keymap) sgml-mode-map))
         (menu-map (make-sparse-keymap "HTML")))
@@ -137,10 +137,24 @@
 
 
 (defun recover-this-file ()
+  "Recovers the file of the current buffer, if any."
   (interactive)
   (let ((file-path  (buffer-file-name)))
     (if (and file-path (file-exists-p file-path) (file-regular-p file-path))
         (recover-file file-path)
+        (message "This buffer has no associated file."))))
+
+
+(defun delete-this-file (kill-buffer)
+  "Deletes the file of the current buffer, if any.
+When KILL-BUFFER is true (command prefix), also kills the buffer."
+  (interactive "P")
+  (let ((file-path  (buffer-file-name)))
+    (if (and file-path (file-exists-p file-path) (file-regular-p file-path))
+        (progn
+          (delete-file file-path)
+          (when kill-buffer
+            (kill-buffer)))
         (message "This buffer has no associated file."))))
 
 
@@ -1025,7 +1039,7 @@ RETURN: The current frame.
 
 
 (defmacro define-frame-parameter (name)
-  `(defun ,(intern (format "frame-%s" name)) (&optional frame)
+  `(defun ,(intern (format "pjb-frame-%s" name)) (&optional frame)
      ,(format "Returns the %s parameter of the `frame'." name)
      (frame-parameter (or frame (selected-frame)) ',name)))
 
@@ -1093,7 +1107,7 @@ RETURN: The current frame.
 
 
 
-(defun max-frame-line-number (&optional frame)
+(defun pjb-frame-max-line-number (&optional frame)
   "
 RETURN: The maximum number of line that can be displayed on this frame
         inside this screen.
@@ -1103,7 +1117,7 @@ RETURN: The maximum number of line that can be displayed on this frame
       (frame-char-height frame))))
 
 
-(defun max-frame-column-number (&optional frame margin)
+(defun pjb-frame-max-column-number (&optional frame margin)
   "
 MARGIN: Number of pixel to substract from the display width.
 RETURN: The maximum number of columns that can be displayed on this frame
@@ -1120,9 +1134,9 @@ RETURN: The maximum number of columns that can be displayed on this frame
   (interactive)
   (let ((*current-frame* (current-frame)))
     (set-frame-width  *current-frame*
-                      (max-frame-column-number
+                      (pjb-frame-max-column-number
                        *current-frame* (+ (if current-prefix-arg 64 0) 34)))
-    (set-frame-height *current-frame* (max-frame-line-number *current-frame*))
+    (set-frame-height *current-frame* (pjb-frame-max-line-number *current-frame*))
     (set-frame-position *current-frame* 0 0)
     (delete-other-windows)))
 
@@ -1145,8 +1159,8 @@ RETURN: The maximum number of columns that can be displayed on this frame
   (interactive "NOffset: ")
   (let ((*current-frame* (current-frame)))
     (set-frame-position *current-frame*
-                        (+ offset (eval (frame-pixel-left *current-frame*)))
-                        (eval (frame-pixel-top *current-frame*)))))
+                        (+ offset (eval (pjb-frame-pixel-left *current-frame*)))
+                        (eval (pjb-frame-pixel-top *current-frame*)))))
 
 
 (defun move-frame-down (offset)
@@ -1154,8 +1168,8 @@ RETURN: The maximum number of columns that can be displayed on this frame
   (interactive "NOffset: ")
   (let ((*current-frame* (current-frame)))
     (set-frame-position *current-frame*
-                        (eval (frame-pixel-left *current-frame*))
-                        (+ offset (eval (frame-pixel-top *current-frame*))))))
+                        (eval (pjb-frame-pixel-left *current-frame*))
+                        (+ offset (eval (pjb-frame-pixel-top *current-frame*))))))
 
 (defun move-frame-to (args)
   (interactive "X'(left top)= ")
@@ -1215,7 +1229,7 @@ SEE:   position-y"
            (position-x (second pos) frame)
            (error "Unexpected x position: %S" pos)))
       ((minusp pos)
-       (- (+ pos (frame-pixel-width frame))  (x-display-pixel-width  frame)))
+       (- (+ pos (pjb-frame-pixel-width frame))  (x-display-pixel-width  frame)))
       (t pos))))
 
 
@@ -1237,7 +1251,7 @@ SEE:   position-x
            (position-y (second pos) frame)
            (error "Unexpected y position: %S" pos)))
       ((minusp pos)
-       (- (+ pos (frame-pixel-height frame))  (x-display-pixel-height  frame)))
+       (- (+ pos (pjb-frame-pixel-height frame))  (x-display-pixel-height  frame)))
       (t pos))))
 
 
@@ -1251,10 +1265,10 @@ NOTE:   For multi-screen displays, the coordinate system could be such that
         (+ -|x|) (+ -|y|).
 "
   (let ((frame (or frame (current-frame))))
-    (let ((x (frame-pixel-left frame))
-          (y (frame-pixel-top  frame)))
+    (let ((x (pjb-frame-pixel-left frame))
+          (y (pjb-frame-pixel-top  frame)))
       (set-frame-position frame 0 0)
-      (prog1 (list (frame-pixel-left frame) (frame-pixel-top frame))
+      (prog1 (list (pjb-frame-pixel-left frame) (pjb-frame-pixel-top frame))
         (set-frame-position frame (position-x x) (position-y y))))))
 
 (defun screen-usable-area (&optional frame)
@@ -1278,7 +1292,7 @@ RETURN: The origin and width and height of the screen where the frame lies,
 
 (defvar *frame-maximized-states*)
 
-;; (list (frame-pixel-left) (frame-pixel-top) (frame-width) (frame-height))
+;; (list (frame-pixel-left) (frame-pixel-top) (pjb-frame-width) (pjb-frame-height))
 ;; (0 (+ -23) 179 78)
 
 
@@ -1432,10 +1446,10 @@ Multiply by -1 = without decoration.
                               (if (and (eq window-system 'ns) decorationp) 64 0))))
               (labels ((mesframe (frame)
                          (message "0: x=%8S y=%8S w=%8S h=%8S"
-                                  (frame-pixel-left frame)
-                                  (frame-pixel-top frame)
-                                  (frame-pixel-width frame)
-                                  (frame-pixel-height frame)))
+                                  (pjb-frame-pixel-left frame)
+                                  (pjb-frame-pixel-top frame)
+                                  (pjb-frame-pixel-width frame)
+                                  (pjb-frame-pixel-height frame)))
                        (move-frame (x w y h)
                          ;; (mesframe frame)
                          (message "1: x=%8S y=%8S w=%8S h=%8S" x y w h)
@@ -1449,8 +1463,8 @@ Multiply by -1 = without decoration.
                          ;; (mesframe frame)
                          (setf x (position-x x)
                                y (position-y y)
-                               w (frame-pixel-width  frame)
-                               h (frame-pixel-height frame))
+                               w (pjb-frame-pixel-width  frame)
+                               h (pjb-frame-pixel-height frame))
                          (message "2: x=%8S y=%8S w=%8S h=%8S" x y w h)
                          (set-frame-position frame x y)
                          ;; (mesframe frame)
@@ -1463,7 +1477,7 @@ Multiply by -1 = without decoration.
   (interactive)
   (let ((*current-frame* (current-frame)))
     (set-frame-width *current-frame* 81)
-    (set-frame-height *current-frame* (max-frame-line-number))
+    (set-frame-height *current-frame* (pjb-frame-max-line-number))
     (if current-prefix-arg
         (set-frame-position *current-frame* -1  0)
         (set-frame-position *current-frame* -64 0))
@@ -1476,7 +1490,7 @@ Multiply by -1 = without decoration.
   (let ((*current-frame* (current-frame)))
     (setq truncate-partial-width-windows nil)
     (set-frame-width *current-frame* 167)
-    (set-frame-height *current-frame* (max-frame-line-number))
+    (set-frame-height *current-frame* (pjb-frame-max-line-number))
     (set-frame-position *current-frame* 0 0)
     (delete-other-windows)
     (split-window-horizontally 86)
@@ -1536,9 +1550,9 @@ Multiply by -1 = without decoration.
                                   (cdr (assoc 'top fp)))
                             (cdr (assoc 'width fp))
                             (cdr (assoc 'height fp))))
-          (set-frame-width  frame (max-frame-column-number frame 34))
+          (set-frame-width  frame (pjb-frame-max-column-number frame 34))
           ;; I don't know where these 34 go?
-          (set-frame-height frame (max-frame-line-number   frame))
+          (set-frame-height frame (pjb-frame-max-line-number   frame))
           (set-frame-position frame 0 0)))
     (setf (gethash frame *frame-maximized-states*) state)))
 
@@ -1574,31 +1588,31 @@ only display one window with the scratch buffer"
          (screen-height (fourth area))
          (other-frames  (remove-if
                          (lambda (fr) (or (eq fr frame)
-                                     (not (equal (frame-display fr)
-                                                 (frame-display frame)))))
+                                     (not (equal (pjb-frame-display fr)
+                                                 (pjb-frame-display frame)))))
                          (frame-list))))
     (select-frame frame)
     (case (length other-frames)
       ((0) (full-frame 3))              ; by default go to the right.
-      ((1) (let ((left (eval (frame-pixel-left (first other-frames)))))
+      ((1) (let ((left (eval (pjb-frame-pixel-left (first other-frames)))))
              (if (< left (truncate (- screen-width 20) 2))
                  (full-frame 3)
                  (full-frame 2))))
       (otherwise
        (let ((used-squares '()))
          (dolist (fr other-frames)
-           (let ((h (if (< (eval (frame-pixel-left fr))
+           (let ((h (if (< (eval (pjb-frame-pixel-left fr))
                            (- (truncate screen-width  2) *window-manager-x-offset*))
                         ;; on the left 46 [+ 57]
-                        (if (<= (frame-pixel-width fr) (truncate screen-width 2))
+                        (if (<= (pjb-frame-pixel-width fr) (truncate screen-width 2))
                             '(4 6)
                             '(4 6 5 7))
                         ;; on the right 57 whatever.
                         '(5 7)))
-                 (v (if (< (eval (frame-pixel-top fr))
+                 (v (if (< (eval (pjb-frame-pixel-top fr))
                            (- (truncate screen-height 2) *window-manager-y-offset*))
                         ;; on the top 45 [+ 67]
-                        (if (<= (frame-pixel-height fr) (truncate screen-height 2))
+                        (if (<= (pjb-frame-pixel-height fr) (truncate screen-height 2))
                             '(4 5)
                             '(4 5 6 7))
                         ;; on the bottom whatever.
@@ -1624,10 +1638,10 @@ only display one window with the scratch buffer"
                  nil ; no repeat
                  (lambda () ; a closure, thanks to lexical-binding above :-)
                    (toggle-tool-bar-mode-from-frame +1)
-                   (set-frame-size frame (1- (frame-width frame)) (1- (frame-height frame)))
+                   (set-frame-size frame (1- (pjb-frame-width frame)) (1- (pjb-frame-height frame)))
                    (forward-font -1)
                    (forward-font +1)
-                   (set-frame-size frame (1+ (frame-width frame)) (1+ (frame-height frame)))
+                   (set-frame-size frame (1+ (pjb-frame-width frame)) (1+ (pjb-frame-height frame)))
                    (toggle-tool-bar-mode-from-frame -1)))))
 
 (when (eq window-system 'ns)

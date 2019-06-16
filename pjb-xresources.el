@@ -42,10 +42,8 @@ RETURN: The current frame.
 
 
 (defmacro define-frame-parameter (name)
-  (let ((name (intern (format "frame-%s" name))))
-    (unless (fboundp name)
-      `(defun ,name (&optional frame)
-         (frame-parameter (or frame (selected-frame)) ',name)))))
+  `(defun* ,(intern (format "pjb-frame-%s" name)) (&optional frame)
+     (frame-parameter (or frame (selected-frame)) ',name)))
 
 ;; (dolist (p (frame-parameters)) (insert (format "(define-frame-parameter %s)\n" (car p))))
 
@@ -94,8 +92,12 @@ RETURN: The current frame.
 (define-frame-parameter font)
 
 
-(defalias 'frame-pixel-top  'frame-top)
-(defalias 'frame-pixel-left 'frame-left)
+(defalias 'pjb-frame-pixel-top    'pjb-frame-top)
+(defalias 'pjb-frame-pixel-left   'pjb-frame-left)
+(defalias 'pjb-frame-pixel-bottom 'pjb-frame-bottom)
+(defalias 'pjb-frame-pixel-right  'pjb-frame-right)
+(defalias 'pjb-frame-pixel-height 'pjb-frame-height)
+(defalias 'pjb-frame-pixel-width  'pjb-frame-width)
 
 
 (defun set-default-frame-parameter (name value)
@@ -106,19 +108,19 @@ RETURN: The current frame.
     value))
 
 
-(defun frame-geometry (&optional frame)
+(defun pjb-frame-geometry (&optional frame)
   "Return the position and size of the `frame' as an X geometry specification string."
   (let ((frame (or frame (current-frame))))
     (format "%dx%d-%d+%d"
-            (frame-width frame) (frame-height frame)
-            (frame-pixel-left frame) (frame-pixel-top frame))))
+            (pjb-frame-width frame)      (pjb-frame-height frame)
+            (pjb-frame-pixel-left frame) (pjb-frame-pixel-top frame))))
 
 
-(defun frame-full-screen (&optional frame)
+(defun pjb-frame-full-screen (&optional frame)
   "Return the full-screen X resource parameter for the `frame'."
   (let* ((frame    (or frame (current-frame)))
-         (fwidth   (frame-pixel-width))
-         (fheight  (frame-pixel-height))
+         (fwidth   (pjb-frame-pixel-width))
+         (fheight  (pjb-frame-pixel-height))
          (percent  0.95))
     (destructuring-bind (stop sleft sheight swidth) (screen-usable-area (current-frame))
       (flet ((within (percent a b)
@@ -178,38 +180,38 @@ RETURN: The current frame.
   (interactive)
   (generate-x-resources
    ("emacs"
-    ("*background"     (frame-background-color))
-    ("*bitmapIcon"     (on-off (frame-icon-name)))
-    ("*borderColor"    (frame-border-color))
-    ("*borderWidth"    (frame-border-width))
-    ("*cursorColor"    (frame-cursor-color))
+    ("*background"     (pjb-frame-background-color))
+    ("*bitmapIcon"     (on-off (pjb-frame-icon-name)))
+    ("*borderColor"    (pjb-frame-border-color))
+    ("*borderWidth"    (pjb-frame-border-width))
+    ("*cursorColor"    (pjb-frame-cursor-color))
     ("*cursorBlink"    (on-off blink-cursor))
-    ("*font"           (frame-font))
+    ("*font"           (pjb-frame-font))
     ("*fontBackend"    :unset)
-    ("*foreground"     (frame-foreground-color))
-    ("*geometry"       (frame-geometry))
-    ("*fullscreen"     (or-unset (frame-full-screen)))
-    ("*iconName"       (or-unset (frame-icon-name)))
-    ("*internalBorder" (frame-internal-border-width))
-    ("*lineSpacing"    (or-unset (frame-line-spacing)))
+    ("*foreground"     (pjb-frame-foreground-color))
+    ("*geometry"       (pjb-frame-geometry))
+    ("*fullscreen"     (or-unset (pjb-frame-full-screen)))
+    ("*iconName"       (or-unset (pjb-frame-icon-name)))
+    ("*internalBorder" (pjb-frame-internal-border-width))
+    ("*lineSpacing"    (or-unset (pjb-frame-line-spacing)))
     ("*menuBar"        (on-off menu-bar-mode))
-    ("*minibuffer"     (if (frame-minibuffer) :unset "none"))
+    ("*minibuffer"     (if (pjb-frame-minibuffer) :unset "none"))
     ("*paneFont"       :unset) ; how to get it?    Font name for menu pane titles, in non-toolkit versions of Emacs.
-    ("*pointerColor"   (frame-mouse-color))
+    ("*pointerColor"   (pjb-frame-mouse-color))
     ("*privateColormap" :unset) ;  If ‘on’, use a private color map, in the case where the “default visual” of class PseudoColor and Emacs is using it.
     ("*reverseVideo"   (on-off (cdr (or (assq 'reverse (frame-parameters))
                                        (assq 'reverse default-frame-alist)))))
-    ("*screenGamma"    (or-unset (frame-screen-gamma)))
-    ("*scrollBarWidth" (frame-scroll-bar-width))
+    ("*screenGamma"    (or-unset (pjb-frame-screen-gamma)))
+    ("*scrollBarWidth" (pjb-frame-scroll-bar-width))
     ("*selectionFont" :unset) ;  Font name for pop-up menu items, in non-toolkit versions of Emacs. (For toolkit versions, see Lucid Resources, also see LessTif  Resources.)
     ("*selectionTimeout" :unset) ; Number of milliseconds to wait for a selection reply. If the selection owner doesn't reply in this time, we give up. A value of 0  means wait as long as necessary.
     ("*synchronous" :unset) ; Run Emacs in synchronous mode if ‘on’. Synchronous mode is useful for debugging X problems.
-    ("*title"       (or (frame-title) (frame-name)))
+    ("*title"       (or (pjb-frame-title) (pjb-frame-name)))
     ("*toolBar" (if top-toolbar
                    top-toolbar-height
                    0))
     ("*useXIM"  :unset) ; Turn off use of X input methods (XIM) if ‘false’ or ‘off’. This is only relevant if your Emacs is actually built with XIM support.  It is potentially useful to turn off XIM for efficiency, especially slow X client/server links.
-    ("*verticalScrollBars" (on-off (frame-vertical-scroll-bars)))
+    ("*verticalScrollBars" (on-off (pjb-frame-vertical-scroll-bars)))
     ("*visualClass"        (or-unset (x-display-visual-class))))
    ("emacs*menu"
     ("*font"              (face-font 'menu))

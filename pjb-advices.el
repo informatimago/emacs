@@ -197,7 +197,7 @@ Email addresses are not case sensitive."
       ad-do-it
       (unless (eq window-system 'w32)
         (if focus-follows-mouse
-            (set-mouse-position (selected-frame) (1- (frame-width)) 0)
+            (set-mouse-position (selected-frame) (1- (pjb-frame-width)) 0)
             (redirect-frame-focus original-frame (selected-frame))))))
   (ad-activate 'other-frame))
 
@@ -392,4 +392,3 @@ delete any existing frames that the frame configuration doesn't mention.
 
 ;; (provide 'pjb-advices)
 ;;;; THE END ;;;;
-

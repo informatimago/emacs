@@ -373,7 +373,7 @@ zerodivide|zdiv
 
 
 (defparameter *expanded-keywords*
-  (mapcar (lambda (regexp) (parse-lex-regexp (string-trim "     " regexp)))
+  (mapcar (lambda (regexp) (parse-lex-regexp (cl:string-trim "     " regexp)))
          (split-sequence:split-sequence  #\newline  *pl1-keywords* :remove-empty-subseqs t)))
 
 ;; (reduce (function append) *expanded-keywords*)

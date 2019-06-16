@@ -73,7 +73,7 @@
    (browse-url
     (format "https://developer.apple.com/library/mac/search/?q=%s"
             (browse-url-url-encode-chars
-             (string-trim *whitespaces* search-string)
+             (cl:string-trim *whitespaces* search-string)
              "[^A-Za-z0-9]")))))
 
 (defun osx-search-region (start end)
@@ -89,7 +89,7 @@
       (browse-url
        (format "https://developer.apple.com/library/ios/search/?q=%s"
                (browse-url-url-encode-chars
-                (string-trim *whitespaces* search-string)
+                (cl:string-trim *whitespaces* search-string)
                 "[^A-Za-z0-9]")))))
 
 (defun ios-search-region (start end)
@@ -113,13 +113,47 @@
                                 (mapconcat (function identity) words "/")))))
                   (format "http://developer.android.com/reference/index.html?q=%s"
                           (browse-url-url-encode-chars
-                           (string-trim *whitespaces* search-string)
+                           (cl:string-trim *whitespaces* search-string)
                            "[^A-Za-z0-9]")))))
 
 (defun android-search-region (start end)
   "Search the text in the region with Android."
   (interactive "r")
   (%search-region start end 'symbol 'android-search))
+
+
+(defvar *pjb-search-exclude*            '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
+(defvar *pjb-search-include-extensions* '("xib" "h" "c" "m" "hh" "cc" "mm" "hxx" "cxx"
+                                          "lisp" "asd" "cl" "el"
+                                          "rb" "java" "xml"
+                                          "logs" "txt" "html" "iml"
+                                          "json" "md" "prefs"
+                                          "project" "properties"
+                                          "sh" "bash"))
+(defun git-search (search-string)
+  "Search a regex in the current git repository (with `find-grep' and `grep-find-command')."
+  (interactive "sSearch Git Regexp: ")
+  (let ((exclude *pjb-search-exclude*)
+        (include (mapcar (lambda (extension) (format "\\*.%s" extension))
+                         *pjb-search-include-extensions*)))
+    (find-grep (format "find %S \\( \\( %s \\) -prune \\) -o -type f %s -print0 | xargs -0 grep -nHi -e %s"
+
+                       (expand-file-name (vc-git-root (or (buffer-file-name) default-directory)))
+                       (mapconcat (lambda (name) (format "-name %s" name)) exclude " -o ")
+                       (if include
+                           (format "\\( %s \\)" (mapconcat (lambda (name) (format "-name %s" name)) include " -o "))
+                           "")
+                       (shell-quote-argument search-string)))))
+
+(defun git-search-region (start end)
+  "Search the text in the region in the current git repository."
+  (interactive "r")
+  (%search-region start end 'symbol 'git-search))
+
+(defun git-search-symbol-at-point ()
+  "Search the symbol at point in the current git repository."
+  (interactive)
+  (git-search (symbol-name (symbol-at-point))))
 
 (defun project-search (search-string)
   "Search a regex in the current project (with `find-grep' and `grep-find-command')."
@@ -139,7 +173,7 @@
    (format "http://www.google.com/search?as_q=%s&num=50&hl=en&ie=ISO8869-1&btnG=Google+Search&as_epq=&as_oq=&as_eq=&lr=&as_ft=i&as_filetype=&as_qdr=all&as_nlo=&as_nhi=&as_occt=any&as_dt=i&as_s
 itesearch=&safe=images"
            (browse-url-url-encode-chars
-            (string-trim *whitespaces* search-string)
+            (cl:string-trim *whitespaces* search-string)
             "[^A-Za-z0-9]"))))
 
 (defun google-search-region (start end)
@@ -206,6 +240,7 @@ itesearch=&safe=images"
 
 ;;(global-set-key (kbd "C-h 1") 'android-search-region)
 ;;(global-set-key (kbd "C-h 1") 'osx-search-region)
+
 (global-set-key (kbd "C-h 1") 'ios-search-region)
 (global-set-key (kbd "C-h 2") 'google-search-region)
 (global-set-key (kbd "C-h 3") 'acronym-search-region)
@@ -213,7 +248,12 @@ itesearch=&safe=images"
 (global-set-key (kbd "C-h 5") 'includes-search-region)
 (global-set-key (kbd "C-h 6") 'hyperspec-search-region)
 (global-set-key (kbd "C-h 7") 'here-search-region)
-(global-set-key (kbd "C-h 0") 'android-browse-documentation-of-class-at-point)
+(global-set-key (kbd "C-h 8") 'git-search-region)
+
+(global-set-key (kbd "H-s")   'git-search-symbol-at-point)
+(global-set-key (kbd "C-H-s") 'git-search)
+(global-set-key (kbd "M-H-s") 'git-search-region)
+
 
 (defun set-osx-search-region-function ()
   (interactive)

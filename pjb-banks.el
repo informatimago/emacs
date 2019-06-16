@@ -72,7 +72,7 @@ RETURN: A cleaned string where the comas are replaced by dots,
         (i 0)
         (result '()))
       ((null items) (apply (function concatenate) 'string (nreverse result)))
-    (unless (zerop (length (string-trim " " item)))
+    (unless (zerop (length (cl:string-trim " " item)))
       (incf i)
       (push (format "%10s" item) result)
       (when (zerop (mod i 6))
@@ -131,8 +131,8 @@ Use Mozilla, and copy-and-paste to emacs."
                (sol (match-string-no-properties 7 line))
                ;; (mat (match-lines))
                (lin) (ori))
-          (setf deb (string-trim " " deb)
-                cre (string-trim " " cre)
+          (setf deb (cl:string-trim " " deb)
+                cre (cl:string-trim " " cre)
                 y (+ y (cond ((and (= mv 12) (= m 1)) 1999)
                              ((and (= mv 1) (= m 12)) 2001)
                              (t                       2000)))
@@ -162,7 +162,7 @@ Use Mozilla, and copy-and-paste to emacs."
                      (if (< (length lab) 48) lab
                          (replace-regexp-in-string
                           "\n" "\n                "
-                          (string-trim " " (string-justify-left lab 48)))))
+                          (cl:string-trim " " (string-justify-left lab 48)))))
                   ,(cond
                     ((string-match "HACIENDA\\|SEGURIDAD" lab)
                      ":IMPUESTO")
@@ -222,8 +222,8 @@ Use Mozilla, and copy-and-paste to emacs."
                ;; (mat (match-lines))
                (lin) (ori))
           (message "%S %S %S" deb cre sol)
-          (setf deb (string-trim " " deb)
-                cre (string-trim " " cre)
+          (setf deb (cl:string-trim " " deb)
+                cre (cl:string-trim " " cre)
                 y (+ y (cond ((and (= mv 12) (= m 1)) 1999)
                              ((and (= mv 1) (= m 12)) 2001)
                              (t                       2000)))

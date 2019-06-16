@@ -1127,7 +1127,7 @@ DO:     [cltl2] string= compares two strings and is true if they are
   (make-string size initial-element))
 
 
-(defun string-trim (character-bag string-designator)
+(defun cl:string-trim (character-bag string-designator)
   "Common-Lisp: returns a substring of string, with all characters in \
 character-bag stripped off the beginning and end.
 "
