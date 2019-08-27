@@ -2472,14 +2472,34 @@ FILE-AND-OPTION: either an atom evaluated to a path,
   (lambda (&rest arguments)
     value))
 
+(defun mapdirectories (thunk directory &optional mode)
+  "
+THUNK:       a function of one argument called for each directory and subdirectories in DIRECTORY.
+DIRECTORY:   the pathname of the base directory.
+MODE         :prefix (default) or :suffix
+"
+  (let ((mode (or mode :prefix)))
+    (dolist (file (directory-files directory))
+      (unless (or (string= "." file) (string= ".." file))
+        (let* ((path  (concat directory
+                              (if (string= "/" (subseq directory (1- (length directory))))
+                                  "" "/")
+                              file))
+               (stat (file-attributes path)))
+          (when (eq 't (first stat))
+            (when (eq mode :prefix)
+              (funcall thunk path))
+            (mapdirectories thunk path)
+            (when (eq mode :suffix)
+              (funcall thunk path))))))))
 
 (defun mapfiles (thunk directory &optional recursive exceptions)
   "
-THUNK:      a function of one argument called for each file pathname.
-DIRECTORY:  the pathname of the base directory.
-RECURSIVE:  a boolean indicating whether the directory will be walked recursively.
-EXCEPTIONS: either a list of pathnames that mustn't be processed,
-            or a predicate indicating the pathnames that mustn't be processed.
+THUNK:       a function of one argument called for each file pathname.
+DIRECTORY:   the pathname of the base directory.
+RECURSIVE:   a boolean indicating whether the directory will be walked recursively.
+EXCEPTIONS:  either a list of pathnames that mustn't be processed,
+             or a predicate indicating the pathnames that mustn't be processed.
 "
   (dolist (file (directory-files directory))
     (let* ((predicate (cond
@@ -2497,22 +2517,19 @@ EXCEPTIONS: either a list of pathnames that mustn't be processed,
                               "" "/")
                           file))
            (stat (file-attributes path)))
-      ;; (message "\n\nstat      = %S" stat)
-      ;; (message "recursive = %S" recursive)
-      ;; (message "path      = %S" path)
-      ;; (message "filter (funcall predicate path) -> %S" (funcall predicate path))
       (case (first stat)
         ((t)                            ; directory
          (unless (or (string= "." file) (string= ".." file))
            (when recursive
              (unless (funcall predicate path)
                (mapfiles thunk path recursive predicate)))))
-        ((nil) ; file
+        ((nil)                          ; file
          (unless (funcall predicate path)
            (funcall thunk path)))
-        (otherwise ; symlink
+        (otherwise                      ; symlink
          ;; NOP
          )))))
+
 
 
 (defmacro* with-files ((file-var directory-expr &key recursive exceptions) &body body)
@@ -2906,4 +2923,7 @@ Attribution: ?"
 (test/enough-namestring)
 
 (provide 'pjb-emacs)
-;;;: THE END ;;;;
+
+;; Local Variables:
+;; coding: utf-8
+;; End Variables:
