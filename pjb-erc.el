@@ -1136,6 +1136,17 @@ command).
 
 ;;;---------------------------------------------------------------------
 
+(defun pjb-youtube/erc-insert-pre-meat (message)
+  (when (string-match "\\(https?://youtu.be/[_A-Za-z0-9=?]*\\|https?://www.youtube.com/watch?v=[_A-Za-z0-9=?]*\\)" message)
+    (let ((url (match-string 1 message)))
+      (shell-command (format "/Applications/MacPorts/smtube.app/Contents/MacOS/smtube %S &" url)
+                     "*smtube*"))))
+
+;; (add-hook 'erc-insert-pre-hook 'pjb-youtube/erc-insert-pre-meat)
+;; (remove-hook 'erc-insert-pre-hook 'pjb-youtube/erc-insert-pre-meat)
+;;;---------------------------------------------------------------------
+
+
 ;; (pjb-set-erc-nickserv-passwords)
 ;; (setf erc-timestamp-format "%Y-%m-%d %H:%M\n")
 ;; (erc-match-mode 1)
