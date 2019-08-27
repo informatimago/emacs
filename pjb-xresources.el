@@ -42,7 +42,7 @@ RETURN: The current frame.
 
 
 (defmacro define-frame-parameter (name)
-  `(defun ,(intern (format "pjb-frame-%s" name)) (&optional frame)
+  `(defun* ,(intern (format "pjb-frame-%s" name)) (&optional frame)
      (frame-parameter (or frame (selected-frame)) ',name)))
 
 ;; (dolist (p (frame-parameters)) (insert (format "(define-frame-parameter %s)\n" (car p))))
