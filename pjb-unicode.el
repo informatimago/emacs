@@ -33,14 +33,41 @@
 ;;;;**************************************************************************
 (require 'cl)
 
+(defparameter *pjb-unicode-maps*
+  '((mathematical-monospace ((?0 ?9 #x1d7c6)
+                             (?A ?Z #x1d62f)
+                             (?a ?z #x1d629)))))
+
+
+
+(defun pjb-unicode-map-character-ranges (string ranges)
+  (map 'string (lambda (ch)
+                 (let ((range (find-if (lambda (range)  (<= (first range) ch (second range)))
+                                       ranges)))
+                   (if range
+                       (+ ch (third range))
+                       ch)))
+       string))
+
+(defun pjb-unicode-get-map (map-name)
+  (second (assoc map-name *pjb-unicode-maps*)))
+
+(defun pjb-unicode-map-region (start end map-name)
+  (let* ((text (buffer-substring start end))
+         (new  (pjb-unicode-map-character-ranges text (pjb-unicode-get-map map-name))))
+    (delete-region start end)
+    (insert new)))
+
+(defun pjb-unicode-set-keys (map-name)
+  (loop for (min max offset) in (pjb-unicode-get-map map-name)
+        do (loop for ch from min to max
+                 do (local-set-key (kbd (string ch)) (string (+ ch offset))))))
+
+
 (defun pjb-unicode-ascii ()
   (interactive)
-  (loop for ch from ?0 to ?9
-        do (local-set-key (kbd (string ch)) nil))
-  (loop for ch from ?A to ?Z
-        do (local-set-key (kbd (string ch)) nil)
-           (local-set-key (kbd (string (+ #x20 ch))) nil)))
-
+  (loop for ch from 32 to 126
+        do (local-set-key (kbd (string ch)) nil)))
 
 (defun pjb-unicode-parenthesized-latin ()
   (interactive)
@@ -198,15 +225,16 @@
         do (local-set-key (kbd (string ch))          (string mf))
            (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
 
+
+
+
 (defun pjb-unicode-mathematical-monospace ()
   (interactive)
-  (loop for ch from ?0 to ?9
-        for mf from #x1d7f6
-        do  (local-set-key (kbd (string ch))        (string mf)))
-  (loop for ch from ?A to ?Z
-        for mf from #x1d670
-        do (local-set-key (kbd (string ch))          (string mf))
-           (local-set-key (kbd (string (+ #x20 ch))) (string (+ 26 mf)))))
+  (pjb-unicode-set-keys 'mathematical-monospace))
+
+(defun pjb-unicode-mathematical-monospace-region (start end)
+  (interactive "r")
+  (pjb-unicode-map-region start end 'mathematical-monospace))
 
 (provide 'pjb-unicode)
 (local-set-key (kbd "A-(")
@@ -219,3 +247,131 @@
                  (interactive "p")
                  (insert (make-string rep ?⸩))))
 
+
+
+(defparameter *braille*
+  '((capital "⠠")
+    (number "⠼")
+    (bracket "⠶")
+
+    ("1" "⠼⠁")
+    ("2" "⠼⠂")
+    ("3" "⠼⠃")
+    ("4" "⠼⠄")
+    ("5" "⠼⠅")
+    ("6" "⠼⠆")
+    ("7" "⠼⠇")
+    ("8" "⠼⠈")
+    ("9" "⠼⠉")
+    ("0" "⠼⠊")
+
+    ("a" "⠁")
+    ("b" "⠂")
+    ("c" "⠃")
+    ("d" "⠄")
+    ("e" "⠅")
+    ("f" "⠆")
+    ("g" "⠇")
+    ("h" "⠈")
+    ("i" "⠉")
+    ("j" "⠊")
+    ("k" "⠋")
+    ("l" "⠌")
+    ("m" "⠍")
+    ("n" "⠎")
+    ("o" "⠏")
+    ("p" "⠐")
+    ("q" "⠑")
+    ("r" "⠒")
+    ("s" "⠓")
+    ("t" "⠔")
+    ("u" "⠥")
+    ("v" "⠧")
+    ("w" "⠺")
+    ("x" "⠭")
+    ("y" "⠽")
+    ("z" "⠵")
+    ("ç" "⠯")
+    ("é" "⠿")
+    ("à" "⠷")
+    ("è" "⠮")
+    ("ù" "⠾")
+    ("â" "⠡")
+    ("ê" "⠣")
+    ("î" "⠩")
+    ("ô" "⠹")
+    ("û" "⠱")
+    ("ë" "⠫")
+    ("ï" "⠻")
+    ("ü" "⠳")
+    ("ö" "⠪")
+    ("ì" "⠌")
+    ("ä" "⠜")
+    ("ò" "⠬")
+
+    ("," "⠂")
+    (";" "⠆")
+    ("'" "⠄")
+    (":" "⠒")
+    ("-" "⠤")
+    ("." "⠨")
+    ("." "⠲")
+    ("!" "⠖")
+    ("?" "⠦")
+    ("`" "⠦")
+    ("‘" "⠦")
+    ("’" "⠴")
+    ("/" "⠌")
+    ("(" "⠶")
+    (")" "⠶")
+
+    ("A" "⠠⠁")
+    ("B" "⠠⠂")
+    ("C" "⠠⠃")
+    ("D" "⠠⠄")
+    ("E" "⠠⠅")
+    ("F" "⠠⠆")
+    ("G" "⠠⠇")
+    ("H" "⠠⠈")
+    ("I" "⠠⠉")
+    ("J" "⠠⠊")
+    ("K" "⠠⠋")
+    ("L" "⠠⠌")
+    ("M" "⠠⠍")
+    ("N" "⠠⠎")
+    ("O" "⠠⠏")
+    ("P" "⠠⠐")
+    ("Q" "⠠⠑")
+    ("R" "⠠⠒")
+    ("S" "⠠⠓")
+    ("T" "⠠⠔")
+    ("U" "⠠⠥")
+    ("V" "⠠⠧")
+    ("W" "⠠⠺")
+    ("X" "⠠⠭")
+    ("Y" "⠠⠽")
+    ("Z" "⠠⠵")
+    ("Ç" "⠠⠯")
+    ("É" "⠠⠿")
+    ("À" "⠠⠷")
+    ("È" "⠠⠮")
+    ("Ù" "⠠⠾")
+    ("Â" "⠠⠡")
+    ("Ê" "⠠⠣")
+    ("Î" "⠠⠩")
+    ("Ô" "⠠⠹")
+    ("Û" "⠠⠱")
+    ("Ë" "⠠⠫")
+    ("Ï" "⠠⠻")
+    ("Ü" "⠠⠳")
+    ("Ö" "⠠⠪")
+    ("Ì" "⠠⠌")
+    ("Ä" "⠠⠜")
+    ("Ò" "⠠⠬")
+    ))
+
+(defun pjb-unicode-braille ()
+  (interactive)
+  (loop for (key braille) in *braille*
+        when (stringp key)
+          do (local-set-key (kbd key) braille)))
