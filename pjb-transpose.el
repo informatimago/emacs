@@ -92,9 +92,19 @@
   (interactive "r")
   (let ((replacement (array-to-string (rotate (region-to-array start end)))))
     (delete-region start end)
-    (goto-char start)
-    (set-mark-command nil)
-    (insert replacement)))
+    (insert replacement)
+    (set-mark start)
+    (goto-char (point))
+    (activate-mark)))
+
+(defun rotate-region (start end)
+  (interactive "r")
+  (let ((replacement (array-to-string (rotate (rotate (rotate (region-to-array start end)))))))
+    (delete-region start end)
+    (insert replacement)
+    (set-mark start)
+    (goto-char (point))
+    (activate-mark)))
 
 
 ;;;; THE END ;;;;
