@@ -92,6 +92,8 @@
   (interactive "r")
   (let ((replacement (array-to-string (rotate (region-to-array start end)))))
     (delete-region start end)
+    (goto-char start)
+    (set-mark-command nil)
     (insert replacement)))
 
 
