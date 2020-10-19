@@ -2920,6 +2920,15 @@ Attribution: ?"
   (local-set-key (kbd "<backtab>") (lambda () (interactive) (backward-button 1 t t))))
 
 
+(defun octal (n)
+  "N is a decimal numbers whose digits are taken as octal digits
+and converted as such."
+  (loop
+     for d across (format "%d" n)
+     for r = (digit-char-p d) then (+ (* 8 r) (digit-char-p d))
+     finally (return r)))
+
+
 (test/enough-namestring)
 
 (provide 'pjb-emacs)
