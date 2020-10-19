@@ -1692,17 +1692,85 @@ Bi-directional stream.")
 ;; - 25 - Environment -
 ;; --------------------
 
-;; Time functions -  http://.../cltl/clm/node232.html
-
-
 (defun get-internal-real-time ()
+  "Common-Lisp: Return the internal real time.
+Return as a floating-point number the current time in internal
+time units, relative to the unix epoch.  The difference between
+the values of two calls to this function is the amount of elapsed real
+time (i.e., clock time) between the two calls."
+  ;; Alternatively, just return: (time-convert nil 'integer) now that we have bignums in emacs lisp…
   (destructuring-bind (high low microsec &rest ignored) (current-time)
     (declare (ignore ignored))
     (+ (* high 65536.0) low (* 1e-6 microsec))))
 
 
+(defconstant +unix-epoch+ 2208988800)
+
+
+(defun get-universal-time ()
+  "Common-Lisp: Return the current time, represented as a universal time.
+Return the universal time as a floating-point number."
+  (+ +unix-epoch+ (get-internal-real-time)))
+
+;; CL timezone = hours to the west
+;; emacs timezone = seconds to the east.
+
+(defun* encode-universal-time (se mi ho da mo ye &optional time-zone)
+  "Common-Lisp: Convert a time from Decoded Time format to a universal time.
+Return the universal time as a floating-point number."
+  (destructuring-bind (high low)
+      (encode-time (list se mi ho da mo ye nil
+                         (if time-zone
+                             nil
+                           (let ((emacs-time (encode-time (list se mi ho da mo ye nil nil (* time-zone -3600)))))
+                             (decoded-time-dst (decode-time emacs-time))))
+                         (if time-zone
+                             (* time-zone -3600)
+                           (first (current-time-zone)))))
+    (+ +unix-epoch+ (* high 65536.0) low)))
+
+
+(defun* decode-universal-time (universal-time &optional time-zone)
+  "Common-Lisp:  Returns the decoded time represented by the given universal time.
+If time-zone is not supplied, it defaults to the current time zone
+adjusted for daylight saving time. If time-zone is supplied, daylight
+saving time information is ignored. The daylight saving time flag is
+nil if time-zone is supplied."
+
+  (let* ((emacs-time-zone    (when time-zone
+                               (* time-zone -3600)))
+         (decoded-emacs-time (decode-time (- universal-time +unix-epoch+)
+                                          emacs-time-zone))
+         (daylight           (if time-zone
+                                 nil
+                               (decoded-time-dst decoded-emacs-time)))
+         (timezone           (if time-zone
+                                 time-zone
+                                 (/ (decoded-time-zone decoded-emacs-time) -3600))))
+    (values (decoded-time-second  decoded-emacs-time)
+            (decoded-time-minute  decoded-emacs-time)
+            (decoded-time-hour    decoded-emacs-time)
+            (decoded-time-day     decoded-emacs-time)
+            (decoded-time-month   decoded-emacs-time)
+            (decoded-time-year    decoded-emacs-time)
+            (mod (+ 6 (decoded-time-weekday decoded-emacs-time)) 7)
+            daylight
+            (+ timezone (if daylight 1 0)))))
+
+;; (values  (encode-universal-time 0 0 12 1 8 2020 0)
+;;          (encode-universal-time 0 0 12 1 11 2020 0)
+;;          (multiple-value-list (decode-universal-time (encode-universal-time 0 0 12 1 8 2020 0)))
+;;          (multiple-value-list (decode-universal-time (encode-universal-time 0 0 12 1 8 2020 0) -1))
+;;          (multiple-value-list (decode-universal-time (encode-universal-time 0 0 12 1 11 2020 0)))
+;;          (multiple-value-list (decode-universal-time (encode-universal-time 0 0 12 1 11 2020 0) -1)))
+
+(defun get-decoded-time ()
+  "Common-Lisp: Return the current time, represented as a decoded time."
+  (decode-universal-time (get-universal-time)))
+
+
 (defmacro time (&rest body)
-  "Common-Lisp:  time evaluates form in the current environment (lexical and \
+  "Common-Lisp:  time evaluate form in the current environment (lexical and \
 dynamic). A call to time can be compiled.
 DO:      time prints various timing data and other information to trace output.
          The nature and format of the printed information is
