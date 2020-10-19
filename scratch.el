@@ -65,3 +65,33 @@
 ;;     (setq options (nreverse options))
 ;;     `(defclass ,name ,super ,fields ,options)))
 
+
+
+
+(defun camel-case (text)
+  (if (find ?- text)
+      (mapconcat (function capitalize)  (split-string text "-_") " ")
+    (capitalize text)))
+
+(defun composition-juxtaposed-text-components (text)
+  (let ((components (make-vector (* 2 (length text))  '(base-right . base-left))))
+    (dotimes (i (length text) components)
+      (setf (aref components (* 2 i)) (aref text i)))))
+
+(defun camel-case-symbols-font-lock ()
+  "
+RETURN: A font-lock-keywords list lisp-style symbols to camel case.
+"
+  (when (<= 21 emacs-major-version)
+    `(("\\<\\([-_!@#$%^&*A-Za-z0-9]+\\)\\>"
+       (1 (progn (compose-region (match-beginning 1) (match-end 1)
+                                 (composition-juxtaposed-text-components
+                                  (camel-case (buffer-substring (match-beginning 1) (match-end 1))))
+                                 'decompose-region)
+                 nil))))))
+"camel-case-symbols-font-lock"
+
+;; (camel-case "camel-case-symbols-font-lock")
+;; (font-lock-add-keywords nil (camel-case-symbols-font-lock))
+
+
