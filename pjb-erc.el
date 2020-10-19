@@ -1118,10 +1118,9 @@ command).
      (pjb-erc-keybindings)))
   (loop with current-channel = (buffer-name)
         for (channels . eval-function)
-          in '((("#lisp" "##lisp" "#lispcafe" "#lispgame"  "#lisp-lab" "#lisp-fr" "#lisp-es"
-                 "#ccl" "#sbcl" "#quicklisp")
-                . cl-eval-last-expression)
-               (("#emacs")
+          in '((("#emacs" "#emacsfr"  "#haskell-emacs"
+                 "irc.freenode.org:6667"
+                 )
                 . el-eval-last-expression)
                (("#scheme")
                 . scheme-eval-last-expression)
