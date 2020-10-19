@@ -63,9 +63,9 @@
 
 (defun pjb-ruby-mode-meat ()
   (interactive)
-  (local-set-key (kbd "\C-c,")    (function ruby-backward-sexp))
-  (local-set-key (kbd "\C-c.")    (function ruby-forward-sexp))
-  (local-set-key (kbd "\C-x\C-e") (function pjb-ruby-eval-last-sexp))
+  (local-set-key (kbd "C-c ,")    (function ruby-backward-sexp))
+  (local-set-key (kbd "C-c .")    (function ruby-forward-sexp))
+  (local-set-key (kbd "C-x C-e") (function pjb-ruby-eval-last-sexp))
   (setf inferior-ruby-first-prompt-pattern "^irb\\(.*\\)[>*\"'] *")
   (values))
 
