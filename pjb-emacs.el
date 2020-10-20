@@ -212,6 +212,13 @@ RETURN: the buffer which has as name `name'.
   (interactive "DDirectory for this buffer: ")
   (setf default-directory path))
 
+(defun reset-home-directory ()
+  "Set the default directory of all non-file buffers to ~/."
+  (interactive)
+  (dolist (buffer (buffer-list))
+    (unless (buffer-file-name buffer)
+      (with-current-buffer buffer
+        (set-default-directory "~/")))))
 
 ;;;----------------------------------------------------------------------------
 ;;; Editing functions:
