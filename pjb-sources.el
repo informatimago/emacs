@@ -3541,7 +3541,22 @@ SProject Type: ")
 (global-set-key (kbd "A-f") 'sources-find-file-named)
 (global-set-key (kbd "C-c C-x C-f") 'sources-find-file-named)
 
+(defvar *pjb-tab-width-alist*
+  '(("^/Applications/Emacs.app/Contents/Resources/" . 8)
+    ("^/usr/local/src/ccl-.*/" . 8))
+  "A map of regexps to tab-widths.
+Any file whose path matches the regexp will have it's tab-width set
+accordingly by pjb-find-file-meat/tab-width.")
 
+(defun pjb-find-file-meat/tab-width ()
+  "Set the `tab-width' to a value specified in `*pjb-tab-width-alist*'."
+  (unless (assoc 'tab-width file-local-variables-alist)
+    (let ((path (buffer-file-name (current-buffer))))
+      (let ((entry (find-if (lambda (regexp) (string-match regexp path)) *pjb-tab-width-alist* :key (function car))))
+        (when entry
+          (set-variable 'tab-width (cdr entry) t))))))
+
+(add-hook 'find-file-hook 'pjb-find-file-meat/tab-width)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
