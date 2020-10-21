@@ -3541,12 +3541,15 @@ SProject Type: ")
 (global-set-key (kbd "A-f") 'sources-find-file-named)
 (global-set-key (kbd "C-c C-x C-f") 'sources-find-file-named)
 
-(defvar *pjb-tab-width-alist*
-  '(("^/Applications/Emacs.app/Contents/Resources/" . 8)
-    ("^/usr/local/src/ccl-.*/" . 8))
+(defvar *pjb-tab-width-alist* '()
   "A map of regexps to tab-widths.
-Any file whose path matches the regexp will have it's tab-width set
-accordingly by pjb-find-file-meat/tab-width.")
+Any file whose path matches the regexp will have it's `tab-width' set
+accordingly by `pjb-find-file-meat/tab-width'.
+
+For example:   '((\"^/Applications/Emacs.app/Contents/Resources/\" . 8)
+                 (\"^/usr/local/src/ccl-.*/\" . 8))
+")
+
 
 (defun pjb-find-file-meat/tab-width ()
   "Set the `tab-width' to a value specified in `*pjb-tab-width-alist*'."
