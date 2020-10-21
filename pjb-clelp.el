@@ -60,12 +60,12 @@ even after a prefix path.
                         (cl:ignore-errors
                          (cl:namestring
                           (cl:truename
-                           (make-pathname :version nil :defaults (cl:pathname ,path)))))))))
+                           (cl:make-pathname :version nil :defaults (cl:pathname ,path)))))))))
         (let ((path (clpath buffer-file-name)))
           (unless (and path (file-exists-p path))
-            (when (or (string-match "^\"\\([^/]+\\)\"$"     buffer-file-name)
-                      (string-match "^/.*/\"\\([^/]+\\)\"$" buffer-file-name)
-                      (string-match "^/.*/\\([^/]+\\)$"     buffer-file-name))
+            (when (or (string-match "^ *\"\\([^/]+\\)\"$"     buffer-file-name)
+                      (string-match "^/.*/ *\"\\([^/]+\\)\"$" buffer-file-name)
+                      (string-match "^/.*/ *\\([^/]+\\)$"     buffer-file-name))
               (setf path (clpath  (match-string 1 buffer-file-name)))))
           (when (and path (file-exists-p path))
             (handler-case
