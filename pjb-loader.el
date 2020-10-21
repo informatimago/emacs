@@ -33,21 +33,22 @@
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
 ;;;;    Boston, MA 02111-1307 USA
 ;;;;**************************************************************************
+(require cl)
 
 (defun check-version-lock (from)
   (if (file-exists-p "--version.lock")
-    (error "version lock")))
+      (error "version lock")))
 
 (defun load-stuff (files &optional show-messages)
   (unwind-protect
-      (dolist (path files)
-        (if *pjb-load-noerror*
-          (condition-case cc
-              (load path *pjb-load-noerror* *pjb-load-silent*)
-            (error
-             (setq show-messages t)
-             (message (format "ERROR: %S" cc))))
-          (load path *pjb-load-noerror* *pjb-load-silent*)))
+       (dolist (path files)
+         (if *pjb-load-noerror*
+             (condition-case cc
+                             (load path *pjb-load-noerror* *pjb-load-silent*)
+                             (error
+                              (setq show-messages t)
+                              (message (format "ERROR: %S" cc))))
+             (load path *pjb-load-noerror* *pjb-load-silent*)))
     (when (file-exists-p "--version.lock")
       (delete-file "--version.lock"))
     (when show-messages
@@ -92,6 +93,7 @@
         "pjb-ruby.el"
         "pjb-shell.el"
         "pjb-sources.el"
+        "pjb-clelp.el"
         "pjb-state-coding.el"
         "pjb-strings.el"
         "pjb-utilities.el"
@@ -148,70 +150,70 @@
                   ))))
 
 
- (unless :obsolete
-   '(
-     "pjb-vm"
-     "pjb-vm-kill-file.el"
+(unless :obsolete
+  '(
+    "pjb-vm"
+    "pjb-vm-kill-file.el"
 
-     "pjb-banks-old.el"
-     "pjb-c.el"
-     "pjb-objc-mode.el"
-     "pjb-comint"
-     "slime-rpc.el"
-     "split.el"
+    "pjb-banks-old.el"
+    "pjb-c.el"
+    "pjb-objc-mode.el"
+    "pjb-comint"
+    "slime-rpc.el"
+    "split.el"
 
-     ))
-
-
+    ))
 
 
 
 
- ;; (load-stuff
- ;;  (let ((files-not-to-load
- ;;         (append
- ;;          ;; files NEVER to load.
- ;;          '("pjb-emacs-cl"
- ;;            "pjb-c"
- ;;            "pjb-w3"
- ;;            "pjb-objc-mode"
- ;;            "pjb-banks-old")
- ;;          (when *pjb-light-emacs*
- ;;            ;; files NOT to load when light
- ;;            '("pjb-banks"
- ;;              "pjb-bourse"
- ;;              "pjb-cl-faces"
- ;;              "pjb-computer-paper"
- ;;              "pjb-constants"
- ;;              "pjb-cvs"
- ;;              "pjb-cvspass"
- ;;              "pjb-dot"
- ;;              "pjb-graph"
- ;;              "pjb-i2p-expression"
- ;;              "pjb-invoices"
- ;;              "pjb-layers"
- ;;              "pjb-make-depends"
- ;;              "pjb-roman"
- ;;              "pjb-s2p-expression"
- ;;              "pjb-secouer"
- ;;              "pjb-selftrade"
- ;;              "pjb-server"
- ;;              "pjb-transpose"
- ;;              "pjb-vm-kill-file"
- ;;              "pjb-worldfact")))))
- ;;    (remove-if
- ;;     (lambda (file) (member* file files-not-to-load :test (function string=)))
- ;;     (let ((home-path (namestring (user-homedir-pathname))))
- ;;       (append
- ;;        ;; all the files
- ;;        (mapcar
- ;;         (function pathname-name)
- ;;         (file-expand-wildcards ; DIRECTORY doesn't work on "pjb-*" yet.
- ;;          (if (file-directory-p (concatenate 'string home-path "src/public/emacs"))
- ;;              (concatenate 'string home-path "src/public/emacs/pjb-*.el")
- ;;            (get-directory :share-lisp "packages/com/informatimago/emacs/pjb-*.el"))))
- ;;        (list ;; some additional dynamic data:
- ;;         (concatenate 'string home-path ".emacs-devises")))))))
+
+
+;; (load-stuff
+;;  (let ((files-not-to-load
+;;         (append
+;;          ;; files NEVER to load.
+;;          '("pjb-emacs-cl"
+;;            "pjb-c"
+;;            "pjb-w3"
+;;            "pjb-objc-mode"
+;;            "pjb-banks-old")
+;;          (when *pjb-light-emacs*
+;;            ;; files NOT to load when light
+;;            '("pjb-banks"
+;;              "pjb-bourse"
+;;              "pjb-cl-faces"
+;;              "pjb-computer-paper"
+;;              "pjb-constants"
+;;              "pjb-cvs"
+;;              "pjb-cvspass"
+;;              "pjb-dot"
+;;              "pjb-graph"
+;;              "pjb-i2p-expression"
+;;              "pjb-invoices"
+;;              "pjb-layers"
+;;              "pjb-make-depends"
+;;              "pjb-roman"
+;;              "pjb-s2p-expression"
+;;              "pjb-secouer"
+;;              "pjb-selftrade"
+;;              "pjb-server"
+;;              "pjb-transpose"
+;;              "pjb-vm-kill-file"
+;;              "pjb-worldfact")))))
+;;    (remove-if
+;;     (lambda (file) (member* file files-not-to-load :test (function string=)))
+;;     (let ((home-path (namestring (user-homedir-pathname))))
+;;       (append
+;;        ;; all the files
+;;        (mapcar
+;;         (function pathname-name)
+;;         (file-expand-wildcards ; DIRECTORY doesn't work on "pjb-*" yet.
+;;          (if (file-directory-p (concatenate 'string home-path "src/public/emacs"))
+;;              (concatenate 'string home-path "src/public/emacs/pjb-*.el")
+;;            (get-directory :share-lisp "packages/com/informatimago/emacs/pjb-*.el"))))
+;;        (list ;; some additional dynamic data:
+;;         (concatenate 'string home-path ".emacs-devises")))))))
 
 
 
@@ -237,8 +239,8 @@ RETURN: (not eof)
   (interactive)
   (let* ((comment-regexp   "\\(#|\\([^|]\\||[^#]\\)*|#\\)\\|\\(;.*$\\)")
          (space-or-comment (format "\\(%s\\)\\|\\(%s\\)"
-                             "[ \t\n\v\f\r]+"
-                             comment-regexp)) )
+                                   "[ \t\n\v\f\r]+"
+                                   comment-regexp)) )
     (while (looking-at space-or-comment)
       (goto-char (match-end 0)))
     (< (point) (point-max))))
@@ -327,35 +329,35 @@ NOTE:   Scanning stops as soon as an error is detected by forward-sexp.
 RETURN: The list of results from fun.
 "
   (save-excursion
-    (save-restriction
-      (let ((old-buffer            (current-buffer))
-            (existing-buffer       (get-buffer source-file))
-            last-bosexp)
-        (if existing-buffer
-            (switch-to-buffer existing-buffer)
-            (find-file source-file))
-        (widen)
-        (goto-char (point-min))
-        (while (< (point) (point-max))
-          (el-walk-sexps fun))
-        (if existing-buffer
-            (switch-to-buffer old-buffer)
-            (kill-buffer (current-buffer)))))))
+   (save-restriction
+    (let ((old-buffer            (current-buffer))
+          (existing-buffer       (get-buffer source-file))
+          last-bosexp)
+      (if existing-buffer
+          (switch-to-buffer existing-buffer)
+          (find-file source-file))
+      (widen)
+      (goto-char (point-min))
+      (while (< (point) (point-max))
+        (el-walk-sexps fun))
+      (if existing-buffer
+          (switch-to-buffer old-buffer)
+          (kill-buffer (current-buffer)))))))
 
 
 (defun source-file-requires (path)
   (let ((requires '()))
     (el-map-sexps path
-               (lambda (form start end)
-                 (when (and (listp form)
-                            (eq 'require (first form)))
-                   (push (let ((what (second form)))
-                           (if (atom what)
-                               what
-                               (if (eq 'quote (first what))
-                                   (second what)
-                                   what)))
-                         requires))))
+                  (lambda (form start end)
+                    (when (and (listp form)
+                               (eq 'require (first form)))
+                      (push (let ((what (second form)))
+                              (if (atom what)
+                                  what
+                                  (if (eq 'quote (first what))
+                                      (second what)
+                                      what)))
+                            requires))))
     requires))
 
 
@@ -376,30 +378,30 @@ RETURN: A list of NODES sorted topologically according to
         then the list returned won't contain all the NODES.
 "
   (loop
-     with sorted = '()
-     with incoming = (map 'vector (lambda (to)
-                                    (loop
-                                        for from in nodes
-                                        when (and (not (eq from to))
-                                                   (funcall lessp from to))
-                                        sum 1))
-                           nodes)
-     with q = (loop
-                  for node in nodes
-                  for inco across incoming
-                  when (zerop inco)
-                  collect node)
-     while q
-     do (let ((n (pop q)))
-           (push n sorted)
-           (loop
-              for m in nodes
-              for i from 0
-              do (when (and (and (not (eq n m))
-                                  (funcall lessp n m))
-                             (zerop (decf (aref incoming i))))
-                    (push m q))))
-     finally (return (nreverse sorted))))
+    with sorted = '()
+    with incoming = (map 'vector (lambda (to)
+                                   (loop
+                                     for from in nodes
+                                     when (and (not (eq from to))
+                                               (funcall lessp from to))
+                                       sum 1))
+                         nodes)
+    with q = (loop
+               for node in nodes
+               for inco across incoming
+               when (zerop inco)
+                 collect node)
+    while q
+    do (let ((n (pop q)))
+         (push n sorted)
+         (loop
+           for m in nodes
+           for i from 0
+           do (when (and (and (not (eq n m))
+                              (funcall lessp n m))
+                         (zerop (decf (aref incoming i))))
+                (push m q))))
+    finally (return (nreverse sorted))))
 
 
 
@@ -410,7 +412,7 @@ RETURN: A list of NODES sorted topologically according to
       (mapcar (lambda (file)
                 (let ((path (concat (if load-file-name
                                         (file-name-directory load-file-name)
-                                      (concat (getenv "HOME") "/src/public/emacs/"))
+                                        (concat (getenv "HOME") "/src/public/emacs/"))
                                     file)))
                   (cons (intern (pathname-name* file))
                         (source-file-requires path))))
@@ -423,15 +425,15 @@ RETURN: A list of NODES sorted topologically according to
 
 
 (defun check-pjb-sources-lessp ()
- (let ((nodes (mapcar (lambda (path) (intern (pathname-name* path))) *pjb-sources*)))
-   (loop
+  (let ((nodes (mapcar (lambda (path) (intern (pathname-name* path))) *pjb-sources*)))
+    (loop
       for from in nodes
       do  (loop
-             for to in nodes
-             when (and (not (eq from to))
-                       (pjb-sources-lessp from to)
-                       (pjb-sources-lessp to from))
-             do (print (list from to))))))
+            for to in nodes
+            when (and (not (eq from to))
+                      (pjb-sources-lessp from to)
+                      (pjb-sources-lessp to from))
+              do (print (list from to))))))
 
 (let ((sorted (topological-sort
                (mapcar (lambda (path) (intern (pathname-name* path))) *pjb-sources*)
