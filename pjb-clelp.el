@@ -68,14 +68,20 @@ even after a prefix path.
                       (string-match "^/.*/ *\\([^/]+\\)$"     buffer-file-name))
               (setf path (clpath  (match-string 1 buffer-file-name)))))
           (when (and path (file-exists-p path))
-            (handler-case
-                (let ((inhibit-read-only t))
-                  (insert-file-contents path)
-                  (set-visited-file-name path)
-                  (message "buffer-file-name = %S" path)
-                  t)
-              (file-error ()
-                nil))))))))
+            (let ((old-buffer (find-buffer-visiting path)))
+              (if old-buffer
+                  (progn
+                    (kill-buffer (current-buffer))
+                    (switch-to-buffer old-buffer)
+                    t)
+                  (handler-case
+                      (let ((inhibit-read-only t))
+                        (insert-file-contents path)
+                        (set-visited-file-name path)
+                        (message "buffer-file-name = %S" path)
+                        t)
+                    (file-error ()
+                      nil))))))))))
 
 (add-hook 'find-file-not-found-functions 'pjb-find-file-not-found/cl-pathname)
 
