@@ -38,8 +38,10 @@
 
 (defun milliways-run ()
   (interactive)
-  (while *milliways*
-    (ignore-errors (funcall (pop *milliways*)))))
+  (when *milliways*
+    (while *milliways*
+      (ignore-errors (funcall (pop *milliways*))))
+    (timer-delete-function 'milliways-run)))
 
 (defun milliways-activate (&optional delay)
   "Called at the end of ~/.emacs"
