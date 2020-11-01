@@ -51,7 +51,10 @@
 
 (defun milliways-schedule (function)
   "Schedule the function to be called after emacs started."
-  (push function *milliways*))
+  (push function *milliways*)
+  (unless (find 'milliways-run (append timer-list timer-idle-list)
+                :key (function timer--function))
+    (milliways-activate)))
 
 (milliways-schedule
  (lambda ()
