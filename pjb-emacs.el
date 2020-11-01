@@ -876,6 +876,18 @@ DO:     Insert in the current buffer a list of colors and
                       :key (function timer--function))))
 
 
+(defun alarm-ring (&optional name)
+  (message (if name
+               (format "Alarm %s!" name)
+               "Alarm!"))
+  (loop repeat 10 do (beep) (sleep 0.3)))
+
+(defun set-alarm (delay-seconds &optional name)
+  (interactive "NDelay (seconds): ")
+  (run-at-time delay-seconds nil 'alarm-ring name))
+
+
+
 (defun chronometre (lambda-body &optional outstream)
   "
 DO:     Chronometre the execution of `lambda-body'.
