@@ -882,9 +882,11 @@ DO:     Insert in the current buffer a list of colors and
                "Alarm!"))
   (loop repeat 10 do (beep) (sleep 0.3)))
 
-(defun set-alarm (delay-seconds &optional name)
-  (interactive "NDelay (seconds): ")
-  (run-at-time delay-seconds nil 'alarm-ring name))
+(defun set-alarm (delay-seconds name)
+  (interactive "NDelay (seconds):
+sWhy: ")
+  (run-at-time delay-seconds nil 'alarm-ring
+               (if (string= name "") "Alarm!" name)))
 
 
 
@@ -1759,6 +1761,22 @@ See also: `exclude-frame' and `include-frame'
        (set-mark (match-beginning 0)))
       (t (error "Can't find %S" text)))))
 
+
+(defun pjb-buffer-containing-regexp (regexp)
+  (remove-if-not (lambda (buffer)
+                   (with-current-buffer buffer
+                     (save-excursion
+                      (goto-char (point-min))
+                      (re-search-forward regexp nil t))))
+                 (buffer-list)))
+
+;; TODO: provide a grep-like result buffer:
+;; (pjb-buffer-containing-regexp "\\<banning\\>")
+;; 
+;; (defun pjb-search-buffer-containing (regexp)
+;;   (interactive "sRegexp: ")
+;;   (dolist (buffer (buffer-list)))
+;;   )
 
 ;;;----------------------------------------------------------------------------
 ;;; Masking private text
