@@ -33,7 +33,7 @@
 ;;;;    Software Foundation, Inc., 59 Temple Place, Suite 330,
 ;;;;    Boston, MA 02111-1307 USA
 ;;;;**************************************************************************
-(require cl)
+(require 'cl)
 
 (defun check-version-lock (from)
   (if (file-exists-p "--version.lock")

@@ -35,12 +35,13 @@
 
 (defvar *echo-keys-last* nil "Last command processed by `echo-keys'.")
 (defvar *echo-key-width*  40 "Default width of the *echo-keys* window.")
+(defvar *echo-key-password-disable* nil "Temporarily disable echo key for password input.")
 
 
 (defun echo-keys ()
   (let ((deactivate-mark deactivate-mark)
         (keys            (this-command-keys)))
-    (when keys
+    (when (and keys (not *echo-key-password-disable*))
       (save-excursion
        (with-current-buffer (get-buffer-create "*echo-key*")
          (goto-char (point-max))
@@ -74,15 +75,22 @@
           (when (eq (window-buffer window) echo-buffer)
             (delete-window window))))
       (progn
-        (add-hook 'pre-command-hook 'echo-keys)
         (delete-other-windows)
         (split-window nil (- (window-width) *echo-key-width*) t)
         (other-window 1)
         (switch-to-buffer (get-buffer-create "*echo-key*"))
         (toggle-truncate-lines +1)
         (set-window-dedicated-p (selected-window) t)
-        (other-window 1))))
+        (other-window 1)
+        (add-hook 'pre-command-hook 'echo-keys))))
 
+(defadvice echo-key--read-passwd--disable (before read-passwd)
+  (message "echo-key--read-passwd--disable")
+  (setf *echo-key-password-disable* t))
+
+(defadvice echo-key--read-passwd--enable (after read-passwd)
+    (message "echo-key--read-passwd--enable")
+  (setf *echo-key-password-disable* nil))
 
 (provide 'pjb-echo-keys)
 ;;;; THE END ;;;;
