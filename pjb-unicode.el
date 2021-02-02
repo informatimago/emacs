@@ -69,6 +69,20 @@
   (loop for ch from 32 to 126
         do (local-set-key (kbd (string ch)) nil)))
 
+
+(defun pjb-unicode-small-caps ()
+  (interactive)
+  (loop for ch from ?0 to ?9
+        for mf from 120802
+        do  (local-set-key (kbd (string ch))        (string mf)))
+  (loop for ch from ?a to ?z
+        for mf across "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘꞯʀꜱᴛᴜᴠᴡxʏᴢ"
+        do (local-set-key (kbd (string ch))          (string mf)))
+  (loop for ch from ?A to ?Z
+        for mf across "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘꞯʀꜱᴛᴜᴠᴡxʏᴢ"
+        do (local-set-key (kbd (string ch))          (string mf))))
+
+
 (defun pjb-unicode-parenthesized-latin ()
   (interactive)
   (loop for ch from ?0 to ?9
