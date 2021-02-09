@@ -15,6 +15,7 @@
 ;;;;                     the option of displaying repeated command count.
 ;;;;    2014-06-05 <PJB> Extracted from ~/.emacs.
 ;;;;BUGS
+;;;;    We should define a customization for *echo-key-coallesce-repeats*.
 ;;;;LEGAL
 ;;;;    AGPL3
 ;;;;
