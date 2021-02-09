@@ -11,14 +11,14 @@
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
+;;;;    2021-02-09 <PJB> By suggestion of quiliro@irc.freenode.org, added
+;;;;                     the option of displaying repeated command count.
 ;;;;    2014-06-05 <PJB> Extracted from ~/.emacs.
 ;;;;BUGS
-;;;;    <quiliro> One thing I suggest to do is to represent repetitions as just one line with [6] for example beside it.
-;;;;    <quiliro> with 6 being the number of repetitions of the same keypress
 ;;;;LEGAL
 ;;;;    AGPL3
 ;;;;
-;;;;    Copyright Pascal J. Bourguignon 2014 - 2014
+;;;;    Copyright Pascal J. Bourguignon 2014 - 2021
 ;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
@@ -36,10 +36,14 @@
 (require 'cl)
 
 (defvar *echo-keys-last* nil "Last command processed by `echo-keys'.")
+(defvar *echo-keys-count* 0 "Number of times the `*echo-keys-last*` command was repeated.")
 (defvar *echo-key-width*  40 "Default width of the *echo-keys* window.")
 (defvar *echo-key-password-disable* nil "Temporarily disable echo key for password input.")
 
+(defvar *echo-key-coallesce-repeats* nil
+  "When true, displays <key> <command> [N times] instead of n lines <key> <commands>.")
 
+(setf *echo-key-coallesce-repeats* t)
 (defun echo-keys ()
   (let ((deactivate-mark deactivate-mark)
         (keys            (this-command-keys)))
@@ -51,14 +55,34 @@
              (let ((desc (key-description keys)))
                (if (= 1 (length desc))
                    (insert desc)
-                   (insert " " desc " ")))
-             (insert (if (eq 'self-insert-command *echo-keys-last*)
-                         "\n"
-                         "")
-                     (format "%-12s %s\n"
-                             (key-description keys)
-                             this-command)))
-         (setf *echo-keys-last* this-command)
+                   (insert " " desc " "))
+               (setf *echo-keys-last* this-command
+                     *echo-keys-count* 1))
+             (if (and *echo-key-coallesce-repeats*
+                      (eql *echo-keys-last* this-command))
+                 (progn
+                   (incf *echo-keys-count*)
+                   ;; update the last line
+                   (forward-line -1)
+                   (if (= 2 *echo-keys-count*)
+                       (progn
+                         (end-of-line)
+                         (insert (format " [%d times]" *echo-keys-count*)))
+                       (save-match-data
+                        (when (re-search-forward " \\[\\([0-9]+\\) times\\]" nil t)
+                          (delete-region (match-beginning 1) (match-end 1))
+                          (goto-char (match-beginning 1))
+                          (insert (format "%d" *echo-keys-count*)))))
+                   (forward-line 1))
+                 (progn
+                   (insert (if (eq 'self-insert-command *echo-keys-last*)
+                               "\n"
+                               "")
+                           (format "%-12s %s\n"
+                                   (key-description keys)
+                                   this-command))
+                   (setf *echo-keys-last* this-command
+                         *echo-keys-count* 1))))
          (dolist (window (window-list))
            (when (eq (window-buffer window) (current-buffer))
              (with-selected-window window
