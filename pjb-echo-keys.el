@@ -44,7 +44,7 @@
 (defvar *echo-key-coallesce-repeats* nil
   "When true, displays <key> <command> [N times] instead of n lines <key> <commands>.")
 
-(setf *echo-key-coallesce-repeats* t)
+
 (defun echo-keys ()
   (let ((deactivate-mark deactivate-mark)
         (keys            (this-command-keys)))
