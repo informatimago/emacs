@@ -13,6 +13,8 @@
 ;;;;MODIFICATIONS
 ;;;;    2014-06-05 <PJB> Extracted from ~/.emacs.
 ;;;;BUGS
+;;;;    <quiliro> One thing I suggest to do is to represent repetitions as just one line with [6] for example beside it.
+;;;;    <quiliro> with 6 being the number of repetitions of the same keypress
 ;;;;LEGAL
 ;;;;    AGPL3
 ;;;;
