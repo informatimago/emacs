@@ -1772,11 +1772,12 @@ See also: `exclude-frame' and `include-frame'
 
 ;; TODO: provide a grep-like result buffer:
 ;; (pjb-buffer-containing-regexp "\\<banning\\>")
-;; 
+;;
 ;; (defun pjb-search-buffer-containing (regexp)
 ;;   (interactive "sRegexp: ")
 ;;   (dolist (buffer (buffer-list)))
 ;;   )
+
 
 ;;;----------------------------------------------------------------------------
 ;;; Masking private text
@@ -2803,7 +2804,8 @@ The search is performed in sequentially once from (point) to (point-max)."
   "Align text between point and mark as columns.
 Columns are separated by whitespace characters.
 Prefix arg means align that many columns. (default is all)
-Attribution: ?"
+Attribution: Matthias Helmling (https://www.emacswiki.org/emacs/align.el).
+This function is GPL."
   (interactive "r\nP")
   (save-excursion
     (let ((p start)
