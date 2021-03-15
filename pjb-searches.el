@@ -166,6 +166,13 @@
   (%search-region start end 'symbol 'project-search))
 
 
+(defun numero-inconnu-search (&optional numero)
+  "Search for the phone `number' in the numeroinconnu.fr database."
+  (interactive "sNumero: ")
+  (browse-url (format "https://www.numeroinconnu.fr/numero/%s" numero)))
+(defalias 'ni 'numero-inconnu-search)
+
+
 (defun google-search (search-string)
   "Search a string with Google."
   (interactive "sGoogle Search: ")
