@@ -389,3 +389,31 @@
   (loop for (key braille) in *braille*
         when (stringp key)
           do (local-set-key (kbd key) braille)))
+
+(defun ensure-list (x) (if (listp x) x (list x)))
+
+(defun pjb-unicode-clock (clocks)
+  "Return a string containing clock emojis from `clocks`
+which is a designator for a list of numbers representing hours,
+or hours and a half."
+  (let ((clocks (ensure-list clocks)))
+    (map 'string (lambda (clock)
+                   (let ((hour (mod (truncate clock) 12))
+                         (demi (round (- clock (truncate clock))
+                                      0.5)))
+                     (+ (if (zerop demi)
+                            #x1f550
+                            (+ #x1f550 12))
+                        (if (zerop hour)
+                            12
+                            hour)
+                        -1)))
+         clocks)))
+
+(defun pjb-unicode-clock-number (n)
+  (pjb-unicode-clock (map 'list (lambda (digit)  (- digit ?0))
+                          (format "%d" n))))
+
+;; (pjb-unicode-clock-number 6.693648696890451, 149.30317099394867)
+;; (pjb-unicode-clock-number 00641371491811)
+;; "🕕🕓🕐🕒🕖🕐🕓🕘🕐🕗🕐🕐"
