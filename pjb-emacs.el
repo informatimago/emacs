@@ -2970,8 +2970,28 @@ and converted as such."
 
 (test/enough-namestring)
 
+(defun strike-previous-word ()
+  "Strike the previous word."
+  (interactive)
+  (backward-word 1)
+  (while (looking-at "[[:word:]]")
+    (forward-char 1)
+    (insert #x336)))
+
+(defun strike-region (start end)
+  "Strike the whole region."
+  (interactive "r")
+  (let ((stop (make-marker)))
+    (set-marker stop end)
+    (save-excursion
+     (goto-char start)
+     (while (< (point) stop)
+       (forward-char 1)
+       (insert #x336)))))
+
 (provide 'pjb-emacs)
 
 ;; Local Variables:
 ;; coding: utf-8
 ;; End Variables:
+ -->
