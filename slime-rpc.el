@@ -10,28 +10,24 @@
 (setf slime-enable-evaluate-in-emacs t)
 
 (defun eval-in-cl (cl-expression-string process-result-values)
-  (slime-eval-with-transcript
-   `(swank:eval-and-grab-output ,cl-expression-string)
-   (lexical-let  ((here (current-buffer))
+  (slime-eval-async
+   `(swank:eval-and-grab-output ,(format "(cl:multiple-value-list %s)"
+                                        cl-expression-string))
+   (lexical-let  ((here (current-buffer)) ; shall we use a marker?
                   (process-result-values process-result-values))
      (lambda (result-values)
        (set-buffer here)
-       (funcall process-result-values result-values)))))
+       (funcall process-result-values result-values))))
+  nil)
 
-(eval-in-cl "(values 1 * (ext:! 20) (package-name *package*))"
-            (lambda (values)
-              (dolist (v values)
-                (insert (format "%s\n" v)))))
-;; Returns:
-;;
-;; nil
-;;
-;; then later inserts:
-;;
-;; 1
-;; (42 (EMACS-UNREADABLE |buffer| |*scratch*|))
-;; 2432902008176640000
-;; "COMMON-LISP-USER"
+(eval-in-cl "(values 1 * (expt 2 20) (package-name *package*))"
+            (lambda (result) (insert (format ";; %s\n" (second result)))))
+;; (1 (1 0 :sbcl) 1048576 "COMMON-LISP-USER")
+
+
+(eval-in-cl "(progn #+sbcl (values 1 0 :sbcl) #+ccl (values 2 :ccl) #-(or sbcl ccl) 3)"
+            (lambda (result) (insert (format ";; %s\n" (second result)))))
+;; (1 0 :sbcl)
 
 
 
