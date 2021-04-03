@@ -34,36 +34,41 @@
 ;;;;    Boston, MA 02111-1307 USA
 ;;;;****************************************************************************
 
+(require 'pjb-cl)
+
 (defvar *saved-scroll-functions* nil)
 (make-local-variable '*saved-scroll-functions*)
+
+(defparameter *page-mode-bindings*
+  '((pm-backward-page       scroll-down         "<prior>" "C-c p p")
+    (pm-forward-page        scroll-up           "<next>"  "C-c p n")
+    (pm-beginning-of-buffer beginning-of-buffer "<home>"  "C-c p a")
+    (pm-end-of-buffer       end-of-buffer       "<end>"   "C-c p e")))
 
 (defun page-mode (&optional on)
   (interactive "p")
   (if (if on (plusp on) (not *saved-scroll-functions*))
-    (progn
-      (narrow-to-page)
-      (unless *saved-scroll-functions*
-        (setf *saved-scroll-functions*
-              (list (key-binding [prior]) (key-binding [next])
-                    (key-binding [home])  (key-binding [end]))))
-      (local-set-key [prior] (function pm-backward-page))
-      (local-set-key [next]  (function pm-forward-page))
-      (local-set-key [home]  (function pm-beginning-of-buffer))
-      (local-set-key [end]   (function pm-end-of-buffer)))
-    (progn
-      (widen)
-      (if *saved-scroll-functions*
-        (progn
-          (local-set-key [prior] (first  *saved-scroll-functions*))
-          (local-set-key [next]  (second *saved-scroll-functions*))
-          (local-set-key [home]  (third  *saved-scroll-functions*))
-          (local-set-key [end]   (fourth *saved-scroll-functions*))
-          (setf *saved-scroll-functions* nil))
-        (progn
-          (local-set-key [prior] (function scroll-down))
-          (local-set-key [next]  (function scroll-up))
-          (local-set-key [home]  (function beginning-of-buffer))
-          (local-set-key [end]   (function end-of-buffer)))))))
+      (progn
+        (unless *saved-scroll-functions*
+          (setf *saved-scroll-functions*
+                (loop for (new-fun old-fun . keys) in *page-mode-bindings*
+                      append (loop for key in keys
+                                   collect (list (kbd key) (key-binding (kbd key)))))))
+        (loop for (new-fun old-fun . keys) in *page-mode-bindings*
+              do (loop for key in keys
+                       do (local-set-key (kbd key) new-fun)))
+        (narrow-to-page))
+      (progn
+        (widen)
+        (beginning-of-buffer)
+        (if *saved-scroll-functions*
+            (progn
+              (mapc (lambda (args) (apply (function local-set-key) args))
+                    *saved-scroll-functions*)
+              (setf *saved-scroll-functions* nil))
+            (loop for (new-fun old-fun . keys) in *page-mode-bindings*
+                  do (loop for key in keys
+                           do (local-set-key (kbd key) old-fun)))))))
 
 
 (defun pm-forward-page (&optional count)
@@ -80,7 +85,7 @@
   (setf count (or count 1))
   (widen)
   (unless (search-backward "\f" nil 'at-limit (1+ count))
-    (goto-char (point-max)))
+    (goto-char (point-min)))
   (narrow-to-page))
 
 
@@ -98,22 +103,23 @@
   (narrow-to-page))
 
 
-
 (defun pjb-animate (speed)
-  (interactive "nSpeed: ")
-  (let ((delay (/ 1.0  speed))
-        (done  nil))
+(interactive "nSpeed: ")
+(let ((delay (/ 1.0  speed))
+      (done  nil))
+  (widen)
+  (goto-char (point-min))
+  (message "Animating...")
+  (while (not done)
     (widen)
-    (goto-char (point-min))
-    (message "Animating...")
-    (while (not done)
-      (widen)
-      (if (search-forward "\f" nil 'at-limit)
+    (if (search-forward "\f" nil 'at-limit)
         nil
         (goto-char (point-max))
         (setq done t))
-      (narrow-to-page)
-      (sit-for delay)
-      (force-mode-line-update t)
-      ) ;;while
-    (message "Done.")))
+    (narrow-to-page)
+    (sit-for delay)
+    (force-mode-line-update t))
+  (message "Done.")))
+
+;;;; THE END ;;;;
+
