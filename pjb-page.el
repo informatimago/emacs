@@ -45,8 +45,12 @@
     (pm-beginning-of-buffer beginning-of-buffer "<home>"  "C-c p a")
     (pm-end-of-buffer       end-of-buffer       "<end>"   "C-c p e")))
 
-(defun page-mode (&optional on)
-  (interactive "p")
+(defun pjb-reset-page-mode-key-bindings ()
+  (loop for (new-fun old-fun . keys) in *page-mode-bindings*
+        do (loop for key in keys
+                 do (local-set-key (kbd key) new-fun))))
+
+(defun pjb-set-page-mode-key-bindings ()
   (if (if on (plusp on) (not *saved-scroll-functions*))
       (progn
         (unless *saved-scroll-functions*
@@ -54,10 +58,8 @@
                 (loop for (new-fun old-fun . keys) in *page-mode-bindings*
                       append (loop for key in keys
                                    collect (list (kbd key) (key-binding (kbd key)))))))
-        (loop for (new-fun old-fun . keys) in *page-mode-bindings*
-              do (loop for key in keys
-                       do (local-set-key (kbd key) new-fun)))
-        (narrow-to-page))
+        (pjb-reset-page-mode-key-bindings)
+        (pjb-narrow-to-page))
       (progn
         (widen)
         (beginning-of-buffer)
@@ -70,6 +72,14 @@
                   do (loop for key in keys
                            do (local-set-key (kbd key) old-fun)))))))
 
+(defun page-mode (&optional on)
+  (interactive "p")
+  (pjb-set-page-mode-key-bindings))
+
+(defun pjb-narrow-to-page (&optional arg)
+  (narrow-to-page arg)
+  (normal-mode t)
+  (pjb-reset-page-mode-key-bindings))
 
 (defun pm-forward-page (&optional count)
   (interactive "p")
@@ -77,7 +87,7 @@
   (widen)
   (unless (search-forward "\f" nil 'at-limit count)
     (goto-char (point-max)))
-  (narrow-to-page))
+  (pjb-narrow-to-page))
 
 
 (defun pm-backward-page (&optional count)
@@ -86,21 +96,21 @@
   (widen)
   (unless (search-backward "\f" nil 'at-limit (1+ count))
     (goto-char (point-min)))
-  (narrow-to-page))
+  (pjb-narrow-to-page))
 
 
 (defun pm-beginning-of-buffer ()
   (interactive)
   (widen)
   (goto-char (point-min))
-  (narrow-to-page))
+  (pjb-narrow-to-page))
 
 
 (defun pm-end-of-buffer ()
   (interactive)
   (widen)
   (goto-char (point-max))
-  (narrow-to-page))
+  (pjb-narrow-to-page))
 
 
 (defun pjb-animate (speed)
