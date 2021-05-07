@@ -3610,6 +3610,13 @@ For example:   '((\"^/Applications/Emacs.app/Contents/Resources/\" . 8)
      ;; Add line header:
      (replace-regexp "^" " * " nil (point) (- end 1)))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun narrow-to-defun ()
+  (interactive)
+  (save-excursion
+   (mark-defun)
+   (narrow-to-region (point) (mark))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'pjb-sources)
