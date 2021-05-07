@@ -42,15 +42,15 @@
 (defparameter *page-mode-bindings*
   '((pm-backward-page       scroll-down         "<prior>" "C-c p p")
     (pm-forward-page        scroll-up           "<next>"  "C-c p n")
-    (pm-beginning-of-buffer beginning-of-buffer "<home>"  "C-c p a")
-    (pm-end-of-buffer       end-of-buffer       "<end>"   "C-c p e")))
+    (pm-beginning-of-buffer beginning-of-buffer "<home>"  "C-c p a" "C-c p <")
+    (pm-end-of-buffer       end-of-buffer       "<end>"   "C-c p e" "C-c p >")))
 
 (defun pjb-reset-page-mode-key-bindings ()
   (loop for (new-fun old-fun . keys) in *page-mode-bindings*
         do (loop for key in keys
                  do (local-set-key (kbd key) new-fun))))
 
-(defun pjb-set-page-mode-key-bindings ()
+(defun pjb-set-page-mode-key-bindings (&optional on)
   (if (if on (plusp on) (not *saved-scroll-functions*))
       (progn
         (unless *saved-scroll-functions*
@@ -74,9 +74,12 @@
 
 (defun page-mode (&optional on)
   (interactive "p")
-  (pjb-set-page-mode-key-bindings))
+  (pjb-set-page-mode-key-bindings on)
+  (unless on
+    (normal-mode t)))
 
 (defun pjb-narrow-to-page (&optional arg)
+  (interactive)
   (narrow-to-page arg)
   (normal-mode t)
   (pjb-reset-page-mode-key-bindings))
