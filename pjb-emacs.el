@@ -1722,6 +1722,19 @@ See also: `exclude-frame' and `include-frame'
 (defalias 'swap-windows 'rotate-buffers)
 
 
+(defun tooltip-at-point (format-control &rest arguments)
+  "Displays a message in a tooltip at point."
+  (let* ((pos (window-absolute-pixel-position (point)))
+         (x (car pos))
+         (y (cdr pos)))
+    (let* ((tooltip-frame-parameters
+             (acons 'left x
+                    (acons 'top y
+                           tooltip-frame-parameters))))
+      (tooltip-show (apply (function format) format-control arguments)))))
+
+;; (tooltip-at-point "Hello %s!\nHow do you do?\n--------\nBonjour le monde!" "World")
+
 
 ;;;----------------------------------------------------------------------------
 ;;; Searching selected text
@@ -2994,4 +3007,3 @@ and converted as such."
 ;; Local Variables:
 ;; coding: utf-8
 ;; End Variables:
- -->
