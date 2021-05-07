@@ -116,23 +116,68 @@
   (pjb-narrow-to-page))
 
 
+
+(defun list-all-major-modes ()
+  "Well, all the major modes we can find.
+We only include the symbols that are loaded.
+"
+  ;; There's no definite list, notably if you want potential major modes
+  ;; that have not been loaded or installed yet.  There's a
+  ;; minor-mode-list but there is no major-mode-list.
+  (let ((major-modes '()))
+    (do-symbols (symbol)
+      (when (let ((name (symbol-name symbol)))
+              (and (< 5 (length name))
+                   (string= "-mode" (subseq name (- (length name) 5)))
+                   (not (member symbol minor-mode-list))
+                   (fboundp symbol)
+                   (not (macrop symbol))))
+        (push symbol major-modes)))
+    major-modes))
+
+(defun pm-insert-page (new-major-mode)
+  "Inserts a new page at point."
+  (interactive (intern (completing-read "New mode: "
+                                        (sort (mapcar (function symbol-name)
+                                                      (list-all-major-modes))
+                                              (function string<))
+                                        nil
+                                        :require-match
+                                        (cons (symbol-name major-mode)
+                                              0))))
+  (let ((new-page (format "%c\n" 12)))
+    (insert new-page "\n" new-page)
+    (backward-char 3)
+    (pjb-narrow-to-page)
+    (handler-case (funcall new-major-mode 1)
+      (error () (funcall new-major-mode)))
+    (insert (format "%s -*- mode:%s -*- %s\n\n"
+                    (if (member new-major-mode
+                                '(lisp-mode
+                                  emacs-lisp-mode))
+                        ";;"
+                        comment-start)
+                    new-major-mode
+                    comment-end))))
+
+
 (defun pjb-animate (speed)
-(interactive "nSpeed: ")
-(let ((delay (/ 1.0  speed))
-      (done  nil))
-  (widen)
-  (goto-char (point-min))
-  (message "Animating...")
-  (while (not done)
+  (interactive "nSpeed: ")
+  (let ((delay (/ 1.0  speed))
+        (done  nil))
     (widen)
-    (if (search-forward "\f" nil 'at-limit)
-        nil
-        (goto-char (point-max))
-        (setq done t))
-    (narrow-to-page)
-    (sit-for delay)
-    (force-mode-line-update t))
-  (message "Done.")))
+    (goto-char (point-min))
+    (message "Animating...")
+    (while (not done)
+      (widen)
+      (if (search-forward "\f" nil 'at-limit)
+          nil
+          (goto-char (point-max))
+          (setq done t))
+      (narrow-to-page)
+      (sit-for delay)
+      (force-mode-line-update t))
+    (message "Done.")))
 
 ;;;; THE END ;;;;
 
