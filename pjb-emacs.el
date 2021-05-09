@@ -1943,17 +1943,19 @@ to the buffer instead of local to the mode."
             (for S in '("" "S-"))       ; Shift
             (for H in '("" "H-"))       ; Hyper
             (for s in '("" "s-"))       ; super
+            ;; TODO: What about other keysyms?
             (for x from 32 to 127))
            (let* ((k (format "%s%s%s%s%s%s%c" C M A S H s x))
                   (key (ignore-errors (read-kbd-macro k))))
              (when key
                (push
                 (list k
-                      (format "%-12s  %-12s  %S\n" k key
-                              (or
-                               ;; (string-key-binding key)
-                               ;; What is this string-key-binding?
-                               (key-binding key))))
+                      ;; (format "%-12s  %-12s  %S" k key
+                      ;;         (or
+                      ;;          ;; (string-key-binding key)
+                      ;;          ;; What is this string-key-binding?
+                      ;;          (key-binding key)))
+                      (key-binding key))
                 bindings))))
     (sort bindings
           (lambda (a b)
@@ -1963,6 +1965,8 @@ to the buffer instead of local to the mode."
                         (length (first b)))
                      (string< (first a)
                               (first b))))))))
+
+;; (map nil (lambda (x) (insert (format "%S\n" x))) (list-all-bindings))
 
 
 ;;;----------------------------------------------------------------------------
