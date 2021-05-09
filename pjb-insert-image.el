@@ -35,6 +35,7 @@
 ;;;;    Boston, MA 02111-1307 USA
 ;;;;**************************************************************************
 (require 'cl)
+(require 'comint)
 
 (defun splice (new-list old list)
   "Like substitute but replace the old by the elements in the new-list."
@@ -49,7 +50,7 @@
      finally (return (nreverse result))))
 
 
-(defun comint-output-filter (process string)
+(defun pjb-comint-output-filter (process string)
   (let ((oprocbuf (process-buffer process)))
     ;; First check for killed buffer or no input.
     (when (and string oprocbuf (buffer-name oprocbuf))
