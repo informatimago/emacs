@@ -27,5 +27,11 @@
 ;; (eval-in-cl "+"
 ;;             (lambda (result) (insert (format ";; %s\n" (second result)))))
 
+;; (eval-in-cl "(list \"Hello World\" (find-symbol \"RUN-PROGRAM\" \"UIOP\"))"
+;;             (lambda (result) (insert (format "\n;; %s\n" (second result)))))
+;; nil
+;; (("Hello World" uiop/run-program:run-program))
+
 
 ;;;; THE END ;;;;
+
