@@ -51,10 +51,10 @@
 
 
 (defparameter *implementation/header-map*
-  '(("m"    "h")
-    ("c"    "h")
-    ("mm"   "hh"  "h")
+  '(("c"    "h")
+    ("m"    "h")
     ("cc"   "hh"  "h")
+    ("mm"   "hh"  "h")
     ("cpp"  "hpp" "h")
     ("c++"  "h++" "h"))
   "A map of implementation file types to the corresponding header file types.
