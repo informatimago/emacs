@@ -41,17 +41,17 @@
 
 (defun shell-buffer-name (i) (format "%dshell" i))
 
-(defun shell (&optional buffer)
+(defadvice shell (around shell/multiple-buffers first (&optional buffer) activate)
   "Create a new shell when none exist, or switch to the last created one."
   (interactive "P")
   (if buffer
-      (funcall original-shell buffer)
+      ad-do-it
       (let ((i 0))
         (while (get-buffer (shell-buffer-name i))
           (setq i (1+ i)))
         (if (= 0 i)
             (progn ;; no shell, let's make the first one
-              (funcall original-shell)
+              ad-do-it
               (rename-buffer (shell-buffer-name 0)))
             (progn ;; already have some shells, let's jump to one.
               (switch-to-buffer (shell-buffer-name (1- i))))))))
@@ -64,7 +64,7 @@
   "Create a new shell."
   (interactive "P")
   (flet ((run-shell ()
-           (funcall original-shell)
+           (shell)
            (let ((i 0))
              (while (get-buffer (shell-buffer-name i))
                (setq i (1+ i)))
