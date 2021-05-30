@@ -45,7 +45,9 @@
   "Create a new shell when none exist, or switch to the last created one."
   (interactive "P")
   (if buffer
-      ad-do-it
+      (progn
+        (ad-set-args 0 (list buffer))
+        ad-do-it)
       (let ((i 0))
         (while (get-buffer (shell-buffer-name i))
           (setq i (1+ i)))
