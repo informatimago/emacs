@@ -147,6 +147,7 @@
                   "pjb-bourse.el"
                   "pjb-selftrade.el"
 
+                  "pjb-unicode.el"
                   ))))
 
 
