@@ -65,12 +65,6 @@
 (defun nshell (ask-for-shell-p)
   "Create a new shell."
   (interactive "P")
-  (flet ((run-shell ()
-           (shell)
-           (let ((i 0))
-             (while (get-buffer (shell-buffer-name i))
-               (setq i (1+ i)))
-             (rename-buffer (shell-buffer-name i)))))
     (if ask-for-shell-p
         (let* ((command (read-from-minibuffer
                          "Command: " "/bin/bash" nil nil nil
@@ -83,7 +77,7 @@
                    (message "pgm=%S args=%S"
                             explicit-shell-file-name
                             ,xargs-name)
-                   (run-shell)))
+                   (shell)))
           (message "command=%S f=%S member=%S"
                    (first args) *forward-control-c-shells*
                     (member* (first args) *forward-control-c-shells*
@@ -97,8 +91,7 @@
                               (comint-send-string
                                (get-buffer-process (current-buffer))
                                (format "%c" 3))))))
-        (run-shell))))
-
+        (shell)))
 
 
 ;;;; THE END ;;;;
