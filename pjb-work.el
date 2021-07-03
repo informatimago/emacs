@@ -240,7 +240,7 @@ RETURN: A list of the names of projects initiated for the FIRM.
         (insert header)
         (insert "\n\n\n\n\n")
         (insert footer)
-        (insert "\nTotal:\n Facturation:\n Hourly Rate:\n\n\n"))
+        (insert "\n Total:\n Facturation:\n Hourly Rate:\n\n\n"))
       (cond
         ((progn (goto-char (point-min))
                 (search-forward-regexp " Total.*\n Facturation.*" nil t))
