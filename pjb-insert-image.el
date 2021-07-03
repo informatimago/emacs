@@ -49,6 +49,8 @@
             (push item result))
      finally (return (nreverse result))))
 
+(defun comint-output-filter (process string)
+  (pjb-comint-output-filter process string))
 
 (defun pjb-comint-output-filter (process string)
   (let ((oprocbuf (process-buffer process)))
