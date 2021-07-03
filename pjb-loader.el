@@ -119,7 +119,7 @@
   (setf *pjb-sources*
         (append *pjb-sources*
                 '(
-
+                  "pjb-unicode.el"
 
                   "pjb-computer-paper.el"
                   "pjb-cvs.el"
@@ -147,7 +147,7 @@
                   "pjb-bourse.el"
                   "pjb-selftrade.el"
 
-                  "pjb-unicode.el"
+
                   ))))
 
 
@@ -446,3 +446,4 @@ RETURN: A list of NODES sorted topologically according to
 (load-stuff *pjb-sources* (not *pjb-load-silent*))
 
 ;;;; THE END ;;;;
+
