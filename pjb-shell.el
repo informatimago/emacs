@@ -48,6 +48,7 @@
       (progn
         (ad-set-args 0 (list buffer))
         ad-do-it)
+      ;; find *a* shell:
       (let ((i 0))
         (while (get-buffer (shell-buffer-name i))
           (setq i (1+ i)))
@@ -65,33 +66,39 @@
 (defun nshell (ask-for-shell-p)
   "Create a new shell."
   (interactive "P")
-    (if ask-for-shell-p
-        (let* ((command (read-from-minibuffer
-                         "Command: " "/bin/bash" nil nil nil
-                         "/bin/bash"))
-               (args (split-string command "[ \t]+"))
-               (explicit-shell-file-name (first args))
-               (pname (file-name-nondirectory explicit-shell-file-name))
-               (xargs-name (intern (concat "explicit-" pname "-args"))))
-          (eval `(let ((,xargs-name ',(rest args)))
-                   (message "pgm=%S args=%S"
-                            explicit-shell-file-name
-                            ,xargs-name)
-                   (shell)))
-          (message "command=%S f=%S member=%S"
-                   (first args) *forward-control-c-shells*
-                    (member* (first args) *forward-control-c-shells*
-                       :test (lambda (string regexp) (string-match regexp string))))
-          (when (member* (first args) *forward-control-c-shells*
-                       :test (lambda (string regexp) (string-match regexp string)))
-            (make-keymap-local)
-            (local-set-key (kbd "C-c C-c")
-                           (lambda ()
-                              (interactive)
-                              (comint-send-string
-                               (get-buffer-process (current-buffer))
-                               (format "%c" 3))))))
-        (shell)))
+  (flet ((new-shell ()
+           (let ((i 0))
+             (while (get-buffer (shell-buffer-name i))
+                (setq i (1+ i)))
+             (switch-to-buffer (get-buffer-create (shell-buffer-name i)))
+             (shell (current-buffer)))))
+   (if ask-for-shell-p
+       (let* ((command (read-from-minibuffer
+                        "Command: " "/bin/bash" nil nil nil
+                        "/bin/bash"))
+              (args (split-string command "[ \t]+"))
+              (explicit-shell-file-name (first args))
+              (pname (file-name-nondirectory explicit-shell-file-name))
+              (xargs-name (intern (concat "explicit-" pname "-args"))))
+         (eval `(let ((,xargs-name ',(rest args)))
+                  (message "pgm=%S args=%S"
+                           explicit-shell-file-name
+                           ,xargs-name)
+                  (new-shell)))
+         (message "command=%S f=%S member=%S"
+                  (first args) *forward-control-c-shells*
+                  (member* (first args) *forward-control-c-shells*
+                           :test (lambda (string regexp) (string-match regexp string))))
+         (when (member* (first args) *forward-control-c-shells*
+                        :test (lambda (string regexp) (string-match regexp string)))
+           (make-keymap-local)
+           (local-set-key (kbd "C-c C-c")
+                          (lambda ()
+                            (interactive)
+                            (comint-send-string
+                             (get-buffer-process (current-buffer))
+                             (format "%c" 3))))))
+       (new-shell))))
 
 
 ;;;; THE END ;;;;
