@@ -730,7 +730,9 @@ with possible additional arguments `browse-url-xterm-args'."
     (message "Done.")))
 
 
-
+(defun pjb-ansi-colorize-buffer ()
+  (interactive)
+  (ansi-color-apply-on-region (point-min) (point-max)))
 
 (defvar pjb-listing-light "LightBlue"
   "Background color of light listing area.") ;;pjb-listing-light
