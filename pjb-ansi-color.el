@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    Colorize a buffer containing ansi-color escape sequences.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2021 - 2021
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU Affero General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -38,60 +38,60 @@
 ;; http://www.strasis.com/documentation/limelight-xe/reference/ecma-48-sgr-codes
 
 (defparameter *pjb-ansi-color-to-face*
-  
+
   '(((normal)                 0    :weight :slant :underline :box :inverse-video :strike-through
                                    :foreground :background)
-    
+
     ((bold-on)                1    (:weight            bold))
-    ((bold-off)               2    :weight)            
-    ((italic-on)              3    (:slant             italic))         
-    ((underline-on)           4    (:underline         t))              
-    ((blink-on)               5    (:box               t))              
-    ((invert-on)              7    (:inverse-video     t))              
-    ((strike-on)              9    (:strike-through    t))              
-    
-    ((bold-off)               21   :weight)            
-    ((italic-off)             23   :slant)             
-    ((underline-off)          24   :underline)         
-    ((blink-off)              25   :box)               
-    ((invert-off)             27   :inverse-video)     
+    ((bold-off)               2    :weight)
+    ((italic-on)              3    (:slant             italic))
+    ((underline-on)           4    (:underline         t))
+    ((blink-on)               5    (:box               t))
+    ((invert-on)              7    (:inverse-video     t))
+    ((strike-on)              9    (:strike-through    t))
+
+    ((bold-off)               21   :weight)
+    ((italic-off)             23   :slant)
+    ((underline-off)          24   :underline)
+    ((blink-off)              25   :box)
+    ((invert-off)             27   :inverse-video)
     ((strike-off)             29   :strike-throught)
-    
-    ((black-fore)             30   (:foreground        "#000000"))      
-    ((red-fore)               31   (:foreground        "#800000"))      
-    ((green-fore)             32   (:foreground        "#008000"))      
-    ((yellow-fore)            33   (:foreground        "#808000"))      
-    ((blue-fore)              34   (:foreground        "#000080"))      
-    ((magenta-fore)           35   (:foreground        "#800080"))      
-    ((cyan-fore)              36   (:foreground        "#008080"))      
-    ((white-fore)             37   (:foreground        "#c0c0c0"))      
-    
-    ((black-back)             40   (:background        "#000000"))      
-    ((red-back)               41   (:background        "#800000"))      
-    ((green-back)             42   (:background        "#008000"))      
-    ((yellow-back)            43   (:background        "#808000"))      
-    ((blue-back)              44   (:background        "#000080"))      
-    ((magenta-back)           45   (:background        "#800080"))      
-    ((cyan-back)              46   (:background        "#008080"))      
-    ((white-back)             47   (:background        "#c0c0c0"))      
-    
-    ((bright-black-fore)      90   (:foreground        "#808080"))      
-    ((bright-red-fore)        91   (:foreground        "#ff0000"))      
-    ((bright-green-fore)      92   (:foreground        "#00ff00"))      
-    ((bright-yellow-fore)     93   (:foreground        "#ffff00"))      
-    ((bright-blue-fore)       94   (:foreground        "#0000ff"))      
-    ((bright-magenta-fore)    95   (:foreground        "#ff00ff"))      
-    ((bright-cyan-fore)       96   (:foreground        "#00ffff"))      
-    ((bright-white-fore)      97   (:foreground        "#ffffff"))      
-    
-    ((bright-black-back)      100  (:background        "#808080"))      
-    ((bright-red-back)        101  (:background        "#ff0000"))      
-    ((bright-green-back)      102  (:background        "#00ff00"))      
-    ((bright-yellow-back)     103  (:background        "#ffff00"))      
-    ((bright-blue-back)       104  (:background        "#0000ff"))      
-    ((bright-magenta-back)    105  (:background        "#ff00ff"))      
-    ((bright-cyan-back)       106  (:background        "#00ffff"))      
-    ((bright-white-back)      107  (:background        "#ffffff"))      
+
+    ((black-fore)             30   (:foreground        "#000000"))
+    ((red-fore)               31   (:foreground        "#800000"))
+    ((green-fore)             32   (:foreground        "#008000"))
+    ((yellow-fore)            33   (:foreground        "#808000"))
+    ((blue-fore)              34   (:foreground        "#000080"))
+    ((magenta-fore)           35   (:foreground        "#800080"))
+    ((cyan-fore)              36   (:foreground        "#008080"))
+    ((white-fore)             37   (:foreground        "#c0c0c0"))
+
+    ((black-back)             40   (:background        "#000000"))
+    ((red-back)               41   (:background        "#800000"))
+    ((green-back)             42   (:background        "#008000"))
+    ((yellow-back)            43   (:background        "#808000"))
+    ((blue-back)              44   (:background        "#000080"))
+    ((magenta-back)           45   (:background        "#800080"))
+    ((cyan-back)              46   (:background        "#008080"))
+    ((white-back)             47   (:background        "#c0c0c0"))
+
+    ((bright-black-fore)      90   (:foreground        "#808080"))
+    ((bright-red-fore)        91   (:foreground        "#ff0000"))
+    ((bright-green-fore)      92   (:foreground        "#00ff00"))
+    ((bright-yellow-fore)     93   (:foreground        "#ffff00"))
+    ((bright-blue-fore)       94   (:foreground        "#0000ff"))
+    ((bright-magenta-fore)    95   (:foreground        "#ff00ff"))
+    ((bright-cyan-fore)       96   (:foreground        "#00ffff"))
+    ((bright-white-fore)      97   (:foreground        "#ffffff"))
+
+    ((bright-black-back)      100  (:background        "#808080"))
+    ((bright-red-back)        101  (:background        "#ff0000"))
+    ((bright-green-back)      102  (:background        "#00ff00"))
+    ((bright-yellow-back)     103  (:background        "#ffff00"))
+    ((bright-blue-back)       104  (:background        "#0000ff"))
+    ((bright-magenta-back)    105  (:background        "#ff00ff"))
+    ((bright-cyan-back)       106  (:background        "#00ffff"))
+    ((bright-white-back)      107  (:background        "#ffffff"))
 
     )
   "Maps CSI m codes to face properties.
