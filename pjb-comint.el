@@ -76,8 +76,8 @@
 
   (defun pjb-comint-filter-meat/position (string)
     (let ((commands '(("\nA"            beginning-of-line)
-                      ("\\(\\[0-9\\]+\\)C"  ecma-048-cuf 1)
-                      ("\\(\\[0-9;\\]*\\)H" ignore)))
+                      ("\\([0-9]+\\)C"  ecma-048-cuf 1)
+                      ("\\([0-9;]*\\)H" ignore)))
           (start 0))
       (while (let ((cmd (find-if (lambda (cmd) (eql start (string-match (first cmd) string start))) commands)))
                (when cmd
@@ -94,7 +94,7 @@
       (insert string)
       (goto-char 0)
       (let ((changed nil))
-        (while (re-search-forward "[\\[0-9;\\]*m" (point-max) t)
+        (while (re-search-forward "\\[\\([0-9;]*\\)m" (point-max) t)
           (setf changed t)
           (delete-region (match-beginning 0) (match-end 0)))
         (if changed
