@@ -35,6 +35,8 @@
 (require 'pjb-cl)
 
 
+(defparameter *pjb-ansi-csi-regexp* "\\[\\([0-9;]*\\)\\([@-~]\\)")
+
 ;; http://www.strasis.com/documentation/limelight-xe/reference/ecma-48-sgr-codes
 
 (defparameter *pjb-ansi-color-to-face*
@@ -141,7 +143,7 @@ All other CSI ANSi sequences are ignored and hidden."
   (interactive "r")
   (goto-char start)
   (let ((current-face '()))
-    (while (re-search-forward "\\[\\([0-9;]*\\)\\([@-~]\\)" (point-max) t)
+    (while (re-search-forward *pjb-ansi-csi-regexp* (point-max) t)
            (if (string= "m" (match-string 2))
                (let ((new-color-codes (match-string 1))
                      (old-end   (match-beginning 0))
@@ -157,11 +159,12 @@ All other CSI ANSi sequences are ignored and hidden."
     (when current-face
       (set-text-properties start end (list 'face current-face)))))
 
+
 (defun pjb-ansi-decolorize-region (start end)
   "Remove all face properties from the region, and decompose the CSI sequences."
   (interactive "r")
-  (while (re-search-forward "\\[\\([0-9;]*\\)\\([@-~]\\)" (point-max) t)
-         (decompose-region old-end new-start))
+  (while (re-search-forward *pjb-ansi-csi-regexp* (point-max) t)
+         (decompose-region (match-beginning 0) (match-end 0)))
   (remove-text-properties start end *pjb-ansi-properties*))
 
 (defun pjb-ansi-colorize-buffer ()
@@ -176,4 +179,28 @@ All other CSI ANSI sequences are ignored and hidden."
   (pjb-ansi-decolorize-region (point-min) (point-max))
   (font-lock-fontify-buffer))
 
+
+(defun pjb-ansi-remove-all-csi-sequences-from-region (start end)
+  (interactive "r")
+  (goto-char start)
+  (while (re-search-forward *pjb-ansi-csi-regexp* (point-max) t)
+         (delete-region (match-beginning 0) (match-end 0))
+         (goto-char (match-beginning 0))))
+
+(defun pjb-ansi-remove-all-csi-sequences-from-buffer ()
+  (interactive)
+  (pjb-ansi-remove-all-csi-sequences-from-region (point-min) (point-max)))
+
+
 (provide 'pjb-ansi-color)
+
+
+
+
+
+
+
+
+
+
+
