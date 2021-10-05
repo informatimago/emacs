@@ -411,7 +411,7 @@ RETURN:      A new string in upper case and dash.
   "
 DO:      From the start to end, converts to upcase all symbols.
          Does not touch string literals, comments starting with ';' and
-         symbols quoted with '|' or with '\'.
+         symbols quoted with '|' or with '\\'.
 "
   (interactive "*r")
   (case-lisp-region start end (function upcase-region))
@@ -422,7 +422,7 @@ DO:      From the start to end, converts to upcase all symbols.
   "
 DO:      From the (point) to (point-max), converts to upcase all symbols.
          Does not touch string literals, comments starting with ';' and
-         symbols quoted with '|' or with '\'.
+         symbols quoted with '|' or with '\\'.
 "
   (interactive "*")
   (upcase-lisp-region (point) (point-max)))
@@ -432,7 +432,7 @@ DO:      From the (point) to (point-max), converts to upcase all symbols.
   "
 DO:      From the start to end, converts to low-case all symbols.
          Does not touch string literals, comments starting with ';' and
-         symbols quoted with '|' or with '\'.
+         symbols quoted with '|' or with '\\'.
 "
   (interactive "*r")
   (case-lisp-region start end (function downcase-region))
@@ -443,7 +443,7 @@ DO:      From the start to end, converts to low-case all symbols.
   "
 DO:      From the (point) to (point-max), converts to lowcase all symbols.
          Does not touch string literals, comments starting with ';' and
-         symbols quoted with '|' or with '\'.
+         symbols quoted with '|' or with '\\'.
 "
   (interactive "*")
   (downcase-lisp-region (point) (point-max)))
