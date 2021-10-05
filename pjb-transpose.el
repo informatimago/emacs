@@ -106,5 +106,12 @@
     (goto-char (point))
     (activate-mark)))
 
+(defun rotate-rectangle (start end)
+  (interactive "r")
+  (goto-char (min start end))
+  (picture-insert-rectangle
+   (map 'list (lambda (line) (coerce line 'string))
+        (rotate (rotate (rotate (coerce (picture-snarf-rectangle start end)
+                                        'vector)))))))
 
 ;;;; THE END ;;;;
