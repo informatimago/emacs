@@ -190,6 +190,7 @@ itesearch=&safe=images"
 
 (defparameter *acronym-search-url* "http://www.acronymfinder.com/%s.html")
 ;;  "http://www.cygwin.com/acronyms/#%s"
+
 (defun acronym-search (acronym-string)
   (interactive "sAcronym Search: ")
   (browse-url (format *acronym-search-url* acronym-string)))
