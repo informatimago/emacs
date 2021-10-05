@@ -5,13 +5,13 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    org-mode utilities:
 ;;;;
 ;;;;    - pjb-org-split-big-blocks splits out big blocks to separate
 ;;;;      files that are then included.
 ;;;;
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -19,19 +19,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2021 - 2021
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU Affero General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -139,7 +139,7 @@ Return the path of the new directory."
       (insert "\n" text "\n\n")
       (write-file path nil))))
 
-(defun pjb-org-insert-file (path type &optional subtype)
+(defun pjb-org-insert-include (path type &optional subtype)
   "Inserts a #+INCLUDE tag."
   (insert "\n")
   (insert (format "#+INCLUDE: %S %s" path type ))
@@ -147,6 +147,7 @@ Return the path of the new directory."
   (insert "\n\n"))
 
 (defun pjb-org-split-big-blocks (&optional maxsize)
+  "Big blocks (greater than `maxsize`, default 2048) are saved to files, and replaced with #+include elements."
   (interactive)
   (let ((maxsize (or maxsize 2048))
 	    (path (buffer-file-name)))
@@ -171,7 +172,7 @@ Return the path of the new directory."
                                     (format "%s.org" ele-name))))
 	         (pjb-org-save-element element ele-name ele-path)
 	         (delete-region (org-element-begin element) (org-element-end element))
-	         (pjb-org-insert-file (pjb-org-enough-namestring ele-path (file-name-directory path))
+	         (pjb-org-insert-include (pjb-org-enough-namestring ele-path (file-name-directory path))
                                   (org-element-type element)
                                   (org-element-subtype element)))))))))
 
@@ -179,4 +180,3 @@ Return the path of the new directory."
 (provide 'pjb-org)
 
 ;;;; THE END ;;;;
-
