@@ -51,7 +51,7 @@
   "Inserts the date and time."
   (interactive)
   (beginning-of-line)
-  (insert (format-time-string " %Y-%m-%d ( \"%H:%M:%S\" \"\" ) ; \n\n   - "))
+  (insert (format-time-string "%Y-%m-%d ( \"%H:%M:%S\" \"\" ) ; \n\n   - "))
   (end-of-line))
 
 
@@ -70,9 +70,6 @@
     (store-match-data mat)
     (replace-match (format "%S ) ; %s" now duration) t t nil 2)
     (pjb-work-total)))
-
-
-
 
 
 
@@ -131,20 +128,17 @@ found backward from the point."
     (setq amount (* total hourly-rate))
     (setq totalstring
           (concat
-           (format " Total %30s %10s = %5.2f j   (%6.2f h)\n" "" (d-dms total) (/ total 8.0) total)
-           (format " Facturation %34s %8.2f EUR HT\n" "" amount)
-           (format " Hourly Rate %34s    %5.2f EUR HT/hour\n" "" hourly-rate)))
+           (format "Total %30s %10s = %5.2f j   (%6.2f h)\n" "" (d-dms total) (/ total 8.0) total)
+           (format "Facturation %34s %8.2f EUR HT\n" "" amount)
+           (format "Hourly Rate %34s    %5.2f EUR HT/hour\n" "" hourly-rate)))
     ;; insert the total string.
     (goto-char (point-min))
-    (if (search-forward-regexp
-         " Total.*\n Facturation.*\n Hourly Rate.*\n" nil t)
+    (if (search-forward-regexp "Total.*\nFacturation.*\nHourly Rate.*\n" nil t)
         (replace-match totalstring)
         (if (search-forward-regexp (format " %s\n" (make-string 72 ?=)) nil t)
             (goto-char (match-end 0))
             (goto-char (point-max)))
         (insert totalstring))))
-
-
 
 (defun intervention-file-path (firm project date)
   "
@@ -240,10 +234,10 @@ RETURN: A list of the names of projects initiated for the FIRM.
         (insert header)
         (insert "\n\n\n\n\n")
         (insert footer)
-        (insert "\n Total:\n Facturation:\n Hourly Rate:\n\n\n"))
+        (insert "\nTotal:\nFacturation:\nHourly Rate:\n\n\n"))
       (cond
         ((progn (goto-char (point-min))
-                (search-forward-regexp " Total.*\n Facturation.*" nil t))
+                (search-forward-regexp "Total.*\nFacturation.*" nil t))
          (beginning-of-line)
          (if (search-backward "===="
                               (save-excursion (forward-line -5) (point)) t)
