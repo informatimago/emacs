@@ -32,13 +32,12 @@
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
 (require 'cl)
+(require 'pjb-cl)
 
 (defparameter *pjb-unicode-maps*
   '((mathematical-monospace ((?0 ?9 #x1d7c6)
                              (?A ?Z #x1d62f)
                              (?a ?z #x1d629)))))
-
-
 
 (defun pjb-unicode-map-character-ranges (string ranges)
   (map 'string (lambda (ch)
