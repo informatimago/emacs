@@ -76,12 +76,16 @@
   (interactive "p")
   (pjb-set-page-mode-key-bindings on)
   (unless on
-    (normal-mode t)))
+    (let ((view view-mode))
+      (normal-mode t)
+      (when view (view-mode 1)))))
 
 (defun pjb-narrow-to-page (&optional arg)
   (interactive)
   (narrow-to-page arg)
-  (normal-mode t)
+  (let ((view view-mode))
+    (normal-mode t)
+    (when view (view-mode 1)))
   (pjb-reset-page-mode-key-bindings))
 
 (defun pm-forward-page (&optional count)
