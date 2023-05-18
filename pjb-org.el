@@ -73,8 +73,8 @@ else it's returned as is."
 			                 post-blank post-affiliated parent value switches number-lines
 			                 preserve-indent retain-labels use-labels label-fmt)
 
-(defun org-element-type (element)
-  (first element))
+;; (defun org-element-type (element)
+;;   (first element))
 
 (defun org-element-subtype (element)
   (org-element-language element))

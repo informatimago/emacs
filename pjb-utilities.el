@@ -509,7 +509,7 @@ The optional remaining arguments are formated.
               ))
 
        (t
-        (apply 'printf *STANDARD-OUTPUT* (cdr args))
+        (apply 'printf *standard-output* (cdr args))
         (return-from :print))
 ;;;       (setq out (car args)
 ;;;             format-args (cdr args)

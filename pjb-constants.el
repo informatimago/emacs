@@ -360,10 +360,12 @@
 
 
 (defconstant year (* 365 24 60 60)
-  "Value of a year in second.") ;;year
+  "Value of a year in second.")
+(defconstant julian-year (* 365.25 24 60 60)
+  "Value of a year in second.")
 
-(defconstant light-year (* c year)
-  "Value of a light-year in meter.") ;;light-year
+(defconstant light-year (* c julian-year)
+  "Value of a light-year in meter.")
 
 
 ;; (defun sqrt (x) (expt x 0.5))

@@ -3492,7 +3492,7 @@ SProject Type: ")
   (let ((directory     (remove-trailling-slashes directory))
         (exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
         (include-types (ecase project-type
-                         ((nil)
+                         ((nil c)
                           '("xib" "h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
                             "lisp" "asd" "cl" "el"
                             "rb"

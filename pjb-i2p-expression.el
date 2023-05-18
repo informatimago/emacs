@@ -508,7 +508,6 @@ RETURN:  Whether all arguments are nil or all are not nil,
           (values (list (car i-rest) s-infix s-factor) ii-rest))))))
 
 
-
 (defun i2p-infix (infix)
   (if (i2p-prefixop-p (car infix))
       (multiple-value-bind (s-infix i-rest) (i2p-infix (cdr infix))

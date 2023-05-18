@@ -5,9 +5,9 @@
 ;;;;SYSTEM:             POSIX
 ;;;;USER-INTERFACE:     NONE
 ;;;;DESCRIPTION
-;;;;    
+;;;;
 ;;;;    A column-based browser.
-;;;;    
+;;;;
 ;;;;AUTHORS
 ;;;;    <PJB> Pascal J. Bourguignon <pjb@informatimago.com>
 ;;;;MODIFICATIONS
@@ -15,19 +15,19 @@
 ;;;;BUGS
 ;;;;LEGAL
 ;;;;    AGPL3
-;;;;    
+;;;;
 ;;;;    Copyright Pascal J. Bourguignon 2021 - 2021
-;;;;    
+;;;;
 ;;;;    This program is free software: you can redistribute it and/or modify
 ;;;;    it under the terms of the GNU Affero General Public License as published by
 ;;;;    the Free Software Foundation, either version 3 of the License, or
 ;;;;    (at your option) any later version.
-;;;;    
+;;;;
 ;;;;    This program is distributed in the hope that it will be useful,
 ;;;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;    GNU Affero General Public License for more details.
-;;;;    
+;;;;
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
@@ -116,7 +116,7 @@
   "Insert the `browser-items` in the `column` number in the current org-table, under the `title`.
 If the table dosn't have that number of columns, they're automatically created."
   ;; browser-item ::= (title action data)
-  (org-table-clean-column column) 
+  (org-table-clean-column column)
   (when title
     (org-table-goto-line 1)
     (org-table-goto-column column)
@@ -146,7 +146,7 @@ If the table dosn't have that number of columns, they're automatically created."
 
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map t)
-    
+
     (local-set-key "n" 'org-table-next-row)
     (define-key map "p" 'org-table-previous-row)
     (define-key map "n"   'next-item)
@@ -155,8 +155,7 @@ If the table dosn't have that number of columns, they're automatically created."
     (define-key map "C-p" 'previous-item)
     map))
 
-(local-set-key (kbd "C-c i") *clage-mode-map*)
-  )
+;; (local-set-key (kbd "C-c i") *clage-mode-map*)
 
 (defun pjb-browser-item-window (fname)
   "Locate the window for the file fname, or split the current window for it."
@@ -222,7 +221,7 @@ If the table dosn't have that number of columns, they're automatically created."
     (erase-buffer)
     (pjb-insert-browser-table)
     (pjb-insert-browser-column
-     1 "categories" 
+     1 "categories"
      (make-item-browser-tree item-buffer))))
 
 

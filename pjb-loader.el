@@ -80,6 +80,7 @@
         "pjb-erc.el"
         "pjb-erc-filter.el"
         "pjb-erc-speak.el"
+        "pjb-eval.el"
         "pjb-euro.el"
         "pjb-font.el"
         "pjb-html.el"
