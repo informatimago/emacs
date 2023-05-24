@@ -35,17 +35,20 @@
 ;;;;**************************************************************************
 
 
+(require 'ruby-mode)
+(require 'inf-ruby)
+
 (defun pjb-ruby-send-block ()
   "Send the current block to the inferior Ruby process."
   (interactive)
   (save-excursion
-    (ruby-end-of-block)
-    (end-of-line)
-    (let ((end (point)))
-      (ruby-beginning-of-block)
-      (message "sending to ruby: %S"
-               (buffer-substring-no-properties (point) end))
-      (ruby-send-region (point) end))))
+   (ruby-end-of-block)
+   (end-of-line)
+   (let ((end (point)))
+     (ruby-beginning-of-block)
+     (message "sending to ruby: %S"
+              (buffer-substring-no-properties (point) end))
+     (ruby-send-region (point) end))))
 
 
 (defun pjb-ruby-eval-last-sexp ()
@@ -66,6 +69,8 @@
   (local-set-key (kbd "C-c ,")    (function ruby-backward-sexp))
   (local-set-key (kbd "C-c .")    (function ruby-forward-sexp))
   (local-set-key (kbd "C-x C-e") (function pjb-ruby-eval-last-sexp))
+  (setf indent-tabs-mode nil)
+  (local-set-key (kbd "TAB") 'indent-for-tab-command)
   (setf inferior-ruby-first-prompt-pattern "^irb\\(.*\\)[>*\"'] *")
   (values))
 

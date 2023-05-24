@@ -95,5 +95,17 @@
     (assert (and (<= 2 modulo) (<= modulo (length +computer-paper-colors+))))
     (put-computer-paper-overlay modulo block)))
 
+(defun computer-paper--adjust-right-margin (width)
+  (interactive "P")
+  (save-excursion
+   (let ((margin (if (integerp width)
+                     width
+                     80)))
+     (goto-char (point-min))
+     (while (re-search-forward "^.*$" nil t)
+       (let ((width (- (match-end 0) (match-beginning 0))))
+         (when (< width margin)
+           (end-of-line)
+           (insert (make-string (- margin width) 32))))))))
 
 ;;;; THE END ;;;;

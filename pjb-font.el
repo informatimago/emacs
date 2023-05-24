@@ -329,15 +329,16 @@ RETURN:  A tree where the child of each node are labelled with
   (when (fboundp 'single-frame) (single-frame)))
 
 
-(cond
- ((eq window-system 'mac)
-  (make-my-mac-font-sets 9)
-  (make-my-mac-font-sets 10)
-  (make-my-mac-font-sets 12)
-  (make-my-mac-font-sets 14))
+(defun pjb-font-init ()
+  (cond
+    ((eq window-system 'mac)
+     (make-my-mac-font-sets 9)
+     (make-my-mac-font-sets 10)
+     (make-my-mac-font-sets 12)
+     (make-my-mac-font-sets 14))
 
- ((eq window-system 'x)
-  (select-default-font)))
+    ((eq window-system 'x)
+     (select-default-font))))
 
 
 (provide 'pjb-font)

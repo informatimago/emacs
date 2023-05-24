@@ -42,23 +42,25 @@
 (when nil
 
   (defun pjb-comint-filter-meat/erase-screen (string)
-    (let ((pos (search "c" string :from-end t)))
-      (if pos
-          (progn
-            (erase-buffer)
-            (subseq string (+ 2 pos)))
-          string)))
+    (when string
+      (let ((pos (search "c" string :from-end t)))
+        (if pos
+            (progn
+              (erase-buffer)
+              (subseq string (+ 2 pos)))
+            string))))
 
   (defun pjb-comint-filter-meat/erase-in-line (string)
-    (let* ((pos (search "\\[\\([0-9]*\\)K" string :from-end t))
-           (ps  (match-string 1 string)))
-      (if pos
-          (progn
-            (erase-buffer)
-            (if (or (string= "" ps) (= 0 (parse-number ps)))
-                (subseq string 0 pos)
-                ""))
-          string)))
+    (when string
+      (let* ((pos (search "\\[\\([0-9]*\\)K" string :from-end t))
+             (ps  (match-string 1 string)))
+        (if pos
+            (progn
+              (erase-buffer)
+              (if (or (string= "" ps) (= 0 (parse-number ps)))
+                  (subseq string 0 pos)
+                  ""))
+            string))))
 
   (defun ecma-048-cuu ()
     (backward-line 1))
@@ -75,31 +77,33 @@
     (insert (make-string (forward-line 1) 10)))
 
   (defun pjb-comint-filter-meat/position (string)
-    (let ((commands '(("\nA"            beginning-of-line)
-                      ("\\([0-9]+\\)C"  ecma-048-cuf 1)
-                      ("\\([0-9;]*\\)H" ignore)))
-          (start 0))
-      (while (let ((cmd (find-if (lambda (cmd) (eql start (string-match (first cmd) string start))) commands)))
-               (when cmd
-                 (setf start (match-end 0))
-                 (apply (second cmd) (mapcar (lambda (i) (nth-value 0 (cl:parse-integer (match-string i string)))) (cddr cmd)))
-                 t)))
-      (if (zerop start)
-          string
-          (subseq string start))))
+    (when string
+      (let ((commands '(("\nA"            beginning-of-line)
+                        ("\\([0-9]+\\)C"  ecma-048-cuf 1)
+                        ("\\([0-9;]*\\)H" ignore)))
+            (start 0))
+        (while (let ((cmd (find-if (lambda (cmd) (eql start (string-match (first cmd) string start))) commands)))
+                 (when cmd
+                   (setf start (match-end 0))
+                   (apply (second cmd) (mapcar (lambda (i) (nth-value 0 (cl:parse-integer (match-string i string)))) (cddr cmd)))
+                   t)))
+        (if (zerop start)
+            string
+            (subseq string start)))))
 
   (defun pjb-comint-filter-meat/color (string)
     "Remove color ansi codes."
-    (with-temp-buffer
-      (insert string)
-      (goto-char 0)
-      (let ((changed nil))
-        (while (re-search-forward "\\[\\([0-9;]*\\)m" (point-max) t)
-          (setf changed t)
-          (delete-region (match-beginning 0) (match-end 0)))
-        (if changed
-            (buffer-substring-no-properties (point-min) (point-max))
-            string))))
+    (when string
+      (with-temp-buffer
+          (insert string)
+        (goto-char 0)
+        (let ((changed nil))
+          (while (re-search-forward "\\[\\([0-9;]*\\)m" (point-max) t)
+                 (setf changed t)
+                 (delete-region (match-beginning 0) (match-end 0)))
+          (if changed
+              (buffer-substring-no-properties (point-min) (point-max))
+              string)))))
 
   ;; (add-hook 'comint-preoutput-filter-functions 'pjb-comint-filter-meat/position)
   (add-hook 'comint-preoutput-filter-functions 'pjb-comint-filter-meat/erase-screen)
@@ -111,7 +115,7 @@
   (setf comint-preoutput-filter-functions nil)
 
 
-  );; when nil
+  ) ;; when nil
 
 
 ;;;; THE END ;;;;

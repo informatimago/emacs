@@ -1029,24 +1029,25 @@ command).
 "
   (if current-prefix-arg
       t
-      (let ((command (first (split-string input " " t))))
-        (if (or (intersection (coerce command 'list)
-                              (coerce "!\"#$%&'()*+,:;<=>?@[\\]`{}" 'list))
-                (string= "" (or (ignore-errors
-                                 (let ((exec-path (remove-if
-                                                   (lambda (path)
-                                                     (prefixp (expand-file-name "~/") path))
-                                                   exec-path)))
-                                   (shell-command-to-string (format "which %S" command))))
-                                "")))
-            t
-            (progn
-              (message "%s" input)
-              (message "command = %S" command)
-              (message "which   = %S" (ignore-errors
-                                       (shell-command-to-string (format "which %S" command))))
-              (message "This looks like a shell command, Use M-p C-u RET to send it.")
-              (setf erc-send-this nil))))))
+      (when input
+        (let ((command (first (split-string input " " t))))
+          (if (or (intersection (coerce command 'list)
+                                (coerce "!\"#$%&'()*+,:;<=>?@[\\]`{}" 'list))
+                  (string= "" (or (ignore-errors
+                                   (let ((exec-path (remove-if
+                                                     (lambda (path)
+                                                       (prefixp (expand-file-name "~/") path))
+                                                     exec-path)))
+                                     (shell-command-to-string (format "which %S" command))))
+                                  "")))
+              t
+              (progn
+                (message "%s" input)
+                (message "command = %S" command)
+                (message "which   = %S" (ignore-errors
+                                         (shell-command-to-string (format "which %S" command))))
+                (message "This looks like a shell command, Use M-p C-u RET to send it.")
+                (setf erc-send-this nil)))))))
 (add-hook 'erc-send-pre-hook 'pjb/erc-send-pre-meat/filter-unix-commands)
 
 

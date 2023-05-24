@@ -151,8 +151,9 @@
 
 
 (defun pjb-comint-preoutput-insert-image (string)
-  (let ((case-fold-search t))
-    (loop
+  (when string
+   (let ((case-fold-search t))
+     (loop
        with result = '()
        while (and (plusp (length string))
                   (string-match "\\(.*\\)(EMACS:INSERT-IMAGE[ \t\n]+#P\"\\(\\([^\\\"]\\|\\.\\)*\\)\")\\(.*\\)"
@@ -163,6 +164,6 @@
             (push before result)
             (push (list (create-image path) " ") result)
             (setf string after))
-       finally (push string result) (return (nreverse result)))))
+       finally (push string result) (return (nreverse result))))))
 
 ;;;; THE END ;;;;

@@ -100,6 +100,4 @@
                              (format "%c" 3))))))
        (new-shell))))
 
-
 ;;;; THE END ;;;;
-
