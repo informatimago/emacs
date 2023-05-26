@@ -56,6 +56,7 @@
 ;;;;****************************************************************************
 (require 'font-lock)
 (require 'add-log)
+(require 'grep)
 
 (require 'pjb-cl)
 (require 'pjb-utilities)
@@ -3440,16 +3441,23 @@ the FUNCTION can take."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar *sources* "/tmp")
-(defvar *sources-cache* '())
-
-(defun directory-recursive-find-files-named (directory name)
-  (split-string (shell-command-to-string (format "find %s -name %s -print0 | head -40"
-                                                 (shell-quote-argument (expand-file-name directory))
-                                                 (shell-quote-argument name)))
-                "\0" t))
+(defvar *sources* '("/tmp") "A list of directories where to find source files.")
+(defvar *sources-cache* '() "A cached list of file names.")
 
 
+(defun directory-recursive-find-files-named (directories name)
+  (split-string
+   (shell-command-to-string
+    (let ((command
+            (format "find %s -name %s -print0 | head -z -n 40"
+                    (mapconcat (lambda (dir)
+                                 (shell-quote-argument
+                                  (expand-file-name dir)))
+                               directories " ")
+                    (shell-quote-argument name))))
+      (message "command = %S" command)
+      command))
+   "\0" t))
 
 (require 'filecache)
 
@@ -3459,7 +3467,6 @@ the FUNCTION can take."
   (if (zerop (length path))
       "/"
       path))
-
 
 (defun* expand-path-alternatives (path)
   (let ((items '())
@@ -3484,11 +3491,27 @@ the FUNCTION can take."
     (mapcar (lambda (components) (apply (function concat) components))
         (apply (function combine) (nreverse items)))))
 
+(defun update-grep-find-command (exclude-names include-types)
+  (setf grep-find-command
+        (format "find %s \\( \\( %s \\) -prune \\) -o -type f  \\( %s \\) -print0 | xargs -0 grep -niH -e "
+                *sources*
+                (mapconcat (lambda (name) (format "-name %s" name))     exclude-names " -o ")
+                (mapconcat (lambda (type) (format "-name \\*.%s" type)) include-types " -o "))
+        grep-host-defaults-alist nil))
 
-(defun set-sources (directory &optional project-type)
-  (interactive "sSource directory:
-SProject Type: ")
-  (message "Caching paths…")
+(defun update-sources (directory &optional append)
+  (setf *sources* (if append
+                      (append *sources* (list directory))
+                      (list directory)))
+  (setf *sources-cache* (sort (mapcar (function car) file-cache-alist)
+                              (function string<)))
+  (let ((directory (expand-file-name directory)))
+    (set-shadow-map (list (cons (format "%s/" directory)
+                                (format "%s%s/" (file-name-directory directory)
+                                        *shadow-directory-name*))))))
+
+  
+(defun set-or-add-sources (directory project-type append) 
   (let ((directory     (remove-trailling-slashes directory))
         (exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
         (include-types (ecase project-type
@@ -3511,29 +3534,29 @@ SProject Type: ")
                           '("h" "c" "m" "hh"  "cc" "mm" "hxx" "cxx"
                             "xml" "logs" "txt"
                             "html" "iml" "json" "md" "prefs" "project" "properties" "sh")))))
+
+    (message "Caching paths…")
     (handler-case
-        (dolist (directory (mapcar (function remove-trailling-slashes)
-                                   (expand-path-alternatives directory)))
-          (let ((*sources* directory))
-            (file-cache-add-directory-recursively
-             directory
-             (format ".*\\.\\(%s\\)$" (mapconcat (function identity) include-types "\\|")))))
+        (dolist (current-directory (mapcar (function remove-trailling-slashes)
+                                           (expand-path-alternatives directory)))
+          (file-cache-add-directory-recursively
+           current-directory
+           (format ".*\\.\\(%s\\)$" (mapconcat (function identity) include-types "\\|"))))
       (error (err)
         (message (format "error while caching files: %s" err))))
-    (setf *sources* directory)
-    (setf *sources-cache* (sort (mapcar (function car) file-cache-alist)
-                                (function string<)))
-    (let ((directory (expand-file-name directory)))
-      (set-shadow-map (list (cons (format "%s/" directory)
-                                  (format "%s%s/" (file-name-directory directory) *shadow-directory-name*)))))
     (message "Caching paths… Complete.")
-    (setf grep-find-command
-          (format "find %s \\( \\( %s \\) -prune \\) -o -type f  \\( %s \\) -print0 | xargs -0 grep -niH -e "
-                  *sources*
-                  (mapconcat (lambda (name) (format "-name %s" name))     exclude-names " -o ")
-                  (mapconcat (lambda (type) (format "-name \\*.%s" type)) include-types " -o "))
-          grep-host-defaults-alist nil)))
+    (update-sources directory append)
+    (update-grep-find-command exclude-names include-types)))
 
+(defun add-sources (directory &optional project-type)
+  (interactive "DSource directory:
+SProject Type (c lisp android cocoa): ")
+  (set-or-add-sources directory project-type t))
+
+(defun set-sources (directory &optional project-type)
+  (interactive "DSource directory:
+SProject Type (c lisp android cocoa): ")
+  (set-or-add-sources directory project-type nil))
 
 (defun sources-find-file-named (name)
   (interactive (list
@@ -3547,17 +3570,22 @@ SProject Type: ")
     (case (length files)
       ((0) (message "No such file."))
       ((1) (find-file (first files)))
-      (otherwise (find-file (x-popup-menu (list '(0 0) (selected-window))
-                                          (list "Source Find File Named"
-                                                (cons "Select a file"
-                                                      (sort (mapcar (lambda (path) (cons path path))
-                                                                    files)
-                                                            (lambda (a b)
-                                                              (let ((a (car a))
-                                                                    (b (car b)))
-                                                               (or (< (length a) (length b))
-                                                                   (and (= (length a) (length b))
-                                                                        (string< a b))))))))))))))
+      (otherwise
+       (let ((candidates (sort (mapcar (lambda (path) (cons path path))
+                                       files)
+                               (lambda (a b)
+                                 (let ((a (car a))
+                                       (b (car b)))
+                                   (or (< (length a) (length b))
+                                       (and (= (length a) (length b))
+                                            (string< a b))))))))
+         (progn ; print files sorted as candidates:
+           (message "Multiple files found:")
+           (dolist (candidate candidates)
+             (message "%s" (car candidate))))
+         (find-file (x-popup-menu (list '(0 0) (selected-window))
+                                  (list "Source Find File Named"
+                                        (cons "Select a file" candidates)))))))))
 
 (global-set-key (kbd "A-f") 'sources-find-file-named)
 (global-set-key (kbd "C-c C-x C-f") 'sources-find-file-named)
