@@ -454,7 +454,7 @@ allows receiving the original form intact).")
     (concrete-abstraction
      . "Concrete Abstractions -- An Introduction to Computer Science Using Scheme  http://www.gustavus.edu/+max/concrete-abstractions.html")
     (lisp-in-small-pieces
-     . "Lisp in Small Pieces   http://pagesperso-systeme.lip6.fr/Christian.Queinnec/WWW/LiSP.html  http://pagesperso-systeme.lip6.fr/Christian.Queinnec/Books/LiSP-2ndEdition-2006Dec11.tgz")
+     . "Lisp in Small Pieces   https://www.amazon.com/Lisp-Small-Pieces-Christian-Queinnec/dp/0521545668/")
     (on-lisp
      . "On Lisp  Paul Graham   http://www.paulgraham.com/onlisptext.html  http://www.bookshelf.jp/texi/onlisp/onlisp.html  http://www.bookshelf.jp/texi/onlisp/onlisp.tar.gz")
     (compiler-principle-techniques-and-tools
