@@ -41,7 +41,7 @@
                                      "LightBlue"  "LightCyan" "PowderBlue"))
 
 
-(defun delete-all-overlays ()
+(defun delete-all-overlays (&rest arguments)
   (interactive)
   (mapc (lambda (item)
           (if (listp item)

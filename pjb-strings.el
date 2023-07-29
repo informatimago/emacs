@@ -178,21 +178,7 @@ then a simple space is used."
              (concat sub sub string)))))
 
 
-(defun string-replace (&rest arg)
-  "Please use `replace-regexp-in-string' instead of string-replace."
-  (error "Please use replace-regexp-in-string instead of string-replace."))
-
-;;; (defun string-replace (string regexp replace &optional fixedcase literal)
-;;;         are replaced by the `replace' string."
-;;;   (let ( (start 0)
-;;;          (replace-length (length replace))
-;;;     (while (< start max)
-;;;           (progn
-;;;             (setf string (replace-match replace fixedcase literal  string))
-;;;             (setf max    (length string)))
-;;;   string
-;;;   )
-
+;; string-replace is now again? an emacs function.
 
 (defun string-justify-left (string &optional width left-margin)
   "RETURN: a left-justified string built from string.
