@@ -62,6 +62,7 @@
       '(
         "emacs-uptime.el"
         "pjb-advices.el"
+        "pjb-asdf.el"
         "pjb-asm7090.el"
         "pjb-blink.el"
         "pjb-constants.el"
