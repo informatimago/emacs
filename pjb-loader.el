@@ -104,6 +104,7 @@
         "pjb-thi.el"
         "pjb-c-style.el"
         "pjb-searches.el"
+        "pjb-termbin.el"
 
         "pjb-java"
 
