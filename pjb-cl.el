@@ -52,6 +52,9 @@
 (require 'parse-time)
 (setf lexical-binding t)
 
+(require 'cl-generic)
+(defalias 'defmethod 'cl-defmethod)
+
 ;; Let's teach emacs how to format Common-Lisp:
 
 (mapc (lambda (sym) (put sym 'lisp-indent-function 1))
