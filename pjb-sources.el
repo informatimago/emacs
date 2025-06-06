@@ -1897,42 +1897,7 @@ and last year of the copyright.
                                   "Updating copyright"
                                   (function pjb-update-copyright)))
 
-(defun pjb-bump-asdf-version (&optional vf)
-  "Bump the version in the asdf systems in the current buffer.
-vf= 1 => increment the minor.
-vf= 4 => increment the major.
-vf=16 => increment the version.
-"
-  (interactive "p")
-  (let* ((vf    (or vf 1))
-         (field (case vf
-                  ((1)  3)
-                  ((4)  2)
-                  ((16) 1)
-                  (otherwse
-                   (error "Invalid version field parameter %d, should be (member 1 4 16)"
-                          vf))))
-         (fmt  (case field
-                 ((1) "%d.0.0")
-                 ((2)   "%d.0")
-                 ((3)     "%d"))))
-    (goto-char (point-min))
-    (while (re-search-forward  ":version +\"\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)\"" (point-max) t)
-      (replace-region (match-beginning field) (match-end 3)
-                      (format fmt (1+ (parse-integer (match-string field))))))))
 
-(defun pjb-bump-asdf-version-in-directory (vf &optional directory)
-  "Bumps the ASD system version in all asd files in the `directory' (recursively).
-vf= 1 => increment the minor.
-vf= 4 => increment the major.
-vf=16 => increment the version.
-"
-  (interactive "p\nDDirectory: ")
-  (process-all-files-in-directory (or directory default-directory)
-                                  "\\(\\.asd\\)$"
-                                  "Bumping version of asd systems"
-                                  (lambda ()
-                                    (pjb-bump-asdf-version vf))))
 
 
 
@@ -3510,8 +3475,8 @@ the FUNCTION can take."
                                 (format "%s%s/" (file-name-directory directory)
                                         *shadow-directory-name*))))))
 
-  
-(defun set-or-add-sources (directory project-type append) 
+
+(defun set-or-add-sources (directory project-type append)
   (let ((directory     (remove-trailling-slashes directory))
         (exclude-names '("debug" "release" ".svn" ".git" ".hg" ".cvs"))
         (include-types (ecase project-type
