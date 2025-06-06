@@ -64,16 +64,23 @@ otherwise the current date is returned."
       (t ; different date, reset it
         date))))
 
-(assert (equal (list (next-date-version '(2012 12 31 0))
-                     (next-date-version '(2012 12 31 12))
-                     (next-date-version '(2012 12 31))
-                     (next-date-version '(2023 8 3))
-                     (next-date-version '(2023 8 3 12)))
-               '((2023 8 3)
-                 (2023 8 3)
-                 (2023 8 3)
-                 (2023 8 3 1)
-                 (2023 8 3 13))))
+
+(let* ((year  (string-to-number (format-time-string "%Y")))
+       (month (string-to-number (format-time-string "%m")))
+       (day   (string-to-number (format-time-string "%d")))
+       (current-date (list year month day)))
+  (assert (equal (list (next-date-version '(2012 12 31 0))
+                       (next-date-version '(2012 12 31 12))
+                       (next-date-version '(2012 12 31))
+                       (next-date-version `(,year ,month ,day))
+                       (next-date-version `(,year ,month ,day 12)))
+
+                 (list current-date
+                       current-date
+                       current-date
+                       (append current-date '(1))
+                       (append current-date '(13))))))
+
 
 (defun next-usual-version (version)
   "version is a list of 1 or more integers,
@@ -108,3 +115,46 @@ we just increment the last one."
     (delete-region start end)
     (goto-char start)
     (insert (mapconcat (function prin1-to-string) new-version "."))))
+
+
+
+;; (defun pjb-bump-asdf-version (&optional vf)
+;;   "Bump the version in the asdf systems in the current buffer.
+;; vf= 1 => increment the minor.
+;; vf= 4 => increment the major.
+;; vf=16 => increment the version.
+;; "
+;;   (interactive "p")
+;;   (let* ((vf    (or vf 1))
+;;          (field (case vf
+;;                   ((1)  3)
+;;                   ((4)  2)
+;;                   ((16) 1)
+;;                   (otherwse
+;;                    (error "Invalid version field parameter %d, should be (member 1 4 16)"
+;;                           vf))))
+;;          (fmt  (case field
+;;                  ((1) "%d.0.0")
+;;                  ((2)   "%d.0")
+;;                  ((3)     "%d"))))
+;;     (goto-char (point-min))
+;;     (while (re-search-forward  ":version +\"\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)\"" (point-max) t)
+;;       (replace-region (match-beginning field) (match-end 3)
+;;                       (format fmt (1+ (let* ((s  (match-string field))
+;;                                              (n (read s)))
+;;                                         (if (integerp n)
+;;                                             n
+;;                                             (error "Expected an integer, not %s" s)))))))))
+;;
+;; (defun pjb-bump-asdf-version-in-directory (vf &optional directory)
+;;   "Bumps the ASD system version in all asd files in the `directory' (recursively).
+;; vf= 1 => increment the minor.
+;; vf= 4 => increment the major.
+;; vf=16 => increment the version.
+;; "
+;;   (interactive "p\nDDirectory: ")
+;;   (process-all-files-in-directory (or directory default-directory)
+;;                                   "\\(\\.asd\\)$"
+;;                                   "Bumping version of asd systems"
+;;                                   (lambda ()
+;;                                     (pjb-bump-asdf-version vf))))
