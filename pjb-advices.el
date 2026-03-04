@@ -88,7 +88,7 @@ It's not nice to report errors (or drop in the debugger), while mouse-dragging.
   ;; leave interactive to mouse-drag-vertical-line itself.
   (condition-case signal
       ad-do-it
-    ('error nil)))
+    (error nil)))
 (ad-activate 'mouse-drag-vertical-line)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
