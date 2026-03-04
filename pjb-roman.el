@@ -369,7 +369,7 @@ PRE:    1<=N<=4999
 ;            (or (= n m)
 ;                (insert (format  "%4d -> %-20s -> %4d %s\n"
 ;                                 n r m (if (= n m) "" "***")))))
-;        ('error
+;        (error
 ;         (insert (format "ERROR for %4d [%-20s] : %s\n" n (to-roman n)
 ;                         (car (cdr cc)))))))
 ;     (for
