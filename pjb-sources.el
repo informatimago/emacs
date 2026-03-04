@@ -2734,15 +2734,16 @@ silent:     When non-nil, don't issue any message whent the file type can't
       (and (true-atom (car node)) (true-atom (cdr node)))))
 
 
-(defun flatten-tree (tree)
+(defun pjb-flatten-tree (tree)
   "tree --> list"
   (cond
     ((null tree)  tree)
     ((nodep tree) (list tree))
-    (t (append (flatten-tree (car tree)) (flatten-tree (cdr tree))))))
+    (t (append (pjb-flatten-tree (car tree))
+	       (pjb-flatten-tree (cdr tree))))))
 
 
-'(mapcar (lambda (io) (equal (cadr io) (flatten-tree (car io))))
+'(mapcar (lambda (io) (equal (cadr io) (pjb-flatten-tree (car io))))
   '(
     (  a                  (a)              )
     (  (a)                (a)              )
@@ -2820,7 +2821,7 @@ silent:     When non-nil, don't issue any message whent the file type can't
   (mapc (lambda (x)
           (printf "    int         %-16s=%d;\n"
                   (car x) (if (intersection (cdr x) defaults) 1 0)))
-        (collapse-alist (flatten-tree
+        (collapse-alist (pjb-flatten-tree
                          (mapcar (lambda (x)
                                    (mapcar (lambda (y) (cons y (car x)))
                                            (cdr x)))
