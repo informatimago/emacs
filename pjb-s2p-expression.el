@@ -50,7 +50,7 @@
     "Type of token: 'integer, 'float, 'identifier, 'string, or 'special.")
    (value
     :initform nil
-    :accessor value
+    :accessor aetoken-value
     :initarg  :value
     :documentation
     "Value of the token (a number, a string or a symbol).")
@@ -376,10 +376,10 @@ RETURN: a lisp expression : identifier, number  or expr."
       (setq op (token (scanner self)))
       (cond
 
-       ((eq (value op) (intern "("))
+       ((eq (aetoken-value op) (intern "("))
         (next-token (scanner self))
         (setq expr (parse-expr self))
-        (if (eq (value (token (scanner self))) (intern ")"))
+        (if (eq (aetoken-value (token (scanner self))) (intern ")"))
             (progn
               (next-token (scanner self))
               expr)
@@ -387,10 +387,10 @@ RETURN: a lisp expression : identifier, number  or expr."
                  (substring (source (scanner self))
                             (1- (curr-pos (scanner self)))))))
 
-       ((eq (value op) (intern "{"))
+       ((eq (aetoken-value op) (intern "{"))
         (next-token (scanner self))
         (setq expr (parse-expr self))
-        (if (eq (value (token (scanner self))) (intern "}"))
+        (if (eq (aetoken-value (token (scanner self))) (intern "}"))
             (progn
               (next-token (scanner self))
               expr)
@@ -398,10 +398,10 @@ RETURN: a lisp expression : identifier, number  or expr."
                  (substring (source (scanner self))
                             (1- (curr-pos (scanner self)))))))
 
-       ((eq (value op) (intern "["))
+       ((eq (aetoken-value op) (intern "["))
         (next-token (scanner self))
         (setq expr (parse-expr self))
-        (if (eq (value (token (scanner self))) (intern "]"))
+        (if (eq (aetoken-value (token (scanner self))) (intern "]"))
             (progn
               (next-token (scanner self))
               expr)
@@ -411,7 +411,7 @@ RETURN: a lisp expression : identifier, number  or expr."
 
        ((member (ttype op) '(identifier integer float))
         (next-token (scanner self))
-        (value op))
+        (aetoken-value op))
 
        (t
         (error "Unexpected token at: '%s'."
@@ -425,10 +425,10 @@ RETURN: a lisp expression : identifier, number  or expr."
 RETURN: a lisp expression : (op simple) or simple."
   (let ((op))
       (setq op (token (scanner self)))
-      (if (member (value op) '(+ -))
+      (if (member (aetoken-value op) '(+ -))
           (progn
             (next-token (scanner self))
-            (list (value op) (parse-simple self)))
+            (list (aetoken-value op) (parse-simple self)))
         (parse-simple self))))
 
 
@@ -438,10 +438,10 @@ RETURN: a lisp expression : (op term fact) or fact."
   (let ((fact) (op))
     (setq fact (parse-fact self))
     (setq op (token (scanner self)))
-    (while (member (value op) '(* / ^))
+    (while (member (aetoken-value op) '(* / ^))
       (next-token (scanner self))
-      (setq fact (list (value op)
-                       (if (eq (value op) '/) (list 'float fact) fact)
+      (setq fact (list (aetoken-value op)
+                       (if (eq (aetoken-value op) '/) (list 'float fact) fact)
                        (parse-fact self)))
       (setq op (token (scanner self))))
     fact))
@@ -465,10 +465,10 @@ RETURN: a lisp expression : (op term fact) or fact."
   (let (compare op)
     (setq compare (parse-expr self))
     (setq op (token (scanner self)))
-    (if (member (value op) '( <  >  <=  >=  =  ==  <>  !=  /= ))
+    (if (member (aetoken-value op) '( <  >  <=  >=  =  ==  <>  !=  /= ))
         (progn
           (next-token (scanner self))
-          (setq compare (list (lisp-compare-op (value op))
+          (setq compare (list (lisp-compare-op (aetoken-value op))
                               compare
                               (parse-expr self)))))
     compare))
@@ -481,9 +481,9 @@ RETURN: a lisp expression : (+ expr term), (- expr term) or term."
   (let ((term) (op))
     (setq term (parse-term self))
     (setq op (token (scanner self)))
-    (while (member (value op) '(+ -))
+    (while (member (aetoken-value op) '(+ -))
       (next-token (scanner self))
-      (setq term (list (value op) term (parse-term self)))
+      (setq term (list (aetoken-value op) term (parse-term self)))
       (setq op (token (scanner self))))
     term))
 
@@ -553,9 +553,9 @@ The accepted operators are :
 ;    (while (not (equal 'eos (ttype token)))
 ;      (printf (if (equal 'special (ttype token))
 ;                  "%-10S %c\n"
-;                "%-10S %S\n") (ttype token) (value token))
+;                "%-10S %S\n") (ttype token) (aetoken-value token))
 ;      (setq token (next-token scanner)))
-;    (printf "%-10S %S\n" (ttype token) (value token))))
+;    (printf "%-10S %S\n" (ttype token) (aetoken-value token))))
 
 
 
