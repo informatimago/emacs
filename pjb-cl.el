@@ -1349,65 +1349,65 @@ by the corresponding lowercase characters.
   (incf (slot-value self 'index)))
 
 
-(defun map-into (result-sequence function &rest sequences)
-  (cond
-    ((every (function listp) sequences)
-     (cond
-       ((listp result-sequence)
-        (do ((sequences sequences (mapcar (function cdr) sequences))
-             (target result-sequence (cdr target)))
-            ((or (null target) (some (function null) sequences)) result-sequence)
-          (setf (car target) (apply function
-                                    (mapcar (function car) sequences)))))
-       ((vectorp* result-sequence)
-        (do ((sequences sequences (mapcar (function cdr) sequences))
-             (target 0 (1+ target)))
-            ((or (>= target (length result-sequence))
-                 (some (function null) sequences)) result-sequence)
-          (setf (aref result-sequence target)
-                (apply function (mapcar (function car) sequences)))))
-       (t (error "RESULT-SEQUENCE is neither a LIST or a VECTOR."))))
-    ((every (function vectorp*) sequences)
-     (cond
-       ((listp result-sequence)
-        (do ((source 0 (1+ source))
-             (min (apply (function min) (mapcar (function length) sequences)))
-             (target result-sequence (cdr target)))
-            ((or (null target) (>= source min)) result-sequence)
-          (setf (car target)
-                (apply function (mapcar (lambda (seq) (aref seq source))
-                                        sequences)))))
-       ((vectorp* result-sequence)
-        (do ((index 0 (1+ index))
-             (min (apply (function min) (length result-sequence)
-                         (mapcar (function length) sequences))))
-            ((>= index min) result-sequence)
-          (setf (aref result-sequence index)
-                (apply function (mapcar (lambda (seq) (aref seq index))
-                                        sequences)))))
-       (t (error "RESULT-SEQUENCE is neither a LIST or a VECTOR."))))
-    (t
-     (do ((res
-           (make-instance
-               (cond
-                 ((listp    result-sequence) 'iterator-list)
-                 ((vectorp* result-sequence) 'iterator-vector)
-                 (t (error "RESULT-SEQUENCE is neither a LIST or a VECTOR.")))
-             :sequence result-sequence))
-          (sequences
-           (mapcar
-            (lambda (seq)
-              (make-instance
-                  (cond
-                    ((listp    seq) 'iterator-list)
-                    ((vectorp* seq) 'iterator-vector)
-                    (t (error "A SEQUENCE is neither a LIST or a VECTOR.")))
-                :sequence seq)) sequences)))
-         ((some (function end-of-sequence-p) (cons res sequences))
-          result-sequence)
-       (set-current-item res (apply function
-                                    (mapcar (function current-item) sequences)))
-       (dolist (seq (cons res sequences)) (advance seq))))))
+;; (defun map-into (result-sequence function &rest sequences)
+;;   (cond
+;;     ((every (function listp) sequences)
+;;      (cond
+;;        ((listp result-sequence)
+;;         (do ((sequences sequences (mapcar (function cdr) sequences))
+;;              (target result-sequence (cdr target)))
+;;             ((or (null target) (some (function null) sequences)) result-sequence)
+;;           (setf (car target) (apply function
+;;                                     (mapcar (function car) sequences)))))
+;;        ((vectorp* result-sequence)
+;;         (do ((sequences sequences (mapcar (function cdr) sequences))
+;;              (target 0 (1+ target)))
+;;             ((or (>= target (length result-sequence))
+;;                  (some (function null) sequences)) result-sequence)
+;;           (setf (aref result-sequence target)
+;;                 (apply function (mapcar (function car) sequences)))))
+;;        (t (error "RESULT-SEQUENCE is neither a LIST or a VECTOR."))))
+;;     ((every (function vectorp*) sequences)
+;;      (cond
+;;        ((listp result-sequence)
+;;         (do ((source 0 (1+ source))
+;;              (min (apply (function min) (mapcar (function length) sequences)))
+;;              (target result-sequence (cdr target)))
+;;             ((or (null target) (>= source min)) result-sequence)
+;;           (setf (car target)
+;;                 (apply function (mapcar (lambda (seq) (aref seq source))
+;;                                         sequences)))))
+;;        ((vectorp* result-sequence)
+;;         (do ((index 0 (1+ index))
+;;              (min (apply (function min) (length result-sequence)
+;;                          (mapcar (function length) sequences))))
+;;             ((>= index min) result-sequence)
+;;           (setf (aref result-sequence index)
+;;                 (apply function (mapcar (lambda (seq) (aref seq index))
+;;                                         sequences)))))
+;;        (t (error "RESULT-SEQUENCE is neither a LIST or a VECTOR."))))
+;;     (t
+;;      (do ((res
+;;            (make-instance
+;;                (cond
+;;                  ((listp    result-sequence) 'iterator-list)
+;;                  ((vectorp* result-sequence) 'iterator-vector)
+;;                  (t (error "RESULT-SEQUENCE is neither a LIST or a VECTOR.")))
+;;              :sequence result-sequence))
+;;           (sequences
+;;            (mapcar
+;;             (lambda (seq)
+;;               (make-instance
+;;                   (cond
+;;                     ((listp    seq) 'iterator-list)
+;;                     ((vectorp* seq) 'iterator-vector)
+;;                     (t (error "A SEQUENCE is neither a LIST or a VECTOR.")))
+;;                 :sequence seq)) sequences)))
+;;          ((some (function end-of-sequence-p) (cons res sequences))
+;;           result-sequence)
+;;        (set-current-item res (apply function
+;;                                     (mapcar (function current-item) sequences)))
+;;        (dolist (seq (cons res sequences)) (advance seq))))))
 
 
 ;; (MAP-INTO [0 0 0 0] (function +) "ABCD"       '(1 1 1))
