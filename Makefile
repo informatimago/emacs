@@ -122,6 +122,17 @@ EMACS_FLAGS_DEFAULT=
 	| $(AWK) 'BEGIN{s=0;} /Loading .*fns-/{next;} /Warning: Function .* from cl package/{s=1;next;} {if(s==0){print $0}else{s=0;next;}}'
 # See also .emacs in this directory with the load-path used to compile.
 
+TEST_EL_FILES=\
+	autocad-test.el \
+	pjb-constants-test.el \
+	pjb-echo-keys-test.el \
+	pjb-utilities-test.el
+
+test:
+	@for test_file in $(TEST_EL_FILES); do \
+		echo "Running $$test_file"; \
+		$(EMACS) --batch -Q -L . -l $$test_file -f ert-run-tests-batch-and-exit || exit $$?; \
+	done
 
 # ------------------------------------------------------------------------
 # Compiling & installing lisp packages:
@@ -174,5 +185,4 @@ cleanall::
 # 	./make-depends -I. $(EMACS_SOURCES:.el=.elc) >> Makefile.depend
 
 #### Makefile                         --                     --          ####
-
 
