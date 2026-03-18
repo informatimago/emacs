@@ -1289,10 +1289,15 @@ NOTE:   For multi-screen displays, the coordinate system could be such that
 "
   (let ((frame (or frame (current-frame))))
     (let ((x (pjb-frame-pixel-left frame))
-          (y (pjb-frame-pixel-top  frame)))
-      (set-frame-position frame 0 0)
-      (prog1 (list (pjb-frame-pixel-left frame) (pjb-frame-pixel-top frame))
-        (set-frame-position frame (position-x x) (position-y y))))))
+          (y (pjb-frame-pixel-top  frame))
+          (result nil))
+      (unwind-protect (progn
+                        (set-frame-position frame 0 0)
+                        (setf result (list (pjb-frame-pixel-left frame)
+                                           (pjb-frame-pixel-top frame))))
+        (set-frame-position frame (position-x x) (position-y y)))
+      result)))
+
 
 (defun screen-usable-area (&optional frame)
   "
@@ -1307,7 +1312,6 @@ RETURN: The origin and width and height of the screen where the frame lies,
           (eval (second origin))
           (- screen-width (eval (first origin)))
           (- screen-height (eval (second origin))))))
-
 
 ;;;
 ;;;
