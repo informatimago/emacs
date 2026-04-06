@@ -909,8 +909,13 @@ RETURN: (cons seconds the result of `lambda-body').
 
 
 
-(defun fill-region (from to &optional justify nosqueeze to-eop)
-  "Fill each of the paragraphs in the region.
+(defun pjb-fill-region (from to &optional justify nosqueeze to-eop)
+  "PJB variant of `fill-region'.  Renamed to stop shadowing the
+Emacs core `fill-region' (the original was a wholesale redefinition).
+Bind to whatever key you like; the built-in `fill-region' is back
+in scope under its real name.
+
+Fill each of the paragraphs in the region.
 A prefix arg means justify as well.
 Ordinarily the variable `fill-column' controls the width.
 
@@ -1125,8 +1130,10 @@ RETURN: The current frame.
     value))
 
 (when (fboundp 'set-background-color)
-  (defadvice set-background-color (after sbc-fringe last (color-name) activate)
-    (when (facep 'fringe) (set-face-background 'fringe color-name))))
+  (defun pjb-emacs--sync-fringe-with-background (color-name &rest _)
+    (when (facep 'fringe) (set-face-background 'fringe color-name)))
+  (advice-add 'set-background-color :after
+              #'pjb-emacs--sync-fringe-with-background))
 
 
 
@@ -2912,7 +2919,10 @@ This function is GPL."
     (when (file-exists-p path)
       path)))
 
-(defun find-file-at-point ()
+(defun pjb-find-file-at-point ()
+  "PJB variant of `find-file-at-point'.  Renamed to stop shadowing
+ffap.el's built-in `find-file-at-point'.  Recognises a path with an
+optional :LINE: suffix and visits it."
   (interactive)
   (save-match-data
    (when (looking-at *find-file-at-point-file-regexp*)
@@ -2939,7 +2949,7 @@ This function is GPL."
    (let ((buffer (current-buffer)))
      (when (funcall search *find-file-at-point-file-regexp* nil t)
        (goto-char (match-beginning 0))
-       (find-file-at-point)
+       (pjb-find-file-at-point)
        (make-variable-buffer-local 'find-file-at-point-paths-buffer)
        (setf find-file-at-point-paths-buffer buffer)
        (with-current-buffer buffer

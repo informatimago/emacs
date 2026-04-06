@@ -111,13 +111,16 @@
         (other-window 1)
         (add-hook 'pre-command-hook 'echo-keys))))
 
-(defadvice echo-key--read-passwd--disable (before read-passwd)
+(defun echo-key--read-passwd-disable (&rest _args)
   (message "echo-key--read-passwd--disable")
   (setf *echo-key-password-disable* t))
 
-(defadvice echo-key--read-passwd--enable (after read-passwd)
-    (message "echo-key--read-passwd--enable")
+(defun echo-key--read-passwd-enable (&rest _args)
+  (message "echo-key--read-passwd--enable")
   (setf *echo-key-password-disable* nil))
+
+(advice-add 'read-passwd :before #'echo-key--read-passwd-disable)
+(advice-add 'read-passwd :after  #'echo-key--read-passwd-enable)
 
 (provide 'pjb-echo-keys)
 ;;;; THE END ;;;;

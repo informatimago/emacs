@@ -6,22 +6,20 @@
 (defun pprint (object &optional stream)
   (pp object stream))
 
-(defadvice xml-parse-region (around xml-parse-region/dtd-patch last
-                                    (beg end &optional buffer parse-dtd parse-ns)
-                                    activate)
-  "DTD are file-level, so we move elements out of the dtd sexp."
+(defun pjb-xml--xml-parse-region-dtd-patch
+    (orig-fun beg end &optional buffer parse-dtd parse-ns)
+  "DTDs are file-level, so we move elements out of the dtd sexp.
+Around-advice for `xml-parse-region'."
   (if (or xml-validating-parser parse-dtd)
-      (let ((sexp ad-do-it))
+      (let ((sexp (funcall orig-fun beg end buffer parse-dtd parse-ns)))
         (if (and (listp sexp)
                  (consp (car sexp))
                  (listp (caar sexp))
                  (eq 'dtd (caaar sexp)))
-            (list* :hi
-                   (caar sexp)
-                   (cdar sexp)
-                   (cdr sexp))
-            sexp))
-      ad-do-it))
+            (list* :hi (caar sexp) (cdar sexp) (cdr sexp))
+          sexp))
+    (funcall orig-fun beg end buffer parse-dtd parse-ns)))
+(advice-add 'xml-parse-region :around #'pjb-xml--xml-parse-region-dtd-patch)
 
 
 ;;; documents additions.

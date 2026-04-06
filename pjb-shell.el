@@ -41,23 +41,23 @@
 
 (defun shell-buffer-name (i) (format "%dshell" i))
 
-(defadvice shell (around shell/multiple-buffers first (&optional buffer) activate)
-  "Create a new shell when none exist, or switch to the last created one."
+(defun pjb-shell--multiple-buffers (orig-fun &optional buffer)
+  "Create a new shell when none exist, or switch to the last created one.
+Around-advice for `shell'."
   (interactive "P")
   (if buffer
-      (progn
-        (ad-set-args 0 (list buffer))
-        ad-do-it)
-      ;; find *a* shell:
-      (let ((i 0))
-        (while (get-buffer (shell-buffer-name i))
-          (setq i (1+ i)))
-        (if (= 0 i)
-            (progn ;; no shell, let's make the first one
-              ad-do-it
-              (rename-buffer (shell-buffer-name 0)))
-            (progn ;; already have some shells, let's jump to one.
-              (switch-to-buffer (shell-buffer-name (1- i))))))))
+      (funcall orig-fun buffer)
+    ;; find *a* shell:
+    (let ((i 0))
+      (while (get-buffer (shell-buffer-name i))
+        (setq i (1+ i)))
+      (if (= 0 i)
+          (progn  ;; no shell, let's make the first one
+            (funcall orig-fun nil)
+            (rename-buffer (shell-buffer-name 0)))
+        ;; already have some shells, let's jump to one
+        (switch-to-buffer (shell-buffer-name (1- i)))))))
+(advice-add 'shell :around #'pjb-shell--multiple-buffers)
 
 
 (defvar *forward-control-c-shells*

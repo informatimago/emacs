@@ -817,34 +817,28 @@ Any fill pointer is ignored.
       (array-dimension (aref array 0) (1- axis-number))))
 
 
-(defadvice aref
-    (around pjb-cl-aref first (array &rest subscripts) activate)
-  "Common-Lisp: Accesses the array element specified by the subscripts. \
-If no subscripts are supplied and array is zero rank, aref accesses the \
-sole element of array.
-NOTE: zero rank arrays are not supported.
-"
-  (setq ad-return-value
-        (if (= 1 (length subscripts))
-            ad-do-it
-            (loop for vector = array then (aref vector index)
-               for index in subscripts
-               ;;do (printf "vector = %S index = %S\n" vector index)
-               finally return vector))))
-(ad-activate 'aref)
+;; Multidimensional aref/aset.  We deliberately do NOT advise the core
+;; `aref' built-in any more — the advice was a global monkey-patch that
+;; affected every package in the running Emacs.  Instead, callers that
+;; need multi-axis access should use these explicit helpers.  The
+;; existing in-tree usage (pjb-transpose.el) goes through nested
+;; (aref (aref m i) j) which works directly on the vector-of-vectors
+;; layout produced by `make-array' below.
+(defun pjb-cl-aref-md (array &rest subscripts)
+  "Common-Lisp-style multidimensional aref.
+Walk the nested-vector representation produced by `make-array'."
+  (cl-loop for vector = array then (aref vector index)
+           for index in subscripts
+           finally return vector))
 
-
-(defun pjb-cl%%aset (array &rest subscripts-and-value)
-  "PRIVATE
-DO:     sets the value of the element in array at subcripts.
-NOTE:   Used as (defsetf aref pjb-cl%%aset).
-"
-  (let ((value (car (last subscripts-and-value)))
+(defun pjb-cl-aset-md (array &rest subscripts-and-value)
+  "Common-Lisp-style multidimensional aset.
+Walk the nested-vector representation produced by `make-array' and
+write VALUE at the leaf position."
+  (let ((value      (car (last subscripts-and-value)))
         (subscripts (butlast subscripts-and-value)))
-    (aset (apply 'aref array (butlast subscripts))
+    (aset (apply #'pjb-cl-aref-md array (butlast subscripts))
           (car (last subscripts)) value)))
-
-(defsetf aref pjb-cl%%aset)
 
 
 

@@ -789,7 +789,7 @@ POST:   (<= start index end)
 ;;; utilities
 ;;;----------------------------------------------------------------------------
 
-(defun ensure-list (x) (if (listp x) x (list x)))
+;; `ensure-list' is built-in since Emacs 28.1; we no longer redefine it.
 
 (define-modify-macro appendf (&rest args) append "Append onto list")
 

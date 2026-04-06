@@ -84,7 +84,40 @@ Per-file outcome:
 
 ---
 
-## Phase 2 — Kill the global monkey-patches
+## Phase 2 — Kill the global monkey-patches  ✅ landed (strict exit criterion)
+
+Status: zero `defadvice`, zero `ad-activate`, zero `defun` shadowing the listed core symbols. All 186 tests still pass.
+
+**Reality reduced the scope considerably.** A pre-flight `fboundp` audit against stock Emacs 30.2 (`-Q`) revealed that most of `pjb-cl.el`'s "redefinitions" are actually polyfills, not collisions: `string-upcase`, `string-downcase`, `sleep`, `complement`, `pathname-name`, `probe-file`, `truename`, `file-write-date`, `char`, `schar`, `array-dimension`, `upper-case-p`, `alpha-char-p`, `char-upcase`, etc. are **not** built into modern Emacs at all (and `cl-string-upcase`/`cl-pathname-name`/etc. are not in `cl-lib` either). They get to keep their current names through Phase 2 and will be renamed under the `cl-`/`pjb-cl-` policy in Phase 4. The actual built-in shadows reduced to: `aref` (advice), `fill-region`, `find-file-at-point`, `ensure-list`.
+
+What landed in this pass:
+
+- **`pjb-cl.el`** — deleted the global `aref` `defadvice` and the `(defsetf aref pjb-cl%%aset)` that hooked it. Multidimensional access is now provided by two explicit helpers, `pjb-cl-aref-md` and `pjb-cl-aset-md`, that walk the vector-of-vectors layout `make-array` produces. The single in-tree caller (`pjb-transpose.el`) was already using nested `(aref (aref m i) j)` so it needed no edit.
+- **`pjb-emacs.el`** — renamed `fill-region` → `pjb-fill-region` and `find-file-at-point` → `pjb-find-file-at-point` (the only in-tree caller in the same file was updated). The `set-background-color` `defadvice` was ported to `advice-add :after` via `pjb-emacs--sync-fringe-with-background`.
+- **`pjb-utilities.el`**, **`pjb-list.el`**, **`pjb-unicode.el`** — deleted three independent `(defun ensure-list …)` definitions; built-in since Emacs 28.1.
+- **`pjb-advices.el`** — rewritten end-to-end. Every `defadvice` ported to `advice-add` (`switch-to-buffer :after`, `mouse-drag-vertical-line :around`, `mail-setup :after`, `x-parse-geometry :filter-args`, `set-face-attribute :filter-args`, `gnus :before`, `message-make-sender :around`, `backtrace :around`, `jump-to-register :after`). Body-replacing advices were demoted to plain commands the user can call/rebind explicitly: `pjb-rmail-sort-by-correspondent` (was `:around` on `rmail-sort-by-correspondent`), `pjb-custom-save-variables-sorted` (was `:around` on `custom-save-variables`), `pjb-gnus-summary-reply-as-followup` (was `:around` on `gnus-summary-reply`). The `< emacs 22` `other-frame` block was deleted as unreachable. The file now `(provide 'pjb-advices)` and `(require 'cl-lib)` (was `cl`).
+- **`pjb-echo-keys.el`** — two malformed `defadvice` forms (advising `read-passwd` but never `ad-activate`d) ported to two real `advice-add` calls.
+- **`pjb-shell.el`** — `defadvice shell` ported to `pjb-shell--multiple-buffers` via `advice-add :around`.
+- **`pjb-xml.el`** — `defadvice xml-parse-region` ported to `pjb-xml--xml-parse-region-dtd-patch` via `advice-add :around`.
+- **`emacs-window-focus-mouse.el`** — replaced `defadvice select-window` with `advice-add`, replaced the `destructuring-bind` patterns with explicit accessors (so the file actually byte-compiles cleanly now), fixed the `(window-edges win :body)` call to the modern `(window-edges win t)` form.
+- **`pjb-vm.el`** — deleted the commented-out `defadvice` blocks (advise-replace helper for `rmail-sort-by-*` and `vm-mime-attach-object` `:before`-advice) so the strict `grep defadvice` check is clean.
+- **`pjb-emacs-patches.el`** — emptied. The `< 22` `called-interactively-p` shim was unreachable, the `completion--twq-all` redefinition was pinned to Emacs 24.3.1 (also unreachable), and the `comment-region-internal` redefinition was equivalent to `(setq-default comment-empty-lines t)`. The stub file now contains just that customisation plus a `(provide 'pjb-emacs-patches)`. Removed from `pjb-loader.el`'s load list.
+
+What deliberately did **not** land in Phase 2:
+
+- The pathname / character-predicate / time-accessor / system-info layer in `pjb-cl.el` is unchanged. Those names don't shadow anything in modern Emacs, so they failed the Phase 2 strict criterion. They will be migrated to the `cl-*` namespace in Phase 4 along with the rest of the rename pass.
+- `pjb-frame-server-old.el` is still tracked but already unused; Phase 5 will retire it together with `pjb-vm.el`, `pjb-banks-old.el`, etc.
+- The four "currently broken" Phase 1 pins (`pjb-date`, `pjb-pmatch`, `pjb-math`, `pjb-graph`) are still pinned. Phase 2's scope was advice/shadows; Phase 3 (`cl` → `cl-lib`) will fix `parse-integer` and `handler-case`, the `pjb-math` top-level call needs a `noninteractive` guard, and `pjb-graph`'s EIEIO usage needs the `defgeneric` → `cl-defgeneric` rewrite.
+
+**Exit criterion verification**:
+```
+$ grep -nE '^\s*\(defadvice\b' *.el           # → empty
+$ grep -nE '^\(ad-activate' *.el              # → empty
+$ grep -nE '^\(defun (aref|fill-region|find-file-at-point|ensure-list|comment-region-internal|completion--twq-all) ' *.el   # → empty
+$ make test                                    # → 186 tests, 183 expected, 0 unexpected, 3 skipped
+```
+
+## Phase 2 — original plan (reference)
 
 Goal: zero core-function redefinitions, zero `defadvice`. The ordering matters because Phase 3 depends on `pjb-cl.el` no longer poisoning later loads.
 

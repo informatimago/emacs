@@ -85,7 +85,7 @@ sources, skipping the heavier optional modules.  Bind before loading
         "pjb-class.el"
         "pjb-dodo.el"
         "pjb-emacs.el"
-        "pjb-emacs-patches.el"
+        ;; "pjb-emacs-patches.el"  ;; Phase 2: file emptied / retired.
         "pjb-emacs-balance-windows.el"
         "pjb-insert-image.el"
         "pjb-milliways.el"

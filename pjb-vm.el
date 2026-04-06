@@ -157,44 +157,9 @@
   ;;(defun vm          () (interactive) (error "Use mail in a shell!"))
   ;;(defun rmail-input () (interactive) (error "Use mail in a shell!"))
 
-  ;; (defmacro advise-replace (fname parameters body)
-  ;;   (let ((aname (intern (format "pjb-adrep-%s" fname))))
-  ;;     `(progn
-  ;;        (defadvice ,fname
-  ;;            (around ,aname  first  ,parameters  activate)
-  ;;          ,body)
-  ;;        (ad-activate (quote ,fname)))
-  ;;     )) ;;advise-replace
-  ;; (put 'advise-replace      'lisp-indent-function 2)
-  ;;
-  ;;
-  ;; (advise-replace rmail-sort-by-correspondent (reverse)
-  ;;   (vm-sort-messages  (if reverse "reversed-author" "author")))
-  ;;
-  ;; (advise-replace rmail-sort-by-date          (reverse)
-  ;;   (vm-sort-messages  (if reverse "reversed-date" "date")))
-  ;;
-  ;; (advise-replace rmail-sort-by-labels        (reverse)
-  ;;   (error "Not implemented with VM."))
-  ;;
-  ;; (advise-replace rmail-sort-by-lines         (reverse)
-  ;;   (vm-sort-messages  (if reverse "reversed-line-count" "line-count")))
-  ;;
-  ;; (advise-replace rmail-sort-by-recipient     (reverse)
-  ;;   (vm-sort-messages  (if reverse "reversed-recipients" "recipients")))
-  ;;
-  ;; (advise-replace rmail-sort-by-subject       (reverse)
-  ;;   (vm-sort-messages  (if reverse "reversed-subject" "subject")))
-
-
-  ;; (defadvice vm-mime-attach-object
-  ;;     (before pjb-removemime-vm-mime-attach-object nil activate)
-  ;;   (save-restriction
-  ;;     (pjb-mail-narrow-to-headers)
-  ;;     (pjb-mail-remove-header "^\\(MIME-Version:\\|Content-\\)" t))
-  ;;   )
-  ;; (ad-activate 'vm-mime-attach-object)
-
+  ;; Phase 2: removed two commented-out `defadvice' blocks (advise-replace
+  ;; helper for rmail-sort-by-* and a vm-mime-attach-object before-advice)
+  ;; that survived only as documentation.  See git history for the originals.
 
 
   (when (require 'vm-pop nil t)

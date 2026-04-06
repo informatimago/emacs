@@ -38,7 +38,7 @@
 ;;;;******************************************************************************
 (require 'pjb-cl)
 
-(defun ensure-list (x) (if (listp x) x (list x)))
+;; `ensure-list' is built-in since Emacs 28.1; we no longer redefine it.
 
 (defun iota (count &optional start step)
   "

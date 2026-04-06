@@ -389,7 +389,7 @@
         when (stringp key)
           do (local-set-key (kbd key) braille)))
 
-(defun ensure-list (x) (if (listp x) x (list x)))
+;; `ensure-list' is built-in since Emacs 28.1; we no longer redefine it.
 
 (defun pjb-unicode-clock (clocks)
   "Return a string containing clock emojis from `clocks`
