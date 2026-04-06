@@ -431,7 +431,44 @@ Each deletion bumps a checklist item in this document and gets a one-line entry 
 
 ---
 
-## Phase 6 — Loader cleanup
+## Phase 6 — Loader cleanup  ✅ landed
+
+Status: `pjb-loader.el` rewritten from scratch — **134 lines** (down from 451), of which ~30 lines are actual logic; the rest is the source list itself, which is data, not code. **207 tests, 207 expected, 0 unexpected; tools/lint-collisions.el → 0 collisions.** Smoke-loading the loader in `-Q --batch` succeeds; the only two errors are pre-existing missing external packages (`inf-ruby` for `pjb-ruby.el`, `slime` for `pjb-clelp.el`) and they get reported through the new `pjb-loader-noerror` path instead of aborting the load.
+
+### What changed
+
+- **Removed the home-grown sexp walker** (`el-walk-sexps`, `el-map-sexps`, `skip-comments`, `source-file-requires`, `pathname-name*`, `topological-sort`, `pjb-sources-lessp`, `check-pjb-sources-lessp`, `*pjb-sources-order*`, `*el-walk-sexps-end-marker*`) — about 220 lines of dependency-walking machinery that re-implemented what `bytecomp.el` already does, but worse.
+- **Stopped opening every source file with `find-file` at startup.** The old loader visited every `pjb-*.el` file in a real buffer (with `find-file` / `switch-to-buffer` / `kill-buffer`), parsed every top-level sexp via `forward-sexp`, harvested `(require ...)` forms, then ran a hand-rolled `topological-sort` over them on every Emacs start. The new loader does none of that — it just calls `load` on each entry of `pjb-loader-sources` in declared order.
+- **Switched the source list to a plain hand-maintained ordered list.** Two `defvar`s: `pjb-loader-sources` (always loaded — 47 entries) and `pjb-loader-extra-sources` (skipped when `pjb-loader-light` is set — 17 entries). Adding a new module is now "append it to one of the two lists".
+- **Renamed the loader's free variables** from earmuffs to a clean prefix:
+  - `*pjb-load-noerror*` → `pjb-loader-noerror`
+  - `*pjb-load-silent*`  → `pjb-loader-silent`
+  - `*pjb-light-emacs*`  → `pjb-loader-light`
+  - All three are real `defvar`s with docstrings (the Phase 0 `defvar` promotion under the old names is now consolidated and namespaced).
+- **Renamed the load function**: `load-stuff` (a generic name that polluted the global namespace and was a Phase-4-style collision risk) → `pjb-loader--load-one` (the per-file worker, prefixed `--` to mark it private) and `pjb-loader-load-all` (the public entry point, also `M-x` interactive).
+- **Removed the dead `(unless :obsolete '(...))` documentation block** entirely (Phase 5 had collapsed it to a comment; Phase 6 just deleted it).
+- **Removed the 50-line commented-out alternate `load-stuff` machinery** (the `files-not-to-load` / `file-expand-wildcards` / `pathname-name` / `namestring` block that hadn't been live since the early Common-Lisp emulation days).
+- **Removed `check-version-lock`** (one-line dead helper that referenced a `--version.lock` file the loader no longer manages).
+- Switched from `(require 'cl)` to `(require 'cl-lib)`. The new code uses no cl macros at all (a tiny `defun pjb-loader--load-one` and a `mapc` over the list), so the migration was free. **9 of 39 files** now on `cl-lib` (was 8 at end of Phase 3).
+
+### What stayed the same (intentionally)
+
+- The set of files loaded is byte-for-byte identical to the post-Phase-5 active list. Phase 6 was about *how* the loader works, not *what* it loads.
+- The loader still calls `pjb-loader-load-all` at file-load time (preserving the historical "just `(load \"pjb-loader\")` from .emacs and you're done" workflow). Users who want lazy / deferred loading can `(setq pjb-loader-light t)` before requiring it, or skip the auto-call by binding `pjb-loader-noerror` and calling `pjb-loader-load-all` themselves later.
+
+### Exit criterion
+
+| Item | Status |
+|---|---|
+| Loader < 100 lines of *code* | ✅ ~30 lines of code; 134 lines total (rest is the source-list data) |
+| `(provide 'pjb-loader)` | ✅ |
+| All variables are `defvar`s with docstrings | ✅ |
+| Loader does not visit any buffer at startup | ✅ |
+| `make test` | ✅ 207 / 207 / 0 / 0 |
+| `tools/lint-collisions.el` | ✅ 0 |
+| Smoke-load in `-Q --batch` | ✅ (only pre-existing missing external packages report errors, via the new `pjb-loader-noerror` path) |
+
+## Phase 6 — original plan (reference)
 
 `pjb-loader.el` re-implements `bytecomp`'s dependency walker. After Phases 1–4 land, the loader is the largest remaining oddity:
 
