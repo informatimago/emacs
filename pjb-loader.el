@@ -121,11 +121,7 @@ sources, skipping the heavier optional modules.  Bind before loading
 
         "pjb-java"
 
-        "pjb-objc-edit.el"
-        "pjb-objc-gen.el"
-        "pjb-objc-ide.el"
-        ;; not yet ;; "pjb-objc-mode.el"
-        "pjb-objc-parser.el"
+        ;; Phase 5: pjb-objc-* family retired (cc-mode supersedes).
         "android-classes.el"
         "pjb-pl1.el" ; testing
         ))
@@ -138,8 +134,6 @@ sources, skipping the heavier optional modules.  Bind before loading
                   "pjb-unicode.el"
 
                   "pjb-computer-paper.el"
-                  "pjb-cvs.el"
-                  "pjb-cvspass.el"
                   "pjb-dot.el"
                   "pjb-graph.el"
 
@@ -151,7 +145,6 @@ sources, skipping the heavier optional modules.  Bind before loading
                   "pjb-s2p-expression.el"
 
                   "pjb-layers.el"
-                  "pjb-make-depends.el"
                   "pjb-roman.el"
                   "pjb-secouer.el"
                   "pjb-server.el"
@@ -167,19 +160,10 @@ sources, skipping the heavier optional modules.  Bind before loading
                   ))))
 
 
-(unless :obsolete
-  '(
-    "pjb-vm"
-    "pjb-vm-kill-file.el"
-
-    "pjb-banks-old.el"
-    "pjb-c.el"
-    "pjb-objc-mode.el"
-    "pjb-comint"
-    "slime-rpc.el"
-    "split.el"
-
-    ))
+;; Phase 5: every file that used to live in this `(unless :obsolete ...)`
+;; documentation block has been deleted from the tree
+;; (pjb-vm, pjb-vm-kill-file, pjb-banks-old, pjb-c, pjb-objc-mode,
+;; pjb-comint, slime-rpc, split).
 
 
 

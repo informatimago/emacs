@@ -323,7 +323,80 @@ Concrete rename targets (non-exhaustive — Phase 1 tests will reveal more):
 
 ---
 
-## Phase 5 — Retire what Emacs already provides
+## Phase 5 — Retire what Emacs already provides  ✅ landed (partial)
+
+Status: **19 files deleted** from the tree (one was already retired by the user between sessions). **207 tests, 207 expected, 0 unexpected; tools/lint-collisions.el still 0 collisions.** Makefile `EMACS_SOURCES` and `pjb-loader.el`'s active and `:obsolete` lists trimmed; one stale `(require 'pjb-make-depends)` removed from `pjb-erc.el`.
+
+### Files deleted
+
+| File | Reason |
+|---|---|
+| `pjb-banks-old.el` | superseded by `pjb-banks.el`; was already in loader's `:obsolete` block |
+| `pjb-vm.el` | VM upstream is unmaintained; in `:obsolete` block |
+| `pjb-vm-kill-file.el` | depended on VM; in `:obsolete` block; was in `EMACS_SOURCES` |
+| `pjb-comint.el` | `ansi-color` + `comint-output-filter-functions` cover the use case; in `:obsolete` block |
+| `slime-rpc.el` | modern SLIME/SLY; in `:obsolete` block |
+| `split.el` | window-pane experiment; built-in `window.el` covers it; in `:obsolete` block; the `pjb-split-balance-windows` rename from Phase 4 was the last thing keeping it useful and that's gone too |
+| `pjb-frame-server-old.el` | name self-explanatory; superseded by `server.el` + `emacsclient` |
+| `pjb-tla.el` | TLA / GNU Arch is dead |
+| `pjb-google-translate.el` | MELPA `google-translate` package supersedes |
+| `pjb-cvs.el` | CVS is dead |
+| `pjb-cvspass.el` | CVS is dead; was in `EMACS_SOURCES` |
+| `pjb-c.el` | cc-mode supersedes; in `:obsolete` block; was in `EMACS_SOURCES` |
+| `pjb-objc-mode.el` | cc-mode's objc-mode supersedes; in `:obsolete` block; was in `EMACS_SOURCES` |
+| `pjb-objc-edit.el` | objc helper; companion to retired mode |
+| `pjb-objc-gen.el` | objc helper; companion to retired mode |
+| `pjb-objc-ide.el` | objc helper; companion to retired mode |
+| `pjb-objc-parser.el` | objc helper; companion to retired mode |
+| `pjb-objc-parser-test.el` | tests for retired parser (the one Phase 1 deliberately *did not* add to `TEST_EL_FILES` because its home-grown test runner was already failing) |
+| `pjb-make-depends.el` | depend tracking is a build-tool concern, not editor; the corresponding Makefile rules are commented out |
+| `pjb-emacs-patches.el` | already gutted by Phase 2 to a stub; user finalised the deletion between sessions (commit `15979c2`) |
+
+### Knock-on edits
+
+- **`Makefile`** — `EMACS_SOURCES` lost: `pjb-c.el`, `pjb-cvs.el`, `pjb-cvspass.el`, `pjb-make-depends.el`, `pjb-objc-mode.el`, `pjb-vm-kill-file.el`. (The other deleted files were never in `EMACS_SOURCES`.)
+- **`pjb-loader.el`** — dropped from the active load list: `pjb-cvs.el`, `pjb-cvspass.el`, `pjb-make-depends.el`, `pjb-objc-edit.el`, `pjb-objc-gen.el`, `pjb-objc-ide.el`, `pjb-objc-parser.el`. The dead `(unless :obsolete '(...))` documentation block (whose contents were all just deleted) collapsed to a one-line comment.
+- **`pjb-erc.el`** — dropped a real `(require 'pjb-make-depends)` at line 69.
+
+### Files deliberately *kept* (deferred to a later pass)
+
+These were on the original Phase 5 candidate list but kept because they have either real ERT coverage, real interactive value, or non-trivial behaviour distinct from the suggested replacement:
+
+| File | Why kept |
+|---|---|
+| `pjb-shell.el` | now goes through `advice-add` (Phase 2); `pjb-shell-new` is a useful multi-shell helper |
+| `pjb-html.el` | 16 ERT cases; the helpers are different from `sgml-mode` |
+| `pjb-image-minor-mode.el` | active in startup; semantics differ from `iimage-mode` |
+| `pjb-insert-image.el` | comint patch; orthogonal to built-in image display |
+| `pjb-find-tag-hook.el` | the hook adds metadata `xref` doesn't track |
+| `pjb-page.el` | different mode model from built-in `page.el` |
+| `pjb-queue.el` | 12 ERT cases |
+| `pjb-pgp.el` | interactive PGP commands not directly covered by `epa`/`epg` |
+| `pjb-asdf.el` | ASDF helper for CL workflow |
+| `pjb-state-coding.el` | 15 ERT cases; bit-encoding helpers, not coding-system handling |
+| `pjb-erc-speak.el`, `pjb-speak.el` | depend on `emacspeak` setup the user controls |
+| `pjb-emacs-balance-windows.el` | actually defines `pjb-balance-windows-vertically`, not a `balance-windows` shadow |
+
+These should each get their own focused review pass — most likely as part of a future Phase 7 ("trim long-tail") rather than this phase.
+
+### Counts
+
+| Metric | Before Phase 5 | After Phase 5 | Δ |
+|---:|---:|---:|---:|
+| Top-level `.el` files | ~120 | ~101 | −19 |
+| Files in `EMACS_SOURCES` | 43 | 37 | −6 |
+| Files in `pjb-loader` active list | 53 | 46 | −7 |
+| ERT tests | 207 | 207 | 0 |
+| `tools/lint-collisions.el` | 0 collisions | 0 collisions | — |
+
+### Exit criterion
+
+- ✅ Every "definitely dead" file from the Phase 5 plan removed.
+- ✅ `Makefile` and `pjb-loader.el` references updated.
+- ✅ `make test` → 207 tests, 207 expected, 0 unexpected, 0 skipped.
+- ✅ `tools/lint-collisions.el` → `0 collisions`.
+
+## Phase 5 — original plan (reference)
 
 For each file below, the work is: confirm the modern replacement, port any still-useful idiosyncratic helper into the appropriate `pjb-*` module, then delete the file from `EMACS_SOURCES`.
 

@@ -53,14 +53,11 @@ EMACS_SOURCES=\
 	pjb-asm7090.el \
 	pjb-banks.el \
 	pjb-bourse.el \
-	pjb-c.el \
 	pjb-cl.el \
 	pjb-cl-faces.el \
 	pjb-cl-magic.el \
 	pjb-class.el \
 	pjb-constants.el \
-	pjb-cvs.el \
-	pjb-cvspass.el \
 	pjb-erc.el \
 	pjb-font.el \
 	pjb-dot.el \
@@ -73,8 +70,6 @@ EMACS_SOURCES=\
 	pjb-layers.el \
 	pjb-list.el \
 	pjb-mail.el \
-	pjb-make-depends.el \
-	pjb-objc-mode.el \
 	pjb-object.el \
 	pjb-pgp.el \
 	pjb-queue.el \
@@ -89,7 +84,6 @@ EMACS_SOURCES=\
 	pjb-strings.el \
 	pjb-transpose.el \
 	pjb-utilities.el \
-	pjb-vm-kill-file.el \
 	pjb-work.el \
 	pjb-worldfact.el
 

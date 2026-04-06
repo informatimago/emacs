@@ -66,7 +66,7 @@
 
 
 (require 'pjb-cl)
-(require 'pjb-make-depends)
+;; Phase 5: pjb-make-depends.el retired (build-tool concern, not editor).
 (require 'pjb-html)
 
 (eval-when (compile load exec)
