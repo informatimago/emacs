@@ -51,21 +51,36 @@ Cheap, no-risk groundwork that makes every later phase tractable.
 
 ---
 
-## Phase 1 — Test the load-bearing pure code
+## Phase 1 — Test the load-bearing pure code  ✅ landed
 
-We must not rename or rewrite anything before the safety net exists. Target the libraries that are (a) pure-ish, (b) reused everywhere, and (c) currently untested. ERT tests live next to the source as `<name>-test.el` and are added to `TEST_EL_FILES` in the `Makefile`.
+Status: 14 new ERT companion files added; full suite is **186 tests, 183 expected, 0 unexpected, 3 skipped** across 18 files.
 
-Priority order (highest leverage first):
+Per-file outcome:
 
-1. **`pjb-strings.el`** — many candidates for renaming/removal. Tests must pin current behaviour for `basename`, `dirname`, `string-index`, `string-position`, `unsplit-string`, `join`, `string-repeat`, `string-justify-left`, `chop-spaces*`, `chop-prefix`, `string-remove-accents`, `prefixp`, `suffixp`, `first-char`/`last-char`/`butfirst-char`/`butlast-char`.
-2. **`pjb-list.el`** — `iota`, `flatten`, etc.
-3. **`pjb-cl.el`** — the highest-risk file; tests should cover at least every symbol that aliases or wraps a CL operator we still rely on (`pathname-*`, `char*`, `string-*case`, `array-dimension`, `probe-file`, `truename`, `get-decoded-time`).
-4. **`pjb-date.el`**, **`pjb-pmatch.el`**, **`pjb-roman.el`**, **`pjb-queue.el`**, **`pjb-math.el`**, **`pjb-graph.el`**.
-5. **`pjb-xml.el`**, **`pjb-html.el`**, **`pjb-unicode.el`**, **`pjb-color.el`**, **`pjb-state-coding.el`**.
+| Test file | Tests | Notes |
+|---|---|---|
+| pjb-strings-test.el | 16 | one quirk pinned: `cut-string` errors when length is not a multiple |
+| pjb-list-test.el | 14 | clean |
+| pjb-cl-test.el | 26 | covers `pathname-*`, `probe-file`, `truename`, `file-write-date`, time/system info, char predicates, `array-dimension`. `get-universal-time` pinned as `numberp` (returns float, not integer) |
+| pjb-date-test.el | 3 | `parse-iso8601-date` pinned as **broken**: signals `void-function parse-integer` because the unprefixed `parse-integer` is no longer in modern `cl`. Phase 2 fix target. |
+| pjb-pmatch-test.el | 2 | **load-error pin**: pjb-pmatch.el runs its own home-grown self-tests at top level using `handler-case`, which is not in modern `cl`/`cl-lib`. Loading the file aborts. Phase 2 should replace the self-test block with ERT and remove `handler-case`. |
+| pjb-roman-test.el | 12 | clean |
+| pjb-queue-test.el | 12 | clean |
+| pjb-math-test.el | 2 | **load-error pin**: pjb-math.el calls `(set-greek-bindings "C-c g")` at top level, which crashes in `emacs -Q --batch` because there is no usable local map. Phase 2 should guard the top-level call with `unless noninteractive`. |
+| pjb-graph-test.el | 2 | **load-error pin**: pjb-graph.el uses the removed EIEIO `defgeneric` macro. Phase 3 should rewrite as `cl-defgeneric`/`cl-defmethod`. |
+| pjb-xml-test.el | 15 | needs `(require 'cl)` (uses `defun*`); skips `xml-parse-region` which is wrapped in defadvice |
+| pjb-html-test.el | 16 | clean |
+| pjb-unicode-test.el | 12 | clean |
+| pjb-color-test.el | 10 | loaded via `load-file` (no `provide`); covers RGB conversions, value-to-name, lighter/darker, factor-range errors |
+| pjb-state-coding-test.el | 15 | **two reality pins**: `make-mask` and `integer-to-mask` signal `overflow-error` on modern Emacs (the loop assumes `(* 2 m)` overflows to 0, which no longer happens with bignums). Phase 2 should rewrite using `integer-length`. |
 
-For each new test file: 5–15 ERT cases is enough to lock the public API; we are not chasing coverage, we are pinning semantics for the rename pass.
+**Test-authoring notes carried forward to Phase 2/3**:
+- Several test files needed `(require 'cl)` to load their library because the library uses unprefixed cl macros (`defun*`, `do`, `parse-integer`). Phase 3 will eliminate this need.
+- The `(or load-file-name buffer-file-name)` idiom is unset by the time `ert-run-tests-batch-and-exit` runs the test bodies. Capture it into a file-level `defvar` at load time (see `pjb-cl-test.el` for the pattern).
+- The Makefile `test` target now uses `status=0; … || status=$?; exit $status` so the suite reports every file's result instead of aborting at the first failure.
+- `pjb-objc-parser-test.el` was deliberately **not** added to `TEST_EL_FILES`: it is a pre-existing home-grown test runner (not ERT) and currently fails on its own assertions in modern Emacs. Convert/repair it as part of Phase 5 (Objective-C retirement) or Phase 1.5.
 
-**Exit criterion**: every file listed above has a `*-test.el` companion in `TEST_EL_FILES`, and `make test` is green.
+**Exit criterion met**: 14 new test files, all added to `TEST_EL_FILES`, `make test` green (0 unexpected). The four "currently broken" pins (`pjb-date`, `pjb-pmatch`, `pjb-math`, `pjb-graph`, `pjb-state-coding`) are intentional regression markers for Phases 2–3 to clear.
 
 ---
 

@@ -124,15 +124,29 @@ EMACS_FLAGS_DEFAULT=
 
 TEST_EL_FILES=\
 	autocad-test.el \
+	pjb-cl-test.el \
+	pjb-color-test.el \
 	pjb-constants-test.el \
+	pjb-date-test.el \
 	pjb-echo-keys-test.el \
-	pjb-utilities-test.el
+	pjb-graph-test.el \
+	pjb-html-test.el \
+	pjb-list-test.el \
+	pjb-math-test.el \
+	pjb-pmatch-test.el \
+	pjb-queue-test.el \
+	pjb-roman-test.el \
+	pjb-state-coding-test.el \
+	pjb-strings-test.el \
+	pjb-unicode-test.el \
+	pjb-utilities-test.el \
+	pjb-xml-test.el
 
 test:
-	@for test_file in $(TEST_EL_FILES); do \
+	@status=0; for test_file in $(TEST_EL_FILES); do \
 		echo "Running $$test_file"; \
-		$(EMACS) --batch -Q -L . -l $$test_file -f ert-run-tests-batch-and-exit || exit $$?; \
-	done
+		$(EMACS) --batch -Q -L . -l $$test_file -f ert-run-tests-batch-and-exit || status=$$?; \
+	done; exit $$status
 
 # `make check` byte-compiles every source with warnings-as-errors and then
 # runs the ERT suite.  This is the CI gate; `make` proper still uses the
