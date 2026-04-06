@@ -49,80 +49,80 @@
 ;;; cat pjb-graph.el | sed -n  -e '/^(def/s/^/;; /p'
 
 ;; (defclass PjbElement ()
-;; (defmethod* description ((self PjbElement))
-;; (defmethod* setProperty ((self PjbElement) (prop-name symbol) prop-value)
-;; (defmethod* getProperty ((self PjbElement) (prop-name symbol))
-;; (defmethod* deleteProperty ((self PjbElement) (prop-name symbol))
+;; (cl-defmethod description ((self PjbElement))
+;; (cl-defmethod setProperty ((self PjbElement) (prop-name symbol) prop-value)
+;; (cl-defmethod getProperty ((self PjbElement) (prop-name symbol))
+;; (cl-defmethod deleteProperty ((self PjbElement) (prop-name symbol))
 
 ;; (defclass PjbSet (PjbElement)
-;; (defmethod* description ((self PjbSet))
-;; (defmethod* cardinal ((self PjbSet))
-;; (defmethod* containsElement ((self PjbSet) (anElement PjbElement))
-;; (defmethod* addElement ((self PjbSet) (newElement PjbElement))
-;; (defmethod* addElements ((self PjbSet) newElementList)
-;; (defmethod* removeElement ((self PjbSet) (oldElement PjbElement))
-;; (defmethod* performWithElements ((self PjbSet) lambda-body)
-;; (defmethod* mapElements ((self PjbSet) lambda-body)
-;; (defmethod* selectElements ((self PjbSet) select-lambda)
+;; (cl-defmethod description ((self PjbSet))
+;; (cl-defmethod cardinal ((self PjbSet))
+;; (cl-defmethod containsElement ((self PjbSet) (anElement PjbElement))
+;; (cl-defmethod addElement ((self PjbSet) (newElement PjbElement))
+;; (cl-defmethod addElements ((self PjbSet) newElementList)
+;; (cl-defmethod removeElement ((self PjbSet) (oldElement PjbElement))
+;; (cl-defmethod performWithElements ((self PjbSet) lambda-body)
+;; (cl-defmethod mapElements ((self PjbSet) lambda-body)
+;; (cl-defmethod selectElements ((self PjbSet) select-lambda)
 
 ;; (defclass PjbHashedSet (PjbSet)
-;; (defmethod* containsElement ((self PjbHashedSet) (anElement PjbElement))
-;; (defmethod* addElement ((self PjbHashedSet) (newElement PjbElement))
+;; (cl-defmethod containsElement ((self PjbHashedSet) (anElement PjbElement))
+;; (cl-defmethod addElement ((self PjbHashedSet) (newElement PjbElement))
 
 ;; (defclass PjbEdge (PjbElement)
-;; (defmethod* description ((self PjbEdge))
-;; (defgeneric copy ((self PjbEdge))
-;; (defgeneric nodes ((self PjbEdge))
-;; (defgeneric isBetweenNodes ((self PjbEdge)
-;; (defgeneric successor-of ((self PjbEdge) (node PjbElement))
+;; (cl-defmethod description ((self PjbEdge))
+;; (cl-defgeneric copy ((self PjbEdge))
+;; (cl-defgeneric nodes ((self PjbEdge))
+;; (cl-defgeneric isBetweenNodes ((self PjbEdge)
+;; (cl-defgeneric successor-of ((self PjbEdge) (node PjbElement))
 
 ;; (defclass PjbWeightMixin ()
-;; (defmethod* setWeight ((self PjbWeightMixin) (newWeight integer))
+;; (cl-defmethod setWeight ((self PjbWeightMixin) (newWeight integer))
 ;; (defun node-cons-p (item)
 
 ;; (defclass PjbUndirectedEdge (PjbEdge)
-;; (defmethod* copy ((self PjbUndirectedEdge))
+;; (cl-defmethod copy ((self PjbUndirectedEdge))
 ;; (defun identical-nodes (nodes-cons-a nodes-cons-b)
-;; (defmethod* isBetweenNodes ((self PjbEdge)
-;; (defmethod* successor-of ((self PjbUndirectedEdge) (node PjbElement))
-;; (defmethod* setNodes ((self PjbUndirectedEdge)
+;; (cl-defmethod isBetweenNodes ((self PjbEdge)
+;; (cl-defmethod successor-of ((self PjbUndirectedEdge) (node PjbElement))
+;; (cl-defmethod setNodes ((self PjbUndirectedEdge)
 
 ;; (defclass PjbWeightedUndirectedEdge (PjbUndirectedEdge PjbWeightMixin)
-;; (defmethod* description ((self PjbWeightedUndirectedEdge))
+;; (cl-defmethod description ((self PjbWeightedUndirectedEdge))
 
 ;; (defclass PjbDirectedEdge (PjbEdge)
-;; (defmethod* copy ((self PjbDirectedEdge))
-;; (defmethod* nodes ((self PjbDirectedEdge))
-;; (defmethod* isBetweenNodes ((self PjbEdge)
-;; (defmethod* successor-of ((self PjbDirectedEdge) (node PjbElement))
-;; (defmethod* setNodes ((self PjbDirectedEdge)
+;; (cl-defmethod copy ((self PjbDirectedEdge))
+;; (cl-defmethod nodes ((self PjbDirectedEdge))
+;; (cl-defmethod isBetweenNodes ((self PjbEdge)
+;; (cl-defmethod successor-of ((self PjbDirectedEdge) (node PjbElement))
+;; (cl-defmethod setNodes ((self PjbDirectedEdge)
 
 ;; (defclass PjbWeightedDirectedEdge (PjbDirectedEdge PjbWeightMixin)
-;; (defmethod* description ((self PjbWeightedDirectedEdge))
-;; (defmethod* copy ((self PjbWeightedDirectedEdge))
+;; (cl-defmethod description ((self PjbWeightedDirectedEdge))
+;; (cl-defmethod copy ((self PjbWeightedDirectedEdge))
 ;; (defun subclass-of-edge-p (item)
 
 ;; (defclass PjbGraph (PjbElement)
-;; (defmethod* description ((self PjbGraph))
-;; (defmethod* addNode ((self PjbGraph) (newNode PjbElement))
-;; (defmethod* addNodes ((self PjbGraph) newNodeList)
-;; (defmethod* removeNode ((self PjbGraph) (oldNode PjbElement))
-;; (defmethod* removeNodes ((self PjbGraph) oldNodeList)
-;; (defmethod* addEdge ((self PjbGraph) (newEdge PjbEdge))
-;; (defmethod* addEdgeBetweenNodes ((self PjbGraph)
-;; (defmethod* removeEdge ((self PjbGraph) (oldEdge PjbEdge))
-;; (defmethod* removeEdges ((self PjbGraph) edge-list)
-;; (defmethod* removeEdgesBetweenNodes ((self PjbGraph)
-;; (defmethod* edgesBetweenNodes ((self PjbGraph)
-;; (defmethod* directedEdgesBetweenNodes ((self PjbGraph)
-;; (defmethod* directedEdgesFromNode ((self PjbGraph) (fromNode PjbElement))
-;; (defmethod* successorNodes ((self PjbGraph) (node PjbElement))
-;; (defmethod* adjacentNodes ((self PjbGraph) (node PjbElement))
-;; (defmethod* flowDistanceFromNode ((self PjbGraph)
-;; (defmethod* walkFromNode ((self PjbGraph) (startNode PjbElement) lambda-body)
-;; (defmethod* walkEdgesFromNode ((self PjbGraph)
-;; (defmethod* copy ((self PjbGraph) &rest keys)
-;; (defmethod* show-graph ((self PjbGraph))
+;; (cl-defmethod description ((self PjbGraph))
+;; (cl-defmethod addNode ((self PjbGraph) (newNode PjbElement))
+;; (cl-defmethod addNodes ((self PjbGraph) newNodeList)
+;; (cl-defmethod removeNode ((self PjbGraph) (oldNode PjbElement))
+;; (cl-defmethod removeNodes ((self PjbGraph) oldNodeList)
+;; (cl-defmethod addEdge ((self PjbGraph) (newEdge PjbEdge))
+;; (cl-defmethod addEdgeBetweenNodes ((self PjbGraph)
+;; (cl-defmethod removeEdge ((self PjbGraph) (oldEdge PjbEdge))
+;; (cl-defmethod removeEdges ((self PjbGraph) edge-list)
+;; (cl-defmethod removeEdgesBetweenNodes ((self PjbGraph)
+;; (cl-defmethod edgesBetweenNodes ((self PjbGraph)
+;; (cl-defmethod directedEdgesBetweenNodes ((self PjbGraph)
+;; (cl-defmethod directedEdgesFromNode ((self PjbGraph) (fromNode PjbElement))
+;; (cl-defmethod successorNodes ((self PjbGraph) (node PjbElement))
+;; (cl-defmethod adjacentNodes ((self PjbGraph) (node PjbElement))
+;; (cl-defmethod flowDistanceFromNode ((self PjbGraph)
+;; (cl-defmethod walkFromNode ((self PjbGraph) (startNode PjbElement) lambda-body)
+;; (cl-defmethod walkEdgesFromNode ((self PjbGraph)
+;; (cl-defmethod copy ((self PjbGraph) &rest keys)
+;; (cl-defmethod show-graph ((self PjbGraph))
 
 
 
@@ -148,7 +148,7 @@ It can be used to store markers while walking sets or graphs containing them.")
   );;PjbElement
 
 
-(defmethod* initialize-instance ((self PjbElement) fields)
+(cl-defmethod initialize-instance ((self PjbElement) fields)
   "
 DO:     Initalize the instance id.
 "
@@ -157,7 +157,7 @@ DO:     Initalize the instance id.
   self);;initialize-instance
 
 
-(defmethod* description ((self PjbElement))
+(cl-defmethod description ((self PjbElement))
   "
 RETURN: A string describing this element.
 "
@@ -165,14 +165,14 @@ RETURN: A string describing this element.
   );;description
 
 
-;; (defmethod* identicalTo ((self PjbElement) (other PjbElement))
+;; (cl-defmethod identicalTo ((self PjbElement) (other PjbElement))
 ;;   "
 ;; RETURN: Whether self and other are the same element. (eq self other)
 ;; "
 ;;   (eq self other)
 ;;   );;identicalTo
 
-(defmethod* property-names ((self PjbElement))
+(cl-defmethod property-names ((self PjbElement))
   "
 RETUR: The list of property names (keys) of properties of this element.
 "
@@ -183,7 +183,7 @@ RETUR: The list of property names (keys) of properties of this element.
   );;property-names
 
 
-(defmethod* setProperty ((self PjbElement) (prop-name symbol) prop-value)
+(cl-defmethod setProperty ((self PjbElement) (prop-name symbol) prop-value)
   "
 POST:  (eq (getProperty self prop-name) prop-value)
 "
@@ -192,7 +192,7 @@ POST:  (eq (getProperty self prop-name) prop-value)
   );;setProperty
 
 
-(defmethod* getProperty ((self PjbElement) (prop-name symbol))
+(cl-defmethod getProperty ((self PjbElement) (prop-name symbol))
   "
 RETURN: the property `prop-name' of this element.
 "
@@ -200,7 +200,7 @@ RETURN: the property `prop-name' of this element.
   );;getProperty
 
 
-(defmethod* deleteProperty ((self PjbElement) (prop-name symbol))
+(cl-defmethod deleteProperty ((self PjbElement) (prop-name symbol))
   "
 DO:     Remove the property named `prop-name' from the property list of
         this element.
@@ -227,7 +227,7 @@ DO:     Remove the property named `prop-name' from the property list of
   );;PjbSet
 
 
-(defmethod* description ((self PjbSet))
+(cl-defmethod description ((self PjbSet))
   "
 RETURN: A string describing this element.
 "
@@ -236,7 +236,7 @@ RETURN: A string describing this element.
   );;description
 
 
-(defmethod* cardinal ((self PjbSet))
+(cl-defmethod cardinal ((self PjbSet))
   "
 RETURN: The number of elements in this set.
 "
@@ -244,7 +244,7 @@ RETURN: The number of elements in this set.
   );;cardinal
 
 
-(defmethod* containsElement ((self PjbSet) (anElement PjbElement))
+(cl-defmethod containsElement ((self PjbSet) (anElement PjbElement))
   "
 RETURN: Whether this set contains anElement.
 "
@@ -261,7 +261,7 @@ RETURN: Whether this set contains anElement.
   );;containsElement
 
 
-(defmethod* addElement ((self PjbSet) (newElement PjbElement))
+(cl-defmethod addElement ((self PjbSet) (newElement PjbElement))
   "
 PRE:    already_in   = (containsElement self newElement),
         old_cardinal = (cardinal self)
@@ -274,7 +274,7 @@ POST:   already_in       ==> (cardinal self) == old_cardinal
   );;addElement
 
 
-(defmethod* addElements ((self PjbSet) newElementList)
+(cl-defmethod addElements ((self PjbSet) newElementList)
   "
 DO:     Add each element of the newElementList to this set.
 "
@@ -283,7 +283,7 @@ DO:     Add each element of the newElementList to this set.
   );;addElements
 
 
-(defmethod* removeElement ((self PjbSet) (oldElement PjbElement))
+(cl-defmethod removeElement ((self PjbSet) (oldElement PjbElement))
   "
 PRE:    already_in   = (containsElement self newElement),
         old_cardinal = (cardinal self)
@@ -295,7 +295,7 @@ POST:   already_in       ==> (cardinal self) == (1- old_cardinal),
   );;removeElement
 
 
-(defmethod* performWithElements ((self PjbSet) lambda-body)
+(cl-defmethod performWithElements ((self PjbSet) lambda-body)
   "
 DO:     calls lambda-body with each element in the set.
 NOTE:   lambda-body must not change this set.
@@ -304,7 +304,7 @@ NOTE:   lambda-body must not change this set.
   );;performWithElements
 
 
-(defmethod* mapElements ((self PjbSet) lambda-body)
+(cl-defmethod mapElements ((self PjbSet) lambda-body)
   "
 RETURN: the list of results returned by lambda-body called with each element.
 NOTE:   lambda-body must not change this set.
@@ -312,7 +312,7 @@ NOTE:   lambda-body must not change this set.
   (mapcar lambda-body (elements self)))
 
 
-(defmethod* selectElements ((self PjbSet) select-lambda)
+(cl-defmethod selectElements ((self PjbSet) select-lambda)
   "
 RETURN: A list of elements for which select-lambda returned true.
 "
@@ -329,7 +329,7 @@ RETURN: A list of elements for which select-lambda returned true.
   );;selectElements
 
 
-(defmethod* element-list ((self PjbSet))
+(cl-defmethod element-list ((self PjbSet))
   "
 RETURN: A new list of the elements in self.
 "
@@ -337,7 +337,7 @@ RETURN: A new list of the elements in self.
   );;element-list
 
 
-(defmethod* find-elements-with-property ((self PjbSet) (property symbol) value)
+(cl-defmethod find-elements-with-property ((self PjbSet) (property symbol) value)
   "
 RETURN: A list of elements that have as property PROPERTY the value VALUE.
 "
@@ -362,7 +362,7 @@ index of its elements to be able to retrieve them rapidly.")
   );;PjbHashedSet
 
 
-(defmethod* containsElement ((self PjbHashedSet) (anElement PjbElement))
+(cl-defmethod containsElement ((self PjbHashedSet) (anElement PjbElement))
   "
 RETURN: Whether this set contains anElement.
 "
@@ -370,7 +370,7 @@ RETURN: Whether this set contains anElement.
   );;containsElement
 
 
-(defmethod* addElement ((self PjbHashedSet) (newElement PjbElement))
+(cl-defmethod addElement ((self PjbHashedSet) (newElement PjbElement))
   "
 PRE:    already_in   = (containsElement self newElement),
         old_cardinal = (cardinal self)
@@ -393,7 +393,7 @@ POST:   already_in       ==> (cardinal self) == old_cardinal
   );;PjbEdge
 
 
-(defmethod* description ((self PjbEdge))
+(cl-defmethod description ((self PjbEdge))
   "
 RETURN: A string describing this element.
 "
@@ -405,46 +405,17 @@ RETURN: A string describing this element.
   );;description
 
 
-(defgeneric copy ((self PjbEdge))
-  "
-RETURN: A copy of this edge.
-        The copy has the same  nodes than this edge.
-        Other attributes are normally copied.
-"
-  );;copy
+(cl-defgeneric copy (self)
+  "RETURN: A copy of this edge.")
 
+(cl-defgeneric nodes (self)
+  "RETURN: A cons containing the two nodes of the edge.")
 
-(defgeneric nodes ((self PjbEdge))
-  "
-RETURN: A cons containing the two nodes of the edge, in no specific order.
-        (Subclasses implementing directed edges should add specific methods
-         to get the `from' and the `to' nodes).
-"
-  );;nodes
+(cl-defgeneric isBetweenNodes (self nodeA nodeB)
+  "RETURN: Whether this edge is between NODEA and NODEB.")
 
-
-(defgeneric isBetweenNodes ((self PjbEdge)
-                            (nodeA PjbElement)  (nodeB PjbElement))
-  "
-RETURN: Whether this edge is between `nodeA' and `nodeB'.
-        If this edge is directed then `nodeA' is compared to the from node
-                                  and `nodeB' is compared to the  to  node,
-        otherwise, the node order is not important.
-"
-  );;isBetweenNodes
-
-
-(defgeneric successor-of ((self PjbEdge) (node PjbElement))
-  "
-RETURN: If node is a node of the edge, then return its successor or nil.
-        That is, for an undirected edge e,
-             (and (eq (successor-of e (car (nodes e))) (cdr (nodes e)))
-                  (eq (successor-of e (cdr (nodes e))) (car (nodes e))) )
-        while for a directed edge d:
-             (xor (eq (successor-of e (car (nodes e))) (cdr (nodes e)))
-                  (eq (successor-of e (cdr (nodes e))) (car (nodes e))) )
-"
-  );;nodes
+(cl-defgeneric successor-of (self node)
+  "RETURN: If NODE is a node of SELF, return its successor or nil.")
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -465,7 +436,7 @@ RETURN: If node is a node of the edge, then return its successor or nil.
   );;PjbWeightMixin
 
 
-(defmethod* setWeight ((self PjbWeightMixin) (newWeight integer))
+(cl-defmethod setWeight ((self PjbWeightMixin) (newWeight integer))
   "
 POST:   (equal (weight self) newWeight)
 "
@@ -502,7 +473,7 @@ RETURN: Whether `item' is a cons of two objects kind of PjbElement.
   );;PjbUndirectedEdge
 
 
-(defmethod* copy ((self PjbUndirectedEdge))
+(cl-defmethod copy ((self PjbUndirectedEdge))
   "
 RETURN: A copy of this edge (only with same nodes).
 "
@@ -522,7 +493,7 @@ RETURN: Whether nodes-cons-a and nodes-cons-b contain the same nodes.
   );;identical-nodes
 
 
-;; (defmethod* identicalTo ((self PjbUndirectedEdge) (other PjBElement))
+;; (cl-defmethod identicalTo ((self PjbUndirectedEdge) (other PjBElement))
 ;;   "
 ;; RETURN: Whether self and other are the same undirected edge.
 ;; NOTE:   We only compare the nodes linked by this edge, not any other attribute
@@ -532,7 +503,7 @@ RETURN: Whether nodes-cons-a and nodes-cons-b contain the same nodes.
 ;;        (identical-nodes (nodes self) (nodes other)))
 ;;   );;identicalTo
 
-(defmethod* isBetweenNodes ((self PjbEdge)
+(cl-defmethod isBetweenNodes ((self PjbEdge)
                             (nodeA PjbElement)  (nodeB PjbElement))
   "
 RETURN: Whether this edge is between `nodeA' and `nodeB'.
@@ -542,7 +513,7 @@ RETURN: Whether this edge is between `nodeA' and `nodeB'.
   );;isBetweenNodes
 
 
-(defmethod* successor-of ((self PjbUndirectedEdge) (node PjbElement))
+(cl-defmethod successor-of ((self PjbUndirectedEdge) (node PjbElement))
   "
 RETURN: If node is a node of this edge, then the other node, else nil.
 "
@@ -554,7 +525,7 @@ RETURN: If node is a node of this edge, then the other node, else nil.
   );;successor-of
 
 
-(defmethod* setNodes ((self PjbUndirectedEdge)
+(cl-defmethod setNodes ((self PjbUndirectedEdge)
                      (nodeA PjbElement) (nodeB PjbElement))
   "
 DO:     set the nodes of this edge.
@@ -572,7 +543,7 @@ DO:     set the nodes of this edge.
   );;PjbWeightedUndirectedEdge
 
 
-(defmethod* description ((self PjbWeightedUndirectedEdge))
+(cl-defmethod description ((self PjbWeightedUndirectedEdge))
   "
 RETURN: A string describing this element.
 "
@@ -606,7 +577,7 @@ RETURN: A string describing this element.
   );;PjbDirectedEdge
 
 
-(defmethod* copy ((self PjbDirectedEdge))
+(cl-defmethod copy ((self PjbDirectedEdge))
   "
 RETURN: A copy of this edge (only with same nodes).
 "
@@ -616,7 +587,7 @@ RETURN: A copy of this edge (only with same nodes).
   );;copy
 
 
-(defmethod* nodes ((self PjbDirectedEdge))
+(cl-defmethod nodes ((self PjbDirectedEdge))
   "
 RETURN: A cons containing the two nodes of the edge in no particular order.
 NOTE:   Use the accessor methods `from' and `to' to get the wanted node.
@@ -625,7 +596,7 @@ NOTE:   Use the accessor methods `from' and `to' to get the wanted node.
   );;nodes
 
 
-;; (defmethod* identicalTo ((self PjbDirectedEdge) (other PjBElement))
+;; (cl-defmethod identicalTo ((self PjbDirectedEdge) (other PjBElement))
 ;;   "
 ;; RETURN: Whether self and other are the same directed edge.
 ;; NOTE:   We only compare the nodes linked by this edge, not any other attribute
@@ -637,7 +608,7 @@ NOTE:   Use the accessor methods `from' and `to' to get the wanted node.
 ;;   );;identicalTo
 
 
-(defmethod* isBetweenNodes ((self PjbEdge)
+(cl-defmethod isBetweenNodes ((self PjbEdge)
                            (nodeA PjbElement)  (nodeB PjbElement))
   "
 RETURN: Whether this edge is between `nodeA' and `nodeB'.
@@ -649,7 +620,7 @@ RETURN: Whether this edge is between `nodeA' and `nodeB'.
   );;isBetweenNodes
 
 
-(defmethod* successor-of ((self PjbDirectedEdge) (node PjbElement))
+(cl-defmethod successor-of ((self PjbDirectedEdge) (node PjbElement))
   "
 RETURN: If node is the `from'  node of this edge, then the `to' node, else nil.
 "
@@ -657,7 +628,7 @@ RETURN: If node is the `from'  node of this edge, then the `to' node, else nil.
   );;successor-of
 
 
-(defmethod* setNodes ((self PjbDirectedEdge)
+(cl-defmethod setNodes ((self PjbDirectedEdge)
                      (newFrom PjbElement) (newTo PjbElement))
   "
 DO:     set the nodes of this edge.
@@ -676,7 +647,7 @@ DO:     set the nodes of this edge.
   );;PjbWeightedDirectedEdge
 
 
-(defmethod* description ((self PjbWeightedDirectedEdge))
+(cl-defmethod description ((self PjbWeightedDirectedEdge))
   "
 RETURN: A string describing this element.
 "
@@ -689,7 +660,7 @@ RETURN: A string describing this element.
   );;description
 
 
-(defmethod* copy ((self PjbWeightedDirectedEdge))
+(cl-defmethod copy ((self PjbWeightedDirectedEdge))
   "
 RETURN: A copy of this edge (only with same nodes).
 "
@@ -740,7 +711,7 @@ Default is PjbUndirectedEdge.")
   );;PjbGraph
 
 
-(defmethod* description ((self PjbGraph))
+(cl-defmethod description ((self PjbGraph))
   "
 RETURN: A string describing this element.
 "
@@ -751,7 +722,7 @@ RETURN: A string describing this element.
   );;description
 
 
-(defmethod* addNode ((self PjbGraph) (newNode PjbElement))
+(cl-defmethod addNode ((self PjbGraph) (newNode PjbElement))
   "
 DO:     Add newNode to the set of nodes of this graph.
 "
@@ -759,7 +730,7 @@ DO:     Add newNode to the set of nodes of this graph.
   );;addNode
 
 
-(defmethod* addNodes ((self PjbGraph) newNodeList)
+(cl-defmethod addNodes ((self PjbGraph) newNodeList)
   "
 DO:     Add a list of new nodes to the set of nodes of this graph.
 "
@@ -768,7 +739,7 @@ DO:     Add a list of new nodes to the set of nodes of this graph.
 
 
 
-(defmethod* removeNode ((self PjbGraph) (oldNode PjbElement))
+(cl-defmethod removeNode ((self PjbGraph) (oldNode PjbElement))
   "
 DO:      Remove the oldNode from the graph.
          This implies removing all the edges adjacent to the node too.
@@ -782,7 +753,7 @@ DO:      Remove the oldNode from the graph.
   );;removeNode
 
 
-(defmethod* removeNodes ((self PjbGraph) oldNodeList)
+(cl-defmethod removeNodes ((self PjbGraph) oldNodeList)
   "
 DO:      Remove all the nodes of the oldNodeList from this graph.
 "
@@ -790,7 +761,7 @@ DO:      Remove all the nodes of the oldNodeList from this graph.
   );;removeNodes
 
 
-(defmethod* addEdge ((self PjbGraph) (newEdge PjbEdge))
+(cl-defmethod addEdge ((self PjbGraph) (newEdge PjbEdge))
   "
 PRE:    (and (containsElement (nodes self) (nth 0 (nodes newEdge)))
              (containsElement (nodes self) (nth 1 (nodes newEdge))))
@@ -802,7 +773,7 @@ DO:     Add a new edge to this graph.
   );;addNode
 
 
-(defmethod* addEdgeBetweenNodes ((self PjbGraph)
+(cl-defmethod addEdgeBetweenNodes ((self PjbGraph)
                                 (nodeA PjbElement) (nodeB PjbElement))
   "
 DO:     Create a new edge (of class edge-class) between `nodeA' and `nodeB'.
@@ -816,7 +787,7 @@ DO:     Create a new edge (of class edge-class) between `nodeA' and `nodeB'.
   );;addEdgeBetweenNodes
 
 
-(defmethod* removeEdge ((self PjbGraph) (oldEdge PjbEdge))
+(cl-defmethod removeEdge ((self PjbGraph) (oldEdge PjbEdge))
   "
 DO:     Remove the `oldEdge' from this graph.
 "
@@ -824,7 +795,7 @@ DO:     Remove the `oldEdge' from this graph.
   );;removeEdge
 
 
-(defmethod* removeEdges ((self PjbGraph) edge-list)
+(cl-defmethod removeEdges ((self PjbGraph) edge-list)
   "
 DO:     Remove all the edges in edge-list from this graph.
 "
@@ -832,7 +803,7 @@ DO:     Remove all the edges in edge-list from this graph.
   );;removeEdges
 
 
-(defmethod* removeEdgesBetweenNodes ((self PjbGraph)
+(cl-defmethod removeEdgesBetweenNodes ((self PjbGraph)
                                     (nodeA PjbElement) (nodeB PjbElement))
   "
 DO:     Remove all edges between `nodeA' and `nodeB'.
@@ -843,7 +814,7 @@ DO:     Remove all edges between `nodeA' and `nodeB'.
   );;removeEdgesBetweenNodes
 
 
-(defmethod* edgesBetweenNodes ((self PjbGraph)
+(cl-defmethod edgesBetweenNodes ((self PjbGraph)
                               (nodeA PjbElement) (nodeB PjbElement))
   "
 RETURN: A list of edges existing between the `nodeA' and `nodeB'.
@@ -856,7 +827,7 @@ RETURN: A list of edges existing between the `nodeA' and `nodeB'.
   );;edgesBetweenNodes
 
 
-(defmethod* directedEdgesBetweenNodes ((self PjbGraph)
+(cl-defmethod directedEdgesBetweenNodes ((self PjbGraph)
                                       (fromNode PjbElement) (toNode PjbElement))
   "
 RETURN: A list of edges existing from the `fromNode' and to the `toNode'.
@@ -867,7 +838,7 @@ RETURN: A list of edges existing from the `fromNode' and to the `toNode'.
   );;directedEdgesBetweenNodes
 
 
-(defmethod* directedEdgesFromNode ((self PjbGraph) (fromNode PjbElement))
+(cl-defmethod directedEdgesFromNode ((self PjbGraph) (fromNode PjbElement))
   "
 PRE:    edge-class is-subclass-of PjbDirectedEdge
         or edge-class eq PjbDirectedEdge.
@@ -883,7 +854,7 @@ RETURN: A list of edges existing from the `fromNode'.
   );;directedEdgesBetweenNodes
 
 
-(defmethod* successorNodes ((self PjbGraph) (node PjbElement))
+(cl-defmethod successorNodes ((self PjbGraph) (node PjbElement))
   "
 RETURN: The list of successors nodes of the given node in this graph.
 NOTE:   For undirected graphs, it's the same as adjacentNodes.
@@ -899,7 +870,7 @@ NOTE:   For undirected graphs, it's the same as adjacentNodes.
   );;successorNodes
 
 
-(defmethod* adjacentNodes ((self PjbGraph) (node PjbElement))
+(cl-defmethod adjacentNodes ((self PjbGraph) (node PjbElement))
   "
 RETURN: The list of nodes adjacent to the given node in this graph.
 NOTE:   For directed graphs, an adjacent node is either a predecessor
@@ -920,7 +891,7 @@ NOTE:   For directed graphs, an adjacent node is either a predecessor
   );;adjacentNodes
 
 
-(defmethod* flowDistanceFromNode ((self PjbGraph)
+(cl-defmethod flowDistanceFromNode ((self PjbGraph)
                                  (startNode PjbElement) (prop-name symbol))
   "
 DO:     Compute for each node in this graph the distance from the startNode,
@@ -953,7 +924,7 @@ NOTE:   If the graph is not connex, then some distances will be nil,
   );;flowDistanceFromNode
 
 
-(defmethod* walkFromNode ((self PjbGraph) (startNode PjbElement) lambda-body)
+(cl-defmethod walkFromNode ((self PjbGraph) (startNode PjbElement) lambda-body)
   "
 DO:     Walk the graph starting form startNode, calling lambda-body
         with each node as argument.
@@ -989,7 +960,7 @@ DO:     Walk the graph starting form startNode, calling lambda-body
   );;walkFromNode
 
 
-(defmethod* walkEdgesFromNode ((self PjbGraph)
+(cl-defmethod walkEdgesFromNode ((self PjbGraph)
                               (startNode PjbElement) lambda-body)
   "
 DO:     Walk the graph starting form startNode, calling lambda-body
@@ -1036,7 +1007,7 @@ DO:     Walk the graph starting form startNode, calling lambda-body
 
 
 
-(defmethod* copy ((self PjbGraph) &rest keys)
+(cl-defmethod copy ((self PjbGraph) &rest keys)
   "
 RETURN: A copy of this graph.
 NOTE:   By default, the nodes are the same, but the edges are duplicated.
@@ -1129,7 +1100,7 @@ NOTE:   By default, the nodes are the same, but the edges are duplicated.
     );;let
   );;copy
 
-(defmethod* find-nodes-with-property ((self PjbGraph) (property symbol) value)
+(cl-defmethod find-nodes-with-property ((self PjbGraph) (property symbol) value)
   "
 RETURN: A list of nodes that have as property PROPERTY the value VALUE.
 "
@@ -1137,7 +1108,7 @@ RETURN: A list of nodes that have as property PROPERTY the value VALUE.
   );;find-nodes-with-property
 
 
-(defmethod* show-graph ((self PjbGraph))
+(cl-defmethod show-graph ((self PjbGraph))
   (printf "%s {\n" (description self))
 
   (performWithElements

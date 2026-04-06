@@ -2,21 +2,17 @@
 ;;; pjb-math-test.el --- Tests for pjb-math
 (require 'ert)
 (add-to-list 'load-path (file-name-directory (or load-file-name buffer-file-name)))
+(require 'pjb-math)
 
-;; pjb-math.el calls (set-greek-bindings "C-c g") at top level, which
-;; fails in `emacs -Q --batch' because there is no usable local
-;; keymap.  We pin that documented reality here: the file cannot be
-;; loaded in batch mode.  Phase 2 should make the top-level call
-;; conditional on `noninteractive'.
-(defvar pjb-math-test--load-error
-  (condition-case err (require 'pjb-math) (error err)))
+;; pjb-math.el's only public surface is two interactive helpers that
+;; install local key bindings.  We just verify the symbols exist after
+;; load (the top-level keymap installation is now guarded by
+;; `noninteractive', so loading no longer crashes in batch mode).
 
-(ert-deftest pjb-math/load-currently-fails-in-batch ()
-  "Pin the current top-level-side-effect crash so Phase 2 catches the fix."
-  (should pjb-math-test--load-error))
+(ert-deftest pjb-math/feature-provided ()
+  (should (featurep 'pjb-math)))
 
-(ert-deftest pjb-math/symbols-are-defined-when-loaded ()
-  (skip-unless (null pjb-math-test--load-error))
+(ert-deftest pjb-math/symbols-defined ()
   (should (functionp 'set-math-bindings))
   (should (functionp 'set-greek-bindings)))
 

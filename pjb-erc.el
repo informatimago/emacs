@@ -632,10 +632,7 @@ RETURN: a list of sublists of list (the conses from list are reused),
 
 
 (unless (fboundp (quote netrc-parse))
-  (defalias 'netrc-point-at-eol
-      (if (fboundp 'point-at-eol)
-          'point-at-eol
-          'line-end-position))
+  (defalias 'netrc-point-at-eol 'line-end-position)
   (defun netrc-parse (file)
     "Parse FILE and return a list of all entries in the file."
     (when (file-exists-p file)

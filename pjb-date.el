@@ -33,14 +33,17 @@
 ;;;;**************************************************************************
 (require 'parse-time)
 
+(defsubst pjb-date--num (string from to)
+  (string-to-number (substring string from to)))
+
 (defun parse-iso8601-date (string)
   ;; For now, we parse only "yyyymmddThhmmss"
-  (encode-time (parse-integer string 13 15)
-               (parse-integer string 11 13)
-               (parse-integer string 9 11)
-               (parse-integer string 6 8)
-               (parse-integer string 4 6)
-               (parse-integer string 0 4)))
+  (encode-time (pjb-date--num string 13 15)
+               (pjb-date--num string 11 13)
+               (pjb-date--num string 9 11)
+               (pjb-date--num string 6 8)
+               (pjb-date--num string 4 6)
+               (pjb-date--num string 0 4)))
 
 (defun format-rfc822-date (universal-time)
   (format-time-string "%a, %d %b %Y %H:%M:%S %z" universal-time))

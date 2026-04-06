@@ -2,26 +2,65 @@
 ;;; pjb-pmatch-test.el --- Tests pinning the public API of pjb-pmatch.el
 
 (require 'ert)
-(require 'cl) ;; pjb-pmatch.el uses unprefixed `do' / `loop' / `assert' / `equalp'
+(require 'cl) ;; pjb-pmatch.el still uses unprefixed `do' / `loop' / `assert'
 (add-to-list 'load-path (file-name-directory (or load-file-name buffer-file-name)))
+(require 'pjb-pmatch)
 
-;; pjb-pmatch.el runs its own home-grown self-test suite at top level,
-;; using `handler-case' from full Common Lisp.  `handler-case' is not
-;; in modern Emacs `cl' or `cl-lib', so loading the file aborts with
-;; (void-function handler-case).  Phase 2 should either replace the
-;; self-tests with ERT (we now have an ERT framework) and remove
-;; `handler-case', or guard the self-test block with `noninteractive'.
-(defvar pjb-pmatch-test--load-error
-  (condition-case err (require 'pjb-pmatch) (error err)))
+(ert-deftest pjb-pmatch/match-state-empty ()
+  (let ((ms (make-match-state)))
+    (should (equal nil (match-state-dict ms)))
+    (should-not (match-state-failed-p ms))))
 
-(ert-deftest pjb-pmatch/load-currently-fails ()
-  "Pin the current load failure so the Phase 2 fix is detected."
-  (should pjb-pmatch-test--load-error))
+(ert-deftest pjb-pmatch/make-match-state-with-dict ()
+  (let ((ms (make-match-state :dict '((x . 1)))))
+    (should (equal '((x . 1)) (match-state-dict ms)))
+    (should-not (match-state-failed-p ms))))
 
-(ert-deftest pjb-pmatch/api-when-loaded ()
-  (skip-unless (null pjb-pmatch-test--load-error))
-  (should (functionp 'make-match-state))
-  (should (functionp 'match-state-failed-p))
-  (should (functionp 'match)))
+(ert-deftest pjb-pmatch/match-state-failed-p ()
+  (should     (match-state-failed-p '(:failed (:different a b))))
+  (should-not (match-state-failed-p '((x . 1)))))
+
+(ert-deftest pjb-pmatch/match-state-retry-strips-failure ()
+  (should (equal '((x . 1))
+                 (match-state-retry '(:failed (:different a b) (x . 1)))))
+  (should (equal '((x . 1))
+                 (match-state-retry '((x . 1))))))
+
+(ert-deftest pjb-pmatch/match-anonymous-variable-success ()
+  (should-not (match-state-failed-p
+               (match '(!av eats an !av) '(John eats an apple)))))
+
+(ert-deftest pjb-pmatch/match-anonymous-variable-rejects-non-symbol ()
+  (should (match-state-failed-p
+           (match '(!av eats an !av) '(42 eats an apple)))))
+
+(ert-deftest pjb-pmatch/match-literal-mismatch ()
+  (should (equal '(:failed (:different an a))
+                 (match '(!av eats an !av) '(John eats a banana)))))
+
+(ert-deftest pjb-pmatch/match-anonymous-constant ()
+  (should-not (match-state-failed-p
+               (match '(I ate !ac kg of apples)
+                      '(I ate 42 kg of apples)))))
+
+(ert-deftest pjb-pmatch/match-named-variable-binds ()
+  (let ((ms (match '(a (!v x) c) '(a b c))))
+    (should-not (match-state-failed-p ms))
+    (should (equal 'b (cdr (assoc 'x (match-state-dict ms)))))))
+
+(ert-deftest pjb-pmatch/match-named-constant-binds ()
+  (let ((ms (match '(I ate (!c n) kg) '(I ate 42 kg))))
+    (should-not (match-state-failed-p ms))
+    (should (equal 42 (cdr (assoc 'n (match-state-dict ms)))))))
+
+(ert-deftest pjb-pmatch/match-named-variable-rejects-non-symbol ()
+  (should (match-state-failed-p
+           (match '(a (!v x) c) '(a 42 c)))))
+
+(ert-deftest pjb-pmatch/collect-variables ()
+  (let ((vars (collect-variables '((!v x) (!c y) z))))
+    (should (member 'x vars))
+    (should (member 'y vars))
+    (should-not (member 'z vars))))
 
 ;;; pjb-pmatch-test.el ends here

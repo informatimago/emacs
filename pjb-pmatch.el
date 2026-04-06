@@ -793,8 +793,9 @@ EXAMPLE: (match-case expr
   (loop
      for (expression expected-result &optional error) in tests
      do (let* ((got-error nil)
-               (result (handler-case (eval expression)
-                         (error (err) (setf got-error err)))))
+               (result (condition-case err
+                           (eval expression)
+                         (error (setf got-error err) nil))))
           (when verbose
             (message (format "test:   %S" expression))
             (message (format "expect: %S" expected-result))
@@ -1065,12 +1066,21 @@ EXAMPLE: (match-case expr
              :verbose nil))
 
 
-(assert (every (lambda (x) (eq :success x))
-               (list (test/pmatch/!v)
-                     (test/pmatch/!*)
-                     (test/match-case)
-                     (test/pmatch-various)
-                     (test/examples))))
+;; The home-grown self-test block used to run unconditionally at load
+;; time, which made the file refuse to load in `emacs -Q --batch'
+;; (handler-case is not in modern cl/cl-lib).  Phase 3 replaced
+;; handler-case with condition-case in `run-tests' above and now guards
+;; the runner so the self-tests only fire on explicit request.
+(defun pjb-pmatch-run-self-tests ()
+  "Run the legacy home-grown self-test suite for pjb-pmatch.
+ERT coverage lives in pjb-pmatch-test.el; prefer that for CI."
+  (interactive)
+  (assert (every (lambda (x) (eq :success x))
+                 (list (test/pmatch/!v)
+                       (test/pmatch/!*)
+                       (test/match-case)
+                       (test/pmatch-various)
+                       (test/examples)))))
 
 (provide 'pjb-pmatch)
 ;;;; THE END ;;;;

@@ -31,7 +31,7 @@
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
-(require 'cl)
+(require 'cl-lib)
 
 
 (defvar *tempdir*  (format "/tmp/emacs%d" (user-uid)))
@@ -40,12 +40,12 @@
 (defvar *default-language* "en_US")
 
 (defun pjb-speak-file ()
-  (format "%s/speak-%d.txt" *tempdir* (incf *pjb-speak-file-counter*)))
+  (format "%s/speak-%d.txt" *tempdir* (cl-incf *pjb-speak-file-counter*)))
 
 
 (defvar *pjb-speak-last-message* nil)
 
-(defun* speak (message &key (voice *default-voice*) (language *default-language*))
+(cl-defun speak (message &key (voice *default-voice*) (language *default-language*))
   (interactive "sMessage: ")
   (let ((file (pjb-speak-file)))
     (with-current-buffer (get-buffer-create " *speak text*")

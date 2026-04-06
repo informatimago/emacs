@@ -238,17 +238,21 @@ INITIAL-VALUE may be either a list of integer, each one being the number of a bi
 
 (defun integer-to-mask (int-value)
   "
-RETURN: a new mask whose bits are thos of int-value.
+RETURN: a new mask whose bits are those of int-value.
 "
-  (let ((mask)
-        (i 0)
-        (m 1))
-    (while (not (= 0 m)) ;; assuming that maxint*2==0 !!!
-      (if (= m (logand m int-value))
-          (setq mask (cons i mask)))
-      (setq i (1+ i)
-            m (* 2 m)))
-    mask));;integer-to-mask
+  ;; Walk only the bits that are actually set in INT-VALUE.  The
+  ;; previous implementation looped on `(* 2 m)` until it wrapped to
+  ;; zero, which assumed fixnum overflow — under modern Emacs bignums
+  ;; that loop never terminates and signals `overflow-error'.
+  (let ((mask nil)
+        (i    0)
+        (n    int-value))
+    (while (/= 0 n)
+      (when (= 1 (logand n 1))
+        (push i mask))
+      (setq n (ash n -1)
+            i (1+ i)))
+    mask))
 
 
 (defun mask-to-integer (mask)

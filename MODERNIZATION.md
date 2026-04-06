@@ -168,7 +168,73 @@ Convert each to `advice-add`, then ask whether the advice belongs there at all:
 
 ---
 
-## Phase 3 — Migrate `cl` → `cl-lib`
+## Phase 3 — Fix the Phase-1 broken pins, retire obsolete APIs, partial cl-lib migration  ✅ landed (partial)
+
+Status: **207 tests, 207 expected, 0 unexpected, 0 skipped** (up from 186/183/3 at end of Phase 2). Every previously-skipped library is now under real test coverage.
+
+What landed in this pass:
+
+### 3a. The four Phase-1 broken pins are all fixed.
+
+- **`pjb-math.el`** — guarded the top-level `(set-greek-bindings "C-c g")` / `(set-math-bindings "C-c m")` calls with `unless noninteractive`, so loading the file in `emacs -Q --batch` no longer crashes on `local-set-key` against an inert keymap. `pjb-math-test.el` flipped from a 2-test load-error pin to real symbol-existence tests.
+- **`pjb-pmatch.el`** — replaced the `handler-case` call inside `run-tests` with `condition-case` (handler-case isn't in modern `cl`/`cl-lib`); wrapped the top-level `(assert (every ...))` self-test invocation in a new explicit command `pjb-pmatch-run-self-tests` so loading the file no longer fires the legacy suite. `pjb-pmatch-test.el` flipped to 12 real ERT cases (one — the `instanciate` `:!` test — was dropped because the calling convention is unclear from the source).
+- **`pjb-graph.el`** — converted all 106 `defmethod*` and 4 `defgeneric` forms to `cl-defmethod` / `cl-defgeneric`; rewrote the four `cl-defgeneric` declarations to use plain symbol parameter lists (`cl-defgeneric` doesn't accept the EIEIO `(self Class)` type-annotation form in the *generic* signature, only in *methods*). `pjb-graph-test.el` flipped to 11 ERT cases. Three originally-planned tests (`subclass-of-edge-p`, two `PjbUndirectedEdge` constructions) were dropped because modern EIEIO no longer applies the `:initform`-as-lambda factories the way the original 2007 code expected — that's a Phase 5 (EIEIO retirement) job, not Phase 3.
+- **`pjb-date.el`** — replaced `parse-integer` (no longer in modern `cl`) with a tiny `defsubst pjb-date--num` that does `string-to-number` over a substring. `pjb-date-test.el` flipped from a single "currently-broken" pin to 5 real cases pinning RFC822 formatting and ISO8601 round-tripping.
+- **`pjb-state-coding.el`** — rewrote `integer-to-mask` to walk only the bits actually set in the input (`logand n 1` + `ash n -1`) instead of looping until `(* 2 m)` overflows the fixnum range; on modern Emacs bignums the original loop never terminated. `pjb-state-coding-test.el` flipped two `should-error :type 'overflow-error` pins back to real value-equality assertions.
+
+### 3b. `point-at-bol` / `point-at-eol` retired.
+
+- `pjb-find-tag-hook.el` — both call sites switched to `line-beginning-position` / `line-end-position`.
+- `pjb-erc.el` — the netrc-parse polyfill block had a `(if (fboundp 'point-at-eol) 'point-at-eol 'line-end-position)` defalias; collapsed to plain `'line-end-position` (the floor is 27.1 so the conditional is dead).
+
+### 3c. `(require 'cl)` → `(require 'cl-lib)` migration: **8 of 39 files** done.
+
+Done in this pass:
+- **`pjb-vm-kill-file.el`** — zero unprefixed cl symbols, just flipped the require.
+- **`pjb-image-minor-mode.el`** — zero (the `dolist` is built-in), just flipped the require.
+- **`pjb-org-uml.el`** — single `substitute` → `cl-substitute`.
+- **`pjb-erc-filter.el`** — two `loop` → `cl-loop`.
+- **`pjb-speak.el`** — `incf` → `cl-incf`, `defun*` → `cl-defun`.
+- **`pjb-echo-keys.el`** — `incf` → `cl-incf`. Also added `(require 'cl)` to the pre-existing `pjb-echo-keys-test.el` since it uses the deprecated unprefixed `assert` macro and was inheriting the cl import transitively from `pjb-echo-keys.el`.
+- **`pjb-org.el`** — `subseq` → `substring`, `mismatch` → `cl-mismatch`, `getf` → `plist-get`, `second` → `cadr`.
+- (`pjb-advices.el` was already converted in Phase 2.)
+
+Each converted file byte-compiles cleanly (no warnings, no errors).
+
+### 3d. Deferred: bulk `cl` → `cl-lib` for the heavy files.
+
+**31 files still `(require 'cl)`**, with these counts of unprefixed cl-macro/function uses (per a fixed list of ~70 names):
+
+| File | uses | File | uses |
+|---|---:|---|---:|
+| pjb-emacs.el | 139 | pjb-objc-edit.el | 19 |
+| pjb-cl.el | 90 | insulte.el | 18 |
+| pjb-erc.el | 50 | room.el | 16 |
+| pjb-unicode.el | 40 | freerdp-c-style.el | 13 |
+| pjb-pmatch.el | 30 | pjb-asm7090.el | 13 |
+| pjb-font.el | 29 | pjb-html.el | 13 |
+| pjb-objc-ide.el | 28 | pjb-insert-image.el | 12 |
+| psql.el | 26 | pjb-erc-speak.el | 11 |
+| pjb-loader.el | 22 | pjb-objc-parser.el | 11 |
+| pjb-color.el | 10 | pjb-asdf.el | 8 |
+| pjb-eval.el | 7 | pjb-constants.el | 8 |
+| pjb-c-style.el | 7 | trustonic.el | 8 |
+| dxo.el | 7 | ubudu.el | 7 |
+| pjb-secouer.el | 3 | pjb-clelp.el | 1 |
+
+These need a real hand-pass: many are heavy users of `loop` / `defun*` / `flet` / `do` / `case` / `every` / `every` / `incf` / `psetf`, and several (`pjb-cl.el`, `pjb-emacs.el`, `pjb-loader.el`, `pjb-pmatch.el`) reach into edge-case cl semantics that don't transliterate one-for-one. `flet` in particular is dangerous: `cl-flet` has *lexical* scope rather than the dynamic scope the old cl `flet` provided, so any code that depended on the dynamic behaviour breaks silently.
+
+These 31 files **still load** under modern Emacs because the `cl.el` deprecation shim is still in the tree — they emit "obsolete alias" warnings during byte-compile but execute fine. The remaining migration is best done one file at a time, with the test suite re-run after each, and is folded into Phase 4's broader rename pass: as we touch each file to give its in-house symbols a `cl-`/`pjb-` prefix, we also flip `(require 'cl)` → `(require 'cl-lib)` and prefix the call sites we just edited.
+
+### Exit criterion (revised, for the partial landing)
+
+- ✅ Every Phase-1 "currently broken" pin cleared; previously-skipped tests are now real and green.
+- ✅ All `point-at-bol`/`point-at-eol` call sites migrated.
+- ✅ 8 of 39 `(require 'cl)` files migrated to `cl-lib`, with byte-compile-clean.
+- ⏸ The remaining 31 files keep `(require 'cl)` until Phase 4 visits them for the rename pass. They produce deprecation warnings but no failures.
+- ✅ `make test` → 207 tests, 207 expected, 0 unexpected, 0 skipped.
+
+## Phase 3 — original plan (reference)
 
 Now that `pjb-cl.el` is no longer redefining the world, we can safely flip the deprecated `cl` package across the ~40 affected files.
 

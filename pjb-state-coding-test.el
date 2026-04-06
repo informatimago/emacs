@@ -26,16 +26,15 @@
   (should (equal nil (make-mask)))
   (should (equal nil (make-mask nil))))
 
-(ert-deftest pjb-state-coding/make-mask-from-integer-overflows ()
-  ;; Pin reality: integer-to-mask uses `(while (not (= 0 m))` with
-  ;; `(setq m (* 2 m))`, which under modern Emacs (bignums) overflows
-  ;; the fixnum range and signals `overflow-error' instead of looping.
-  ;; Phase 2 should rewrite this with `integer-length' or similar.
-  (should-error (make-mask 5) :type 'overflow-error))
+(ert-deftest pjb-state-coding/make-mask-from-integer ()
+  (should (equal '(2 0)     (make-mask 5)))
+  (should (equal nil        (make-mask 0)))
+  (should (equal '(0)       (make-mask 1))))
 
-(ert-deftest pjb-state-coding/integer-to-mask-overflows ()
-  (should-error (integer-to-mask 5) :type 'overflow-error)
-  (should-error (integer-to-mask 15) :type 'overflow-error))
+(ert-deftest pjb-state-coding/integer-to-mask ()
+  (should (equal '(2 0)     (integer-to-mask 5)))
+  (should (equal nil        (integer-to-mask 0)))
+  (should (equal '(3 2 1 0) (integer-to-mask 15))))
 
 (ert-deftest pjb-state-coding/mask-to-integer ()
   (should (= 0  (mask-to-integer nil)))

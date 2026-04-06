@@ -36,7 +36,7 @@
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
 
-(require 'cl)
+(require 'cl-lib)
 
 (defun pjb-org-enough-namestring (path base)
   "Compute a relative path to go to the `PATH' from a `BASE' directory.
@@ -46,11 +46,11 @@ else it's returned as is."
   (let ((separator "/")
         (here      ".")
         (back      ".."))
-    (if (string= (subseq path 0 (min 1 (length path))) separator)
+    (if (string= (substring path 0 (min 1 (length path))) separator)
         (let* ((apath  (split-string path separator t))
                (abase  (split-string base separator t))
 
-               (i      (mismatch apath abase :test (function string=))))
+               (i      (cl-mismatch apath abase :test #'string=)))
           (if i
               (mapconcat (function identity)
                          (let ((new (or (nthcdr i apath) '(""))))
@@ -65,7 +65,7 @@ else it's returned as is."
   `(progn
      ,@(mapcar (lambda (field)
 		         `(defun ,(intern (format "org-element-%s" field)) (element)
-		            (getf (second element) ,(intern (format ":%s" field)))))
+		            (plist-get (cadr element) ,(intern (format ":%s" field)))))
 	           fields)))
 
 (generate-org-element-reader begin end contents-begin contents-end

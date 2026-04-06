@@ -31,7 +31,7 @@
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
-(require 'cl)
+(require 'cl-lib)
 (require 'erc)
 
 (defcustom erc-ignore-per-channel-alist nil
@@ -77,7 +77,7 @@ people.  You can update the ERC internal info using /WHO *."
 Takes a full SPEC of a user in the form \"nick!login@host\", and
 matches against all the regexp's in `erc-ignore-list'.  If any
 match, returns that regexp."
-  (loop
+  (cl-loop
      for (channel . regexp) in (erc-with-server-buffer erc-ignore-per-channel-alist)
      thereis (and (string= channel tgt)
                   (string-match regexp spec))))
@@ -106,7 +106,7 @@ user matches any regexp in `erc-ignore-reply-list'."
             (when user
               (let ((spec (erc-user-spec user)))
                 (or (erc-list-match erc-ignore-reply-list spec)
-                    (loop
+                    (cl-loop
                        for (channel . regexp) in (erc-with-server-buffer erc-ignore-per-channel-reply-alist)
                        thereis (and (string= channel tgt)
                                     (string-match regexp spec)))))))))))

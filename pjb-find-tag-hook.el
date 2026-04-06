@@ -50,9 +50,9 @@
                (make-location
                 :buffer (current-buffer)
                 :file-name (buffer-file-name (current-buffer))
-                :line-number (count-lines (point-min) (point-at-bol))
+                :line-number (count-lines (point-min) (line-beginning-position))
                 :line-contents (buffer-substring-no-properties
-                                (point-at-bol) (point-at-eol))))
+                                (line-beginning-position) (line-end-position))))
      finally (message "%%find-tag-locations-in-order exists %S" locations) (return (values locations err))))
 
 

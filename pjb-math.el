@@ -93,7 +93,10 @@
                        (dotimes (i n) (insert sm)))))))
 
 
-(set-greek-bindings "C-c g")
-(set-math-bindings "C-c m")
+;; Don't run the keymap installers in batch mode (where there is no
+;; usable local keymap and `local-set-key' would crash).
+(unless noninteractive
+  (set-greek-bindings "C-c g")
+  (set-math-bindings "C-c m"))
 
 (provide 'pjb-math)

@@ -34,7 +34,7 @@
 ;;;;    You should have received a copy of the GNU Affero General Public License
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
-(require 'cl)
+(require 'cl-lib)
 
 (defvar *echo-keys-last* nil "Last command processed by `echo-keys'.")
 (defvar *echo-keys-count* 0 "Number of times the `*echo-keys-last*` command was repeated.")
@@ -62,7 +62,7 @@
              (if (and *echo-key-coallesce-repeats*
                       (eql *echo-keys-last* this-command))
                  (progn
-                   (incf *echo-keys-count*)
+                   (cl-incf *echo-keys-count*)
                    ;; update the last line
                    (forward-line -1)
                    (if (= 2 *echo-keys-count*)

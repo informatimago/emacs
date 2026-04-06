@@ -7,6 +7,7 @@
 ;;;;    AGPL3
 ;;;;    Copyright Pascal Bourguignon
 ;;;;***
+(require 'cl) ;; pre-existing test file uses unprefixed `assert'
 (require 'pjb-echo-keys)
 (require 'ert)
 

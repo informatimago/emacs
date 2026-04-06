@@ -1,12 +1,12 @@
 ;;; pjb-org-uml.el --- -*- lexical-binding: t -*-
 (require 'org)
-(require 'cl)
+(require 'cl-lib)
 
 (defun pjb-org-insert-use-case (title id)
   (interactive
    (list (setf title (read-from-minibuffer "Use Case Title: "))
          (read-from-minibuffer "Use Case ID: "
-                               (substitute ?- 32 (string-downcase title)))))
+                               (cl-substitute ?- 32 (string-downcase title)))))
   (let ((file (format "u-%s.org" id)))
     (insert (format "\n#+INCLUDE: %S\n" file))
     (with-temp-buffer
