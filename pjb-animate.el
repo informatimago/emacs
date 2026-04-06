@@ -1,3 +1,4 @@
+;;; pjb-animate.el --- -*- lexical-binding: t -*-
 (defun pjb-animate (speed)
   (interactive "nSpeed: ")
   (let ((delay (/ 1.0  speed))

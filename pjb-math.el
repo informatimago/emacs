@@ -1,4 +1,4 @@
-;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8;lexical-binding:t -*-
 ;;;;**************************************************************************
 ;;;;FILE:               pjb-math.el
 ;;;;LANGUAGE:           emacs lisp

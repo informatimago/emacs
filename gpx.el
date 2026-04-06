@@ -1,3 +1,4 @@
+;;; gpx.el --- -*- lexical-binding: t -*-
 (progn
   ;; http://www.topografix.com/GPX/1/1/#type_wptType
   ;; http://www.topografix.com/gpx.asp

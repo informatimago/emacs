@@ -1,3 +1,4 @@
+;;; trustonic.el --- -*- lexical-binding: t -*-
 ;;; trustonic-c-style -- c-style following Trustonic coding conventions
 ;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
 ;;;;**************************************************************************

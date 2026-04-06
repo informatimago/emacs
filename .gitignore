@@ -3,4 +3,5 @@
 \#*
 *.elc
 *.bak
+flycheck_*
 

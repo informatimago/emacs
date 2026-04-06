@@ -1,3 +1,4 @@
+;;; pjb-java-generate.el --- -*- lexical-binding: t -*-
 (defparameter *dirpath* "~/src/Android-SDK/ubudu-sdk/src/com/ubudu/sdk/dto/")
 
 (defparameter *java-current-package* 'com.example)

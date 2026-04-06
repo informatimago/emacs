@@ -1,4 +1,4 @@
-;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8;lexical-binding:t -*-
 ;;;;****************************************************************************
 ;;;;FILE:               secouer.el
 ;;;;LANGUAGE:           emacs lisp

@@ -1,3 +1,4 @@
+;;; astruct.el --- -*- lexical-binding: t -*-
 ;; Implements structure as alists prefixed by the structure type name.
 ;; json uses this kind of alist.
 

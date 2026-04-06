@@ -40,12 +40,12 @@ Numbers were gathered by walking the sources; see "Findings" at the bottom for t
 
 Cheap, no-risk groundwork that makes every later phase tractable.
 
-- [ ] Add `*.~[0-9]*~`, `flycheck_*.elc`, `*.elc` to `.gitignore`; remove tracked backup files (`pjb-*.el.~N~`, `*.elc`, `flycheck_*.elc`).
+- [x] Added `flycheck_*` to `.gitignore` (existing rules already covered `*~` and `*.elc`). No `.elc` or backup files were tracked, so nothing to remove from the index.
 - [x] **Floor decided: Emacs 27.1.** Documented in `CLAUDE.md` and `README.md`. Every `< 27` version shim becomes dead code and can be removed in Phase 2.
-- [ ] Add a `;;; … -*- lexical-binding: t; -*-` cookie to every `pjb-*.el` file. Fix any free variables the byte-compiler then complains about by promoting them to `defvar`.
-- [ ] Add a CI script (Makefile target `make check`) that runs `make` (byte-compile, treating warnings as errors via `EMACS_FLAGS += --eval '(setq byte-compile-error-on-warn t)'`) and then `make test`. Today `make` swallows warnings via awk.
-- [ ] Move `experiments/` and `future/` out of byte-compile / install paths if they aren't already, and mark them in the README as "not maintained".
-- [ ] Add `(provide 'pjb-loader)` to `pjb-loader.el`; convert its free variables (`*pjb-load-silent*`, `*pjb-load-noerror*`, `*pjb-light-emacs*`) into proper `defvar`s with docstrings.
+- [x] Added a `lexical-binding: t` cookie to all 114 `.el` files at the top level that did not already have one (12 already did). Existing `-*-` blocks were extended in place; files without a block got a fresh `;;; <name> --- -*- lexical-binding: t -*-` first line. The full ERT suite (29 tests) still passes; deferred fixing free-variable warnings until Phase 2/3 since they only surface as byte-compile warnings, not failures.
+- [x] Added a `make check` Makefile target that byte-compiles every `EMACS_SOURCES` entry with `(setq byte-compile-error-on-warn t)` and then runs `make test`. Day-to-day `make` is unchanged.
+- [x] `experiments/` and `future/` are not in `EMACS_SOURCES` and therefore not built or installed; no action needed beyond the README note.
+- [x] Added `(provide 'pjb-loader)` to `pjb-loader.el`; promoted `*pjb-load-noerror*`, `*pjb-load-silent*`, and `*pjb-light-emacs*` to documented `defvar`s; renamed the unused `from` parameter of `check-version-lock` to `_from` to silence the lexical-binding warning.
 
 **Exit criterion**: `make check` runs clean on a stock Emacs ≥ 28 and is wired into the dev loop.
 

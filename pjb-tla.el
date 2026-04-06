@@ -1,3 +1,4 @@
+;;; pjb-tla.el --- -*- lexical-binding: t -*-
 
 (defvar *acronyms*
   '(

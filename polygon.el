@@ -1,3 +1,4 @@
+;;; polygon.el --- -*- lexical-binding: t -*-
 (defvar *polygon* '())
 
 (defun start-collect-polygon ()

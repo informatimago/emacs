@@ -1,3 +1,4 @@
+;;; inputrc.el --- -*- lexical-binding: t -*-
 
 (defun read-inputrc-file (file)
   (let ((expressions '()))

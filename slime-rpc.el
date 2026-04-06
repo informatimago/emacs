@@ -1,4 +1,4 @@
-;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8;lexical-binding:t -*-
 ;;;; emacs <-> common-lisp RPC with slime/swank
 
 ;;; In emacs, we can execute Common Lisp expressions:

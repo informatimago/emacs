@@ -1,3 +1,4 @@
+;;; pjb-xml.el --- -*- lexical-binding: t -*-
 (require 'xml)
 
 ;;; patches.

@@ -1,3 +1,4 @@
+;;; edit.el --- -*- lexical-binding: t -*-
 
 (defvar edit-setter)
 

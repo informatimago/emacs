@@ -1,4 +1,4 @@
-;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8;lexical-binding:t -*-
 ;;;;**************************************************************************
 ;;;;FILE:               loader.el
 ;;;;LANGUAGE:           emacs lisp
@@ -35,7 +35,20 @@
 ;;;;**************************************************************************
 (require 'cl)
 
-(defun check-version-lock (from)
+(defvar *pjb-load-noerror* nil
+  "When non-nil, `load-stuff' will catch and report errors from each
+loaded file instead of aborting.  Bind before loading `pjb-loader.el'.")
+
+(defvar *pjb-load-silent* nil
+  "When non-nil, `load-stuff' loads each file silently (no message
+echo).  Bind before loading `pjb-loader.el'.")
+
+(defvar *pjb-light-emacs* nil
+  "When non-nil, `pjb-loader.el' loads only the minimal set of pjb
+sources, skipping the heavier optional modules.  Bind before loading
+`pjb-loader.el'.")
+
+(defun check-version-lock (_from)
   (if (file-exists-p "--version.lock")
       (error "version lock")))
 
@@ -447,6 +460,8 @@ RETURN: A list of NODES sorted topologically according to
   (setf *pjb-sources* (reverse (mapcar (lambda (name) (format "%s.el" name)) sorted))))
 
 (load-stuff *pjb-sources* (not *pjb-load-silent*))
+
+(provide 'pjb-loader)
 
 ;;;; THE END ;;;;
 

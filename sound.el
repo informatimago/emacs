@@ -1,3 +1,4 @@
+;;; sound.el --- -*- lexical-binding: t -*-
 (require 'pjb-cl)
 
 (handler-case

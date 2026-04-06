@@ -1,3 +1,4 @@
+;;; pjb-google-translate.el --- -*- lexical-binding: t -*-
 (defun does-not-work/google-translate-word (from to word)
   (pjb-parse-html
    (pjb-get-resource-at-url

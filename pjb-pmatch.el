@@ -1,4 +1,4 @@
-;;;; -*- coding:utf-8 -*-
+;;;; -*- coding:utf-8;lexical-binding:t -*-
 ;;;;****************************************************************************
 ;;;;FILE:               pjb-pmatch.el
 ;;;;LANGUAGE:           Common-Lisp

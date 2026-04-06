@@ -1,3 +1,4 @@
+;;; pjb-org-uml.el --- -*- lexical-binding: t -*-
 (require 'org)
 (require 'cl)
 

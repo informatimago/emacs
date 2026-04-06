@@ -1,3 +1,4 @@
+;;; pjb-cl-magic-lambda-lists.el --- -*- lexical-binding: t -*-
 
 (setf *cl-lambda-lists* (make-hash-table :test #'equal :size 978))
 

@@ -1,3 +1,4 @@
+;;; emacs-window-focus-mouse.el --- -*- lexical-binding: t -*-
 
 (defun window-follow-mouse ()
   (unless (active-minibuffer-window)

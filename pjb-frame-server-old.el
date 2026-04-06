@@ -1,3 +1,4 @@
+;;; pjb-frame-server-old.el --- -*- lexical-binding: t -*-
 ;;;
 ;;; This is superseded by the mfod command (using emacsclient to make frames).
 ;;;

@@ -1,3 +1,4 @@
+;;; android-classes.el --- -*- lexical-binding: t -*-
 (require 'pjb-html)
 ;; (require 'jde nil t)
 ;; (require 'jde-import nil t)

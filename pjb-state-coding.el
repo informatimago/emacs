@@ -1,4 +1,4 @@
-;;;; -*- mode:emacs-lisp;coding:utf-8 -*-
+;;;; -*- mode:emacs-lisp;coding:utf-8;lexical-binding:t -*-
 ;;;;******************************************************************************
 ;;;;FILE:               state-coding.el
 ;;;;LANGUAGE:           emacs lisp

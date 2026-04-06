@@ -134,6 +134,18 @@ test:
 		$(EMACS) --batch -Q -L . -l $$test_file -f ert-run-tests-batch-and-exit || exit $$?; \
 	done
 
+# `make check` byte-compiles every source with warnings-as-errors and then
+# runs the ERT suite.  This is the CI gate; `make` proper still uses the
+# warning-tolerant build for day-to-day work.
+check:
+	@for src in $(EMACS_SOURCES); do \
+		echo "Checking $$src"; \
+		$(EMACS) --batch -Q -L . \
+		         --eval '(setq byte-compile-error-on-warn t)' \
+		         -f batch-byte-compile $$src || exit $$?; \
+	done
+	@$(MAKE) test
+
 # ------------------------------------------------------------------------
 # Compiling & installing lisp packages:
 #
