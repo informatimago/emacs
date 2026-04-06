@@ -1,0 +1,242 @@
+# PJB Emacs Library — Modernization Plan
+
+A code-review / debugging / modernization roadmap for this library. The goal:
+
+1. Eliminate every silent collision with modern Emacs core (no patched/replaced built-ins, no `defadvice`).
+2. Migrate off the deprecated `cl` package onto `cl-lib`.
+3. Cover the load-bearing pure code with ERT tests **before** the rename storm.
+4. Retire early-Emacs-era code that the modern core or ELPA already supersedes.
+
+This plan should be executed top-down: each phase assumes the previous one landed and the test suite is green (`make test`).
+
+## Decisions
+
+- **Supported Emacs version: 27.1 or later.** This drops every `< emacs 22`, `24.3.1`, and `< 27` shim. We can rely on `cl-lib`, `seq`, `map`, `subr-x`, `project.el`, native JSON, `text-property-search`, byte-compiler `lexical-binding` warnings, and the modern `string-*`/`file-name-*` family.
+- **Lexical binding everywhere.** Every `pjb-*.el` file gets a `;;; foo.el --- ... -*- lexical-binding: t; -*-` cookie as part of Phase 0. Files that rely on dynamic scoping for free variables get explicit `defvar`s.
+- **Keep CL-flavoured helpers, but namespace them as `cl-*`.** We deliberately want to *use* CL-style names (`pathname-name`, `probe-file`, `file-write-date`, character predicates, …). The convention is:
+  - **`cl-` prefix** when the bare CL name would collide with an Emacs built-in OR with `cl-lib` itself **only if** the prefixed form is *not* taken by `cl-lib`. So `cl-pathname-name`, `cl-pathname-directory`, `cl-pathname-host`, `cl-probe-file`, `cl-file-write-date`, `cl-file-author`, `cl-truename`, `cl-namestring`, `cl-machine-instance`, `cl-machine-version`, `cl-software-type`, `cl-short-site-name`, `cl-long-site-name`, `cl-lisp-implementation-type`, `cl-lisp-implementation-version`, `cl-get-decoded-time`, `cl-get-universal-time`, `cl-get-internal-real-time`, `cl-sleep`, etc. — none of these are claimed by `cl-lib`, so they are ours to take.
+  - **`pjb-` prefix** when even the `cl-` form is already taken by `cl-lib` (e.g. `cl-string-trim` exists, so we don't override it; if we want a slightly different one it becomes `pjb-string-trim`). Same for anything that isn't really CL-flavoured (`pjb-fill-region`, `pjb-find-file-at-point`, …).
+  - **Never** redefine, advise, or `defalias`-shadow an existing Emacs / `cl-lib` symbol. The single check before adding `cl-foo` is `(or (fboundp 'cl-foo) (fboundp 'foo))` — if either is true, you don't get that name.
+  - A future evolution is to implement a real CL package system on top of obarrays and use the `cl:` reader prefix; this is explicitly out of scope for the current pass and noted in Phase 7.
+
+---
+
+## Inventory at a glance
+
+Numbers were gathered by walking the sources; see "Findings" at the bottom for the per-file evidence.
+
+| Class of issue                              | Count | Worst offenders                                                                                                                                                                         |
+|---------------------------------------------|------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Files using `(require 'cl)` (deprecated)    |   ~40 | `pjb-loader.el`, `pjb-cl.el`, `pjb-emacs.el`                                                                                                                                            |
+| `defadvice` call sites                      |   20+ | `pjb-advices.el`, `pjb-cl.el` (advises `aref`!)                                                                                                                                         |
+| `defun` shadowing an Emacs built-in         |   ~15 | `fill-region`, `find-file-at-point`, `string-upcase`, `string-downcase`, `ensure-list`, `sleep`, `aref` (advice)                                                                        |
+| Full re-definitions of core functions       |     2 | `comment-region-internal`, `completion--twq-all`                                                                                                                                        |
+| Files with no test, but pure enough to test |    14 | `pjb-strings`, `pjb-list`, `pjb-cl`, `pjb-date`, `pjb-pmatch`, `pjb-roman`, `pjb-queue`, `pjb-math`, `pjb-graph`, `pjb-xml`, `pjb-html`, `pjb-unicode`, `pjb-color`, `pjb-state-coding` |
+| Files plausibly supersedable today          |   ~25 | see Phase 5                                                                                                                                                                             |
+
+---
+
+## Phase 0 — Hygiene & baselines
+
+Cheap, no-risk groundwork that makes every later phase tractable.
+
+- [ ] Add `*.~[0-9]*~`, `flycheck_*.elc`, `*.elc` to `.gitignore`; remove tracked backup files (`pjb-*.el.~N~`, `*.elc`, `flycheck_*.elc`).
+- [x] **Floor decided: Emacs 27.1.** Documented in `CLAUDE.md` and `README.md`. Every `< 27` version shim becomes dead code and can be removed in Phase 2.
+- [ ] Add a `;;; … -*- lexical-binding: t; -*-` cookie to every `pjb-*.el` file. Fix any free variables the byte-compiler then complains about by promoting them to `defvar`.
+- [ ] Add a CI script (Makefile target `make check`) that runs `make` (byte-compile, treating warnings as errors via `EMACS_FLAGS += --eval '(setq byte-compile-error-on-warn t)'`) and then `make test`. Today `make` swallows warnings via awk.
+- [ ] Move `experiments/` and `future/` out of byte-compile / install paths if they aren't already, and mark them in the README as "not maintained".
+- [ ] Add `(provide 'pjb-loader)` to `pjb-loader.el`; convert its free variables (`*pjb-load-silent*`, `*pjb-load-noerror*`, `*pjb-light-emacs*`) into proper `defvar`s with docstrings.
+
+**Exit criterion**: `make check` runs clean on a stock Emacs ≥ 28 and is wired into the dev loop.
+
+---
+
+## Phase 1 — Test the load-bearing pure code
+
+We must not rename or rewrite anything before the safety net exists. Target the libraries that are (a) pure-ish, (b) reused everywhere, and (c) currently untested. ERT tests live next to the source as `<name>-test.el` and are added to `TEST_EL_FILES` in the `Makefile`.
+
+Priority order (highest leverage first):
+
+1. **`pjb-strings.el`** — many candidates for renaming/removal. Tests must pin current behaviour for `basename`, `dirname`, `string-index`, `string-position`, `unsplit-string`, `join`, `string-repeat`, `string-justify-left`, `chop-spaces*`, `chop-prefix`, `string-remove-accents`, `prefixp`, `suffixp`, `first-char`/`last-char`/`butfirst-char`/`butlast-char`.
+2. **`pjb-list.el`** — `iota`, `flatten`, etc.
+3. **`pjb-cl.el`** — the highest-risk file; tests should cover at least every symbol that aliases or wraps a CL operator we still rely on (`pathname-*`, `char*`, `string-*case`, `array-dimension`, `probe-file`, `truename`, `get-decoded-time`).
+4. **`pjb-date.el`**, **`pjb-pmatch.el`**, **`pjb-roman.el`**, **`pjb-queue.el`**, **`pjb-math.el`**, **`pjb-graph.el`**.
+5. **`pjb-xml.el`**, **`pjb-html.el`**, **`pjb-unicode.el`**, **`pjb-color.el`**, **`pjb-state-coding.el`**.
+
+For each new test file: 5–15 ERT cases is enough to lock the public API; we are not chasing coverage, we are pinning semantics for the rename pass.
+
+**Exit criterion**: every file listed above has a `*-test.el` companion in `TEST_EL_FILES`, and `make test` is green.
+
+---
+
+## Phase 2 — Kill the global monkey-patches
+
+Goal: zero core-function redefinitions, zero `defadvice`. The ordering matters because Phase 3 depends on `pjb-cl.el` no longer poisoning later loads.
+
+### 2a. `pjb-cl.el` — the radioactive file
+This is *the* single biggest risk: it advises `aref` globally and redefines `string-upcase`/`string-downcase`/`char`/`sleep`/`file-write-date`/`probe-file`/etc. Anything loaded after it runs in a subtly altered Emacs. Sequence:
+
+1. Audit every external caller of `pjb-cl.el`'s exported symbols (Phase 1 test suite + `grep`).
+2. Rename every `defun foo` to `cl-foo` if the `cl-foo` name is free in `cl-lib`, otherwise to `pjb-cl-foo`. (See the prefix policy in "Decisions" at the top.) Concrete plan:
+   - **Pathname layer** → `cl-pathname-host`, `cl-pathname-directory`, `cl-pathname-name`, `cl-pathname-type`, `cl-pathname-version`, `cl-namestring`, `cl-file-namestring`, `cl-directory-namestring`, `cl-host-namestring`, `cl-truename`, `cl-probe-file`, `cl-file-author`, `cl-file-write-date`. Implement them on top of `file-name-*` / `file-attributes` / `file-truename`. Keep the CL semantics where they matter (e.g. `cl-truename` follows symlinks like CL does).
+   - **Character predicates / case** → `cl-char-upcase`, `cl-char-downcase`, `cl-char=`, `cl-char/=`, `cl-char<`, …, `cl-alpha-char-p`, `cl-alphanumericp`, `cl-upper-case-p`, `cl-lower-case-p`, `cl-both-case-p`. None of these clash with `cl-lib`.
+   - **String case** — drop the `string-upcase`/`string-downcase`/`string-capitalize`/`nstring-*` redefinitions outright. Emacs has them as built-ins. The CL-style `cl-string-trim` is already taken by `cl-lib`; use the built-in `string-trim` directly.
+   - **Time / system** → `cl-sleep` (wraps `sleep-for`), `cl-get-internal-real-time` (wraps `float-time`), `cl-get-universal-time`, `cl-get-decoded-time` (wraps `decode-time`), `cl-lisp-implementation-type`, `cl-lisp-implementation-version`, `cl-machine-type`, `cl-machine-version`, `cl-machine-instance`, `cl-software-type`, `cl-software-version`, `cl-short-site-name`, `cl-long-site-name`, `cl-user-homedir-pathname`. All free in `cl-lib`.
+   - **Array layer** → `cl-array-dimension`, `cl-vectorp`, `cl-char` (string indexing), `cl-schar`. The multidimensional array support that today depends on the `aref` advice becomes a dedicated `cl-aref` (or, if `cl-lib` ever takes it, `pjb-cl-aref`).
+3. **Delete** the `aref` advice (L820) unconditionally. Multidimensional access goes through `cl-aref`; no caller is allowed to expect altered `aref` semantics.
+4. Replace every in-tree call site of the old unprefixed names (audit step) with the new `cl-*` names. Phase 1 tests catch regressions.
+5. Add a `pjb-cl-test.el` that locks the `cl-pathname-*`, `cl-probe-file`, `cl-truename`, `cl-file-write-date`, `cl-get-decoded-time`, and `cl-aref` semantics so future Emacs upgrades can't drift them silently.
+
+### 2b. `pjb-emacs-patches.el`
+1. Delete the `< emacs 22` `called-interactively-p` shim — guaranteed dead with the 27.1 floor.
+2. Delete the `completion--twq-all` re-definition. Pinning a private minibuffer.el internal to Emacs 24.3.1 has been wrong for a decade.
+3. Convert the `comment-region-internal` re-definition into either:
+   - a proper `advice-add` with `:filter-args` that forces `noempty`, *or*
+   - (preferred) a thin `pjb-comment-region-no-empty` command bound where the user wants it. The loader simply stops shadowing `comment-region-internal`.
+4. After the file is empty, delete it from `EMACS_SOURCES`.
+
+### 2c. `pjb-advices.el` — port to `advice-add`
+For each advice in the table at `pjb-advices.el:44…379`, do one of:
+
+- **Convert to `advice-add` with the equivalent `:before` / `:after` / `:around` combinator.** Most entries need only a mechanical translation.
+- **Move into the relevant module** if its scope is narrow (the `gnus-summary-reply` "rebind to followup" lives more naturally as a key remap in `pjb-gnus.el`; the `mail-setup` BCC rewrite is mail-only).
+- **Delete** the `< emacs 22` `other-frame` advice and any other entries whose body is `nil` on a modern Emacs.
+
+The `custom-save-variables` `:around` advice replaces the body without `ad-do-it`, which is also a redefinition in disguise. It should become a `defun pjb-write-sorted-custom-file` that the user calls explicitly, not a global override.
+
+### 2d. Stray `defadvice` in module files
+Convert each to `advice-add`, then ask whether the advice belongs there at all:
+
+| Site | Action |
+|---|---|
+| `pjb-emacs.el:1128` `set-background-color` | port to `advice-add :after` |
+| `pjb-echo-keys.el:114,118` `read-passwd` | port to `advice-add` |
+| `pjb-shell.el:44` `shell` | replace with a `pjb-shell-new` command, drop the advice |
+| `pjb-xml.el:8` `xml-parse-region` | port to `advice-add`, but check first whether modern `xml.el` already handles the DTD case |
+| `emacs-window-focus-mouse.el:10` `select-window` | already off-by-default; either delete or port |
+| `pjb-vm.el:163,190` | already commented out; delete |
+
+**Exit criterion**: `grep -nE 'defadvice|^\(defun (aref|fill-region|find-file-at-point|string-upcase|string-downcase|char|sleep|file-write-date|ensure-list|comment-region-internal|completion--twq-all)\b' *.el` returns nothing. The renamed APIs have wrappers; old call sites in the library are updated; `make test` still green.
+
+---
+
+## Phase 3 — Migrate `cl` → `cl-lib`
+
+Now that `pjb-cl.el` is no longer redefining the world, we can safely flip the deprecated `cl` package across the ~40 affected files.
+
+Strategy:
+
+1. For each file that does `(require 'cl)`, replace with `(require 'cl-lib)` and prefix every `loop`, `incf`, `decf`, `first`, `second`, `case`, `defun*`, `setf`, `mapcar*`, `remove-if`, `find-if`, `position`, `count`, `every`, `some`, `union`, `intersection`, `pushnew`, `assoc-if`, etc., with `cl-`.
+2. The library *itself* is now a co-tenant of the `cl-` namespace (see Decisions). That means in-house exports that used to live under `cl-*` need to be checked against `cl-lib`:
+   - `pjb-sources.el` exports `cl-looking-at-what`, `cl-skip-over-sharp-comment`, `cl-skip-over`, `cl-forward`, `cl-what-is-at-point`, `cl-sexp-at-point`. None of these collide with `cl-lib`, so they can stay as-is — but document them in a header comment as "owned by pjb-sources, not by cl-lib".
+   - `pjb-eval.el` exports `cl-eval-last-expression`. Free in `cl-lib`; keep.
+   - Anywhere we *add* a new `cl-foo`, the rule from Decisions applies: check `(or (fboundp 'cl-foo) (fboundp 'foo))` first. If the bare `foo` is a built-in, prefix with `cl-`; if `cl-foo` is also taken, fall back to `pjb-`.
+3. Replace `point-at-bol`/`point-at-eol` (obsolete since Emacs 29.1) with `line-beginning-position`/`line-end-position` in `pjb-find-tag-hook.el:53,55` and `pjb-erc.el:635-651`.
+4. Run `make check`; the `byte-compile-error-on-warn` flag from Phase 0 will catch any `cl-` symbol we missed.
+
+**Exit criterion**: `grep -l '(require .cl.)$' *.el` (note: not `cl-lib`) returns nothing. Byte-compilation is warning-free.
+
+---
+
+## Phase 4 — Rename remaining built-in collisions
+
+Anything found in §1d of the inventory that *still* collides with a current Emacs symbol (after Phase 2 deleted the worst offenders) gets a `pjb-` prefix. Each rename follows the same recipe to keep churn safe:
+
+1. Add the new name as the canonical `defun`.
+2. Update every in-tree caller (Phase 1 tests catch regressions).
+3. **Do not** leave a `defalias` from the old name to the new — that would re-introduce the collision. If the old name is used by the user's own dotfiles, document the rename in `MODERNIZATION.md`'s changelog section.
+4. Run `make test`.
+
+Concrete rename targets (non-exhaustive — Phase 1 tests will reveal more):
+
+- `pjb-emacs.el`: `fill-region` → `pjb-fill-region`, `find-file-at-point` → `pjb-find-file-at-point`, `constantly`/`marker`/`current-frame`/`single-frame`/`double-frame` → `pjb-*`.
+- `pjb-utilities.el`: `ensure-list` → drop (built-in since 28); `printf`/`show`/`write-string` → `pjb-*`; `seconds-to-emacs-time`/`emacs-time-to-seconds` → use built-in `time-convert`.
+- `pjb-strings.el`: replace `string-has-prefix`/`string-has-suffix` with `string-prefix-p`/`string-suffix-p`; replace `chop-spaces*` with `string-trim`/`string-trim-left`/`string-trim-right`; replace `join` with `string-join`. The remaining helpers (`basename`, `dirname`, `string-index`, `unsplit-string`, `prefixp`, `suffixp`, `first-char`/`last-char`/…) get `pjb-` prefixes.
+- `pjb-list.el`: `iota` → `pjb-iota` (or just call `number-sequence`); `flatten` → `pjb-flatten` (sister to the already-renamed `pjb-flatten-tree`).
+- `pjb-c.el`: `substitute-strings` → `pjb-c-substitute-strings`.
+- `pjb-cl.el` follow-up (anything Phase 2 didn't already namespace).
+
+**Exit criterion**: there is no `defun` whose name appears in `(help-function-arglist 'NAME)` against a stock Emacs as a built-in. (A small lint script in `tools/` can automate this check.)
+
+---
+
+## Phase 5 — Retire what Emacs already provides
+
+For each file below, the work is: confirm the modern replacement, port any still-useful idiosyncratic helper into the appropriate `pjb-*` module, then delete the file from `EMACS_SOURCES`.
+
+| File | Replacement | Action |
+|---|---|---|
+| `pjb-frame-server-old.el` | `server.el` + `emacsclient` | delete |
+| `pjb-vm.el`, `pjb-vm-kill-file.el` | Gnus / notmuch / mu4e | delete (already in loader's "obsolete" list) |
+| `pjb-banks-old.el` | `pjb-banks.el` | delete |
+| `pjb-comint.el` | `ansi-color` + `comint-output-filter-functions` | delete |
+| `pjb-shell.el` | modern `shell.el`, optionally `vterm` | extract `pjb-shell-new`, then delete |
+| `pjb-insert-image.el` | built-in image display in comint | delete after porting any unique behaviour |
+| `pjb-image-minor-mode.el` | `iimage-mode` | delete |
+| `pjb-find-tag-hook.el` | `xref` | delete |
+| `pjb-google-translate.el` | MELPA `google-translate` | delete |
+| `pjb-html.el` | `sgml-mode` / `web-mode` / `shr` | delete (port specific helpers if any) |
+| `pjb-c.el` | `cc-mode` | already marked obsolete; finish removing |
+| `pjb-objc-mode.el` | `objc-mode` (cc-mode) | already marked obsolete; finish removing |
+| `pjb-tla.el` | — | delete (TLA/Arch is dead) |
+| `pjb-cvs.el`, `pjb-cvspass.el` | `vc` | delete |
+| `pjb-make-depends.el` | `project.el` / external build tools | delete |
+| `pjb-erc-speak.el`, `pjb-speak.el` | `emacspeak` | delete if unused |
+| `slime-rpc.el` | current SLIME/SLY | delete |
+| `split.el` | built-in | delete |
+| `pjb-page.el` | built-in `page.el` | diff and delete the redundant parts |
+| `pjb-queue.el` | ELPA `queue` | replace |
+| `pjb-pgp.el` | built-in `epa`/`epg` | shrink to pjb-specific glue |
+| `pjb-emacs-balance-windows.el` | built-in `balance-windows` | delete |
+| `pjb-asdf.el` | SLIME/SLY ASDF integration | shrink |
+| `pjb-state-coding.el` | built-in coding-system handling | review |
+
+Each deletion bumps a checklist item in this document and gets a one-line entry in the "Removed" changelog section at the bottom of `MODERNIZATION.md`.
+
+---
+
+## Phase 6 — Loader cleanup
+
+`pjb-loader.el` re-implements `bytecomp`'s dependency walker. After Phases 1–4 land, the loader is the largest remaining oddity:
+
+- [ ] Replace the home-grown `el-walk-sexps` / `el-map-sexps` / `topological-sort` machinery with a static, hand-maintained ordered list (`*pjb-sources*`) — most files have no real cross-`require` anyway.
+- [ ] Stop opening every source file with `find-file` at startup; use `with-temp-buffer` + `insert-file-contents` if a walker is still wanted.
+- [ ] Remove the `(unless :obsolete '(...))` dead-code-as-comment block; move it to a proper `defvar pjb-obsolete-sources` documented in this file.
+- [ ] Switch any deferred initialization to `with-eval-after-load`.
+
+**Exit criterion**: `pjb-loader.el` is < 100 lines, has a `provide`, has `defvar`s for all its variables, and starts Emacs without visiting any buffer.
+
+---
+
+## Findings backing this plan
+
+The detailed inventory (file:line evidence for §1–§5 of this plan) lives in the conversation that produced this document; the highlights:
+
+- `pjb-emacs-patches.el:36` (`called-interactively-p` shim), `:40` (`completion--twq-all` redef pinned to 24.3.1), `:102` (`comment-region-internal` redef).
+- `pjb-advices.el` advises 13 core functions, including `switch-to-buffer`, `mail-setup`, `set-face-attribute`, `gnus`, `gnus-summary-reply`, `message-make-sender`, `backtrace`, `jump-to-register`, `custom-save-variables` (with body replacement).
+- `pjb-cl.el:820` advises `aref` globally; `:1180` `string-upcase`; `:1202` `string-downcase`; `:1428…1511` pathname accessors; `:1566` `probe-file`; `:1796` `sleep`.
+- `pjb-emacs.el:912` redefines `fill-region`; `:2915` redefines `find-file-at-point`.
+- `pjb-utilities.el:792` defines `ensure-list` (built-in since Emacs 28).
+- `pjb-sources.el` exports `cl-`-prefixed symbols; `pjb-eval.el:44` exports `cl-eval-last-expression` — both collide with the `cl-lib` namespace.
+- `point-at-bol`/`point-at-eol` (obsolete in 29.1): `pjb-find-tag-hook.el:53,55`, `pjb-erc.el:635-651`.
+- 40+ files still `(require 'cl)`.
+- Existing tests cover `pjb-utilities`, `pjb-echo-keys`, `pjb-constants`, `pjb-objc-parser`, `autocad`. No tests for `pjb-strings`, `pjb-list`, `pjb-cl`, `pjb-emacs`, `pjb-date`, `pjb-pmatch`, `pjb-roman`, `pjb-queue`, `pjb-math`, `pjb-graph`, `pjb-xml`, `pjb-html`, `pjb-unicode`, `pjb-color`, `pjb-state-coding`.
+
+---
+
+## Phase 7 — (later) A real CL package system
+
+Out of scope for this pass, but worth noting so the `cl-` prefix policy isn't a dead end: a future evolution is to implement a CL-style package system on top of Emacs obarrays, with a `cl:` reader prefix that resolves into a dedicated obarray. At that point the `cl-foo` helpers added in Phase 2a become candidates for migration into the `cl` package proper, accessed as `cl:foo`. Until then, `cl-foo` (and `pjb-cl-foo` for the colliding cases) is the convention.
+
+## Suggested execution order (recap)
+
+1. **Phase 0** — hygiene, version floor (27.1), lexical-binding cookies, `make check`.
+2. **Phase 1** — pin pure-ish library semantics with ERT.
+3. **Phase 2** — kill `pjb-cl.el`'s core overrides (rename to `cl-*` per the prefix policy), then `pjb-emacs-patches.el`, then port `pjb-advices.el` to `advice-add`.
+4. **Phase 3** — `cl` → `cl-lib` everywhere; `point-at-bol`/`-eol` → `line-*-position`.
+5. **Phase 4** — rename remaining collisions to `pjb-*` (or `cl-*` when that fits the policy).
+6. **Phase 5** — retire superseded files.
+7. **Phase 6** — slim down `pjb-loader.el`.
+8. **Phase 7** — (deferred) real CL package system on obarrays.
+
+Each phase ends with a green `make check` and a single commit (or one commit per file in Phases 4–5 if the diff is too wide to review at once).

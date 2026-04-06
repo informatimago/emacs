@@ -2,7 +2,11 @@
 
 Pascal J. Bourguignon's personal Emacs Lisp library — a long-running collection of `pjb-*.el` modules and a handful of standalone files. Some modules with no `interactive` forms have been ported to Common Lisp (e.g. `pjb-list`, `pjb-strings`, `pjb-graph`).
 
-See `CLAUDE.md` for build/test instructions.
+See `CLAUDE.md` for build/test instructions and `MODERNIZATION.md` for the ongoing cleanup roadmap.
+
+## Supported Emacs version
+
+**Emacs 27.1 or later.** The library assumes `cl-lib`, `seq`, `map`, `subr-x`, `project.el`, and `lexical-binding`. The CL-flavoured helpers (pathnames, characters, time accessors, etc.) live under the `cl-` prefix — the same namespace `cl-lib` itself uses — provided there is no collision; otherwise they fall back to a `pjb-` prefix.
 
 ## Status of interactive libraries
 
