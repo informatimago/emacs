@@ -813,9 +813,8 @@ POST:   (<= start index end)
                    clauses)))))
 
 
-(defun chmod (file mode)
-  (interactive "fFile path: \nXMode: ")
-  (set-file-modes file mode))
+;; `chmod' is built-in since Emacs 28.1 — it's an alias for
+;; `set-file-modes' with the same interactive spec.
 
 
 ;;;; THE END ;;;;

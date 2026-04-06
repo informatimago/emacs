@@ -1618,14 +1618,14 @@ SEE ALSO:     `karnaugh-solve' and `gentable'.
       (loop for item in conditions
          for i from 0 below c-count
          collect (concatenate 'string
-                   " " (string-pad item (aref sizes i) :justification :center) " |")
+                   " " (pjb-string-pad item (aref sizes i) :justification :center) " |")
          into title
          finally return (apply 'concatenate 'string title))
 
       (loop for item in a-title
          for i from c-count below s-count
          collect (concatenate 'string
-                   " " (string-pad item (aref sizes i) :justification :center) " |")
+                   " " (pjb-string-pad item (aref sizes i) :justification :center) " |")
          into title
          finally return  (apply 'concatenate 'string title))
       new-line
@@ -1638,7 +1638,7 @@ SEE ALSO:     `karnaugh-solve' and `gentable'.
                       for k from 0 below c-count
                       for c in conditions
                       for l = (+ 3 (aref sizes k))
-                      for s = (string-pad
+                      for s = (pjb-string-pad
                                (if c (cdr bool-vals) (car bool-vals))
                                l :justification :center)
                       do (setf (char s (1- l)) (character "|"))
@@ -1651,7 +1651,7 @@ SEE ALSO:     `karnaugh-solve' and `gentable'.
                           for k from 0 below a-count
                           for l = (+ 3 (aref sizes (+ c-count k)))
                           for f = (aref a-indic k)
-                          for s = (string-pad
+                          for s = (pjb-string-pad
                                    (if f (if (apply f conditions)
                                              (cdr action-vals)
                                              (car action-vals)) "")
@@ -1756,7 +1756,7 @@ EXAMPLE: (COMBINE '(WWW FTP) '(EXA) '(COM ORG)))
                     for item in row
                     for width in widths
                     do (progn
-                         (princ (string-pad item (+ 2 width)
+                         (princ (pjb-string-pad item (+ 2 width)
                                             :justification :center))
                          (princ "|")))
                  (terpri)))
@@ -3578,7 +3578,7 @@ For example:   '((\"^/Applications/Emacs.app/Contents/Resources/\" . 8)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun comment-line (start end)
+(defun pjb-comment-line-box (start end)
   "Comments a region using the infamous 'line' boxing style:
 
 /*
@@ -3606,11 +3606,7 @@ For example:   '((\"^/Applications/Emacs.app/Contents/Resources/\" . 8)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun narrow-to-defun ()
-  (interactive)
-  (save-excursion
-   (mark-defun)
-   (narrow-to-region (point) (mark))))
+;; `narrow-to-defun' has been built-in for many releases.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'pjb-sources)

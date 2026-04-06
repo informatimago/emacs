@@ -41,13 +41,8 @@
                                      "LightBlue"  "LightCyan" "PowderBlue"))
 
 
-(defun delete-all-overlays (&rest arguments)
-  (interactive)
-  (mapc (lambda (item)
-          (if (listp item)
-              (mapc (function delete-overlay) item)
-              (delete-overlay item)))
-        (overlay-lists)))
+;; `delete-all-overlays' has been built-in for many releases; we no
+;; longer redefine it.
 
 
 (defun put-computer-paper-overlay (modulo block)

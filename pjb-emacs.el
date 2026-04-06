@@ -136,8 +136,10 @@
   (defsetf symbol-value-in-buffer set-symbol-value-in-buffer))
 
 
-(defun recover-this-file ()
-  "Recovers the file of the current buffer, if any."
+(defun pjb-recover-this-file ()
+  "PJB variant: don't error when there's no associated file.
+Recovers the file of the current buffer, if any.  The Emacs core
+`recover-this-file' added in 26.1 errors out instead."
   (interactive)
   (let ((file-path  (buffer-file-name)))
     (if (and file-path (file-exists-p file-path) (file-regular-p file-path))

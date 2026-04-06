@@ -891,7 +891,9 @@ be printed just before the window-width."
   (balance-windows))
 
 
-(defun irc ()
+(defun pjb-irc ()
+  "PJB variant of `irc': set up an ERC session with PJB-specific
+servers, channels, palette, and stamp mode."
   (interactive)
   (pjb-server-stop)
   (set-frame-name "ERC")

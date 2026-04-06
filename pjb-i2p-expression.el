@@ -339,7 +339,7 @@ RETURN:  Whether all arguments are nil or all are not nil,
 
 (defun ==> (p q) "RETURN:  p ==> q" (or (not p) q))
 (defun <== (q p) "RETURN:  q <=> p" (or (not p) q))
-(defun xor (p q) "RETURN:  p xor q" (not (eq (not p) (not q))))
+;; `xor' is built-in since Emacs 27.1 with the same semantics.
 (defun fact (n) (if (< n 2) 1 (* n (fact (1- n)))))
 (defalias '! 'fact)
 (defalias 'neg '-)

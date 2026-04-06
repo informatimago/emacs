@@ -155,15 +155,16 @@
   (interactive)
   (git-search (symbol-name (symbol-at-point))))
 
-(defun project-search (search-string)
-  "Search a regex in the current project (with `find-grep' and `grep-find-command')."
+(defun pjb-project-search (search-string)
+  "Search a regex in the current project (with `find-grep' and `grep-find-command').
+Renamed in Phase 4 to stop shadowing `project-search' from project.el."
   (interactive "sSearch Project Regexp: ")
   (find-grep (concat grep-find-command " " (shell-quote-argument search-string))))
 
-(defun project-search-region (start end)
+(defun pjb-project-search-region (start end)
   "Search the text in the region in the current project (with `find-grep' and `grep-find-command')."
   (interactive "r")
-  (%search-region start end 'symbol 'project-search))
+  (%search-region start end 'symbol 'pjb-project-search))
 
 
 (defun numero-inconnu-search (&optional numero)

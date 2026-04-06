@@ -14,8 +14,10 @@
 (defvar *emacs-start-time*   (current-time) "For (emacs-uptime);")
 
 ;;;###autoload
-(defun emacs-uptime ()
-  "Gives Emacs' uptime, based on global var `*emacs-start-time*'."
+(defun pjb-emacs-uptime ()
+  "Gives Emacs' uptime, based on global var `*emacs-start-time*'.
+Renamed from `emacs-uptime' in Phase 4 to stop shadowing the
+Emacs core `emacs-uptime' (which arrived with Emacs 24)."
   (interactive)
   (let* ((st *emacs-start-time*)                ; set in do-it-now.el
          (cur (current-time))

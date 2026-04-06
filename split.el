@@ -160,7 +160,10 @@
         (when (splitp child)
           (balance-split child))))))
 
-(defun balance-windows ()
+(defun pjb-split-balance-windows ()
+  "PJB variant of `balance-windows' for the experimental split.el
+window-pane tree.  Renamed in Phase 4 to stop shadowing the Emacs
+core `balance-windows'."
   (interactive)
   (when (splitp (frame-split-root))
     (balance-split (frame-split-root))))

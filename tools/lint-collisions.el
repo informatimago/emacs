@@ -1,0 +1,21 @@
+(require 'cl-lib) (require 'eieio) (require 'subr-x) (require 'map) (require 'seq) (require 'project)
+(let ((files (directory-files default-directory nil "\\.el\\'"))
+      (collisions nil))
+  (dolist (f files)
+    (when (and (not (string-match "\\.~[0-9]+~$" f))
+               (not (string-prefix-p "flycheck_" f))
+               (not (string-suffix-p "-test.el" f)))
+      (with-temp-buffer
+        (insert-file-contents f)
+        (goto-char (point-min))
+        (while (re-search-forward
+                "^(\\(defun\\|defun\\*\\|cl-defun\\|defmacro\\|defmacro\\*\\|cl-defmacro\\|defsubst\\|defalias '\\)[ \t]+\\([a-zA-Z][a-zA-Z0-9_:*+/<>=?!-]+\\)"
+                nil t)
+          (let* ((kind (match-string 1))
+                 (name (match-string 2))
+                 (sym  (intern-soft name)))
+            (when (and sym (fboundp sym))
+              (push (list f name (line-number-at-pos) kind) collisions)))))))
+  (princ (format "%d collisions:\n" (length collisions)))
+  (dolist (c (sort collisions (lambda (a b) (string< (concat (car a) (cadr a)) (concat (car b) (cadr b))))))
+    (princ (format "%-30s %s\n" (cadr c) (concat (car c) ":" (number-to-string (caddr c)))))))

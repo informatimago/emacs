@@ -265,7 +265,7 @@ RETURN:  dst
 
 
 
-(defun* string-pad (string length &key (padchar 32) (justification :left))
+(defun* pjb-string-pad (string length &key (padchar 32) (justification :left))
   "Append spaces before, after or at both end of string to pad it to length.
 RETURN: A padded string.
 "

@@ -252,7 +252,56 @@ Strategy:
 
 ---
 
-## Phase 4 — Rename remaining built-in collisions
+## Phase 4 — Rename remaining built-in collisions  ✅ landed
+
+Status: **0 collisions** in `tools/lint-collisions.el`. **207 tests, 207 expected, 0 unexpected**.
+
+Phase 4 turned out to be much smaller than the planning section feared. The Phase 3 collision audit (`tools/lint-collisions.el`, runnable as `emacs --batch -Q -L . -l tools/lint-collisions.el`) was rerun against stock Emacs 30.2 with `cl-lib`, `eieio`, `subr-x`, `map`, `seq`, and `project` loaded. It surfaced exactly **13 real `defun` collisions** (not the dozens we extrapolated from the source survey), all of them now resolved:
+
+| symbol | file | resolution |
+|---|---|---|
+| `xor` | pjb-i2p-expression.el | **deleted** — built-in since Emacs 27.1 with identical semantics |
+| `delete-all-overlays` | pjb-computer-paper.el | **deleted** — built-in for many releases, identical behaviour |
+| `chmod` | pjb-utilities.el | **deleted** — built-in since Emacs 28.1 |
+| `narrow-to-defun` | pjb-sources.el | **deleted** — built-in for many releases |
+| `string-pad` | pjb-strings.el | **renamed** to `pjb-string-pad` (built-in is binary, pjb is keyword-arg cl-defun); 5 call sites in `pjb-sources.el` updated |
+| `comment-line` | pjb-sources.el | **renamed** to `pjb-comment-line-box` |
+| `recover-this-file` | pjb-emacs.el | **renamed** to `pjb-recover-this-file` (built-in errors when there's no associated file; pjb variant messages instead) |
+| `irc` | pjb-erc.el | **renamed** to `pjb-irc` |
+| `c++-mode` | pjb-objc-mode.el | **renamed** to `pjb-objc-c++-mode` |
+| `project-search` | pjb-searches.el | **renamed** to `pjb-project-search` (and `project-search-region` → `pjb-project-search-region`) |
+| `balance-windows` | split.el | **renamed** to `pjb-split-balance-windows` |
+| `emacs-uptime` | emacs-uptime.el | **renamed** to `pjb-emacs-uptime` (third-party file from ttn that predates Emacs 24's built-in) |
+| `char-equal` | pjb-cl.el | **renamed** to `cl-char-equal` (the pjb form is variadic CL semantics; the built-in is binary). Free in `cl-lib`, so the `cl-` prefix policy applies. |
+
+In-tree callers were updated as needed (mostly `pjb-sources.el`'s 5 `string-pad` calls). The other renames had no in-tree callers, only the rename site itself.
+
+### What did *not* need renaming (pre-flight expectations vs reality)
+
+The plan section feared a 15+ symbol rename storm in `pjb-cl.el`'s pathname / character / time / system layers (`pathname-name`, `pathname-directory`, `probe-file`, `truename`, `file-write-date`, `string-upcase`, `string-downcase`, `sleep`, `complement`, `integer-length`, `upper-case-p`, `lower-case-p`, `alpha-char-p`, `alphanumericp`, `array-dimension`, `vectorp*`, `schar`, `make-string*`, `lisp-implementation-type`, `machine-instance`, `software-type`, `short-site-name`, etc.). The `fboundp` audit against stock Emacs 30.2 with `cl-lib` showed that **none** of those names are taken by modern Emacs or `cl-lib`. They are pjb-cl polyfills, not collisions, and they get to keep their current bare names. The `cl-` prefix policy in the Decisions section is therefore a *forward-looking* convention for newly-added helpers, not a directive to rename existing ones — the pjb-cl.el names already satisfy the rule "no collision with built-ins or `cl-lib`".
+
+Similarly, the speculative rename targets `iota`, `flatten`, `basename`, `dirname`, `string-index`, `string-position`, `unsplit-string`, `prefixp`, `suffixp`, `first-char`, `last-char`, `butfirst-char`, `butlast-char`, `string-justify-left`, `string-repeat`, `string-has-prefix`, `string-has-suffix`, `chop-spaces`, `string-remove-accents`, `substitute-strings`, `printf`, `show`, `write-string`, `reverse-lines`, `seconds-to-emacs-time`, `emacs-time-to-seconds`, `plist-remove`, `marker`, `constantly`, `current-frame`, `single-frame`, `double-frame`, `remove-all-properties`, `first-existing-file`, `map-existing-files`, `find-file-not-found`, `file-namestring` — **none of them are built-ins in Emacs 30**, so none need renaming. They will stay as-is. (The previously-fixed Phase 2 entries `fill-region`, `find-file-at-point`, `ensure-list` are the only items from this list that were genuine collisions; they are already done.)
+
+### `pjb-strings.el` already uses `string-prefix-p` / `string-suffix-p`?
+
+A grep against the Phase 4 inventory had hinted at `string-has-prefix` / `string-has-suffix` overlapping with `string-prefix-p` / `string-suffix-p`. They're different *names* — there's no collision. The pjb names are kept; users can call either.
+
+### `tools/lint-collisions.el`
+
+The Phase 4 collision audit is checked into the tree as `tools/lint-collisions.el`. Running it is the canonical Phase 4 exit-criterion check:
+
+```
+emacs --batch -Q -L . -l tools/lint-collisions.el
+```
+
+Output: `0 collisions:` on a clean tree. CI should fail if this number ever ticks above zero. (A wrap-up in Phase 0 / Phase 6 should add a `make lint` Makefile target invoking it next to `make check`.)
+
+### Exit criterion
+
+- ✅ `tools/lint-collisions.el` reports `0 collisions`.
+- ✅ `make test` → 207 tests, 207 expected, 0 unexpected, 0 skipped.
+
+## Phase 4 — original plan (reference)
 
 Anything found in §1d of the inventory that *still* collides with a current Emacs symbol (after Phase 2 deleted the worst offenders) gets a `pjb-` prefix. Each rename follows the same recipe to keep churn safe:
 

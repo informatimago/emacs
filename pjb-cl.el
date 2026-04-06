@@ -571,9 +571,11 @@ URL:      http://www.informatimago.com/local/lisp/HyperSpec/Body/f_chareq.htm
   (pjb-cl%%compare-chars char>=  >=  characters))
 
 
-(defun char-equal (&rest characters)
+(defun cl-char-equal (&rest characters)
   "Common-Lisp: similar to char= except it ignores differences in case and \
 might have an implementation-defined behavior for non-simple characters.
+Renamed in Phase 4 to stop shadowing the binary Emacs built-in
+`char-equal'.
 
 URL:      http://www.informatimago.com/local/lisp/HyperSpec/Body/f_chareq.htm
 "

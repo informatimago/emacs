@@ -251,8 +251,11 @@ SEE-ALSO:  c-indent-line
 (defvar c-access-key)
 (defvar c-method-key)
 
-(defun c++-mode ()
-  "Major mode for editing C++ code.
+(defun pjb-objc-c++-mode ()
+  "PJB legacy reimplementation of `c++-mode' from before cc-mode
+shipped one.  Renamed to stop shadowing the cc-mode `c++-mode'.
+
+Major mode for editing C++ code.
 To submit a problem report, enter `\\[c-submit-bug-report]' from a
 c++-mode buffer.  This automatically sets up a mail buffer with
 version information already added.  You just need to add a description
