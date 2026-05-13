@@ -32,7 +32,13 @@
 ;;;;    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ;;;;**************************************************************************
 (require 'cl)
-(require 'slime)
+;; slime is optional at load time: pjb-find-file-not-found/cl-pathname
+;; below already guards its body with `(when (slime-connected-p) ...)',
+;; so we tolerate slime not being on `load-path' when pjb-loader fires
+;; (it's typically loaded later from ~/rc/emacs-slime.el).
+(require 'slime nil 'noerror)
+(declare-function slime-connected-p "slime")
+(declare-function slime-eval        "slime")
 (require 'pjb-cl)
 
 (defun* pjb-find-file-not-found/cl-pathname ()
