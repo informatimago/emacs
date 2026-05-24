@@ -65,11 +65,14 @@ EMACS_SOURCES=\
 	pjb-emacs.el \
 	pjb-computer-paper.el \
 	pjb-euro.el \
+	pjb-gherkin-log.el \
 	pjb-graph.el \
 	pjb-i2p-expression.el \
 	pjb-layers.el \
 	pjb-list.el \
 	pjb-mail.el \
+	pjb-nxml.el \
+	pjb-objc.el \
 	pjb-object.el \
 	pjb-pgp.el \
 	pjb-queue.el \
@@ -84,6 +87,7 @@ EMACS_SOURCES=\
 	pjb-strings.el \
 	pjb-transpose.el \
 	pjb-utilities.el \
+	pjb-valgrind.el \
 	pjb-work.el \
 	pjb-worldfact.el
 

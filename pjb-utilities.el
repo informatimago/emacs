@@ -817,4 +817,29 @@ POST:   (<= start index end)
 ;; `set-file-modes' with the same interactive spec.
 
 
+(defun re-delete-lines-between (start end start-re end-re)
+  "In the region from START to END, delete every block of lines that
+starts on a line matching START-RE and continues up to (and including)
+the next line matching END-RE.  Useful for trimming repeated noise
+sections out of log files.  The search and deletion is restricted to
+the region via a temporary narrowing."
+  (interactive "rsStart regexp: \nsEnd regexp: ")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region start end)
+      (goto-char (point-min))
+      (while (re-search-forward start-re nil t)
+        (let ((match-end (match-end 0)))
+          (goto-char (match-beginning 0))
+          (beginning-of-line)
+          (let ((block-start (point)))
+            (if (re-search-forward end-re nil t)
+                (progn
+                  (goto-char (match-end 0))
+                  (end-of-line)
+                  (unless (eobp) (forward-char))
+                  (delete-region block-start (point)))
+                (goto-char match-end))))))))
+
+
 ;;;; THE END ;;;;
