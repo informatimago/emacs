@@ -1909,11 +1909,7 @@ RETURN: (machine-instance).
         (match-string 2 path)
         path)))
 
-(defvar cl::*user-homedir-pathname*)
-(setf cl::*user-homedir-pathname*
-      (cond (user-init-file  (dirname user-init-file))
-            ((getenv "HOME") (concat (getenv "HOME") "/"))
-            (t               (dirname (first (file-expand-wildcards "~/.emacs"))))))
+(defvar cl::*user-homedir-pathname* (concat user-homedir-pathname "/"))
 (defun user-homedir-pathname (&optional host) cl::*user-homedir-pathname*)
 
 

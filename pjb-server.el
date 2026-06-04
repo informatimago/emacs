@@ -165,7 +165,7 @@ Prefix arg means just kill any existing server communications subprocess."
   (let* ((sysname (system-name))
          (dot-index (string-match "\\." sysname)))
     (condition-case ()
-        (delete-file (format "~/.emacs-server-%s" sysname))
+        (delete-file (home (format ".emacs-server-%s" sysname)))
       (error nil))
     (condition-case ()
         (delete-file (format "/tmp/esrv%d-%s" (user-uid) sysname))
@@ -175,7 +175,7 @@ Prefix arg means just kill any existing server communications subprocess."
     (if dot-index
       (let ((shortname (substring sysname 0 dot-index)))
         (condition-case ()
-            (delete-file (format "~/.emacs-server-%s" shortname))
+            (delete-file (home (format ".emacs-server-%s" shortname)))
           (error nil))
         (condition-case ()
             (delete-file (format "/tmp/esrv%d-%s" (user-uid) shortname))

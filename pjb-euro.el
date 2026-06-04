@@ -108,9 +108,9 @@ To update the devises with variable quotes, use update-devises.
   (interactive)
   ;; (shell-command-to-string
   ;;  "update-devisess boursorama > ~/.emacs-devises~ && mv ~/.emacs-devises~  ~/.emacs-devises ")
-  ;;  (load "~/.emacs-devises")
+  ;;  (load (home ".emacs-devises"))
 
-  ;; (with-file ("~/.emacs-devises" :save t :kill t)
+  ;; (with-file ((home ".emacs-devises") :save t :kill t)
   ;;   (erase-buffer)
   ;; )
   (loop

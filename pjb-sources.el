@@ -1163,7 +1163,7 @@ RETURN:  A list of selected sexp.
 ;;;             (message path)
 ;;;             (mapcar (lambda (sexp) (incf (gethash (depth sexp) histo 0)))
 ;;;                     (get-sexps path)))
-;;;           (directory "~/src/common/lisp/emacs/[a-z]*.el"))
+;;;           (directory (home "src/common/lisp/emacs/[a-z]*.el")))
 ;;;     (let ((result '()))
 ;;;       (maphash (lambda (deep value) (push (cons deep value) result)) histo)
 ;;;       result))

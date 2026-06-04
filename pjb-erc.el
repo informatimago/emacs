@@ -700,7 +700,7 @@ RETURN: a list of sublists of list (the conses from list are reused),
                   (or (cl:string/= (cdr (assoc "machine" entry)) server)
                       (cl:string/= (cdr (assoc "login"   entry)) nick)))
                 (nsplit-list-on-indicator
-                 (reduce 'nconc (netrc-parse "~/.netrc"))
+                 (reduce 'nconc (netrc-parse (home ".netrc")))
                  (lambda (current next) (string= "machine" (car next)))))))))
 
 (defun pjb-set-erc-nickserv-passwords ()
@@ -716,7 +716,7 @@ RETURN: a list of sublists of list (the conses from list are reused),
                             (cl:string/= (cdr (assoc "machine" entry))
                                          (second nickserv)))
                           (nsplit-list-on-indicator
-                           (reduce 'nconc (netrc-parse "~/.netrc"))
+                           (reduce 'nconc (netrc-parse (home ".netrc")))
                            (lambda (current next) (string= "machine" (car next))))))))
                 '((freenode "irc.freenode.org")))))
 
@@ -898,7 +898,7 @@ servers, channels, palette, and stamp mode."
   (pjb-server-stop)
   (set-frame-name "ERC")
   (set-palette pal-irc)
-  (setf *frame-server-job-ticket* "~/frame-erc")
+  (setf *frame-server-job-ticket* (home "frame-erc"))
   ;; --------------------
   (erc-stamp-enable)                    ; == erc-timestamp-mode
   (erc-show-timestamps)
@@ -1035,7 +1035,7 @@ command).
                   (string= "" (or (ignore-errors
                                    (let ((exec-path (remove-if
                                                      (lambda (path)
-                                                       (prefixp (expand-file-name "~/") path))
+                                                       (prefixp (home "") path))
                                                      exec-path)))
                                      (shell-command-to-string (format "which %S" command))))
                                   "")))

@@ -44,7 +44,7 @@
 (defvar *android-packages* '())
 (defvar *android-classes*  '())
 
-(let ((pc (android-packages-and-classes "~/src/public/emacs/android-classes.xhtml")))
+(let ((pc (android-packages-and-classes (home "src/public/emacs/android-classes.xhtml"))))
   (setf *android-packages* (first pc)
         *android-classes* (second pc))
   nil)

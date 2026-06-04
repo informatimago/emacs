@@ -220,7 +220,7 @@ RETURN: the buffer which has as name `name'.
   (dolist (buffer (buffer-list))
     (unless (buffer-file-name buffer)
       (with-current-buffer buffer
-        (set-default-directory "~/")))))
+        (set-default-directory (home ""))))))
 
 ;;;----------------------------------------------------------------------------
 ;;; Editing functions:
