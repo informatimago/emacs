@@ -35,7 +35,7 @@
 ;;;;****************************************************************************
 
 (require 'pjb-cl)
-(defparameter *schedule-file* "~/.sleep-schedule")
+(defparameter *schedule-file* (home ".sleep-schedule"))
 
 (defun pjb-log-sleep (file tag)
   (set-buffer (get-buffer-create " *log-time*"))
@@ -47,8 +47,6 @@
               tag yea mon day hou min sec (truncate (* 3600 zone)) 3600)))
   (write-region (point-min) (point-max) file :append))
 
-
-
 (defun pjb-will-sleep ()
   (interactive)
   (pjb-log-sleep *schedule-file* :start))
@@ -57,12 +55,4 @@
   (interactive)
   (pjb-log-sleep *schedule-file* :stop))
 
-(defun pjb-plot-sleep ()
-  (interactive)
-  (shell-command "~/bin/sleep-schedule.lisp")
-  (other-window 1)
-  (delete-other-windows)
-  (goto-char (point-max)))
-
-
-
+;;;; THE END ;;;;
