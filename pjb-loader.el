@@ -21,6 +21,48 @@
 ;;;;**************************************************************************
 (require 'cl-lib)
 
+;; ---------------------------------------------------------------------------
+;; Path-helper compatibility shims.
+;;
+;; Pascal's personal startup (~/rc/emacs.el) defines `root', `home', `rc'
+;; and `pjb-emacs-source' so that paths adapt to the various MS-Windows /
+;; msys2 locations: HOME may be /c/users/FOO seen from msys2 or c:/users/FOO
+;; seen from MS-Windows, and the system root may live under c:/msys64/ —
+;; likewise for the rc directory.  When this library is loaded standalone,
+;; without that startup, provide defaults valid on a normal Unix system,
+;; where the filesystem root is "/" and HOME is ~.  Each is guarded by
+;; `fboundp' so the personal, platform-aware definitions always win.
+;;
+;; `rc' designates Pascal's private ~/rc/ directory and must NOT be
+;; referenced from this public library, so no default is provided for it.
+;; ---------------------------------------------------------------------------
+
+(defvar pjb-loader-directory
+  (file-name-directory (or load-file-name buffer-file-name default-directory))
+  "Directory holding this library (where the pjb-* sources live).")
+
+(defun pjb-loader--join-pathname (directory path)
+  "Join DIRECTORY and PATH with exactly one slash, collapsing duplicates.
+Either argument may independently have — or lack — a leading or trailing
+slash; the result (with ~ and .. resolved) never contains a spurious //."
+  (expand-file-name
+   (replace-regexp-in-string "/\\{2,\\}" "/" (concat directory "/" path))))
+
+(unless (fboundp 'root)
+  (defun root (path)
+    "Default (Unix) `root': the filesystem root is \"/\", so PATH is returned as is."
+    path))
+
+(unless (fboundp 'home)
+  (defun home (path)
+    "Default (Unix) `home': resolve PATH under the user's HOME (~)."
+    (pjb-loader--join-pathname "~/" path)))
+
+(unless (fboundp 'pjb-emacs-source)
+  (defun pjb-emacs-source (path)
+    "Default `pjb-emacs-source': resolve PATH relative to this library's directory."
+    (pjb-loader--join-pathname pjb-loader-directory path)))
+
 (defvar pjb-loader-noerror nil
   "When non-nil, `pjb-loader-load-all' catches and reports errors from
 each loaded file instead of aborting the whole load.")

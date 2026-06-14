@@ -1888,7 +1888,7 @@ RETURN:  A stack of nodes.
 
 (let* ((load-file-name (or load-file-name
                            ;; for testing:
-                           "/home/pjb/src/public/emacs/pjb-cl-magic.el"))
+                           (pjb-emacs-source "pjb-cl-magic.el")))
        (lambda-lists-el (format "%s-lambda-lists.el"
                           (subseq load-file-name
                                   0 (search ".el" load-file-name :from-end t))))

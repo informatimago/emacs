@@ -1909,8 +1909,10 @@ RETURN: (machine-instance).
         (match-string 2 path)
         path)))
 
-(defvar cl::*user-homedir-pathname* (concat user-homedir-pathname "/"))
-(defun user-homedir-pathname (&optional host) cl::*user-homedir-pathname*)
+(defun user-homedir-pathname (&optional host)
+  (if (boundp '*user-homedir-pathname*)
+      *user-homedir-pathname*
+    (expand-file-name "~/")))
 
 
 ;; ------------------------------------------------------------------------
