@@ -100,4 +100,24 @@ Around-advice for `shell'."
                              (format "%c" 3))))))
        (new-shell))))
 
+
+(defun pjb-comint-answer-color-queries (string)
+  "Reply to OSC 10/11 foreground/background color queries (green on black)."
+  (when (string-match "\e\\][01][01];\\?\\(\e\\\\\\|\a\\)" string)
+    (let ((proc (get-buffer-process (current-buffer))))
+      (when proc
+        ;; OSC 10 = foreground -> green ; OSC 11 = background -> black
+        (when (string-match "\e\\]10;\\?" string)
+          (process-send-string proc "\e]10;rgb:0000/ffff/0000\e\\"))
+        (when (string-match "\e\\]11;\\?" string)
+          (process-send-string proc "\e]11;rgb:0000/0000/0000\e\\"))))
+    ;; strip the queries so they don't litter the buffer
+    (setq string (replace-regexp-in-string "\e\\][01][01];\\?\\(\e\\\\\\|\a\\)" "" string)))
+  string)
+
+;; (add-hook 'shell-mode-hook
+;;           (lambda ()
+;;             (add-hook 'comint-preoutput-filter-functions
+;;                       #'pjb-comint-answer-color-queries nil t)))
+
 ;;;; THE END ;;;;
