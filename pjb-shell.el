@@ -101,23 +101,36 @@ Around-advice for `shell'."
        (new-shell))))
 
 
-(defun pjb-comint-answer-color-queries (string)
-  "Reply to OSC 10/11 foreground/background color queries (green on black)."
-  (when (string-match "\e\\][01][01];\\?\\(\e\\\\\\|\a\\)" string)
-    (let ((proc (get-buffer-process (current-buffer))))
-      (when proc
-        ;; OSC 10 = foreground -> green ; OSC 11 = background -> black
-        (when (string-match "\e\\]10;\\?" string)
-          (process-send-string proc "\e]10;rgb:0000/ffff/0000\e\\"))
-        (when (string-match "\e\\]11;\\?" string)
-          (process-send-string proc "\e]11;rgb:0000/0000/0000\e\\"))))
-    ;; strip the queries so they don't litter the buffer
-    (setq string (replace-regexp-in-string "\e\\][01][01];\\?\\(\e\\\\\\|\a\\)" "" string)))
-  string)
+(defconst pjb-comint-color-query-regexp
+  "\e\\][01][01];\\?\\(\e\\\\\\|\a\\)"
+  "Matches an OSC 10/11 foreground/background color query.
+The bytes are ESC ] 1 0|1 ; ? ST, where ST is ESC \\ or BEL.")
 
-;; (add-hook 'shell-mode-hook
-;;           (lambda ()
-;;             (add-hook 'comint-preoutput-filter-functions
-;;                       #'pjb-comint-answer-color-queries nil t)))
+(defun pjb-comint-strip-color-queries (string)
+  "Strip OSC 10/11 foreground/background color queries from STRING.
+
+A program (vim, htop, ...) may ask the terminal for its fg/bg colors with
+an OSC 10/11 query.  A comint `shell' buffer is a line editor, not a
+terminal emulator, so there is nobody to answer.
+
+This used to *reply* with `process-send-string', but a `shell' buffer has
+only one input channel: the shell's own stdin.  At the prompt that reply
+is therefore fed to the shell as if typed, yielding `command not found'
+noise (the OSC bytes), spurious `> ' PS2 continuations, and a corrupted
+current command line.  So we just drop the queries, keeping the buffer
+clean and leaving stdin untouched; programs that need a real answer should
+run under a terminal emulator such as `M-x ansi-term'."
+  (replace-regexp-in-string pjb-comint-color-query-regexp "" string))
+
+(define-obsolete-function-alias 'pjb-comint-answer-color-queries
+  'pjb-comint-strip-color-queries "2026-06"
+  "Renamed: it now strips the queries instead of injecting a reply into stdin.")
+
+(add-hook 'shell-mode-hook
+          (lambda ()
+            (add-hook 'comint-preoutput-filter-functions
+                      #'pjb-comint-strip-color-queries nil t)
+            (ansi-color-for-comint-mode-on)))
+
 
 ;;;; THE END ;;;;
